@@ -16,7 +16,7 @@ CLIENT_BIN				=	babel_client
 
 CLIENT_DIR				=	client
 
-CLIENT_BUILD_DIR		=	babel_client_build
+CLIENT_BUILD_DIR		=	.babel_client_build
 
 
 # Server
@@ -24,7 +24,7 @@ SERVER_BIN				=	babel_server
 
 SERVER_DIR				=	server
 
-SERVER_BUILD_DIR		=	babel_server_build
+SERVER_BUILD_DIR		=	.babel_server_build
 
 
 
