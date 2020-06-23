@@ -8,6 +8,8 @@ project(CPP_babel_2020)
 # Language Configuration
 set(CMAKE_CXX_STANDARD 17)
 
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/..)
+
 ###############################################################################
 # Set includes directories
 set(

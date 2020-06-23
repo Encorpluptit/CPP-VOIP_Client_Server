@@ -3,6 +3,7 @@
 cmake_minimum_required(VERSION 3.14)
 project(CPP_babel_2020)
 
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/..)
 
 ###############################################################################
 # Language Configuration
