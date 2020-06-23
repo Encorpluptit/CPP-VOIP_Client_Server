@@ -30,7 +30,10 @@ set(CLIENT_SRC_DIR src)
 
 set(
         CLIENT_SOURCE_FILES
+
         test.cpp
+        feature1/feature1.cpp
+        feature2/feature2.cpp
 )
 
 

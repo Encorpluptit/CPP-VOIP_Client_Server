@@ -26,6 +26,8 @@ set(
         CLIENT_SOURCE_FILES
 
         src/test.cpp
+        feature1/feature1.cpp
+        feature2/feature2.cpp
 )
 
 add_compile_options(-Wall -Wextra -Werror)
