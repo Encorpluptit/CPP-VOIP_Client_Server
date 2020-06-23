@@ -1,4 +1,4 @@
-
+![Build](https://github.com/Encorpluptit/CPP_babel_2020/workflows/Build/badge.svg)
 [![codecov](https://codecov.io/gh/Encorpluptit/CPP_babel_2020/branch/master/graph/badge.svg?token=ttl8s3om9V)](https://codecov.io/gh/Encorpluptit/CPP_babel_2020)
 
 
