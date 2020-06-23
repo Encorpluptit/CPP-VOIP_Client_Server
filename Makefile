@@ -1,0 +1,88 @@
+##
+## EPITECH PROJECT, 2020
+## Makefile
+## File description:
+## Makefile
+##
+
+################################################################################
+# Config Vars
+
+NAME					=	babel
+
+
+# Client
+CLIENT_BIN				=	babel_client
+
+CLIENT_DIR				=	client
+
+CLIENT_BUILD_DIR		=	babel_client_build
+
+
+# Server
+SERVER_BIN				=	babel_server
+
+SERVER_DIR				=	server
+
+SERVER_BUILD_DIR		=	babel_server_build
+
+
+
+################################################################################
+.DEFAULT: all
+
+all: $(NAME)
+
+$(NAME): server client
+
+log: OPTIONS +=-DUSE_LOG=ON
+log: $(NAME)
+
+debug: OPTIONS +=-DUSE_DEBUG=ON
+debug: $(NAME)
+
+
+################################################################################
+# SERVER RULES
+server:
+	@mkdir -p $(SERVER_BUILD_DIR)
+	@cmake $(OPTIONS) -B $(SERVER_BUILD_DIR) -t $(SERVER_DIR)
+	@$(MAKE) -j `nproc` --no-print-directory -C $(SERVER_BUILD_DIR)
+#@$(MAKE) -j `nproc` --no-print-directory -C $(BUILD_SERVER_DIR) $(SERVER_BIN)
+
+server_clean:
+	@$(RM) -r $(SERVER_BUILD_DIR)
+
+server_fclean:
+	@$(RM) -r $(SERVER_BIN)
+
+
+
+################################################################################
+# CLIENTS RULES
+client:
+	@mkdir -p $(CLIENT_BUILD_DIR)
+	@cmake $(OPTIONS) -B $(CLIENT_BUILD_DIR) -t $(CLIENT_DIR)
+	@$(MAKE) -j `nproc` --no-print-directory -C $(CLIENT_BUILD_DIR)
+#@$(MAKE) -j `nproc` --no-print-directory -C $(CLIENT_BUILD_DIR) $(CLIENT_BIN)
+
+client_clean:
+	@$(RM) -r $(CLIENT_BUILD_DIR)
+
+client_fclean:
+	@$(RM) -r $(CLIENT_BIN)
+
+
+
+################################################################################
+# OTHERS RULES
+clean: server_clean client_clean
+
+fclean: clean server_fclean client_fclean
+
+tests_run:
+
+re: fclean all
+
+.PHONY: all $(NAME) server client tests_run
+.PHONY: server_clean server_fclean client_clean client_fclean clean fclean re
