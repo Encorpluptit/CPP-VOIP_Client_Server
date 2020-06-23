@@ -2,7 +2,7 @@
 // Created by encorpluptit on 6/23/20.
 //
 
-#include <stdio.h>
+#include <iostream>
 
 int feature1()
 {

@@ -30,7 +30,7 @@ set(
         feature2/feature2.cpp
 )
 
-foreach (src ${CLIENT_SOURCE_FILES})
+foreach (src ${SERVER_SOURCE_FILES})
     set(SERVER_SOURCES ${SERVER_SOURCES} ${SERVER_SRC_DIR}/${src})
 endforeach (src)
 
