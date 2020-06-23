@@ -20,19 +20,24 @@ include_directories(${SERVER_INCLUDE} ${BABEL_COMMON_INCLUDE})
 
 ###############################################################################
 # Source files
-set(CLIENT_SRC_DIR src)
+set(SERVER_SRC_DIR src)
 
 set(
-        CLIENT_SOURCE_FILES
+        SERVER_SOURCE_FILES
 
-        src/test.cpp
+        test.cpp
         feature1/feature1.cpp
         feature2/feature2.cpp
 )
+
+foreach (src ${CLIENT_SOURCE_FILES})
+    set(SERVER_SOURCES ${SERVER_SOURCES} ${SERVER_SRC_DIR}/${src})
+endforeach (src)
 
 add_compile_options(-Wall -Wextra -Werror)
 
 add_executable(
         babel_server
         main.cpp
+        ${SERVER_SOURCES}
 )
