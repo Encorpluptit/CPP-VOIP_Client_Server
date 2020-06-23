@@ -7,4 +7,5 @@
 int feature1()
 {
     std::cout << "feature 1 server" << std::endl;
+    return 0;
 }
