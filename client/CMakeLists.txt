@@ -18,24 +18,31 @@ set(
 include_directories(${CLIENT_INCLUDE} ${BABEL_COMMON_INCLUDE})
 
 
+
+###############################################################################
+# Set Compile Options
+add_compile_options(-Wall -Wextra -Werror)
+
+
 ###############################################################################
 # Source files
 set(CLIENT_SRC_DIR src)
 
 set(
         CLIENT_SOURCE_FILES
-        src/test.cpp
+        test.cpp
 )
 
 
-foreach (src ${SOURCE_FILES})
-    set(CLIENT_SOURCE ${CLIENT_SOURCE} ${CLIENT_SRC_DIR}/${src})
+foreach (src ${CLIENT_SOURCE_FILES})
+    set(CLIENT_SOURCES ${CLIENT_SOURCES} ${CLIENT_SRC_DIR}/${src})
 endforeach (src)
 
-
-add_compile_options(-Wall -Wextra -Werror)
+###############################################################################
+# Client executable
 
 add_executable(
         babel_client
         main.cpp
+        ${CLIENT_SOURCES}
 )
