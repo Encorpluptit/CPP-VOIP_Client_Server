@@ -1,7 +1,6 @@
 ###############################################################################
 # Project Configuration
 cmake_minimum_required(VERSION 3.14)
-project(CPP_babel_2020)
 
 
 ###############################################################################
@@ -12,11 +11,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 ###############################################################################
 # Change Binary output path
-#set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 set(EXECUTABLE_OUTPUT_PATH ..)
-#message(${CMAKE_BINARY_DIR})
-#set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR})
-#set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR})
 
 
 
@@ -24,12 +19,11 @@ set(EXECUTABLE_OUTPUT_PATH ..)
 # Set includes directories
 set(
         SERVER_INCLUDES
+        include
 )
 
-include_directories(${SERVER_INCLUDE} ${BABEL_COMMON_INCLUDE})
+include_directories(${SERVER_INCLUDES} ${BABEL_COMMON_INCLUDE})
 
-# Includes for Tests
-set(G_SERVER_INCLUDES ${SERVER_INCLUDES} PARENT_SCOPE)
 
 
 ###############################################################################
@@ -57,8 +51,6 @@ conan_basic_setup()
 find_package(Qt5Widgets CONFIG REQUIRED)
 
 include_directories(${CMAKE_INCLUDE_PATH})
-#add_executable(babel main.cpp)
-#target_link_libraries(babel ${CONAN_LIBS} Qt5::Widgets)
 
 
 
@@ -82,6 +74,10 @@ endforeach (src)
 
 # Sources for Tests
 set(G_SERVER_SOURCE ${SERVER_SOURCE} PARENT_SCOPE)
+
+# Includes for Tests
+set(G_SERVER_INCLUDES ${SERVER_INCLUDES} PARENT_SCOPE)
+
 
 
 ###############################################################################
