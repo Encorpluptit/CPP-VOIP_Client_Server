@@ -27,6 +27,9 @@ jobs:
       - name: Makefile -> Re
         run: make re
 
+      - name: Makefile -> moul
+        run: make mouli
+
 #      - name: Makefile -> Tests_run
 #        run: make tests_run
 
