@@ -12,11 +12,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-#      - name: Add conan repositories.
-#        run: |
-#          conan remote add tech-repo https://api.bintray.com/conan/epitech/public-conan
-#          conan remote add public-repo https://api.bintray.com/conan/bincrafters/public-conan
-#          conan remote list
+      - name: Add conan repositories.
+        run: |
+          conan remote add tech-repo https://api.bintray.com/conan/epitech/public-conan
+          conan remote add public-repo https://api.bintray.com/conan/bincrafters/public-conan
+          conan remote list
 
       - name: Makefile -> Make
         run: make
