@@ -47,8 +47,10 @@ debug: $(NAME)
 # SERVER RULES
 server:
 	@mkdir -p $(SERVER_BUILD_DIR)
-	@cmake $(OPTIONS) -B $(SERVER_BUILD_DIR)
+	@cmake $(OPTIONS) -B $(SERVER_BUILD_DIR) -t $(SERVER_DIR)
+#	@cmake $(OPTIONS) -B $(SERVER_BUILD_DIR)
 	@$(MAKE) -j `nproc` --no-print-directory -C $(SERVER_BUILD_DIR)
+#@$(MAKE) -j `nproc` --no-print-directory -C $(BUILD_SERVER_DIR) $(SERVER_BIN)
 
 server_clean:
 	@$(RM) -r $(SERVER_BUILD_DIR)
@@ -62,8 +64,10 @@ server_fclean:
 # CLIENTS RULES
 client:
 	@mkdir -p $(CLIENT_BUILD_DIR)
-	@cmake $(OPTIONS) -B $(CLIENT_BUILD_DIR)
+	@cmake $(OPTIONS) -B $(CLIENT_BUILD_DIR) -t $(CLIENT_DIR)
+#	@cmake $(OPTIONS) -B $(CLIENT_BUILD_DIR)
 	@$(MAKE) -j `nproc` --no-print-directory -C $(CLIENT_BUILD_DIR)
+#@$(MAKE) -j `nproc` --no-print-directory -C $(CLIENT_BUILD_DIR) $(CLIENT_BIN)
 
 client_clean:
 	@$(RM) -r $(CLIENT_BUILD_DIR)
@@ -78,7 +82,8 @@ client_fclean:
 
 mouli:
 	#mkdir -p build && cd build && conan install .. && cmake .. && cmake –build .
-	mkdir -p $(MOULI_BUILD_DIR) && cd $(MOULI_BUILD_DIR) && cmake .. && cmake –build .
+	#mkdir -p $(MOULI_BUILD_DIR) && cd $(MOULI_BUILD_DIR) && cmake .. && cmake –build .
+	mkdir -p $(MOULI_BUILD_DIR) && cd $(MOULI_BUILD_DIR) && cmake .. && cmake –build . && make
 
 clean: server_clean client_clean
 

@@ -12,8 +12,8 @@ set(CMAKE_CXX_STANDARD 17)
 
 ###############################################################################
 # Change Binary output path
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
-#set(EXECUTABLE_OUTPUT_PATH ..)
+#set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
+set(EXECUTABLE_OUTPUT_PATH ..)
 message(${CMAKE_BINARY_DIR})
 #set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR})
 #set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR})
