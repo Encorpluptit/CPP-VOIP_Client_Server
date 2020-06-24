@@ -19,11 +19,11 @@ jobs:
         run: |
           conan remote add tech-repo https://api.bintray.com/conan/epitech/public-conan
           conan remote add public-repo https://api.bintray.com/conan/bincrafters/public-conan
-          conan remote list --build=missing
+          conan remote list
       #          conan remote add conan-center https://conan.bintray.com
 
       - name: Install
-        run: mkdir -p build && cd build && conan install ..
+        run: mkdir -p build && cd build && conan install .. --build=missing
 
       - name: Makefile -> Make
         run: make
