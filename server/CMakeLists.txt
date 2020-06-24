@@ -8,11 +8,15 @@ project(CPP_babel_2020)
 # Language Configuration
 set(CMAKE_CXX_STANDARD 17)
 
-set(EXECUTABLE_OUTPUT_PATH ..)
+
+
+###############################################################################
+# Change Binary output path
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
+#set(EXECUTABLE_OUTPUT_PATH ..)
+message(${CMAKE_BINARY_DIR})
 #set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR})
 #set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR})
-
-add_definitions("-fPIC")
 
 
 
@@ -22,13 +26,16 @@ set(
         SERVER_INCLUDES
 )
 
-
 include_directories(${SERVER_INCLUDE} ${BABEL_COMMON_INCLUDE})
+
+# Includes for Tests
+set(G_SERVER_INCLUDES ${SERVER_INCLUDES} PARENT_SCOPE)
 
 
 ###############################################################################
 # Set Compile Options
 add_compile_options(-Wall -Wextra -Werror)
+add_definitions("-fPIC")
 
 if (USE_LOG)
     set(USE_DEBUG ON)
@@ -39,6 +46,7 @@ if (USE_DEBUG)
     add_compile_options(-g3)
     add_compile_definitions(_DEBUG_)
 endif (USE_DEBUG)
+
 
 
 ###############################################################################
@@ -53,6 +61,7 @@ endif (USE_DEBUG)
 #target_link_libraries(babel ${CONAN_LIBS} Qt5::Widgets)
 
 
+
 ###############################################################################
 # Source files
 set(SERVER_SRC_DIR src)
@@ -65,11 +74,18 @@ set(
         feature2/feature2.cpp
 )
 
+
 foreach (src ${SERVER_SOURCE_FILES})
     set(SERVER_SOURCES ${SERVER_SOURCES} ${SERVER_SRC_DIR}/${src})
 endforeach (src)
 
-add_compile_options(-Wall -Wextra -Werror)
+
+# Sources for Tests
+set(G_SERVER_SOURCE ${SERVER_SOURCE} PARENT_SCOPE)
+
+
+###############################################################################
+# Server Executable
 
 add_executable(
         babel_server
