@@ -93,4 +93,4 @@ add_executable(
         ${SERVER_SOURCES}
 )
 
-target_link_libraries(babel_client ${CONAN_LIBS} Qt5::Widgets)
+target_link_libraries(babel_server ${CONAN_LIBS} Qt5::Widgets)

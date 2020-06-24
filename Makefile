@@ -47,6 +47,7 @@ debug: $(NAME)
 # SERVER RULES
 server:
 	@mkdir -p $(SERVER_BUILD_DIR)
+	@cd $(SERVER_BUILD_DIR) && conan install ..
 	@cmake $(OPTIONS) -B $(SERVER_BUILD_DIR) -t $(SERVER_DIR)
 #	@cmake $(OPTIONS) -B $(SERVER_BUILD_DIR)
 	@$(MAKE) -j `nproc` --no-print-directory -C $(SERVER_BUILD_DIR)
@@ -64,6 +65,7 @@ server_fclean:
 # CLIENTS RULES
 client:
 	@mkdir -p $(CLIENT_BUILD_DIR)
+	@cd $(CLIENT_BUILD_DIR) && conan install ..
 	@cmake $(OPTIONS) -B $(CLIENT_BUILD_DIR) -t $(CLIENT_DIR)
 #	@cmake $(OPTIONS) -B $(CLIENT_BUILD_DIR)
 	@$(MAKE) -j `nproc` --no-print-directory -C $(CLIENT_BUILD_DIR)
