@@ -19,7 +19,7 @@ jobs:
         run: |
           conan remote add tech-repo https://api.bintray.com/conan/epitech/public-conan
           conan remote add public-repo https://api.bintray.com/conan/bincrafters/public-conan
-          conan remote list
+          conan remote list --build=missing
       #          conan remote add conan-center https://conan.bintray.com
 
       - name: Install
