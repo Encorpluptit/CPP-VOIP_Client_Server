@@ -27,6 +27,21 @@ include_directories(${SERVER_INCLUDE} ${BABEL_COMMON_INCLUDE})
 
 
 ###############################################################################
+# Set Compile Options
+add_compile_options(-Wall -Wextra -Werror)
+
+if (USE_LOG)
+    set(USE_DEBUG ON)
+    add_compile_definitions(_BABEL_LOG_)
+endif (USE_LOG)
+
+if (USE_DEBUG)
+    add_compile_options(-g3)
+    add_compile_definitions(_DEBUG_)
+endif (USE_DEBUG)
+
+
+###############################################################################
 # Conan Build Management
 #include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 #conan_basic_setup()

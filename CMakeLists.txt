@@ -22,15 +22,15 @@ set(CMAKE_CXX_STANDARD 17)
 option(USE_DEBUG "Enter debug mode" OFF)
 option(USE_LOG "Log Execution in a file" OFF)
 
-if (USE_DEBUG)
-    add_compile_options(-g3)
-    add_compile_definitions(_DEBUG_)
-endif (USE_DEBUG)
-
-if (USE_LOG)
-    set(USE_DEBUG ON)
-    add_compile_definitions(_BABEL_LOG_)
-endif (USE_LOG)
+#if (USE_DEBUG)
+#    add_compile_options(-g3)
+#    add_compile_definitions(_DEBUG_)
+#endif (USE_DEBUG)
+#
+#if (USE_LOG)
+#    set(USE_DEBUG ON)
+#    add_compile_definitions(_BABEL_LOG_)
+#endif (USE_LOG)
 
 
 ###############################################################################
