@@ -22,6 +22,9 @@ jobs:
           conan remote list
       #          conan remote add conan-center https://conan.bintray.com
 
+      - name: Install
+        run: mkdir -p build && cd build && conan install ..
+
       - name: Makefile -> Make
         run: make
 
