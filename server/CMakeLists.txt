@@ -12,6 +12,10 @@ set(EXECUTABLE_OUTPUT_PATH ..)
 #set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR})
 #set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR})
 
+add_definitions("-fPIC")
+
+
+
 ###############################################################################
 # Set includes directories
 set(
@@ -20,6 +24,18 @@ set(
 
 
 include_directories(${SERVER_INCLUDE} ${BABEL_COMMON_INCLUDE})
+
+
+###############################################################################
+# Conan Build Management
+#include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+#conan_basic_setup()
+#
+#find_package(Qt5Widgets CONFIG REQUIRED)
+#
+#include_directories(${CMAKE_INCLUDE_PATH})
+#add_executable(babel main.cpp)
+#target_link_libraries(babel ${CONAN_LIBS} Qt5::Widgets)
 
 
 ###############################################################################

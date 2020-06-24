@@ -11,6 +11,7 @@ set(BIN_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} CACHE INTERNAL lol)
 #message(${CMAKE_CURRENT_BINARY_DIR})
 
 
+
 ###############################################################################
 # Language Configuration
 set(CMAKE_CXX_STANDARD 17)
