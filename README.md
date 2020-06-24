@@ -47,11 +47,11 @@
     
 * ### Install dependencies (can take several minutes)
 
-        mkdir -p build && conan install .. 
+        mkdir -p build && cd build && conan install .. 
 
     or if that doesn't work
 
-        mkdir -p build && conan install .. --build=missing
+        mkdir -p build && cd build && conan install .. --build=missing
 
 
 ---
