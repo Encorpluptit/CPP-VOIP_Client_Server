@@ -76,6 +76,10 @@ client_fclean:
 
 ################################################################################
 # OTHERS RULES
+
+mouli:
+	mkdir -p build && cd build && conan install .. && cmake .. && cmake –build .
+
 clean: server_clean client_clean
 
 fclean: clean server_fclean client_fclean
@@ -84,5 +88,5 @@ tests_run:
 
 re: fclean all
 
-.PHONY: all $(NAME) server client tests_run
+.PHONY: all $(NAME) server client tests_run mouli
 .PHONY: server_clean server_fclean client_clean client_fclean clean fclean re
