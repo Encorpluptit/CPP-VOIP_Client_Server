@@ -14,7 +14,9 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: lol
-        run: pwd
+        run: |
+          pwd
+          ls ~/.conan/data
 
 #      - name: Upgrade conan
 #        run: pip install conan --upgrade
