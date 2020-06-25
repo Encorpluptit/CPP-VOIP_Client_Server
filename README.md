@@ -52,6 +52,10 @@
     or if that doesn't work
 
         mkdir -p build && cd build && conan install .. --build=missing
+        
+        or
+        
+        make mouli-install
 
 
 ---
@@ -74,8 +78,20 @@
     Build **babel_client** binary.
     
     (create **.babel_client_build** folder)
+
+
+* ### `make mouli-install`
+    Install conan dependencies and build them.
     
+    (create **build** folder)
+
+
+* ### `make mouli`
+    Install conan dependencies, build them, make build tree and compile project.
     
+    (create **build** folder)
+
+
 * ### `make clean`
     Remove **.babel_server_build** and **.babel_client_build** folders.
 
