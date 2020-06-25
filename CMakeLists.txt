@@ -17,14 +17,6 @@ option(USE_LOG "Log Execution in a file" OFF)
 
 
 ###############################################################################
-# Common includes
-set(
-        BABEL_COMMON_INCLUDE
-        ${PROJECT_SOURCE_DIR}/common
-)
-
-
-###############################################################################
 # Subdirectories Configuration
 add_subdirectory(client)
 add_subdirectory(server)

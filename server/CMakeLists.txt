@@ -10,12 +10,6 @@ set(CMAKE_CXX_STANDARD 17)
 
 
 ###############################################################################
-# Change Binary output path
-set(EXECUTABLE_OUTPUT_PATH ..)
-
-
-
-###############################################################################
 # Set includes directories
 set(
         SERVER_INCLUDES
@@ -77,6 +71,12 @@ set(G_SERVER_SOURCE ${SERVER_SOURCE} PARENT_SCOPE)
 
 # Includes for Tests
 set(G_SERVER_INCLUDES ${SERVER_INCLUDES} PARENT_SCOPE)
+
+
+
+###############################################################################
+# Change Binary output path
+#set(EXECUTABLE_OUTPUT_PATH ..)
 
 
 
