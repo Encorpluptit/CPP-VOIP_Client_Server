@@ -22,8 +22,8 @@ jobs:
           conan remote add public-repo https://api.bintray.com/conan/bincrafters/public-conan
           conan remote list
 
-      - name: Install
-        run: mkdir -p build && cd build && conan install .. --build=missing
+#      - name: Install
+#        run: mkdir -p build && cd build && conan install .. --build=missing
 
       - name: Makefile -> Make
         run: make
