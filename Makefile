@@ -82,9 +82,10 @@ client_fclean:
 ################################################################################
 # OTHERS RULES
 
+mouli-install:
+	@mkdir -p $(MOULI_BUILD_DIR) && cd $(MOULI_BUILD_DIR) && conan install .. --build=missing
+
 mouli: fclean
-#	mkdir -p build && cd build && conan install .. && cmake .. && cmake –build .
-#	mkdir -p $(MOULI_BUILD_DIR) && cd $(MOULI_BUILD_DIR) && cmake .. && cmake –build .
 	@mkdir -p $(MOULI_BUILD_DIR) && cd $(MOULI_BUILD_DIR) && conan install .. && cmake .. && cmake –build . && make --no-print-directory
 
 clean: server_clean client_clean
