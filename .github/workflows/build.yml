@@ -30,6 +30,9 @@ jobs:
 #      - name: Install
 #        run: mkdir -p build && cd build && conan install .. --build=missing
 
+      - name: Makefile -> mouli-install
+        run: make mouli-install
+
       - name: Makefile -> Make
         run: make
 
