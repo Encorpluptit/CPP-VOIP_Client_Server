@@ -82,6 +82,9 @@ client_fclean:
 ################################################################################
 # OTHERS RULES
 
+gh-install:
+	@mkdir -p $(MOULI_BUILD_DIR) && cd $(MOULI_BUILD_DIR) && conan install .. --build=portaudio --build=qt
+
 mouli-install:
 	@mkdir -p $(MOULI_BUILD_DIR) && cd $(MOULI_BUILD_DIR) && conan install .. --build=missing
 
