@@ -5,6 +5,8 @@
   * [How to Use](#how-to-use)
     + [Client](#client)
     + [Server](#server)
+    + [Protocol](#protocol)
+    + [UML](#uml)
   * [Install instruction](#install-instruction)
     + [Install conan](#install-conan-------warning--------pip3-required-)
     + [Add conan repositories for libraries.](#add-conan-repositories-for-libraries)
@@ -27,10 +29,14 @@
 
 * ### Server
 
+* ### [Protocol](./doc/Protocol.md "Full protocol documentation")
+
+* ### UML
+
 
 ---
 ## Install instruction
-* ### Install conan ( **[ Warning !! ]** pip3 required)
+* ### Install [conan](https://conan.io/ "Conan's Homepage") ( **[ Warning !! ]** pip3 required)
         
         pip install conan
 
