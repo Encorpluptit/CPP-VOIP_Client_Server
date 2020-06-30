@@ -22,8 +22,8 @@ jobs:
           conan remote add public-repo https://api.bintray.com/conan/bincrafters/public-conan
           conan remote list
 
-      - name: Makefile -> gh-install
-        run: make gh-install
+      - name: Makefile -> mouli
+        run: make mouli-install
 
       - name: Makefile -> Make
         run: make
