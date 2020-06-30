@@ -67,10 +67,10 @@ endforeach (src)
 
 
 # Sources for Tests
-set(G_CLIENT_SOURCE ${CLIENT_SOURCE} PARENT_SCOPE)
+# set(G_CLIENT_SOURCE ${CLIENT_SOURCE} PARENT_SCOPE)
 
 # Includes for Tests
-set(G_SERVER_INCLUDES ${SERVER_INCLUDES} PARENT_SCOPE)
+# set(G_SERVER_INCLUDES ${SERVER_INCLUDES} PARENT_SCOPE)
 
 
 
@@ -85,7 +85,7 @@ set(G_SERVER_INCLUDES ${SERVER_INCLUDES} PARENT_SCOPE)
 
 add_executable(
         babel_client
-        main.cpp
+        test.cpp
         ${CLIENT_SOURCES}
 )
 
