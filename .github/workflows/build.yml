@@ -7,32 +7,23 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-#    container: docker://epitechcontent/epitest-docker
-    container: docker://damienbernard42/epitech-babel
+    container: docker://epitechcontent/epitest-docker
+#    container: docker://damienbernard42/epitech-babel
 
     steps:
       - uses: actions/checkout@v2
-#        with:
-#          path: '/root'
-#          path: '/github/home'
 
-#      - name: Upgrade conan
-#        run: pip install conan --upgrade
-#
-#      - name: Add conan repositories.
-#        run: |
-#          conan remote add tech-repo https://api.bintray.com/conan/epitech/public-conan
-#          conan remote add public-repo https://api.bintray.com/conan/bincrafters/public-conan
-#          conan remote list
+      - name: Upgrade conan
+        run: pip install conan --upgrade
 
-#      - name: Install
-#        run: mkdir -p build && cd build && conan install .. --build=missing
-#
-#      - name: Makefile -> gh-install
-#        run: make gh-install
+      - name: Add conan repositories.
+        run: |
+          conan remote add tech-repo https://api.bintray.com/conan/epitech/public-conan
+          conan remote add public-repo https://api.bintray.com/conan/bincrafters/public-conan
+          conan remote list
 
-#      - name: Makefile -> mouli-install
-#        run: make mouli-install
+      - name: Makefile -> gh-install
+        run: make gh-install
 
       - name: Makefile -> Make
         run: make
