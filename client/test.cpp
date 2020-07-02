@@ -69,39 +69,48 @@ int main(void)
 
     if (Pa_Initialize() != paNoError)
         return (error());
-    std::cout << "LOLOL\n\n\n";
+    std::cout << "Input device Start" << std::endl;
     inputParameters.device = Pa_GetDefaultInputDevice();
     if (inputParameters.device == paNoDevice) {
         Pa_Terminate();
         fprintf(stderr,"Error: No default input device.\n");
         return (84);
     }
-//    inputParameters.channelCount = 2;
-//    inputParameters.sampleFormat = PA_SAMPLE_TYPE;
-//    inputParameters.suggestedLatency = Pa_GetDeviceInfo( inputParameters.device )->defaultLowInputLatency;
-//    inputParameters.hostApiSpecificStreamInfo = NULL;
-//
-//    outputParameters.device = Pa_GetDefaultOutputDevice();
-//    if (outputParameters.device == paNoDevice) {
-//        Pa_Terminate();
-//        fprintf(stderr,"Error: No default output device.\n");
-//    }
-//    outputParameters.channelCount = 2;
-//    outputParameters.sampleFormat = PA_SAMPLE_TYPE;
-//    outputParameters.suggestedLatency = Pa_GetDeviceInfo(outputParameters.device)->defaultLowOutputLatency;
-//    outputParameters.hostApiSpecificStreamInfo = NULL;
-//    err = Pa_OpenStream(&stream, &inputParameters, &outputParameters, SAMPLE_RATE, FRAMES_PER_BUFFER, 0, fuzzCallback, NULL);
-//    if (err != paNoError)
-//        return (error());
-//    err = Pa_StartStream(stream);
-//    if (err != paNoError)
-//        return (error());
-//    printf("Hit ENTER to stop program.\n");
-//    getchar();
-//    err = Pa_CloseStream(stream);
-//    if (err != paNoError)
-//        return (error());
-//    printf("Finished. gNumNoInputs = %d\n", gNumNoInputs);
-//    Pa_Terminate();
-//    return 0;
+    inputParameters.channelCount = 3;
+    inputParameters.sampleFormat = PA_SAMPLE_TYPE;
+    inputParameters.suggestedLatency = Pa_GetDeviceInfo( inputParameters.device )->defaultLowInputLatency;
+    inputParameters.hostApiSpecificStreamInfo = NULL;
+    std::cout << "Input device End" << std::endl;
+
+    std::cout << "Output device Start" << std::endl;
+    outputParameters.device = Pa_GetDefaultOutputDevice();
+    if (outputParameters.device == paNoDevice) {
+        Pa_Terminate();
+        fprintf(stderr,"Error: No default output device.\n");
+    }
+    outputParameters.channelCount = 2;
+    outputParameters.sampleFormat = PA_SAMPLE_TYPE;
+    outputParameters.suggestedLatency = Pa_GetDeviceInfo(outputParameters.device)->defaultLowOutputLatency;
+    outputParameters.hostApiSpecificStreamInfo = NULL;
+    std::cout << "Output device End" << std::endl;
+
+
+    std::cout << "Before open stream" << std::endl;
+    err = Pa_OpenStream(&stream, &inputParameters, &outputParameters, SAMPLE_RATE, FRAMES_PER_BUFFER, 0, fuzzCallback, NULL);
+    if (err != paNoError)
+        return (error());
+    std::cout << "Before start stream" << std::endl;
+    err = Pa_StartStream(stream);
+    std::cout << "LOLOL3\n" << std::endl;
+    if (err != paNoError)
+        return (error());
+    std::cout << "LOLOL5\n" << std::endl;
+    printf("Hit ENTER to stop program.\n");
+    getchar();
+    err = Pa_CloseStream(stream);
+    if (err != paNoError)
+        return (error());
+    printf("Finished. gNumNoInputs = %d\n", gNumNoInputs);
+    Pa_Terminate();
+    return 0;
 }

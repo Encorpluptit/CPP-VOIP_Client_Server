@@ -15,7 +15,7 @@
 #define dbg_local()                                                         \
     dprintf(STDERR_FILENO, "[ %s ] - [ %s():%d ]", __F__, __func__, __LINE__)
 
-#define dbg(x, ...) dbg_local(); dprintf(STDERR_FILENO, "\t"x"\n", __VA_ARGS__)
+#define dbg(x, ...) dbg_local(); dprintf(STDERR_FILENO, x"\n", __VA_ARGS__)
 
 #else
 
