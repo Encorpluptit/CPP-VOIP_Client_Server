@@ -12,7 +12,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 ###############################################################################
 # Compilation Options
-option(USE_DEBUG "Enter debug mode" OFF)
+option(USE_DEBUG "Enter debug mode" ON)
 option(USE_LOG "Log Execution in a file" OFF)
 
 
