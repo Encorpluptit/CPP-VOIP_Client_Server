@@ -22,7 +22,7 @@ include_directories(${CLIENT_INCLUDES} ${BABEL_COMMON_INCLUDE})
 
 ###############################################################################
 # Set Compile Options
-add_compile_options(-Wall -Wextra -Werror)
+add_compile_options(-Wall -Wextra)
 add_definitions("-fPIC")
 
 if (USE_LOG)
@@ -33,6 +33,8 @@ endif (USE_LOG)
 if (USE_DEBUG)
     add_compile_options(-g3)
     add_compile_definitions(_DEBUG_)
+else(USE_DEBUG)
+    add_compile_options(-Werror)
 endif (USE_DEBUG)
 
 

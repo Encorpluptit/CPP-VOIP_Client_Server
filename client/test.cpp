@@ -76,32 +76,32 @@ int main(void)
         fprintf(stderr,"Error: No default input device.\n");
         return (84);
     }
-    inputParameters.channelCount = 2;
-    inputParameters.sampleFormat = PA_SAMPLE_TYPE;
-    inputParameters.suggestedLatency = Pa_GetDeviceInfo( inputParameters.device )->defaultLowInputLatency;
-    inputParameters.hostApiSpecificStreamInfo = NULL;
-
-    outputParameters.device = Pa_GetDefaultOutputDevice();
-    if (outputParameters.device == paNoDevice) {
-        Pa_Terminate();
-        fprintf(stderr,"Error: No default output device.\n");
-    }
-    outputParameters.channelCount = 2;
-    outputParameters.sampleFormat = PA_SAMPLE_TYPE;
-    outputParameters.suggestedLatency = Pa_GetDeviceInfo(outputParameters.device)->defaultLowOutputLatency;
-    outputParameters.hostApiSpecificStreamInfo = NULL;
-    err = Pa_OpenStream(&stream, &inputParameters, &outputParameters, SAMPLE_RATE, FRAMES_PER_BUFFER, 0, fuzzCallback, NULL);
-    if (err != paNoError)
-        return (error());
-    err = Pa_StartStream(stream);
-    if (err != paNoError)
-        return (error());
-    printf("Hit ENTER to stop program.\n");
-    getchar();
-    err = Pa_CloseStream(stream);
-    if (err != paNoError)
-        return (error());
-    printf("Finished. gNumNoInputs = %d\n", gNumNoInputs);
-    Pa_Terminate();
-    return 0;
+//    inputParameters.channelCount = 2;
+//    inputParameters.sampleFormat = PA_SAMPLE_TYPE;
+//    inputParameters.suggestedLatency = Pa_GetDeviceInfo( inputParameters.device )->defaultLowInputLatency;
+//    inputParameters.hostApiSpecificStreamInfo = NULL;
+//
+//    outputParameters.device = Pa_GetDefaultOutputDevice();
+//    if (outputParameters.device == paNoDevice) {
+//        Pa_Terminate();
+//        fprintf(stderr,"Error: No default output device.\n");
+//    }
+//    outputParameters.channelCount = 2;
+//    outputParameters.sampleFormat = PA_SAMPLE_TYPE;
+//    outputParameters.suggestedLatency = Pa_GetDeviceInfo(outputParameters.device)->defaultLowOutputLatency;
+//    outputParameters.hostApiSpecificStreamInfo = NULL;
+//    err = Pa_OpenStream(&stream, &inputParameters, &outputParameters, SAMPLE_RATE, FRAMES_PER_BUFFER, 0, fuzzCallback, NULL);
+//    if (err != paNoError)
+//        return (error());
+//    err = Pa_StartStream(stream);
+//    if (err != paNoError)
+//        return (error());
+//    printf("Hit ENTER to stop program.\n");
+//    getchar();
+//    err = Pa_CloseStream(stream);
+//    if (err != paNoError)
+//        return (error());
+//    printf("Finished. gNumNoInputs = %d\n", gNumNoInputs);
+//    Pa_Terminate();
+//    return 0;
 }

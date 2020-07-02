@@ -51,6 +51,7 @@ server:
 	@cmake $(OPTIONS) -B $(SERVER_BUILD_DIR) -t $(SERVER_DIR)
 #	@cmake $(OPTIONS) -B $(SERVER_BUILD_DIR)
 	@$(MAKE) -j `nproc` --no-print-directory -C $(SERVER_BUILD_DIR)
+	@cp $(SERVER_BUILD_DIR)/bin/$(SERVER_BIN) .
 #@$(MAKE) -j `nproc` --no-print-directory -C $(BUILD_SERVER_DIR) $(SERVER_BIN)
 
 server_clean:
@@ -69,6 +70,7 @@ client:
 	@cmake $(OPTIONS) -B $(CLIENT_BUILD_DIR) -t $(CLIENT_DIR)
 #	@cmake $(OPTIONS) -B $(CLIENT_BUILD_DIR)
 	@$(MAKE) -j `nproc` --no-print-directory -C $(CLIENT_BUILD_DIR)
+	@cp $(CLIENT_BUILD_DIR)/bin/$(CLIENT_BIN) .
 #@$(MAKE) -j `nproc` --no-print-directory -C $(CLIENT_BUILD_DIR) $(CLIENT_BIN)
 
 client_clean:
