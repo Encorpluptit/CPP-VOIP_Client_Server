@@ -4,4 +4,9 @@ Full documentation of server/client protocol.
 
    ![alt text][logo]
 
-   [logo]: ../.github/assets/UML.png "UML diagram image in .github/assets"
+   [logo]: ./UML.png "UML diagram image in .github/assets"
+   
+---
+##  How to Use
+
+* 

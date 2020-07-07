@@ -7,27 +7,24 @@
 
 ################################################################################
 # Config Vars
-
 NAME					=	babel
 
+BUILD_DIR				=	.build
 
+
+#################################################
 # Client
 CLIENT_BIN				=	babel_client
 
 CLIENT_DIR				=	client
 
-CLIENT_BUILD_DIR		=	.babel_client_build
 
-
+#################################################
 # Server
 SERVER_BIN				=	babel_server
 
 SERVER_DIR				=	server
 
-SERVER_BUILD_DIR		=	.babel_server_build
-
-
-MOULI_BUILD_DIR			=	build
 
 ################################################################################
 .DEFAULT: all
@@ -45,17 +42,9 @@ debug: $(NAME)
 
 ################################################################################
 # SERVER RULES
-server:
-	@mkdir -p $(SERVER_BUILD_DIR)
-	@cd $(SERVER_BUILD_DIR) && conan install ..
-	@cmake $(OPTIONS) -B $(SERVER_BUILD_DIR) -t $(SERVER_DIR)
-#	@cmake $(OPTIONS) -B $(SERVER_BUILD_DIR)
-	@$(MAKE) -j `nproc` --no-print-directory -C $(SERVER_BUILD_DIR)
-	@cp $(SERVER_BUILD_DIR)/bin/$(SERVER_BIN) .
-#@$(MAKE) -j `nproc` --no-print-directory -C $(BUILD_SERVER_DIR) $(SERVER_BIN)
-
-server_clean:
-	@$(RM) -r $(SERVER_BUILD_DIR)
+server: setup-build-tree
+	@$(MAKE) -j `nproc` --no-print-directory -C $(BUILD_DIR) $(SERVER_BIN)
+	@cp $(BUILD_DIR)/bin/$(SERVER_BIN) .
 
 server_fclean:
 	@$(RM) -r $(SERVER_BIN)
@@ -64,17 +53,9 @@ server_fclean:
 
 ################################################################################
 # CLIENTS RULES
-client:
-	@mkdir -p $(CLIENT_BUILD_DIR)
-	@cd $(CLIENT_BUILD_DIR) && conan install ..
-	@cmake $(OPTIONS) -B $(CLIENT_BUILD_DIR) -t $(CLIENT_DIR)
-#	@cmake $(OPTIONS) -B $(CLIENT_BUILD_DIR)
-	@$(MAKE) -j `nproc` --no-print-directory -C $(CLIENT_BUILD_DIR)
-	@cp $(CLIENT_BUILD_DIR)/bin/$(CLIENT_BIN) .
-#@$(MAKE) -j `nproc` --no-print-directory -C $(CLIENT_BUILD_DIR) $(CLIENT_BIN)
-
-client_clean:
-	@$(RM) -r $(CLIENT_BUILD_DIR)
+client: setup-build-tree
+	@$(MAKE) -j `nproc` --no-print-directory -C $(BUILD_DIR) $(CLIENT_BIN)
+	@cp $(BUILD_DIR)/bin/$(CLIENT_BIN) .
 
 client_fclean:
 	@$(RM) -r $(CLIENT_BIN)
@@ -84,23 +65,29 @@ client_fclean:
 ################################################################################
 # OTHERS RULES
 
+setup-build-tree:
+	@mkdir -p $(BUILD_DIR) && cd $(BUILD_DIR) && conan install ..
+	@cmake $(OPTIONS) -B $(BUILD_DIR)
+
+
 gh-install:
-	@mkdir -p $(MOULI_BUILD_DIR) && cd $(MOULI_BUILD_DIR) && conan install .. --build=portaudio --build=qt
+	@mkdir -p $(BUILD_DIR) && cd $(BUILD_DIR) && conan install .. --build=portaudio --build=qt
 
 mouli-install:
-	@mkdir -p $(MOULI_BUILD_DIR) && cd $(MOULI_BUILD_DIR) && conan install .. --build=missing
+	@mkdir -p $(BUILD_DIR) && cd $(BUILD_DIR) && conan install .. --build=missing
 
 mouli: fclean
-	@mkdir -p $(MOULI_BUILD_DIR) && cd $(MOULI_BUILD_DIR) && conan install .. && cmake .. && cmake –build . && make --no-print-directory
+	@mkdir -p $(BUILD_DIR) && cd $(BUILD_DIR) && conan install .. && cmake .. && cmake –build . && make --no-print-directory
 
-clean: server_clean client_clean
+clean:
+	@$(RM) -r $(BUILD_DIR)
 
 fclean: clean server_fclean client_fclean
-	@$(RM) -r $(MOULI_BUILD_DIR)
+	@$(RM) -r $(BUILD_DIR)
 
 tests_run:
 
 re: fclean all
 
 .PHONY: all $(NAME) server client tests_run mouli
-.PHONY: server_clean server_fclean client_clean client_fclean clean fclean re
+.PHONY: server_fclean client_fclean clean fclean re

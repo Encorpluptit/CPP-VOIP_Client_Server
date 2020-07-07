@@ -29,7 +29,7 @@
 
 * ### Server
 
-* ### [Protocol](./doc/Protocol.md "Full protocol documentation")
+* ### [Protocol](Doc/Protocol.md "Full protocol documentation")
 
 * ### UML
 

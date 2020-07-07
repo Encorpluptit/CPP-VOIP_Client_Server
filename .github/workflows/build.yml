@@ -38,9 +38,6 @@ jobs:
       - name: Makefile -> moul
         run: make mouli
 
-#      - name: Makefile -> Tests_run
-#        run: make tests_run
-
       - name: Upload Coverage
         env:
           CODECOV_TOKEN: "3a429422-1e0a-4743-9294-3888cd37f9b4"

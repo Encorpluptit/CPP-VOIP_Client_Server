@@ -14,6 +14,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(
         SERVER_INCLUDES
         include
+        Server
 )
 
 include_directories(${SERVER_INCLUDES} ${BABEL_COMMON_INCLUDE})
@@ -56,10 +57,7 @@ set(SERVER_SRC_DIR src)
 
 set(
         SERVER_SOURCE_FILES
-
-        test.cpp
-        feature1/feature1.cpp
-        feature2/feature2.cpp
+        Server/Server.cpp
 )
 
 
@@ -87,8 +85,9 @@ set(G_SERVER_INCLUDES ${SERVER_INCLUDES} PARENT_SCOPE)
 
 add_executable(
         babel_server
-        main.cpp
-        ${SERVER_SOURCES}
+        test.cpp
+#        main.cpp
+#        ${SERVER_SOURCES}
 )
 
 target_link_libraries(babel_server ${CONAN_LIBS} Qt5::Widgets)

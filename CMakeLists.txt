@@ -4,25 +4,135 @@ cmake_minimum_required(VERSION 3.14)
 project(CPP_babel_2020)
 
 
-
 ###############################################################################
 # Language Configuration
 set(CMAKE_CXX_STANDARD 17)
 
 
 ###############################################################################
-# Compilation Options
+# Compilation modes
 option(USE_DEBUG "Enter debug mode" ON)
 option(USE_LOG "Log Execution in a file" OFF)
 
 
 ###############################################################################
-# Subdirectories Configuration
-add_subdirectory(client)
-add_subdirectory(server)
+# Set Compile Options
+add_compile_options(-Wall -Wextra)
+add_definitions("-fPIC")
 
+if (USE_LOG)
+    set(USE_DEBUG ON)
+    add_compile_definitions(_BABEL_LOG_)
+endif (USE_LOG)
+
+if (USE_DEBUG)
+    add_compile_options(-g3)
+    add_compile_definitions(_DEBUG_)
+else (USE_DEBUG)
+    add_compile_options(-Werror)
+endif (USE_DEBUG)
+
+
+###############################################################################
+# Conan Build Management
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup()
+
+find_package(Qt5Widgets CONFIG REQUIRED)
+
+include_directories(${CMAKE_INCLUDE_PATH})
+
+
+###############################################################################
+# Babel Common Management
+set(COMMON_DIR BabelCommon)
+
+set(
+        COMMON_INCLUDES
+        ${COMMON_DIR}
+)
+
+include_directories(${COMMON_INCLUDES})
+
+###############################################################################
+# Server Management
+set(SERVER_DIR BabelServer)
+
+##########################
+# Server Includes
+set(
+        SERVER_INCLUDES
+        ${SERVER_DIR}/Server
+)
+
+
+##########################
+# Server Sources
+set(
+        SERVER_SOURCES
+        ${SERVER_DIR}/test.cpp
+        ${SERVER_DIR}/Server/Server.cpp
+)
+
+
+##########################
+# Server Executable
+add_executable(
+        babel_server
+        ${SERVER_DIR}/main.cpp
+        ${SERVER_SOURCES}
+)
+
+target_include_directories(
+        babel_server PUBLIC
+        ${SERVER_INCLUDES}
+)
+
+target_link_libraries(babel_server ${CONAN_LIBS})
+
+
+###############################################################################
+# Client Management
+set(CLIENT_DIR BabelClient)
+
+##########################
+# Server Includes
+set(
+        CLIENT_INCLUDES
+        ${CLIENT_DIR}/include
+)
+
+
+##########################
+# Client Sources
+set(
+        CLIENT_SOURCES
+        ${CLIENT_DIR}/src/feature1/feature1.cpp
+        ${CLIENT_DIR}/src/feature2/feature2.cpp
+)
+
+
+##########################
+# Client Executable
+add_executable(
+        babel_client
+        ${CLIENT_DIR}/main.cpp
+        ${CLIENT_SOURCES}
+)
+
+target_include_directories(
+        babel_client PUBLIC
+        ${CLIENT_INCLUDES}
+)
+
+target_link_libraries(babel_client ${CONAN_LIBS} Qt5::Widgets)
 
 
 ###############################################################################
 # Tests Configuration
-
+set(
+        TESTS_INCLUDES
+        ${COMMON_INCLUDES}
+        ${SERVER_INCLUDES}
+        ${CMAKE_INCLUDE_PATH}
+)
