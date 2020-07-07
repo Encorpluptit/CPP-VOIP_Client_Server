@@ -21,12 +21,14 @@
 
 #include <iostream>
 #include "Debug.hpp"
+#include "ConnectionResponse.hpp"
 
 void launch();
 
 int main()
 {
     dbg("%s", "DEBUG MODE");
+    BabelNetwork::ConnectionResponse lol;
     try {
         launch();
     }

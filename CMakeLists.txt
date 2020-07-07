@@ -50,6 +50,36 @@ set(COMMON_DIR BabelCommon)
 set(
         COMMON_INCLUDES
         ${COMMON_DIR}
+        ${COMMON_DIR}/Protocol/IResponse
+        ${COMMON_DIR}/Protocol/AResponse
+        ${COMMON_DIR}/Protocol/Connection
+)
+
+set(
+        COMMON_SOURCES
+        ${COMMON_DIR}/Protocol/AResponse/AResponse.cpp
+        ${COMMON_DIR}/Protocol/Connection/ConnectionResponse.cpp
+#        ${COMMON_DIR}/
+#        ${COMMON_DIR}/
+#        ${COMMON_DIR}/
+#        ${COMMON_DIR}/
+#        ${COMMON_DIR}/
+#        ${COMMON_DIR}/
+#        ${COMMON_DIR}/
+#        ${COMMON_DIR}/
+#        ${COMMON_DIR}/
+#        ${COMMON_DIR}/
+#        ${COMMON_DIR}/
+#        ${COMMON_DIR}/
+#        ${COMMON_DIR}/
+#        ${COMMON_DIR}/
+#        ${COMMON_DIR}/
+#        ${COMMON_DIR}/
+#        ${COMMON_DIR}/
+#        ${COMMON_DIR}/
+#        ${COMMON_DIR}/
+#        ${COMMON_DIR}/
+#        ${COMMON_DIR}/
 )
 
 include_directories(${COMMON_INCLUDES})
@@ -81,6 +111,7 @@ add_executable(
         babel_server
         ${SERVER_DIR}/main.cpp
         ${SERVER_SOURCES}
+        ${COMMON_SOURCES}
 )
 
 target_include_directories(
@@ -118,6 +149,7 @@ add_executable(
         babel_client
         ${CLIENT_DIR}/main.cpp
         ${CLIENT_SOURCES}
+        ${COMMON_SOURCES}
 )
 
 target_include_directories(
