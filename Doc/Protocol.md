@@ -13,8 +13,8 @@ Full documentation of server/client protocol.
     * `Description`
     * `[ CODE SUCESS | CODE ERROR | DATA ]`
 
----
-## Events on Success
+## Events
+
 
 ### Connexion (1** Codes )
 
@@ -23,10 +23,9 @@ Full documentation of server/client protocol.
     * Success code: 100
     * Data: (None)
     * Errors:
-        * 1100: Connexion Not ok
+        * 1100: Connexion Not ok.
 
 
----
 ### User (2** Codes )
 
 * Login
@@ -57,8 +56,16 @@ Full documentation of server/client protocol.
         * 1230: Unknown Account deletion error.
         * 1231: Account logged somewhere else.
 
+```
+* Add a friend.
+    * Delete an account.
+    * Success code: 230
+    * Data: (None)
+    * Errors:
+        * 1230: Unknown Account deletion error.
+        * 1231: Account logged somewhere else.
+```
 
----
 ### Call (3** Code)
 
 * Start a call (31* Code).
@@ -67,13 +74,15 @@ Full documentation of server/client protocol.
     * Data: (None)
     * Errors:
         * 1310: Unknown Call starting error.
-        * 1311: Call timeout.
+        * 1311: Call Refused.
+        * 1312: Call timeout.
+        * 1313: User not logged in.
 
 
 * Incoming Call (32* Code).
     * Someone is calling you.
     * Success code: 320
-    * Data: [ USERNAME | TIMESTAMP ]
+    * Data: [ USERNAME | TIMESTAMP | CONFERENCE_ID ]
     * Errors:
         * 1320: Unknown incoming error.
         * 1321: Call timeout.
@@ -88,7 +97,24 @@ Full documentation of server/client protocol.
         * 1331: Unknown accept call error.
 
 
----
+* Add user to conference (34* Code).
+    * Add someone to ongoing conference.
+    * Success code: 340.
+    * Data: (None).
+    * Errors:
+        * 1340: Unknown add to conference error.
+        * 1341: Unknown add to conference error.
+
+
+* Remove user from conference (35* Code).
+    * Remove someone to ongoing conference.
+    * Success code: 350.
+    * Data: [ USERNAME | TIMESTAMP | CONFERENCE_ID ]
+    * Errors:
+        * 1350: Unknown remove from conference error.
+        * 1351: Unknown remove from conference error.
+
+
 ### Messages (5** Codes )
 
 * Connection OK
