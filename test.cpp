@@ -7,9 +7,8 @@
 
 #include <stdio.h>
 #include <math.h>
-#include <iostream>
 #include "portaudio.h"
-#include "Exception.hpp"
+#include <iostream>
 
 #define SAMPLE_RATE         (44100)
 #define PA_SAMPLE_TYPE      paFloat32
@@ -62,56 +61,46 @@ int error()
     return (84);
 }
 
-int portaudio(void)
+int main(void)
 {
-    PaStreamParameters inputParameters;
-    PaStreamParameters outputParameters;
+    PaStreamParameters inputParameters, outputParameters;
     PaStream *stream;
     PaError err;
 
     if (Pa_Initialize() != paNoError)
         return (error());
-
+    std::cout << "^^^PA INITIALIZE^^^" << std::endl;
     inputParameters.device = Pa_GetDefaultInputDevice();
-    if (inputParameters.device == paNoDevice)
-        return (error());
-
+    if (inputParameters.device == paNoDevice) {
+        Pa_Terminate();
+        fprintf(stderr,"Error: No default input device.\n");
+        return (84);
+    }
     inputParameters.channelCount = 4;
     inputParameters.sampleFormat = PA_SAMPLE_TYPE;
     inputParameters.suggestedLatency = Pa_GetDeviceInfo( inputParameters.device )->defaultLowInputLatency;
     inputParameters.hostApiSpecificStreamInfo = NULL;
-
-    if ((outputParameters.device = Pa_GetDefaultOutputDevice()) == paNoDevice)
-        return (error());
-
+    outputParameters.device = Pa_GetDefaultOutputDevice();
+    if (outputParameters.device == paNoDevice) {
+        Pa_Terminate();
+        fprintf(stderr,"Error: No default output device.\n");
+    }
     outputParameters.channelCount = 2;
     outputParameters.sampleFormat = PA_SAMPLE_TYPE;
     outputParameters.suggestedLatency = Pa_GetDeviceInfo(outputParameters.device)->defaultLowOutputLatency;
     outputParameters.hostApiSpecificStreamInfo = NULL;
-
-    if ((err = Pa_OpenStream(&stream, &inputParameters, &outputParameters, SAMPLE_RATE, FRAMES_PER_BUFFER, 0, fuzzCallback, NULL)) != paNoError)
+    err = Pa_OpenStream(&stream, &inputParameters, &outputParameters, SAMPLE_RATE, FRAMES_PER_BUFFER, 0, fuzzCallback, NULL);
+    if (err != paNoError)
         return (error());
-
-    if ((err = Pa_StartStream(stream)) != paNoError)
+    err = Pa_StartStream(stream);
+    if (err != paNoError)
         return (error());
-
     printf("Hit ENTER to stop program.\n");
     getchar();
-
-    if ((err = Pa_CloseStream(stream)) != paNoError)
+    err = Pa_CloseStream(stream);
+    if (err != paNoError)
         return (error());
-
     printf("Finished. gNumNoInputs = %d\n", gNumNoInputs);
     Pa_Terminate();
     return 0;
-}
-
-int main(int ac, char **av)
-{
-    try {
-        if (ac != 3)
-            throw(Exception ("Program takes 2 argument ./babel_client IP PORT"));
-        portaudio();
-    }
-    return (0);
 }
