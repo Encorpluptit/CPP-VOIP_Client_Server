@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2020
-** CPP_babel_2020 (Copyright (c) ENCORPLUPTIT on 7/7/20.
+** CPP_babel_2020 (Copyright (c) ENCORPLUPTIT on 7/7/20).
 ** File description:
 ** [IResponse.hpp]: Header file for IResponse feature.
 */
@@ -8,17 +8,32 @@
 #ifndef CPP_BABEL_2020_IRESPONSE_HPP
 #define CPP_BABEL_2020_IRESPONSE_HPP
 
+#include <memory>
+
 namespace BabelNetwork {
     class IResponse {
+        /* <- Class Enum -> */
+    public:
+        enum ResponseCode {
+            ConnectionOk = 100,
+            UnknownError = 1000
+        };
 
         /* <- Constructor - Destructor -> */
     public:
         IResponse() = default;
 
-        virtual ~IResponse() = default;
+        virtual ~IResponse() = 0;
+        /* <- Operators -> */
+    public:
+//        virtual std::ostream &operator<<(std::ostream &os, const IResponse &response) = 0;
 
+//        friend istream &operator>>( istream  &input, Distance &D );
         /* <- Methods -> */
     public:
+        [[nodiscard]] virtual std::unique_ptr<IResponse> getResponse(const std::string &input) = 0;
+
+        [[nodiscard]] virtual bool isOk() = 0;
 
     };
 

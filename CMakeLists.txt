@@ -57,6 +57,7 @@ set(
 
 set(
         COMMON_SOURCES
+        ${COMMON_DIR}/Protocol/IResponse/IResponse.cpp
         ${COMMON_DIR}/Protocol/AResponse/AResponse.cpp
         ${COMMON_DIR}/Protocol/Connection/ConnectionResponse.cpp
 #        ${COMMON_DIR}/

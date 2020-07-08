@@ -29,11 +29,18 @@ int main()
 {
     dbg("%s", "DEBUG MODE");
     BabelNetwork::ConnectionResponse lol;
-    try {
-        launch();
-    }
-    catch (std::exception &e) {
-        std::cerr << e.what() << std::endl;
-    }
+
+    std::cout << std::boolalpha << lol.isOk() << std::endl;
+    std::cout << lol.getCode() << std::endl;
+    std::cout << lol << std::endl;
+    lol.setData("MDR DATA");
+    std::cout << lol << std::endl;
+
+//    try {
+//        launch();
+//    }
+//    catch (std::exception &e) {
+//        std::cerr << e.what() << std::endl;
+//    }
     return 0;
 }

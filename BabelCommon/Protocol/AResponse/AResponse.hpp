@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2020
-** CPP_babel_2020 (Copyright (c) ENCORPLUPTIT on 7/7/20.
+** CPP_babel_2020 (Copyright (c) ENCORPLUPTIT on 7/7/20).
 ** File description:
 ** [AResponse.hpp]: Header file for AResponse feature.
 */
@@ -19,23 +19,26 @@ namespace BabelNetwork {
         /* <- Class Enum -> */
     public:
         enum ResponseCode {
-            UnknownError = 1000
+//            UnknownError = 1000
         };
 
         /* <- Constructor - Destructor -> */
     public:
         AResponse() = default;
 
-        ~AResponse() override = 0;
+        ~AResponse() override = default;
 
 
         /* <- Operators -> */
     public:
         friend std::ostream &operator<<(std::ostream &os, const AResponse &response);
 
-
-        /* <- Methods -> */
+//        friend istream &operator>>( istream  &input, Distance &D );
+            /* <- Methods -> */
     public:
+        [[nodiscard]] std::unique_ptr<IResponse> getResponse(const std::string &input) override;
+
+        [[nodiscard]] bool isOk() override = 0;
 
         /* <- Getters / Setters -> */
     public:
@@ -43,11 +46,15 @@ namespace BabelNetwork {
 
         [[nodiscard]] const std::string &getDescription() const;
 
+        [[nodiscard]] const std::string &getData() const;
+
+        void setData(const std::string &data);
 
         /* <- Attributes -> */
     protected:
-        int _code = ResponseCode::UnknownError;
-        std::string _description;
+        IResponse::ResponseCode _code = IResponse::ResponseCode::UnknownError;
+        std::string _description = "Connection between server and client";
+        std::string _data;
     };
 
 }
