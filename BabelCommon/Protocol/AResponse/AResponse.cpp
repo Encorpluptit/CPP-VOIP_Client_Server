@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2020
 ** CPP_babel_2020 (Copyright (c) ENCORPLUPTIT on 7/7/20).
 ** File description:
-** [AResponse.cpp]: Header file for AResponse feature.
+** [AResponse.cpp]: Source file for AResponse feature.
 */
 
 #include "AResponse.hpp"

@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2020
 ** CPP_babel_2020 (Copyright (c) ENCORPLUPTIT on 7/8/20).
 ** File description:
-** [IResponse.cpp]: Header file for IResponse feature.
+** [IResponse.cpp]: Source file for IResponse feature.
 */
 
 #include "IResponse.hpp"

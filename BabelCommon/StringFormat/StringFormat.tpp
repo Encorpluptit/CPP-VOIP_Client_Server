@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2020
 ** CPP_babel_2020 (Copyright (c) ENCORPLUPTIT on 7/8/20).
 ** File description:
-** [StringFormat.hpp]: Header file for StringFormatpp feature.
+** [StringFormat.hpp]: Template file for StringFormat feature.
 */
 
 #ifndef CPP_BABEL_2020_STRINGFORMAT_TPP
