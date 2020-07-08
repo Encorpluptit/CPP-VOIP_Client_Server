@@ -6,7 +6,7 @@ project(CPP_babel_2020)
 
 ###############################################################################
 # Language Configuration
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 
 
 ###############################################################################
@@ -50,6 +50,8 @@ set(COMMON_DIR BabelCommon)
 set(
         COMMON_INCLUDES
         ${COMMON_DIR}
+        ${COMMON_DIR}/Debug
+        ${COMMON_DIR}/StringFormat
         ${COMMON_DIR}/Protocol/IResponse
         ${COMMON_DIR}/Protocol/AResponse
         ${COMMON_DIR}/Protocol/Connection

@@ -20,14 +20,13 @@
 //}
 
 #include <iostream>
-#include "Debug.hpp"
+#include "Debug/Debug.hpp"
 #include "ConnectionResponse.hpp"
 
 void launch();
 
 int main()
 {
-    dbg("%s", "DEBUG MODE");
     BabelNetwork::ConnectionResponse lol;
 
     std::cout << std::boolalpha << lol.isOk() << std::endl;
@@ -35,12 +34,14 @@ int main()
     std::cout << lol << std::endl;
     lol.setData("MDR DATA");
     std::cout << lol << std::endl;
+    std::cout << std::format("Hello %s!\n", "world");
+    dbg("%s", "lol");
 
-//    try {
-//        launch();
-//    }
-//    catch (std::exception &e) {
-//        std::cerr << e.what() << std::endl;
-//    }
+    try {
+        launch();
+    }
+    catch (std::exception &e) {
+        std::cerr << e.what() << std::endl;
+    }
     return 0;
 }
