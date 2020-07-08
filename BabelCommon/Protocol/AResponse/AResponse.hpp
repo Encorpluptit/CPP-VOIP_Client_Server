@@ -57,6 +57,8 @@ namespace BabelNetwork {
         std::string _data;
     };
 
+    std::ostream &operator<<(std::ostream &os, const AResponse &response);
+
 }
 
 #endif /* CPP_BABEL_2020_ARESPONSE_HPP */

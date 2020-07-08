@@ -11,11 +11,11 @@ using namespace BabelNetwork;
 
 std::ostream &BabelNetwork::operator<<(std::ostream &os, const BabelNetwork::AResponse &response)
 {
-    os << "{Code:" << response.getCode() << ", Desc:" << response.getDescription();
+    os << "{Code: " << response.getCode() << ",Desc: \"" << response.getDescription() << "\"";
     if (response.getData().empty())
-        os << ", Data:" << "(No Data)" << "}";
+        os << ",Data: \"" << "" << "\"}";
     else
-        os << ", Data:" << response.getData() << "}";
+        os << ",Data: \"" << response.getData() << "\"}";
     return os;
 }
 

@@ -24,11 +24,10 @@ namespace BabelNetwork {
         IResponse() = default;
 
         virtual ~IResponse() = 0;
+
         /* <- Operators -> */
     public:
-//        virtual std::ostream &operator<<(std::ostream &os, const IResponse &response) = 0;
 
-//        friend istream &operator>>( istream  &input, Distance &D );
         /* <- Methods -> */
     public:
         [[nodiscard]] virtual std::unique_ptr<IResponse> getResponse(const std::string &input) = 0;
