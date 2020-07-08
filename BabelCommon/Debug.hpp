@@ -6,8 +6,8 @@
 #define CPP_BABEL_2020_DEBUG_HPP
 
 #ifdef _DEBUG_
-#include <stdio.h>
-#include <string.h>
+#include <cstdio>
+#include <cstring>
 #include <unistd.h>
 
 #define __F__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
