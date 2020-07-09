@@ -31,7 +31,8 @@ namespace BabelUtils {
 
         /* <- Methods -> */
     public:
-        void logThis(const std::string &data);
+        template<typename ... Args>
+        void logThis(const std::string &format, Args ... args);
 
     private:
         void initLogType(Logger::LogType type);

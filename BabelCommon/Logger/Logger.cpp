@@ -9,6 +9,7 @@
 #include <time.h>
 #include "Logger.hpp"
 #include "LoggerError.hpp"
+#include "StringFormat.tpp"
 
 using namespace BabelUtils;
 
@@ -19,10 +20,8 @@ Logger::Logger(Logger::LogType type)
         std::filesystem::path tmpPath = createLogDirectories();
         createLogFile(tmpPath);
         _ok = true;
-    } catch (const std::filesystem::filesystem_error &e) {
+    } catch (const std::exception &e) {
         std::cerr << e.what() << std::endl;
-    } catch (const LoggerError &e) {
-        e.what();
     }
 }
 
@@ -32,13 +31,13 @@ Logger::~Logger()
     _logFile.close();
 }
 
-void Logger::logThis(const std::string &data)
+template<typename ... Args>
+void Logger::logThis(const std::string &format, Args ... args)
 {
     if (!isOk())
         return;
-    _logFile << data + "\n";
+    _logFile << std::format(format, args...) + "\n";
 }
-
 
 bool Logger::isOk()
 {
