@@ -49,7 +49,7 @@ set(COMMON_DIR BabelCommon)
 
 set(
         COMMON_INCLUDES
-        ${COMMON_DIR}
+        ${COMMON_DIR}/Logger
         ${COMMON_DIR}/Debug
         ${COMMON_DIR}/StringFormat
         ${COMMON_DIR}/Protocol/IResponse
@@ -59,6 +59,7 @@ set(
 
 set(
         COMMON_SOURCES
+        ${COMMON_DIR}/Logger/Logger.cpp
         ${COMMON_DIR}/Protocol/IResponse/IResponse.cpp
         ${COMMON_DIR}/Protocol/AResponse/AResponse.cpp
         ${COMMON_DIR}/Protocol/Connection/ConnectionResponse.cpp

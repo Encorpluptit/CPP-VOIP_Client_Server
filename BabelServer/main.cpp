@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Debug/Debug.hpp"
 #include "ConnectionResponse.hpp"
+#include "Logger.hpp"
 
 void launch();
 
