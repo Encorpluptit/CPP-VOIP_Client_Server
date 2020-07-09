@@ -73,7 +73,7 @@ std::filesystem::path Logger::createLogDirectories()
     std::filesystem::create_directory(tmpPath);
     tmpPath /= TargetLogDir;
     std::filesystem::create_directory(tmpPath);
-    std::cout << tmpPath << std::endl;
+//    std::cout << tmpPath << std::endl;
     return tmpPath;
 }
 
@@ -88,7 +88,7 @@ void Logger::createLogFile(std::filesystem::path filePath)
     timeinfo = localtime(&rawtime);
     strftime(fileName, sz, "%Y-%m-%d_%H-%M-%S.log", timeinfo);
     filePath /= std::string(fileName);
-    std::cout << filePath << std::endl;
+//    std::cout << filePath << std::endl;
     _logFile = std::ofstream(filePath.string());
 }
 
