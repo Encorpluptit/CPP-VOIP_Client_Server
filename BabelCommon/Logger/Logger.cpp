@@ -84,9 +84,13 @@ void Logger::createLogFile(std::filesystem::path filePath)
     size_t sz = FILENAME_MAX - filePath.string().size();
     char fileName[sz]{};
 
-    time(&rawtime);
-    timeinfo = localtime(&rawtime);
-    strftime(fileName, sz, "%Y-%m-%d_%H-%M-%S.log", timeinfo);
+
+    if (time(&rawtime) == ((time_t) -1) || !(timeinfo = localtime(&rawtime))
+        || !strftime(fileName, sz, "%Y-%m-%d_%H-%M-%S.log", timeinfo)) {
+        filePath /= std::string("Log_File.log");
+        _logFile = std::ofstream(filePath.string());
+        return;
+    }
     filePath /= std::string(fileName);
 //    std::cout << filePath << std::endl;
     _logFile = std::ofstream(filePath.string());
