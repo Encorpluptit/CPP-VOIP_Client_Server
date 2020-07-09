@@ -18,6 +18,21 @@ option(USE_LOG "Log Execution in a file" OFF)
 ###############################################################################
 # Set Compile Options
 add_compile_options(-Wall -Wextra)
+#add_compile_options(
+#        -Wshadow
+#        -Wnon-virtual-dtor
+#        -Wcast-align
+#        -Wunused
+#        -Woverloaded-virtual
+#        -Wpedantic
+#        -Wconversion
+#        -Wduplicated-cond
+#        -Wduplicated-branches
+#        -Wlogical-op
+#        -Wnull-dereference
+#        -Wuseless-cast
+#        -Wdouble-promotion
+#)
 add_definitions("-fPIC")
 
 if (USE_LOG)
@@ -60,6 +75,7 @@ set(
 set(
         COMMON_SOURCES
         ${COMMON_DIR}/Logger/Logger.cpp
+        ${COMMON_DIR}/Logger/LoggerError.cpp
         ${COMMON_DIR}/Protocol/IResponse/IResponse.cpp
         ${COMMON_DIR}/Protocol/AResponse/AResponse.cpp
         ${COMMON_DIR}/Protocol/Connection/ConnectionResponse.cpp

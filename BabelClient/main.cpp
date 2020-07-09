@@ -1,5 +1,5 @@
 #include <iostream>
-#include "Debug/Debug.hpp"
+#include "Debug.hpp"
 
 int feature1();
 int feature2();
