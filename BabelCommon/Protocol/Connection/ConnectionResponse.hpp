@@ -19,13 +19,15 @@ namespace BabelNetwork {
 //            UnknownError = 1000
         };
 
-        [[nodiscard]] bool isOk() final ;
-
         /* <- Constructor - Destructor -> */
     public:
         ConnectionResponse() = default;
 
         ~ConnectionResponse() override = default;
+
+        /* <- Methods -> */
+    public:
+        [[nodiscard]] bool isOk() final ;
     };
 }
 

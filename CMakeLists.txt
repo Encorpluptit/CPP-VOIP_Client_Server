@@ -6,7 +6,7 @@ project(CPP_babel_2020)
 
 ###############################################################################
 # Language Configuration
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
 
 
 ###############################################################################
@@ -79,27 +79,27 @@ set(
         ${COMMON_DIR}/Protocol/IResponse/IResponse.cpp
         ${COMMON_DIR}/Protocol/AResponse/AResponse.cpp
         ${COMMON_DIR}/Protocol/Connection/ConnectionResponse.cpp
-#        ${COMMON_DIR}/
-#        ${COMMON_DIR}/
-#        ${COMMON_DIR}/
-#        ${COMMON_DIR}/
-#        ${COMMON_DIR}/
-#        ${COMMON_DIR}/
-#        ${COMMON_DIR}/
-#        ${COMMON_DIR}/
-#        ${COMMON_DIR}/
-#        ${COMMON_DIR}/
-#        ${COMMON_DIR}/
-#        ${COMMON_DIR}/
-#        ${COMMON_DIR}/
-#        ${COMMON_DIR}/
-#        ${COMMON_DIR}/
-#        ${COMMON_DIR}/
-#        ${COMMON_DIR}/
-#        ${COMMON_DIR}/
-#        ${COMMON_DIR}/
-#        ${COMMON_DIR}/
-#        ${COMMON_DIR}/
+        #        ${COMMON_DIR}/
+        #        ${COMMON_DIR}/
+        #        ${COMMON_DIR}/
+        #        ${COMMON_DIR}/
+        #        ${COMMON_DIR}/
+        #        ${COMMON_DIR}/
+        #        ${COMMON_DIR}/
+        #        ${COMMON_DIR}/
+        #        ${COMMON_DIR}/
+        #        ${COMMON_DIR}/
+        #        ${COMMON_DIR}/
+        #        ${COMMON_DIR}/
+        #        ${COMMON_DIR}/
+        #        ${COMMON_DIR}/
+        #        ${COMMON_DIR}/
+        #        ${COMMON_DIR}/
+        #        ${COMMON_DIR}/
+        #        ${COMMON_DIR}/
+        #        ${COMMON_DIR}/
+        #        ${COMMON_DIR}/
+        #        ${COMMON_DIR}/
 )
 
 include_directories(${COMMON_INCLUDES})
@@ -188,3 +188,23 @@ set(
         ${SERVER_INCLUDES}
         ${CMAKE_INCLUDE_PATH}
 )
+
+set(
+        TESTS_SOURCES
+#        tests/criterion_unit_tests/src/Common/
+        tests/criterion_unit_tests/src/Common/StringFormat_Tests.cpp
+        tests/criterion_unit_tests/src/Common/Protocol_Tests.cpp
+)
+
+add_executable(
+        unit_tests
+        ${COMMON_SOURCES}
+        ${TESTS_SOURCES}
+)
+
+target_compile_definitions(unit_tests PRIVATE _UNIT_TESTS_)
+
+
+target_include_directories(unit_tests PRIVATE tests/criterion_unit_tests/include)
+
+target_link_libraries(unit_tests criterion)

@@ -25,6 +25,10 @@ SERVER_BIN				=	babel_server
 
 SERVER_DIR				=	server
 
+#################################################
+# Tests
+CRITERION_BIN			=	unit_tests
+
 
 ################################################################################
 .DEFAULT: all
@@ -60,6 +64,14 @@ client: setup-build-tree
 client_fclean:
 	@$(RM) -r $(CLIENT_BIN)
 
+
+
+################################################################################
+# TESTS RULES
+tests_run: setup-build-tree
+	@$(MAKE) -j `nproc` --no-print-directory -C $(BUILD_DIR) $(CRITERION_BIN)
+	@cp $(BUILD_DIR)/bin/$(CRITERION_BIN) .
+	@./$(CRITERION_BIN)
 
 
 ################################################################################
