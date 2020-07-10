@@ -95,7 +95,7 @@ clean:
 	@$(RM) -r $(BUILD_DIR)
 
 fclean: clean server_fclean client_fclean
-	@$(RM) -r $(BUILD_DIR)
+	@$(RM) -r $(BUILD_DIR) $(CRITERION_BIN)
 
 tests_run:
 

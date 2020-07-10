@@ -46,7 +46,7 @@ namespace BabelUtils {
 
         /* <- Getters / Setters -> */
     public:
-        bool isOk();
+        bool isOk() const;
 
         /* <- Attributes -> */
     private:

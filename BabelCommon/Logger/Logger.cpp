@@ -6,7 +6,7 @@
 */
 
 #include <iostream>
-#include <time.h>
+#include <ctime>
 #include "Logger.hpp"
 #include "LoggerError.hpp"
 
@@ -30,7 +30,7 @@ Logger::~Logger()
     _logFile.close();
 }
 
-bool Logger::isOk()
+bool Logger::isOk() const
 {
     return _ok;
 }
