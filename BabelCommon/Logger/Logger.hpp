@@ -11,6 +11,7 @@
 #include <fstream>
 #include <filesystem>
 #include "LoggerError.hpp"
+#include "StringFormat.tpp"
 
 namespace BabelUtils {
     class Logger {
@@ -32,7 +33,11 @@ namespace BabelUtils {
         /* <- Methods -> */
     public:
         template<typename ... Args>
-        void logThis(const std::string &format, Args ... args);
+        void logThis(const std::string &format, Args ... args) {
+            if (!isOk())
+                return;
+            _logFile << std::format(format, args...) + "\n";
+        }
 
     private:
         void initLogType(Logger::LogType type);

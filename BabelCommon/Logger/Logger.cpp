@@ -9,7 +9,6 @@
 #include <time.h>
 #include "Logger.hpp"
 #include "LoggerError.hpp"
-#include "StringFormat.tpp"
 
 using namespace BabelUtils;
 
@@ -29,14 +28,6 @@ Logger::~Logger()
 {
     std::cerr << "Finished Logging" << std::endl;
     _logFile.close();
-}
-
-template<typename ... Args>
-void Logger::logThis(const std::string &format, Args ... args)
-{
-    if (!isOk())
-        return;
-    _logFile << std::format(format, args...) + "\n";
 }
 
 bool Logger::isOk()
@@ -94,4 +85,3 @@ void Logger::createLogFile(std::filesystem::path filePath)
 //    std::cout << filePath << std::endl;
     _logFile = std::ofstream(filePath.string());
 }
-

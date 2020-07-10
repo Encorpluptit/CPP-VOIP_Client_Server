@@ -9,6 +9,8 @@ int main()
 {
     BabelUtils::Logger log(BabelUtils::Logger::ServerLog);
 
+    int lol = 5;
+    log.logThis("%d", lol);
 //    try {
 //        launch();
 //    }
