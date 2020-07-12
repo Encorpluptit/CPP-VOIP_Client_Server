@@ -17,7 +17,7 @@ namespace BabelNetwork {
     public:
         ConnectionResponse();
 
-        ConnectionResponse(const Response *response, const char *data);
+        ConnectionResponse(const ResponseHeader *response, const char *data);
 
         ~ConnectionResponse() override = default;
 

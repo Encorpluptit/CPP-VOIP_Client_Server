@@ -21,3 +21,26 @@ Test(Common, ConnectionResponse_2)
 
     ASSERT_BOOL(test.isOk(), false);
 }
+
+Test(Common, ConnectionResponse_3)
+{
+    static const BabelNetwork::AResponse::ResponseHeader hdr = {
+        .returnCode = 84, .dataLength = 0
+    };
+    const char *data = "";
+    BabelNetwork::ConnectionResponse test(&hdr, data);
+
+    ASSERT_BOOL(test.isOk(), false);
+}
+
+Test(Common, ConnectionResponse_4)
+{
+    static const BabelNetwork::AResponse::ResponseHeader hdr = {
+        .returnCode = 84, .dataLength = 0
+    };
+    const char *data = nullptr;
+    BabelNetwork::ConnectionResponse test(&hdr, data);
+
+    ASSERT_BOOL(test.isOk(), false);
+}
+

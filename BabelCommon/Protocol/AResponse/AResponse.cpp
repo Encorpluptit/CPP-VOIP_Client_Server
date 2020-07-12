@@ -10,8 +10,9 @@
 
 using namespace BabelNetwork;
 
-AResponse::AResponse(const Response *response, const char *data)
-    : _code(response->returnCode), _data(data)
+AResponse::AResponse(const ResponseHeader *response, const char *data)
+    : _code(response->returnCode),
+    _data(data ? data : std::string().c_str())
 {}
 
 std::ostream &BabelNetwork::operator<<(std::ostream &os, const BabelNetwork::AResponse &response)
@@ -40,7 +41,7 @@ void AResponse::setData(const std::string &data)
     _data = data;
 }
 
-std::unique_ptr<IResponse> AResponse::getResponse(Response *response, const char *data)
+std::unique_ptr<IResponse> AResponse::getResponse(ResponseHeader *response, const char *data)
 {
 
     return std::unique_ptr<IResponse>(new ConnectionResponse(response, data));
