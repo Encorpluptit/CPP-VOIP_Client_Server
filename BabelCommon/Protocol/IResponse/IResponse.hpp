@@ -16,6 +16,9 @@ namespace BabelNetwork {
     public:
         enum ResponseCode {
             ConnectionOk = 100,
+            LoginOk = 210,
+            AccountCreated = 220,
+            AccountDeleted = 230,
             UnknownError = 1000
         };
 

@@ -21,7 +21,7 @@ namespace BabelNetwork {
 
         /* <- Constructor - Destructor -> */
     public:
-        ConnectionResponse() = default;
+        ConnectionResponse();
 
         ~ConnectionResponse() override = default;
 

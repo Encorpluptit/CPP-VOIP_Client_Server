@@ -40,6 +40,8 @@ namespace BabelNetwork {
 
         [[nodiscard]] bool isOk() override = 0;
 
+        [[nodiscard]] std::string serialize() const;
+
         /* <- Getters / Setters -> */
     public:
         [[nodiscard]] int getCode() const;
@@ -53,7 +55,7 @@ namespace BabelNetwork {
         /* <- Attributes -> */
     protected:
         IResponse::ResponseCode _code = IResponse::ResponseCode::UnknownError;
-        std::string _description = "Connection between server and client";
+        std::string _description;
         std::string _data;
     };
 

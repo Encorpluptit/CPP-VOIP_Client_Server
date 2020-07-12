@@ -7,10 +7,9 @@ void launch();
 
 int main()
 {
-    BabelUtils::Logger log(BabelUtils::Logger::ServerLog);
-
-    int lol = 5;
-    log.logThis("%d", lol);
+    BabelNetwork::ConnectionResponse resp;
+    std::cout << resp.serialize() << std::endl;
+    std::cout << resp << std::endl;
 //    try {
 //        launch();
 //    }

@@ -79,27 +79,6 @@ set(
         ${COMMON_DIR}/Protocol/IResponse/IResponse.cpp
         ${COMMON_DIR}/Protocol/AResponse/AResponse.cpp
         ${COMMON_DIR}/Protocol/Connection/ConnectionResponse.cpp
-        #        ${COMMON_DIR}/
-        #        ${COMMON_DIR}/
-        #        ${COMMON_DIR}/
-        #        ${COMMON_DIR}/
-        #        ${COMMON_DIR}/
-        #        ${COMMON_DIR}/
-        #        ${COMMON_DIR}/
-        #        ${COMMON_DIR}/
-        #        ${COMMON_DIR}/
-        #        ${COMMON_DIR}/
-        #        ${COMMON_DIR}/
-        #        ${COMMON_DIR}/
-        #        ${COMMON_DIR}/
-        #        ${COMMON_DIR}/
-        #        ${COMMON_DIR}/
-        #        ${COMMON_DIR}/
-        #        ${COMMON_DIR}/
-        #        ${COMMON_DIR}/
-        #        ${COMMON_DIR}/
-        #        ${COMMON_DIR}/
-        #        ${COMMON_DIR}/
 )
 
 include_directories(${COMMON_INCLUDES})

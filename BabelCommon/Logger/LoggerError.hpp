@@ -14,9 +14,9 @@
 namespace BabelUtils {
     class LoggerError : public std::exception {
     public:
-        explicit LoggerError(std::string const &msg);
+        explicit LoggerError(std::string msg);
 
-        char const *what() const noexcept override;
+        [[nodiscard]] char const *what() const noexcept override;
 
     private:
         std::string _msg;

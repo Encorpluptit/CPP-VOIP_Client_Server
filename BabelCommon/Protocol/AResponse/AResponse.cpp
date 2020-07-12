@@ -6,16 +6,13 @@
 */
 
 #include "AResponse.hpp"
+#include "ConnectionResponse.hpp"
 
 using namespace BabelNetwork;
 
 std::ostream &BabelNetwork::operator<<(std::ostream &os, const BabelNetwork::AResponse &response)
 {
-    os << "{Code: " << response.getCode() << ",Desc: \"" << response.getDescription() << "\"";
-    if (response.getData().empty())
-        os << ",Data: \"" << "" << "\"}";
-    else
-        os << ",Data: \"" << response.getData() << "\"}";
+    os << response.serialize();
     return os;
 }
 
@@ -41,5 +38,16 @@ void AResponse::setData(const std::string &data)
 
 std::unique_ptr<IResponse> AResponse::getResponse(const std::string &input)
 {
-    return std::unique_ptr<IResponse>();
+
+    return std::unique_ptr<IResponse>(new ConnectionResponse());
+}
+
+std::string AResponse::serialize() const
+{
+    std::string response = "{Code: \"" + std::to_string(getCode()) + "\",Desc: \"" + getDescription() + "\"";
+    if (getData().empty())
+        response += ",Data: \"\"}";
+    else
+        response += ",Data: \"" + getData() + "\"}";
+    return response;
 }

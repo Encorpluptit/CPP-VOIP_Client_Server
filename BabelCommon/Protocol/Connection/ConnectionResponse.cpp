@@ -7,6 +7,11 @@
 
 #include "ConnectionResponse.hpp"
 
+BabelNetwork::ConnectionResponse::ConnectionResponse()
+{
+    _description = "Connection between server and client";
+}
+
 bool BabelNetwork::ConnectionResponse::isOk()
 {
     return _code == IResponse::ResponseCode::ConnectionOk;
