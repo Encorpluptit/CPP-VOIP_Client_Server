@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2020
-** CPP_babel_2020 (Copyright (c) $USER_NAME.capitalize() on 7/12/20).
+** CPP_babel_2020 (Copyright (c) ENCORPLUPTIT on 7/12/20).
 ** File description:
 ** [ASocket.cpp]: Source file for ASocket feature.
 */
