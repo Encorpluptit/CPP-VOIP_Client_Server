@@ -8,6 +8,8 @@
 #ifndef CPP_BABEL_2020_ISOCKET_HPP
 #define CPP_BABEL_2020_ISOCKET_HPP
 
+#include "NetworkInfos.hpp"
+
 namespace BabelNetwork {
     class ISocket {
         /* <- Class Enum -> */
@@ -26,7 +28,7 @@ namespace BabelNetwork {
 
         /* <- Methods -> */
     public:
-        [[nodiscard]] virtual bool connect() = 0;
+        [[nodiscard]] virtual bool connect(const NetworkInfos &networkInfos) = 0;
 
         virtual void disconnect() = 0;
 

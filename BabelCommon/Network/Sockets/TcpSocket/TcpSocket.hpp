@@ -24,7 +24,7 @@ namespace BabelNetwork {
 
         /* <- Methods -> */
     public:
-        [[nodiscard]] bool connect() final;
+        [[nodiscard]] bool connect(const NetworkInfos &networkInfos) final;
 
         void disconnect() final;
 
