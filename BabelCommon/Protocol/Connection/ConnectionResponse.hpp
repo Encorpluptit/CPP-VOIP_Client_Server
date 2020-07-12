@@ -13,12 +13,6 @@
 namespace BabelNetwork {
     class ConnectionResponse final : virtual public AResponse {
 
-        /* <- Class Enum -> */
-    public:
-        enum ResponseCode {
-//            UnknownError = 1000
-        };
-
         /* <- Constructor - Destructor -> */
     public:
         ConnectionResponse();
@@ -27,7 +21,9 @@ namespace BabelNetwork {
 
         /* <- Methods -> */
     public:
-        [[nodiscard]] bool isOk() final ;
+        [[nodiscard]] bool isOk() final;
+
+        void setOk() final;
     };
 }
 

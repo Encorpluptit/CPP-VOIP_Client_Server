@@ -44,10 +44,10 @@ std::unique_ptr<IResponse> AResponse::getResponse(const std::string &input)
 
 std::string AResponse::serialize() const
 {
-    std::string response = "{Code: \"" + std::to_string(getCode()) + "\",Desc: \"" + getDescription() + "\"";
+    std::string response = R"({"Code": )" + std::to_string(getCode()) + R"(, "Desc": ")" + getDescription() + "\"";
     if (getData().empty())
-        response += ",Data: \"\"}";
+        response += R"(, "Data": ""})";
     else
-        response += ",Data: \"" + getData() + "\"}";
+        response += R"(, "Data": ")" + getData() + "\"}";
     return response;
 }

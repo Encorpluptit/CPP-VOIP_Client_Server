@@ -37,6 +37,8 @@ namespace BabelNetwork {
 
         [[nodiscard]] virtual bool isOk() = 0;
 
+        virtual void setOk()  = 0;
+
     };
 
 }

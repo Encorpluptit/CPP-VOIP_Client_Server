@@ -16,3 +16,8 @@ bool BabelNetwork::ConnectionResponse::isOk()
 {
     return _code == IResponse::ResponseCode::ConnectionOk;
 }
+
+void BabelNetwork::ConnectionResponse::setOk()
+{
+    _code = IResponse::ResponseCode::ConnectionOk;
+}

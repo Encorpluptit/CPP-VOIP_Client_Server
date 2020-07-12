@@ -14,7 +14,7 @@
 
 namespace BabelNetwork {
 
-    class AResponse : public IResponse {
+    class AResponse : virtual public IResponse {
 
         /* <- Class Enum -> */
     public:
@@ -41,6 +41,8 @@ namespace BabelNetwork {
         [[nodiscard]] bool isOk() override = 0;
 
         [[nodiscard]] std::string serialize() const;
+
+        void setOk() override = 0;
 
         /* <- Getters / Setters -> */
     public:
