@@ -183,6 +183,7 @@ set(
 #        tests/criterion_unit_tests/src/Common/
         tests/criterion_unit_tests/src/Common/StringFormat_Tests.cpp
         tests/criterion_unit_tests/src/Common/Protocol_Tests.cpp
+        tests/criterion_unit_tests/src/Common/NetworkInfos_Tests.cpp
 )
 
 add_executable(
@@ -196,4 +197,4 @@ target_compile_definitions(unit_tests PRIVATE _UNIT_TESTS_)
 
 target_include_directories(unit_tests PRIVATE tests/criterion_unit_tests/include)
 
-target_link_libraries(unit_tests criterion)
+target_link_libraries(unit_tests criterion pthread)

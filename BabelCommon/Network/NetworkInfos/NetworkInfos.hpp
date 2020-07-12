@@ -12,11 +12,13 @@
 #include <boost/cstdint.hpp>
 
 namespace BabelNetwork {
+    #define DEFAULT_PORT() ("5342")
+
     class NetworkInfos {
 
         /* <- Constructor - Destructor -> */
     public:
-        NetworkInfos(std::string ip, const std::string& port = "5342");
+        explicit NetworkInfos(std::string ip, const std::string& port = DEFAULT_PORT());
 
         ~NetworkInfos() = default;
 
