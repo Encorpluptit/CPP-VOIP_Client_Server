@@ -34,7 +34,7 @@ namespace BabelNetwork {
         friend std::ostream &operator<<(std::ostream &os, const AResponse &response);
 
 //        friend istream &operator>>( istream  &input, Distance &D );
-            /* <- Methods -> */
+        /* <- Methods -> */
     public:
         [[nodiscard]] std::unique_ptr<IResponse> getResponse(const std::string &input) override;
 
@@ -61,6 +61,7 @@ namespace BabelNetwork {
         std::string _data;
     };
 
+    /* <- Operators -> */
     std::ostream &operator<<(std::ostream &os, const AResponse &response);
 
 }

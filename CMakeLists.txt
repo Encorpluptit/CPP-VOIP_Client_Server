@@ -70,6 +70,11 @@ set(
         ${COMMON_DIR}/Protocol/IResponse
         ${COMMON_DIR}/Protocol/AResponse
         ${COMMON_DIR}/Protocol/Connection
+
+        ${COMMON_DIR}/Network/NetworkInfos
+        ${COMMON_DIR}/Network/Sockets/ISocket
+        ${COMMON_DIR}/Network/Sockets/ASocket
+        ${COMMON_DIR}/Network/Sockets/TcpSocket
 )
 
 set(
@@ -79,6 +84,11 @@ set(
         ${COMMON_DIR}/Protocol/IResponse/IResponse.cpp
         ${COMMON_DIR}/Protocol/AResponse/AResponse.cpp
         ${COMMON_DIR}/Protocol/Connection/ConnectionResponse.cpp
+
+        ${COMMON_DIR}/Network/NetworkInfos/NetworkInfos.cpp
+        ${COMMON_DIR}/Network/Sockets/ISocket/ISocket.cpp
+        ${COMMON_DIR}/Network/Sockets/ASocket/ASocket.cpp
+        ${COMMON_DIR}/Network/Sockets/TcpSocket/TcpSocket.cpp
 )
 
 include_directories(${COMMON_INCLUDES})

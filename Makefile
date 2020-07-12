@@ -85,7 +85,9 @@ setup-build-tree:
 gh-install:
 	@mkdir -p $(BUILD_DIR) && cd $(BUILD_DIR) && conan install .. --build=portaudio --build=qt
 
-mouli-install:
+mouli-install: fclean
+	-conan remote add tech-repo https://api.bintray.com/conan/epitech/public-conan
+	-conan remote add public-repo https://api.bintray.com/conan/bincrafters/public-conan
 	@mkdir -p $(BUILD_DIR) && cd $(BUILD_DIR) && conan install .. --build=missing
 
 mouli: fclean
