@@ -16,6 +16,7 @@
 namespace BabelNetwork {
 
     class TcpSocket final : virtual public ASocket, public boost::enable_shared_from_this<TcpSocket> {
+
         /* <- Constructor - Destructor -> */
     public:
         TcpSocket();
