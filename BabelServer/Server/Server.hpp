@@ -5,6 +5,7 @@
 ** [Server.hpp]: Header file for Server feature.
 */
 
+/* <- Class Structure -> */
 /* <- Class Enum -> */
 /* <- Constructor - Destructor -> */
 /* <- Operators -> */

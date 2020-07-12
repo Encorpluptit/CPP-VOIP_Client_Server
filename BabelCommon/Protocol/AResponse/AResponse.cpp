@@ -10,13 +10,17 @@
 
 using namespace BabelNetwork;
 
+AResponse::AResponse(const Response *response, const char *data)
+    : _code(response->returnCode), _data(data)
+{}
+
 std::ostream &BabelNetwork::operator<<(std::ostream &os, const BabelNetwork::AResponse &response)
 {
     os << response.serialize();
     return os;
 }
 
-int BabelNetwork::AResponse::getCode() const
+uint16_t BabelNetwork::AResponse::getCode() const
 {
     return _code;
 }
@@ -36,18 +40,18 @@ void AResponse::setData(const std::string &data)
     _data = data;
 }
 
-std::unique_ptr<IResponse> AResponse::getResponse(const std::string &input)
+std::unique_ptr<IResponse> AResponse::getResponse(Response *response, const char *data)
 {
 
-    return std::unique_ptr<IResponse>(new ConnectionResponse());
+    return std::unique_ptr<IResponse>(new ConnectionResponse(response, data));
 }
 
 std::string AResponse::serialize() const
 {
-    std::string response = R"({"Code": )" + std::to_string(getCode()) + R"(, "Desc": ")" + getDescription() + "\"";
-    if (getData().empty())
-        response += R"(, "Data": ""})";
-    else
-        response += R"(, "Data": ")" + getData() + "\"}";
+    std::string response = \
+    R"({"Code": )" + std::to_string(getCode())      \
+    + R"(, "Desc": ")" + getDescription() + "\""        \
+    + R"(, "Data": ")" + getData()                      \
+    + "\"}";
     return response;
 }

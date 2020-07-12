@@ -11,11 +11,13 @@
 #include "AResponse.hpp"
 
 namespace BabelNetwork {
-    class ConnectionResponse final : virtual public AResponse {
+    class ConnectionResponse final : public AResponse {
 
         /* <- Constructor - Destructor -> */
     public:
         ConnectionResponse();
+
+        ConnectionResponse(const Response *response, const char *data);
 
         ~ConnectionResponse() override = default;
 
@@ -24,6 +26,9 @@ namespace BabelNetwork {
         [[nodiscard]] bool isOk() final;
 
         void setOk() final;
+
+    private:
+        std::string _description = "Connection between server and client";
     };
 }
 

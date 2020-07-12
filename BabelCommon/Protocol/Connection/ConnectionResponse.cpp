@@ -7,10 +7,16 @@
 
 #include "ConnectionResponse.hpp"
 
-BabelNetwork::ConnectionResponse::ConnectionResponse()
+using namespace BabelNetwork;
+
+ConnectionResponse::ConnectionResponse()
 {
     _description = "Connection between server and client";
 }
+
+ConnectionResponse::ConnectionResponse(const Response *response, const char *data)
+    : AResponse(response, data)
+{}
 
 bool BabelNetwork::ConnectionResponse::isOk()
 {

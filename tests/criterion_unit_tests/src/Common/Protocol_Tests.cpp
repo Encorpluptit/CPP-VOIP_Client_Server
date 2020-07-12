@@ -8,7 +8,14 @@
 #include "tests_run.hpp"
 #include "ConnectionResponse.hpp"
 
-Test(Common, ConnectionResponse1)
+Test(Common, ConnectionResponse_1)
+{
+    BabelNetwork::ConnectionResponse test;
+
+    ASSERT_BOOL(test.isOk(), false);
+}
+
+Test(Common, ConnectionResponse_2)
 {
     BabelNetwork::ConnectionResponse test;
 

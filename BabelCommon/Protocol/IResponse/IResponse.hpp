@@ -12,6 +12,7 @@
 
 namespace BabelNetwork {
     class IResponse {
+
         /* <- Class Enum -> */
     public:
         enum ResponseCode {
@@ -33,7 +34,7 @@ namespace BabelNetwork {
 
         /* <- Methods -> */
     public:
-        [[nodiscard]] virtual std::unique_ptr<IResponse> getResponse(const std::string &input) = 0;
+//        [[nodiscard]] virtual std::unique_ptr<IResponse> getResponse(const std::string &input) = 0;
 
         [[nodiscard]] virtual bool isOk() = 0;
 

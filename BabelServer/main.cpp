@@ -10,7 +10,9 @@ void launch();
 int main()
 {
     BabelNetwork::NetworkInfos lol("127.0.0.1");
-    std::cout << lol <<std::endl;
+    BabelNetwork::ConnectionResponse conn;
+    std::cout << conn << std::endl;
+    std::cout << lol << std::endl;
     boost::asio::io_context io_context;
 //    boost::asio::io_context();
 //    boost::asio::ip::tcp::socket _socket;

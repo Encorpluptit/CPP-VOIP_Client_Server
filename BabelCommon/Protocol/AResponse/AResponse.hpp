@@ -16,15 +16,20 @@ namespace BabelNetwork {
 
     class AResponse : virtual public IResponse {
 
-        /* <- Class Enum -> */
+        /* <- Class Structure -> */
     public:
-        enum ResponseCode {
-//            UnknownError = 1000
+        using Response = struct __attribute__((packed)) Response{
+            uint16_t returnCode;
+            uint64_t dataLength;
         };
+
+
 
         /* <- Constructor - Destructor -> */
     public:
         AResponse() = default;
+
+        explicit AResponse(const Response *response, const char *data);
 
         ~AResponse() override = default;
 
@@ -36,7 +41,7 @@ namespace BabelNetwork {
 //        friend istream &operator>>( istream  &input, Distance &D );
         /* <- Methods -> */
     public:
-        [[nodiscard]] std::unique_ptr<IResponse> getResponse(const std::string &input) override;
+        [[nodiscard]] std::unique_ptr<IResponse> getResponse(Response *response, const char *data);
 
         [[nodiscard]] bool isOk() override = 0;
 
@@ -46,7 +51,7 @@ namespace BabelNetwork {
 
         /* <- Getters / Setters -> */
     public:
-        [[nodiscard]] int getCode() const;
+        [[nodiscard]] uint16_t getCode() const;
 
         [[nodiscard]] const std::string &getDescription() const;
 
@@ -56,7 +61,7 @@ namespace BabelNetwork {
 
         /* <- Attributes -> */
     protected:
-        IResponse::ResponseCode _code = IResponse::ResponseCode::UnknownError;
+        uint16_t _code = IResponse::ResponseCode::UnknownError;
         std::string _description;
         std::string _data;
     };
