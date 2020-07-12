@@ -8,6 +8,7 @@
 #ifndef CPP_BABEL_2020_TCPSOCKET_HPP
 #define CPP_BABEL_2020_TCPSOCKET_HPP
 
+#include <memory>
 #include <boost/asio.hpp>
 #include <boost/enable_shared_from_this.hpp>
 #include "ASocket.hpp"
@@ -17,7 +18,7 @@ namespace BabelNetwork {
     class TcpSocket final : virtual public ASocket, public boost::enable_shared_from_this<TcpSocket> {
         /* <- Constructor - Destructor -> */
     public:
-//        TcpSocket();
+        TcpSocket();
         explicit TcpSocket(boost::asio::io_context &io_context);
         ~TcpSocket() final = default;
 
@@ -25,7 +26,7 @@ namespace BabelNetwork {
     public:
         [[nodiscard]] bool connect() final;
 
-        [[nodiscard]] bool disconnect() final;
+        void disconnect() final;
 
         [[nodiscard]] bool isAvailable() const final ;
 
@@ -37,6 +38,7 @@ namespace BabelNetwork {
 
         /* <- Attributes -> */
     private:
+        std::unique_ptr<boost::asio::io_context> _new_context;
         boost::asio::io_context &_io_context;
         boost::asio::ip::tcp::socket _socket;
     };

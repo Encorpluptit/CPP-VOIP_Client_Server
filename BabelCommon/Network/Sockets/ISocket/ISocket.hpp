@@ -28,7 +28,7 @@ namespace BabelNetwork {
     public:
         [[nodiscard]] virtual bool connect() = 0;
 
-        [[nodiscard]] virtual bool disconnect() = 0;
+        virtual void disconnect() = 0;
 
         [[nodiscard]] virtual bool isAvailable() const = 0;
 
