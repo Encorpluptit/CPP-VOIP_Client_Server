@@ -7,12 +7,16 @@
 
 #include "ASocket.hpp"
 
-bool BabelNetwork::ASocket::isConnected() const
+BabelNetwork::ASocket::ASocket(const BabelNetwork::NetworkInfos &networkInfos)
+    : _networkInfos(networkInfos)
+{}
+
+bool BabelNetwork::ASocket::isReady() const
 {
-    return _connected;
+    return _ready;
 }
 
-void BabelNetwork::ASocket::setConnected(bool connected)
+void BabelNetwork::ASocket::setReady()
 {
-    _connected = connected;
+    _ready = true;
 }

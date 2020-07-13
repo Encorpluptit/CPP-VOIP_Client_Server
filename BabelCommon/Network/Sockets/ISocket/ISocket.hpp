@@ -22,17 +22,15 @@ namespace BabelNetwork {
 
         /* <- Constructor - Destructor -> */
     public:
-        ISocket() = default;
+//        ISocket() = default;
 
         virtual ~ISocket() = 0;
 
         /* <- Methods -> */
     public:
-        [[nodiscard]] virtual bool connect(const NetworkInfos &networkInfos) = 0;
+        [[nodiscard]] virtual bool launch() = 0;
 
-        virtual void disconnect() = 0;
-
-        [[nodiscard]] virtual bool isAvailable() const = 0;
+        [[nodiscard]] virtual bool close() = 0;
 
     };
 

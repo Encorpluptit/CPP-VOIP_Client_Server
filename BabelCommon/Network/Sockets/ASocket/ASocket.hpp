@@ -16,19 +16,20 @@ namespace BabelNetwork {
 
         /* <- Constructor - Destructor -> */
     public:
-        ASocket() = default;
+        explicit ASocket(const NetworkInfos &networkInfos);
 
         ~ASocket() override = default;
 
         /* <- Getters / Setters -> */
     public:
-        [[nodiscard]] bool isConnected() const;
+        [[nodiscard]] bool isReady() const;
 
-        void setConnected(bool connected);
+        void setReady();
 
         /* <- Attributes -> */
     protected:
-        bool _connected = false;
+        const NetworkInfos &_networkInfos;
+        bool _ready = false;
     };
 
 }

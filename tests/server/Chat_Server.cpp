@@ -52,8 +52,8 @@ public:
     {
         participants_.insert(participant);
         std::for_each(recent_msgs_.begin(), recent_msgs_.end(),
-            boost::bind(&chat_participant::deliver,
-                participant, boost::placeholders::_1));
+            boost::bind(&chat_participant::deliver, participant, boost::placeholders::_1)
+        );
     }
 
     void leave(const chat_participant_ptr &participant)
@@ -63,13 +63,14 @@ public:
 
     void deliver(const chat_message &msg)
     {
+        std::cout << "START DELIVER" << std::endl;
         recent_msgs_.push_back(msg);
         while (recent_msgs_.size() > max_recent_msgs)
             recent_msgs_.pop_front();
 
         std::for_each(participants_.begin(), participants_.end(),
-            boost::bind(&chat_participant::deliver,
-                boost::placeholders::_1, boost::ref(msg)));
+            boost::bind(&chat_participant::deliver, boost::placeholders::_1, boost::ref(msg))
+        );
     }
 
 private:
@@ -87,8 +88,7 @@ class chat_session
       public boost::enable_shared_from_this<chat_session> {
 public:
     chat_session(boost::asio::io_context &io_context, chat_room &room)
-        : socket_(io_context),
-          room_(room)
+        : socket_(io_context), room_(room)
     {
     }
 
@@ -97,14 +97,14 @@ public:
         return socket_;
     }
 
-    void start()
+    void start_session()
     {
         room_.join(shared_from_this());
-        boost::asio::async_read(socket_,
+        boost::asio::async_read(
+            socket_,
             boost::asio::buffer(read_msg_.data(), chat_message::header_length),
-            boost::bind(
-                &chat_session::handle_read_header, shared_from_this(),
-                boost::asio::placeholders::error));
+            boost::bind(&chat_session::handle_read_header, shared_from_this(), boost::asio::placeholders::error)
+        );
     }
 
     void deliver(const chat_message &msg) override
@@ -112,21 +112,22 @@ public:
         bool write_in_progress = !write_msgs_.empty();
         write_msgs_.push_back(msg);
         if (!write_in_progress) {
-            boost::asio::async_write(socket_,
-                boost::asio::buffer(write_msgs_.front().data(),
-                    write_msgs_.front().length()),
-                boost::bind(&chat_session::handle_write, shared_from_this(),
-                    boost::asio::placeholders::error));
+            boost::asio::async_write(
+                socket_,
+                boost::asio::buffer(write_msgs_.front().data(), write_msgs_.front().length()),
+                boost::bind(&chat_session::handle_write, shared_from_this(), boost::asio::placeholders::error)
+            );
         }
     }
 
     void handle_read_header(const boost::system::error_code &error)
     {
         if (!error && read_msg_.decode_header()) {
+            std::cout << "START READ HEADER" << std::endl;
             boost::asio::async_read(socket_,
                 boost::asio::buffer(read_msg_.body(), read_msg_.body_length()),
-                boost::bind(&chat_session::handle_read_body, shared_from_this(),
-                    boost::asio::placeholders::error));
+                boost::bind(&chat_session::handle_read_body, shared_from_this(), boost::asio::placeholders::error)
+            );
         } else {
             room_.leave(shared_from_this());
         }
@@ -135,11 +136,13 @@ public:
     void handle_read_body(const boost::system::error_code &error)
     {
         if (!error) {
+            std::cout << "START READ BODY" << std::endl;
             room_.deliver(read_msg_);
-            boost::asio::async_read(socket_,
+            boost::asio::async_read(
+                socket_,
                 boost::asio::buffer(read_msg_.data(), chat_message::header_length),
-                boost::bind(&chat_session::handle_read_header, shared_from_this(),
-                    boost::asio::placeholders::error));
+                boost::bind(&chat_session::handle_read_header, shared_from_this(), boost::asio::placeholders::error)
+            );
         } else {
             room_.leave(shared_from_this());
         }
@@ -150,11 +153,11 @@ public:
         if (!error) {
             write_msgs_.pop_front();
             if (!write_msgs_.empty()) {
-                boost::asio::async_write(socket_,
-                    boost::asio::buffer(write_msgs_.front().data(),
-                        write_msgs_.front().length()),
-                    boost::bind(&chat_session::handle_write, shared_from_this(),
-                        boost::asio::placeholders::error));
+                boost::asio::async_write(
+                    socket_,
+                    boost::asio::buffer(write_msgs_.front().data(), write_msgs_.front().length()),
+                    boost::bind(&chat_session::handle_write, shared_from_this(), boost::asio::placeholders::error)
+                );
             }
         } else {
             room_.leave(shared_from_this());
@@ -174,10 +177,8 @@ typedef boost::shared_ptr<chat_session> chat_session_ptr;
 
 class chat_server {
 public:
-    chat_server(boost::asio::io_context &io_context,
-        const tcp::endpoint &endpoint)
-        : io_context_(io_context),
-          acceptor_(io_context, endpoint)
+    chat_server(boost::asio::io_context &io_context, const tcp::endpoint &endpoint)
+        : io_context_(io_context), acceptor_(io_context, endpoint)
     {
         start_accept();
     }
@@ -185,15 +186,16 @@ public:
     void start_accept()
     {
         chat_session_ptr new_session(new chat_session(io_context_, room_));
-        acceptor_.async_accept(new_session->socket(),
-            boost::bind(&chat_server::handle_accept, this, new_session,
-                boost::asio::placeholders::error));
+        acceptor_.async_accept(
+            new_session->socket(),
+            boost::bind(&chat_server::handle_accept, this, new_session, boost::asio::placeholders::error)
+        );
     }
 
     void handle_accept(const chat_session_ptr &session, const boost::system::error_code &error)
     {
         if (!error) {
-            session->start();
+            session->start_session();
         }
 
         start_accept();

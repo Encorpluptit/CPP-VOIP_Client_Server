@@ -102,6 +102,7 @@ set(SERVER_DIR BabelServer)
 set(
         SERVER_INCLUDES
         ${SERVER_DIR}/Server
+        ${SERVER_DIR}/ServerSocket
 )
 
 
@@ -136,7 +137,7 @@ target_link_libraries(babel_server ${CONAN_LIBS})
 set(CLIENT_DIR BabelClient)
 
 ##########################
-# Server Includes
+# Clients Includes
 set(
         CLIENT_INCLUDES
         ${CLIENT_DIR}/include

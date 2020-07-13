@@ -19,42 +19,65 @@ Full documentation of server/client protocol.
 ### Connexion (1** Codes )
 
 * Connection
-    * Client is connected to server.
-    * Success code: 100
-    * Data: (None)
-    * Errors:
-        * 1100: Connexion Not ok.
+    * 100: Connexion Ok.
+    * 199: Connexion Not ok.
 
 
-### User (2** Codes )
+### User (\*2** Codes)
 
-* Login
-    * User is connected.
-    * Success code: 210
-    * Data: (None)
-    * Errors:
-        * 1210: Unknown login error
-        * 1211: Wrong login.
-        * 1212: Wrong password.
-        * 1213: Deleted account.
+* Login (20* Codes)
+    * Request / Success Codes.
+        * 200: Logged In.
+        * 201: Request logging.
+            ```json
+            {
+              "login":      "damien.bernard@epitech.eu",
+              "password" :  "abcd1234"
+            } 
+            ```
+        * 202: User Logged In.
+        * 203: Request Logged out
+            ```json
+            {
+              "login":      "damien.bernard@epitech.eu"
+            } 
+            ```
+        * 204: User Logged Out.
+    * Error Codes    
+        * 1200: Unknown login Error.
+        * 1201: Wrong Login.
+        * 1202: Wrong Password.
+        * 1203: Account Deleted.
+        * 1204: User Already Logged In.
+        * 1205: ??
 
-* Account Created
-    * Create an account.
-    * Success code: 220
-    * Data: (None)
-    * Errors:
-        * 1220: Unknown Account creation error.
-        * 1228: Password too weak (??).
-        * 1229: Login already taken (??).
+* Account Creation (\*21* Codes)
+    * Request / Success Codes.
+        * 210: Request Create Account
+            ```json
+            {
+              "login":      "damien.bernard@epitech.eu",
+              "password" :  "abcd1234"
+            } 
+            ```
+        * 211: Account Created.
+    * Error Codes
+        * 1210: Unknown Account Creation Error.
+        * 1211: Account Already Taken.
+        * 1212: User Already Logged In.
+        * 218: Password too weak (??).
 
 
-* Account Deleted
-    * Delete an account.
-    * Success code: 230
-    * Data: (None)
-    * Errors:
-        * 1230: Unknown Account deletion error.
-        * 1231: Account logged somewhere else.
+* Account Deletion  (22* Codes)
+    * Request / Success Codes.
+        * 220: Request Delete Account.
+        ```json
+        {
+          "login":      "damien.bernard@epitech.eu"
+        } 
+        ```
+        * 211: Account Deleted.
+        
 
 ```
 * Add a friend.

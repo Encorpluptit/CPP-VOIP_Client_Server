@@ -7,46 +7,46 @@
 
 #include "TcpSocket.hpp"
 
-using namespace BabelNetwork;
-
-TcpSocket::TcpSocket()
-    : _new_context(std::make_unique<boost::asio::io_context>()),
-      _io_context(*_new_context),
-      _socket(_io_context) {}
-
-TcpSocket::TcpSocket(boost::asio::io_context &io_context)
-    : _new_context(nullptr), _io_context(io_context), _socket(io_context) {}
-
-void TcpSocket::disconnect()
-{
-    _connected = false;
-    _socket.close();
-}
-
-bool TcpSocket::connect(const NetworkInfos &networkInfos)
-{
-    boost::asio::ip::tcp::endpoint endpoint(
-        boost::asio::ip::address::from_string(networkInfos.getIp()), networkInfos.getPort()
-    );
-    _socket.connect(endpoint);
-    //    start();
-    return false;
-}
-
-bool TcpSocket::isAvailable() const
-{
-    return _socket.available();
-}
-
-const boost::asio::ip::tcp::socket &TcpSocket::getSocket() const
-{
-    return _socket;
-}
-
-const boost::asio::io_context &TcpSocket::getIoContext() const
-{
-    return _io_context;
-}
+//using namespace BabelNetwork;
+//
+//TcpSocket::TcpSocket()
+//    : _new_context(std::make_unique<boost::asio::io_context>()),
+//      _io_context(*_new_context),
+//      _socket(_io_context) {}
+//
+//TcpSocket::TcpSocket(boost::asio::io_context &io_context)
+//    : _new_context(nullptr), _io_context(io_context), _socket(io_context) {}
+//
+//void TcpSocket::disconnect()
+//{
+//    _connected = false;
+//    _socket.close();
+//}
+//
+//bool TcpSocket::connect()
+//{
+//    boost::asio::ip::tcp::endpoint endpoint(
+//        boost::asio::ip::address::from_string(networkInfos.getIp()), networkInfos.getPort()
+//    );
+//    _socket.connect(endpoint);
+//    //    start();
+//    return false;
+//}
+//
+//bool TcpSocket::isAvailable() const
+//{
+//    return _socket.available();
+//}
+//
+//const boost::asio::ip::tcp::socket &TcpSocket::getSocket() const
+//{
+//    return _socket;
+//}
+//
+//const boost::asio::io_context &TcpSocket::getIoContext() const
+//{
+//    return _io_context;
+//}
 
 //TCPSocket::TCPSocket():
 //    _ios(new ::boost::asio::io_service()),

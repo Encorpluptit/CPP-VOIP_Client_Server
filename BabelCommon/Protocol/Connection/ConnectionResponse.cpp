@@ -14,8 +14,7 @@ ConnectionResponse::ConnectionResponse()
 {}
 
 ConnectionResponse::ConnectionResponse(const ResponseHeader *response, const char *data)
-    : AResponse(response, data),
-      _description("Connection between server and client")
+    : AResponse(response, data), _description("Connection between server and client")
 {}
 
 bool BabelNetwork::ConnectionResponse::isOk()

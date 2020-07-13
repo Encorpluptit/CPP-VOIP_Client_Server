@@ -38,7 +38,7 @@ public:
     {
     }
 
-    const char *data() const
+    [[nodiscard]] const char *data() const
     {
         return data_;
     }
@@ -48,12 +48,12 @@ public:
         return data_;
     }
 
-    size_t length() const
+    [[nodiscard]] size_t length() const
     {
         return header_length + body_length_;
     }
 
-    const char *body() const
+    [[nodiscard]] const char *body() const
     {
         return data_ + header_length;
     }
@@ -63,7 +63,7 @@ public:
         return data_ + header_length;
     }
 
-    size_t body_length() const
+    [[nodiscard]] size_t body_length() const
     {
         return body_length_;
     }

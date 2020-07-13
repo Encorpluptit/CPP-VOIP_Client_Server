@@ -24,8 +24,7 @@ std::string make_daytime_string()
     return ctime(&now);
 }
 
-class tcp_connection
-    : public boost::enable_shared_from_this<tcp_connection> {
+class tcp_connection : public boost::enable_shared_from_this<tcp_connection> {
 public:
     typedef boost::shared_ptr<tcp_connection> pointer;
 
