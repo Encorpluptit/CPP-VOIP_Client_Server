@@ -72,6 +72,10 @@ tests_run: setup-build-tree
 	@$(MAKE) -j `nproc` --no-print-directory -C $(BUILD_DIR) $(CRITERION_BIN)
 	@cp $(BUILD_DIR)/bin/$(CRITERION_BIN) .
 	@./$(CRITERION_BIN)
+	-@$(MAKE) -j `nproc` --no-print-directory -C $(BUILD_DIR) test_server
+	-@$(MAKE) -j `nproc` --no-print-directory -C $(BUILD_DIR) test_client
+	@cp $(BUILD_DIR)/bin/test_client $(BUILD_DIR)/bin/test_server .
+
 
 
 ################################################################################

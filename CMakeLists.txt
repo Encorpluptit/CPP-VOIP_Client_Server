@@ -198,3 +198,21 @@ target_compile_definitions(unit_tests PRIVATE _UNIT_TESTS_)
 target_include_directories(unit_tests PRIVATE tests/criterion_unit_tests/include)
 
 target_link_libraries(unit_tests criterion pthread)
+
+##########################
+# Test Executable
+add_executable(
+        test_server
+        tests/server/Chat_Message.hpp
+        tests/server/Chat_Server.cpp
+)
+target_link_libraries(test_server pthread ${CONAN_LIBS})
+
+add_executable(
+        test_client
+        tests/server/Chat_Message.hpp
+        tests/server/Chat_Client.cpp
+)
+
+target_link_libraries(test_client pthread ${CONAN_LIBS})
+#target_link_libraries(babel_client ${CONAN_LIBS} Qt5::Widgets)

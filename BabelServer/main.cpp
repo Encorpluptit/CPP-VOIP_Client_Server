@@ -5,27 +5,17 @@
 #include "NetworkInfos.hpp"
 #include "TcpSocket.hpp"
 
-void launch();
+void launch(char **av);
 
-int main()
+int main(int ac, char **av)
 {
-    BabelNetwork::NetworkInfos lol("127.0.0.1");
-    BabelNetwork::ConnectionResponse conn;
-    std::cout << conn << std::endl;
-    std::cout << lol << std::endl;
-    boost::asio::io_context io_context;
-//    boost::asio::io_context();
-//    boost::asio::ip::tcp::socket _socket;
-    BabelNetwork::TcpSocket sock(io_context);
-
-//    BabelNetwork::ConnectionResponse resp;
-//    std::cout << resp.serialize() << std::endl;
-//    std::cout << resp << std::endl;
-//    try {
-//        launch();
-//    }
-//    catch (std::exception &e) {
-//        std::cerr << e.what() << std::endl;
-//    }
-//    return 0;
+    if (ac < 2)
+        return 84;
+    try {
+        launch(av);
+    }
+    catch (std::exception &e) {
+        std::cerr << e.what() << std::endl;
+    }
+    return 0;
 }

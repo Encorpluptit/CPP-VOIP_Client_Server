@@ -76,8 +76,14 @@ public:
         start_accept();
     }
 
+    explicit tcp_server(boost::asio::io_context &io_context, const int port)
+        : acceptor_(io_context, tcp::endpoint(tcp::v4(), port))
+    {
+        start_accept();
+    }
+
 private:
-    void start_accept()
+    bool start_accept()
     {
         tcp_connection::pointer new_connection =
             tcp_connection::create(acceptor_.get_executor().context());
@@ -100,10 +106,11 @@ private:
     tcp::acceptor acceptor_;
 };
 
-void launch()
+void launch(char **av)
 {
     boost::asio::io_context io_context;
-    tcp_server server(io_context);
+//    tcp_server server(io_context);
+    tcp_server server(io_context, std::atoi(av[1]));
     io_context.run();
 }
 
