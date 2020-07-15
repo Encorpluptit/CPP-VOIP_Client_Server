@@ -5,9 +5,10 @@
 #include "NetworkInfos.hpp"
 //#include "TcpSocket.hpp"
 #include "Server.hpp"
+#include <functional>
 #include <boost/bind.hpp>
 #include "Socket.hpp"
-
+#include "BoostThread.hpp"
 
 void launch(char **av);
 
@@ -18,6 +19,12 @@ void handle_connect(const boost::system::error_code &error)
     else
         std::cerr << "ERROR" << std::endl;
 }
+
+void lolfunc()
+{
+
+}
+
 static void tests(char **av)
 {
     std::cout << "TEST LAUNCHED" << std::endl;
@@ -25,9 +32,12 @@ static void tests(char **av)
     BabelNetwork::NetworkInfos nwi(av[1], av[2]);
     std::cout << nwi << std::endl;
 
+    std::function<void ()> lol = lolfunc;
+    BabelUtils::BoostThread<boost::thread, std::function<void ()>> thread(10, lolfunc);
+
     boost::asio::ip::tcp::resolver resolver(io_context);
-    boost::asio::ip::tcp::resolver::results_type endpoints = resolver.resolve(av[1], av[2]);
-    boost::asio::ip::tcp::endpoint endpoint(boost::asio::ip::tcp::v4(), atoi(av[2]));
+    boost::asio::ip::tcp::resolver::results_type endpoints = resolver.resolve(nwi.getIp(), std::to_string(nwi.getPort()));
+    boost::asio::ip::tcp::endpoint endpoint(boost::asio::ip::tcp::v4(), nwi.getPort());
 
     BabelServer::Socket socket1(nwi);
     socket1.launch();

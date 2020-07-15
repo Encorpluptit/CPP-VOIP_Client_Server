@@ -13,12 +13,12 @@
 
 namespace BabelUtils {
 
-//    template<typename T>
+    template<typename T>
     class AThread : virtual public IThread {
 
         /* <- Constructor - Destructor -> */
     public:
-        explicit AThread(int nb_threads = 10);
+        explicit AThread(int nb_threads = 10) : _nb_threads(nb_threads) {};
 
         ~AThread() override = default;
 
@@ -27,9 +27,9 @@ namespace BabelUtils {
 
         /* <- Getters / Setters -> */
     public:
-        [[nodiscard]] int getNbThreads() const;
+        [[nodiscard]] int getNbThreads() const { return _nb_threads; };
 
-        void setNbThreads(int nbThreads);
+        void setNbThreads(int nbThreads) { _nb_threads = nbThreads; };
 
         /* <- Attributes -> */
     protected:

@@ -8,17 +8,17 @@
 #include "AThread.hpp"
 
 using namespace BabelUtils;
-
-AThread::AThread(int nb_threads) : _nb_threads(nb_threads)
-{
-}
-
-int AThread::getNbThreads() const
-{
-    return _nb_threads;
-}
-
-void AThread::setNbThreads(int nbThreads)
-{
-    _nb_threads = nbThreads;
-}
+//
+//AThread::AThread(int nb_threads) : _nb_threads(nb_threads)
+//{
+//}
+//
+//int AThread::getNbThreads() const
+//{
+//    return _nb_threads;
+//}
+//
+//void AThread::setNbThreads(int nbThreads)
+//{
+//    _nb_threads = nbThreads;
+//}

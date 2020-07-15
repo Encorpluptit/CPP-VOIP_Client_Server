@@ -10,22 +10,22 @@
 using namespace BabelUtils;
 
 
-bool BoostThread::prepare()
-{
-    return false;
-}
-
-bool BoostThread::launch()
-{
-    return false;
-}
-
-bool BoostThread::run()
-{
-    return false;
-}
-
-bool BoostThread::stop()
-{
-    _thread.join();
-}
+//bool BoostThread::prepare()
+//{
+//    return false;
+//}
+//
+//bool BoostThread::launch()
+//{
+//    return false;
+//}
+//
+//bool BoostThread::run()
+//{
+//    return false;
+//}
+//
+//bool BoostThread::stop()
+//{
+//    _thread.join();
+//}

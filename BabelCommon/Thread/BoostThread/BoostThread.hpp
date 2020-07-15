@@ -13,11 +13,13 @@
 
 namespace BabelUtils {
 
-    class BoostThread final : virtual public AThread {
+//    template<typename T, typename H, typename ... Args>
+    template<typename T, typename H>
+    class BoostThread final : virtual public AThread<T> {
 
         /* <- Constructor - Destructor -> */
     public:
-//        BoostThread(int nb_threads);
+        BoostThread(int nb_threads, H handler): AThread<T>(nb_threads), _handler(handler) {};
 
         ~BoostThread() final = default;
 
@@ -25,18 +27,37 @@ namespace BabelUtils {
         /* <- Methods -> */
     public:
 
-        [[nodiscard]] bool prepare() final;
+        [[nodiscard]] bool prepare() final
+        {
+            return false;
+        };
 
-        [[nodiscard]] bool launch() final;
+        [[nodiscard]] bool launch() final
+        {
+            return false;
+        };
 
-        [[nodiscard]] bool run() final;
+        template<typename ... Args>
+        [[nodiscard]] bool setHandler(H handler, Args ... args)
+        {
+            boost::bind(_handler, args ...);
+            return false;
+        };
 
-        [[nodiscard]] bool stop() final;
+        [[nodiscard]] bool run() final
+        {
+            return false;
+        };
+
+        [[nodiscard]] bool stop() final
+        {
+            return false;
+        };
 
         /* <- Attributes -> */
     private:
-        T _handler;
-        boost::thread _thread;
+        H _handler;
+        T _thread;
     };
 
 }
