@@ -9,34 +9,53 @@
 #include <boost/lexical_cast.hpp>
 #include "NetworkInfos.hpp"
 
-BabelNetwork::NetworkInfos::NetworkInfos(std::string ip, const std::string& port)
+#include <charconv>
+#include <iostream>
+
+using namespace BabelNetwork;
+
+NetworkInfos::NetworkInfos(std::string ip, const std::string &port)
     : _ip(std::move(ip))
 {
-    _port = boost::lexical_cast<uint16_t>(port);
+    _port = 0;
+    auto parsed = std::from_chars(port.c_str(), port.end().base(), _port);
+
+    //TODO: Throw BabelNetwork::NetworkException
+    if (parsed.ec == std::errc::invalid_argument
+        || parsed.ec == std::errc::result_out_of_range
+        || parsed.ptr != port.end().base())
+        throw std::runtime_error("lol");
 }
 
-std::ostream &BabelNetwork::operator<<(std::ostream &os, const BabelNetwork::NetworkInfos &connection)
-{
-    os << "Running at " << connection.getIp() << " address and port " << std::to_string(connection.getPort());
-    return os;
+namespace BabelNetwork {
+    std::ostream &operator<<(std::ostream &os, const NetworkInfos &connection)
+    {
+        os << "Connexion at " << connection.getIp() << " address and port " << std::to_string(connection.getPort());
+        return os;
+    }
 }
 
-uint16_t BabelNetwork::NetworkInfos::getPort() const
+uint16_t NetworkInfos::getPort() const
 {
     return _port;
 }
 
-void BabelNetwork::NetworkInfos::setPort(uint16_t port)
+void NetworkInfos::setPort(uint16_t port)
 {
     _port = port;
 }
 
-const std::string &BabelNetwork::NetworkInfos::getIp() const
+const std::string &NetworkInfos::getIp() const
 {
     return _ip;
 }
 
-void BabelNetwork::NetworkInfos::setIp(const std::string &ip)
+void NetworkInfos::setIp(const std::string &ip)
 {
     _ip = ip;
+}
+
+bool NetworkInfos::operator==(const NetworkInfos &other) const
+{
+    return this->getPort() == other.getPort() && this->getIp() == other.getIp();
 }

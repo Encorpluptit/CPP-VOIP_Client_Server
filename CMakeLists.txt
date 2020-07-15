@@ -65,30 +65,46 @@ set(COMMON_DIR BabelCommon)
 set(
         COMMON_INCLUDES
         ${COMMON_DIR}/Logger
+
         ${COMMON_DIR}/Debug
+
         ${COMMON_DIR}/StringFormat
+
         ${COMMON_DIR}/Protocol/IResponse
         ${COMMON_DIR}/Protocol/AResponse
         ${COMMON_DIR}/Protocol/Connection
 
         ${COMMON_DIR}/Network/NetworkInfos
+
         ${COMMON_DIR}/Network/Sockets/ISocket
         ${COMMON_DIR}/Network/Sockets/ASocket
-        ${COMMON_DIR}/Network/Sockets/TcpSocket
+#        ${COMMON_DIR}/Network/Sockets/TcpSocket
+
+        ${COMMON_DIR}/Thread/IThread
+        ${COMMON_DIR}/Thread/AThread
+        ${COMMON_DIR}/Thread/BoostThread
+
 )
 
 set(
         COMMON_SOURCES
         ${COMMON_DIR}/Logger/Logger.cpp
         ${COMMON_DIR}/Logger/LoggerError.cpp
+
         ${COMMON_DIR}/Protocol/IResponse/IResponse.cpp
         ${COMMON_DIR}/Protocol/AResponse/AResponse.cpp
         ${COMMON_DIR}/Protocol/Connection/ConnectionResponse.cpp
 
         ${COMMON_DIR}/Network/NetworkInfos/NetworkInfos.cpp
+
         ${COMMON_DIR}/Network/Sockets/ISocket/ISocket.cpp
         ${COMMON_DIR}/Network/Sockets/ASocket/ASocket.cpp
-        ${COMMON_DIR}/Network/Sockets/TcpSocket/TcpSocket.cpp
+
+        ${COMMON_DIR}/Thread/IThread/IThread.cpp
+        ${COMMON_DIR}/Thread/AThread/AThread.cpp
+        ${COMMON_DIR}/Thread/BoostThread/BoostThread.cpp
+
+        #        ${COMMON_DIR}/Network/Sockets/TcpSocket/TcpSocket.cpp
 )
 
 include_directories(${COMMON_INCLUDES})
@@ -102,7 +118,7 @@ set(SERVER_DIR BabelServer)
 set(
         SERVER_INCLUDES
         ${SERVER_DIR}/Server
-        ${SERVER_DIR}/ServerSocket
+        ${SERVER_DIR}/Socket
 )
 
 
@@ -112,6 +128,7 @@ set(
         SERVER_SOURCES
         ${SERVER_DIR}/test.cpp
         ${SERVER_DIR}/Server/Server.cpp
+        ${SERVER_DIR}/Socket/Socket.cpp
 )
 
 

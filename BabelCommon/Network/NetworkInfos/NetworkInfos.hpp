@@ -18,13 +18,15 @@ namespace BabelNetwork {
 
         /* <- Constructor - Destructor -> */
     public:
-        explicit NetworkInfos(std::string ip, const std::string& port = DEFAULT_PORT());
+        explicit NetworkInfos(std::string ip, const std::string &port = DEFAULT_PORT());
 
         ~NetworkInfos() = default;
 
         /* <- Operators -> */
     public:
         friend std::ostream &operator<<(std::ostream &os, const NetworkInfos &connection);
+
+        bool operator==(const NetworkInfos &other) const;
 
 
         /* <- Methods -> */
@@ -42,13 +44,13 @@ namespace BabelNetwork {
 
         /* <- Attributes -> */
     private:
-        boost::uint16_t _port;
+        uint16_t _port;
+//        boost::uint16_t _port;
         std::string _ip;
     };
 
     /* <- Operators -> */
     std::ostream &operator<<(std::ostream &os, const NetworkInfos &connection);
-
 }
 
 #endif /* CPP_BABEL_2020_NETWORKINFOS_HPP */

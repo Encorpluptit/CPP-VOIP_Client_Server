@@ -100,6 +100,7 @@ public:
     void start_session()
     {
         room_.join(shared_from_this());
+        std::cout << "START SESSION" << std::endl;
         boost::asio::async_read(
             socket_,
             boost::asio::buffer(read_msg_.data(), chat_message::header_length),
@@ -110,6 +111,7 @@ public:
     void deliver(const chat_message &msg) override
     {
         bool write_in_progress = !write_msgs_.empty();
+        std::cout << "START DELIVER" << std::endl;
         write_msgs_.push_back(msg);
         if (!write_in_progress) {
             boost::asio::async_write(

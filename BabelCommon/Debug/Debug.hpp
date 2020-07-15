@@ -16,11 +16,11 @@
 #define DEBUG_INFOS() __F__, __func__, __LINE__
 
 #define dbg_local()                                                                             \
-    std::cerr << std::format("<-- START DEBUG -->\n[ %s ] - [ %s():%d ]", DEBUG_INFOS()) << std::endl;
+    std::cerr << BabelUtils::format("<-- START DEBUG -->\n[ %s ] - [ %s():%d ]", DEBUG_INFOS()) << std::endl;
 
 #define dbg(x, ...)                                                             \
     dbg_local();                                                                \
-    std::cerr << std::format(x"\n<-- END DEBUG -->\n", __VA_ARGS__);            \
+    std::cerr << BabelUtils::format(x"\n<-- END DEBUG -->\n", __VA_ARGS__);     \
 
 #else
 

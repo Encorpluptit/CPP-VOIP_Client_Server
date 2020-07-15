@@ -36,7 +36,7 @@ namespace BabelUtils {
         void logThis(const std::string &format, Args ... args) {
             if (!isOk())
                 return;
-            _logFile << "[ " << _description << " ] ==> " << std::format(format, args...) + "\n";
+            _logFile << "[ " << _description << " ] ==> " << format(format, args...) + "\n";
         }
 
     private:

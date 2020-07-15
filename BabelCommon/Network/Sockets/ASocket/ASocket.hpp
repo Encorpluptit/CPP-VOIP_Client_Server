@@ -26,6 +26,14 @@ namespace BabelNetwork {
 
         void setReady();
 
+        [[nodiscard]] const NetworkInfos &getNetworkInfos() const;
+
+        /* <- Operators -> */
+    public:
+        bool operator==(const NetworkInfos &other) const;
+
+        bool operator==(const ASocket &other) const;
+
         /* <- Attributes -> */
     protected:
         const NetworkInfos &_networkInfos;

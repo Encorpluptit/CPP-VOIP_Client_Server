@@ -12,7 +12,7 @@
 #include <string>
 #include <stdexcept>
 
-namespace std {
+namespace BabelUtils {
     template<typename ... Args>
     std::string format(const std::string &format, Args ... args)
     {
