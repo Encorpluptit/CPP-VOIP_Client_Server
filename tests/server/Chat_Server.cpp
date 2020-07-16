@@ -83,11 +83,11 @@ private:
 
 //----------------------------------------------------------------------
 
-class chat_session
+class ClientSocket
     : public chat_participant,
-      public boost::enable_shared_from_this<chat_session> {
+      public boost::enable_shared_from_this<ClientSocket> {
 public:
-    chat_session(boost::asio::io_context &io_context, chat_room &room)
+    ClientSocket(boost::asio::io_context &io_context, chat_room &room)
         : socket_(io_context), room_(room)
     {
     }
@@ -104,7 +104,7 @@ public:
         boost::asio::async_read(
             socket_,
             boost::asio::buffer(read_msg_.data(), chat_message::header_length),
-            boost::bind(&chat_session::handle_read_header, shared_from_this(), boost::asio::placeholders::error)
+            boost::bind(&ClientSocket::handle_read_header, shared_from_this(), boost::asio::placeholders::error)
         );
     }
 
@@ -117,7 +117,7 @@ public:
             boost::asio::async_write(
                 socket_,
                 boost::asio::buffer(write_msgs_.front().data(), write_msgs_.front().length()),
-                boost::bind(&chat_session::handle_write, shared_from_this(), boost::asio::placeholders::error)
+                boost::bind(&ClientSocket::handle_write, shared_from_this(), boost::asio::placeholders::error)
             );
         }
     }
@@ -128,7 +128,7 @@ public:
             std::cout << "START READ HEADER" << std::endl;
             boost::asio::async_read(socket_,
                 boost::asio::buffer(read_msg_.body(), read_msg_.body_length()),
-                boost::bind(&chat_session::handle_read_body, shared_from_this(), boost::asio::placeholders::error)
+                boost::bind(&ClientSocket::handle_read_body, shared_from_this(), boost::asio::placeholders::error)
             );
         } else {
             room_.leave(shared_from_this());
@@ -143,7 +143,7 @@ public:
             boost::asio::async_read(
                 socket_,
                 boost::asio::buffer(read_msg_.data(), chat_message::header_length),
-                boost::bind(&chat_session::handle_read_header, shared_from_this(), boost::asio::placeholders::error)
+                boost::bind(&ClientSocket::handle_read_header, shared_from_this(), boost::asio::placeholders::error)
             );
         } else {
             room_.leave(shared_from_this());
@@ -158,7 +158,7 @@ public:
                 boost::asio::async_write(
                     socket_,
                     boost::asio::buffer(write_msgs_.front().data(), write_msgs_.front().length()),
-                    boost::bind(&chat_session::handle_write, shared_from_this(), boost::asio::placeholders::error)
+                    boost::bind(&ClientSocket::handle_write, shared_from_this(), boost::asio::placeholders::error)
                 );
             }
         } else {
@@ -173,7 +173,7 @@ private:
     chat_message_queue write_msgs_;
 };
 
-typedef boost::shared_ptr<chat_session> chat_session_ptr;
+typedef boost::shared_ptr<ClientSocket> chat_session_ptr;
 
 //----------------------------------------------------------------------
 
@@ -187,7 +187,7 @@ public:
 
     void start_accept()
     {
-        chat_session_ptr new_session(new chat_session(io_context_, room_));
+        chat_session_ptr new_session(new ClientSocket(io_context_, room_));
         acceptor_.async_accept(
             new_session->socket(),
             boost::bind(&chat_server::handle_accept, this, new_session, boost::asio::placeholders::error)

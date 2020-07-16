@@ -55,8 +55,10 @@ namespace BabelNetwork {
             : ASocket(nwInfos),
               _context(context), _handler(context) {};
 
-        /* <- Methods -> */
+        /* <- Public Methods -> */
     public:
+        /* <- Private Methods -> */
+    private:
 
 //        [[nodiscard]] virtual bool sendResponse(const AResponse &response) = 0;
 

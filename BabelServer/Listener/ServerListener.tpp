@@ -12,9 +12,9 @@
 #include <utility>
 #include "AsioSocket.tpp"
 
-class chat_session : public boost::enable_shared_from_this<chat_session> {
+class ClientSocket : public boost::enable_shared_from_this<ClientSocket> {
 public:
-    chat_session(boost::asio::io_context &io_context, const std::string &msg)
+    ClientSocket(boost::asio::io_context &io_context, const std::string &msg)
         : _socket(io_context), _msg(msg)
     {
     }
@@ -30,7 +30,7 @@ public:
         boost::asio::async_read(
             _socket,
             boost::asio::buffer(_data, DATALENGTH),
-            boost::bind(&chat_session::handle_read_header, shared_from_this(), boost::asio::placeholders::error)
+            boost::bind(&ClientSocket::handle_read_header, shared_from_this(), boost::asio::placeholders::error)
         );
     }
 
@@ -40,7 +40,7 @@ public:
         boost::asio::async_write(
             _socket,
             boost::asio::buffer(_msg.c_str(), _msg.length()),
-            boost::bind(&chat_session::handle_write, shared_from_this(), boost::asio::placeholders::error)
+            boost::bind(&ClientSocket::handle_write, shared_from_this(), boost::asio::placeholders::error)
         );
 //        bool write_in_progress = !write_msgs_.empty();
 //        std::cout << "START DELIVER" << std::endl;
@@ -49,7 +49,7 @@ public:
 //            boost::asio::async_write(
 //                socket_,
 //                boost::asio::buffer(write_msgs_.front().data(), write_msgs_.front().length()),
-//                boost::bind(&chat_session::handle_write, shared_from_this(), boost::asio::placeholders::error)
+//                boost::bind(&ClientSocket::handle_write, shared_from_this(), boost::asio::placeholders::error)
 //            );
 //        }
     }
@@ -61,7 +61,7 @@ public:
             std::cout << "Data before :" << _data << std::endl;
             boost::asio::async_read(_socket,
                 boost::asio::buffer(_data, DATALENGTH),
-                boost::bind(&chat_session::handle_read_body, shared_from_this(), boost::asio::placeholders::error)
+                boost::bind(&ClientSocket::handle_read_body, shared_from_this(), boost::asio::placeholders::error)
             );
             std::cout << "Data After :" << _data << std::endl;
         } else {
@@ -72,7 +72,7 @@ public:
 //            std::cout << "START READ HEADER" << std::endl;
 //            boost::asio::async_read(socket_,
 //                boost::asio::buffer(read_msg_.body(), read_msg_.body_length()),
-//                boost::bind(&chat_session::handle_read_body, shared_from_this(), boost::asio::placeholders::error)
+//                boost::bind(&ClientSocket::handle_read_body, shared_from_this(), boost::asio::placeholders::error)
 //            );
 //        } else {
 //            room_.leave(shared_from_this());
@@ -86,7 +86,7 @@ public:
             std::cout << "Data before :" << _data << std::endl;
             boost::asio::async_read(_socket,
                 boost::asio::buffer(_data, DATALENGTH),
-                boost::bind(&chat_session::handle_read_header, shared_from_this(), boost::asio::placeholders::error)
+                boost::bind(&ClientSocket::handle_read_header, shared_from_this(), boost::asio::placeholders::error)
             );
             std::cout << "Data After :" << _data << std::endl;
         } else {
@@ -97,7 +97,7 @@ public:
 //            boost::asio::async_read(
 //                socket_,
 //                boost::asio::buffer(read_msg_.data(), chat_message::header_length),
-//                boost::bind(&chat_session::handle_read_header, shared_from_this(), boost::asio::placeholders::error)
+//                boost::bind(&ClientSocket::handle_read_header, shared_from_this(), boost::asio::placeholders::error)
 //            );
 //        } else {
 //            std::cerr << "ERROR IN HANDLE READ BODY" << std::endl;
@@ -111,7 +111,7 @@ public:
             boost::asio::async_write(
                 _socket,
                 boost::asio::buffer(_msg.c_str(), _msg.length()),
-                boost::bind(&chat_session::handle_write, shared_from_this(), boost::asio::placeholders::error)
+                boost::bind(&ClientSocket::handle_write, shared_from_this(), boost::asio::placeholders::error)
             );
         } else {
             std::cerr << "ERROR IN HANDLE WRITE" << std::endl;
@@ -165,7 +165,7 @@ namespace BabelNetwork {
     public:
         void start() final
         {
-            boost::shared_ptr<chat_session> new_session(new chat_session(*_context, "msg"));
+            boost::shared_ptr<ClientSocket> new_session(new ClientSocket(*_context, "msg"));
             _acceptor.async_accept(
                 new_session->socket(),
                 boost::bind(&AsioSocket<Listener>::handle_accept, this, new_session, boost::asio::placeholders::error)
@@ -185,7 +185,7 @@ namespace BabelNetwork {
         };
 
 
-        void handle_accept(const boost::shared_ptr<chat_session> &session, const boost::system::error_code &error)
+        void handle_accept(const boost::shared_ptr<ClientSocket> &session, const boost::system::error_code &error)
         {
             if (!error) {
                 std::cout << "ACCEPT OK" << std::endl;
@@ -193,7 +193,6 @@ namespace BabelNetwork {
             }
             start();
         }
-
 
         void setSignalsHandeled()
         {
