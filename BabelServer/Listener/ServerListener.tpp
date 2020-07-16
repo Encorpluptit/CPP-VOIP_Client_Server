@@ -128,20 +128,11 @@ private:
 
 // TODO: change namespace
 // TODO: template in common and ListenerClass derived from AsioSocket<Listener> ?
-namespace BabelNetwork {
-    template<>
-    class AsioSocket<Listener> final : virtual public ASocket {
+namespace BabelServer {
+    class Listener final : virtual public BabelNetwork::AsioSocket<BabelNetwork::Listener> {
     public:
-        explicit AsioSocket(const NetworkInfos &nwInfos)
-            : ASocket(nwInfos),
-              _context(new boost::asio::io_context),
-              _acceptor(boost::asio::ip::tcp::acceptor(
-                  *_context,
-                  boost::asio::ip::tcp::endpoint(
-                      boost::asio::ip::address::from_string(_networkInfos.getIp()), _networkInfos.getPort()
-                  ))
-              ),
-              _signals(*_context)
+        explicit Listener(boost::asio::io_context &context, const BabelNetwork::NetworkInfos &nwInfos)
+            : ASocket(nwInfos), AsioSocket<BabelNetwork::AsioListener>(context, nwInfos)
         {
             setReady();
             setSignalsHandeled();
@@ -149,14 +140,14 @@ namespace BabelNetwork {
             setThread(boost::make_shared<BabelUtils::BoostThread>(
                 [this] {
                     std::cout << "THREAD LAUNCHED" << std::endl;
-                    _context->run();
+                    _context.run();
                     std::cout << "THREAD FINISHED" << std::endl;
                 }
                 )
             );
         }
 
-        ~AsioSocket() final
+        ~Listener() final
         {
             stop();
         }
@@ -165,25 +156,13 @@ namespace BabelNetwork {
     public:
         void start() final
         {
-            boost::shared_ptr<ClientSocket> new_session(new ClientSocket(*_context, "msg"));
-            _acceptor.async_accept(
+            std::cout << "START / RESTART" << std::endl;
+            boost::shared_ptr<ClientSocket> new_session(new ClientSocket(_context, "msg"));
+            getAcceptor().async_accept(
                 new_session->socket(),
-                boost::bind(&AsioSocket<Listener>::handle_accept, this, new_session, boost::asio::placeholders::error)
+                boost::bind(&BabelServer::Listener::handle_accept, this, new_session, boost::asio::placeholders::error)
             );
         };
-
-        void stop() final
-        {
-            std::cout << "LISTENER STOPPED" << std::endl;
-            _context->stop();
-        };
-
-        [[nodiscard]] bool sendResponse(const AResponse &response) final
-        {
-            std::cerr << "Listener cannot send responses" << std::endl;
-            return false;
-        };
-
 
         void handle_accept(const boost::shared_ptr<ClientSocket> &session, const boost::system::error_code &error)
         {
@@ -196,26 +175,98 @@ namespace BabelNetwork {
 
         void setSignalsHandeled()
         {
-            _signals.add(SIGINT);
-            _signals.add(SIGTERM);
-            _signals.async_wait(boost::bind(&AsioSocket::stop, this));
+            getSignals().add(SIGINT);
+            getSignals().add(SIGTERM);
+            getSignals().async_wait(boost::bind(&AsioSocket::stop, this));
         }
-
-        /* <- Getters / Setters -> */
-    public:
-        [[nodiscard]] const boost::shared_ptr<boost::asio::io_context> &getContext() const
-        {
-            return _context;
-        }
-
-
-        /* <- Attributes -> */
-    private:
-        boost::shared_ptr<boost::asio::io_context> _context;
-        boost::asio::ip::tcp::acceptor _acceptor;
-        boost::asio::signal_set _signals;
     };
 
 }
+//// TODO: change namespace
+//// TODO: template in common and ListenerClass derived from AsioSocket<Listener> ?
+//namespace BabelNetwork {
+//    template<>
+//    class AsioSocket<Listener> final : virtual public ASocket {
+//    public:
+//        explicit AsioSocket(boost::asio::io_context &context, const NetworkInfos &nwInfos)
+//            : ASocket(nwInfos),
+//              _context(context),
+//              _acceptor(boost::asio::ip::tcp::acceptor(
+//                  _context,
+//                  boost::asio::ip::tcp::endpoint(
+//                      boost::asio::ip::address::from_string(_networkInfos.getIp()), _networkInfos.getPort()
+//                  ))
+//              ),
+//              _signals(_context)
+//        {
+//            setReady();
+//            setSignalsHandeled();
+//            start();
+//            setThread(boost::make_shared<BabelUtils::BoostThread>(
+//                [this] {
+//                    std::cout << "THREAD LAUNCHED" << std::endl;
+//                    _context.run();
+//                    std::cout << "THREAD FINISHED" << std::endl;
+//                }
+//                )
+//            );
+//        }
+//
+//        ~AsioSocket() final
+//        {
+//            stop();
+//        }
+//
+//        /* <- Methods -> */
+//    public:
+//        void start() final
+//        {
+//            boost::shared_ptr<ClientSocket> new_session(new ClientSocket(_context, "msg"));
+//            _acceptor.async_accept(
+//                new_session->socket(),
+//                boost::bind(&AsioSocket<Listener>::handle_accept, this, new_session, boost::asio::placeholders::error)
+//            );
+//        };
+//
+//        void stop() final
+//        {
+//            std::cout << "LISTENER STOPPED" << std::endl;
+//            _context.stop();
+//        };
+//
+////        [[nodiscard]] bool sendResponse(const AResponse &response) final
+////        {
+////            std::cerr << "Listener cannot send responses" << std::endl;
+////            return false;
+////        };
+//
+//
+//        void handle_accept(const boost::shared_ptr<ClientSocket> &session, const boost::system::error_code &error)
+//        {
+//            if (!error) {
+//                std::cout << "ACCEPT OK" << std::endl;
+//                session->start_session();
+//            }
+//            start();
+//        }
+//
+//        void setSignalsHandeled()
+//        {
+//            _signals.add(SIGINT);
+//            _signals.add(SIGTERM);
+//            _signals.async_wait(boost::bind(&AsioSocket::stop, this));
+//        }
+//
+//        /* <- Getters / Setters -> */
+//    public:
+//
+//
+//        /* <- Attributes -> */
+//    private:
+//        boost::asio::ip::tcp::acceptor _acceptor;
+//        boost::asio::signal_set _signals;
+//    };
+//
+//}
 
 #endif /* CPP_BABEL_2020_SERVERLISTENER_HPP */

@@ -17,11 +17,15 @@
 
 namespace BabelNetwork {
     /* <- Asio Listener Structure -> */
-    using Listener = struct Listener {
+    using AsioListener = struct Listener {
+        Listener(boost::asio::io_context &context, boost::asio::ip::tcp::acceptor acceptor);
+
         boost::asio::ip::tcp::acceptor _acceptor;
         boost::asio::signal_set _signals;
-        BabelUtils::BoostThread _thread;
     };
+
+    AsioListener::Listener(boost::asio::io_context &context, boost::asio::ip::tcp::acceptor acceptor)
+        : _acceptor(std::move(acceptor)), _signals(context) {};
 
     template<class T>
     class AsioSocket : virtual public ASocket {
@@ -29,18 +33,27 @@ namespace BabelNetwork {
 
         /* <- Constructor - Destructor -> */
     public:
-//        AsioSocket(boost::asio::io_context &context)
-//            : _context(context), _handler(context) {};
+        explicit AsioSocket(boost::asio::io_context &context)
+            : _context(context) {};
 
 
         /* <- Public Methods -> */
     public:
+        [[nodiscard]] boost::asio::io_context &getContext() const
+        {
+            return _context;
+        }
+
+        void stop() override
+        {
+            _context.stop();
+        };
 
         /* <- Private Methods -> */
     private:
 
         /* <- Attributes -> */
-    private:
+    protected:
         boost::asio::io_context &_context;
         T _handler;
     };
@@ -57,49 +70,65 @@ namespace BabelNetwork {
 
         /* <- Public Methods -> */
     public:
+        [[nodiscard]] const boost::asio::ip::tcp::socket &getSocket() const
+        {
+            return _handler;
+        }
+
         /* <- Private Methods -> */
     private:
 
 //        [[nodiscard]] virtual bool sendResponse(const AResponse &response) = 0;
 
         /* <- Attributes -> */
-    private:
+    protected:
         boost::asio::io_context &_context;
         boost::asio::ip::tcp::socket _handler;
     };
 
 /* ------------------------------------------------------------ */
 
-//    template<>
-//    class AsioSocket<Listener> : virtual public ASocket {
-//    public:
-//        AsioSocket(boost::asio::io_context &context, const NetworkInfos &nwInfos)
-//            : ASocket(nwInfos),
-//              _context(context),
-//              _acceptor(
-//                  boost::asio::ip::tcp::acceptor(
-//                      _context,
-//                      boost::asio::ip::tcp::endpoint(
-//                          boost::asio::ip::address::from_string(_networkInfos.getIp()), _networkInfos.getPort()
-//                      )
-//                  )
-//              ),
-//              _signals(_context),
-//              _thread([ObjectPtr = &_context] {
-//                      std::cout << "THREAD LAUNCHED" << std::endl;
-//                      ObjectPtr->run();
-//                      std::cout << "THREAD FINISHED" << std::endl;
-//                  }
-//              )
-//        {
-//        }
-//        /* <- Attributes -> */
-//    private:
-//        boost::asio::io_context &_context;
-//        boost::asio::ip::tcp::acceptor _acceptor;
-//        boost::asio::signal_set _signals;
-//        BabelUtils::BoostThread _thread;
-//    };
+    template<>
+    class AsioSocket<AsioListener> : virtual public ASocket {
+    public:
+        AsioSocket(boost::asio::io_context &context, const NetworkInfos &nwInfos)
+            : ASocket(nwInfos),
+              _context(context),
+              _handler(context, boost::asio::ip::tcp::acceptor(
+                  _context,
+                  boost::asio::ip::tcp::endpoint(
+                      boost::asio::ip::address::from_string(_networkInfos.getIp()), _networkInfos.getPort()
+                  ))
+              )
+        {
+        }
+        /* <- Public Methods -> */
+    public:
+        [[nodiscard]] boost::asio::ip::tcp::acceptor &getAcceptor() { return _handler._acceptor; }
+
+        [[nodiscard]] boost::asio::signal_set &getSignals() { return _handler._signals; }
+
+        [[nodiscard]] bool sendResponse(const AResponse &response) final
+        {
+            std::cerr << "Listener cannot send responses" << std::endl;
+            return false;
+        };
+
+        void stop() final
+        {
+            std::cout << "LISTENER STOPPED" << std::endl;
+            _context.stop();
+        };
+
+
+        /* <- Private Methods -> */
+    private:
+
+        /* <- Attributes -> */
+    protected:
+        boost::asio::io_context &_context;
+        AsioListener _handler;
+    };
 }
 
 #endif /* CPP_BABEL_2020_ASIOSOCKET_TPP */
