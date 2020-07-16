@@ -153,6 +153,8 @@ int main(int argc, char *argv[])
 
         boost::thread t([ObjectPtr = &io_context] { ObjectPtr->run(); });
 
+//        boost::thread t(boost::bind(&boost::asio::io_context::run, &io_context));
+
         char line[chat_message::max_body_length + 1];
         while (std::cin.getline(line, chat_message::max_body_length + 1)) {
             using namespace std; // For strlen and memcpy.

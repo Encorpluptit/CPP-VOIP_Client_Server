@@ -14,6 +14,7 @@
 #include <boost/asio.hpp>
 #include "ASocket.hpp"
 #include "AResponse.hpp"
+#include "BoostThread.hpp"
 
 namespace BabelServer {
     class Socket final : virtual public BabelNetwork::ASocket {
@@ -42,9 +43,8 @@ namespace BabelServer {
         boost::asio::ip::tcp::socket _socket;
         boost::asio::ip::tcp::acceptor _acceptor;
         boost::asio::signal_set _signals;
-        boost::thread _thread;
+        BabelUtils::BoostThread _thread;
         std::deque<std::unique_ptr<BabelNetwork::AResponse>> _responses;
-//        std::make_unique<BabelNetwork::AResponse>();
     };
 
 }

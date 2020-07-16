@@ -80,7 +80,6 @@ set(
         ${COMMON_DIR}/Network/Sockets/ASocket
 #        ${COMMON_DIR}/Network/Sockets/TcpSocket
 
-        ${COMMON_DIR}/Thread/IThread
         ${COMMON_DIR}/Thread/AThread
         ${COMMON_DIR}/Thread/BoostThread
 
@@ -100,7 +99,6 @@ set(
         ${COMMON_DIR}/Network/Sockets/ISocket/ISocket.cpp
         ${COMMON_DIR}/Network/Sockets/ASocket/ASocket.cpp
 
-        ${COMMON_DIR}/Thread/IThread/IThread.cpp
         ${COMMON_DIR}/Thread/AThread/AThread.cpp
         ${COMMON_DIR}/Thread/BoostThread/BoostThread.cpp
 

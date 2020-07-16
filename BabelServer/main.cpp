@@ -22,22 +22,39 @@ void handle_connect(const boost::system::error_code &error)
 
 void lolfunc()
 {
+    std::cout << "LAUNCHING LOL FUNCTION" << std::endl;
+}
 
+void lolfunc2(int value)
+{
+    std::cout << "LAUNCHING LOL 2 FUNCTION ->" << value << std::endl;
 }
 
 static void tests(char **av)
 {
     std::cout << "TEST LAUNCHED" << std::endl;
-    boost::asio::io_context io_context;
-    BabelNetwork::NetworkInfos nwi(av[1], av[2]);
+    BabelNetwork::NetworkInfos nwi;
+    try {
+        auto ip = boost::asio::ip::address::from_string(av[1]);
+        nwi.setIp(ip.to_string());
+    } catch (const std::exception &e) {
+        nwi.setIp(boost::asio::ip::address_v4().to_string());
+    }
     std::cout << nwi << std::endl;
 
-    std::function<void ()> lol = lolfunc;
-    BabelUtils::BoostThread<boost::thread, std::function<void ()>> thread(10, lolfunc);
+//    int value = 14;
+//    BabelUtils::BoostThread<boost::thread, std::function<void (int)>> thread(&lolfunc2, value);
+//    thread.launch();
+//    BabelUtils::BoostThread<boost::thread, std::function<void (int)>> thread2(lolfunc2);
+//    thread2.setHandler(boost::bind(&lolfunc2, value));
+//    thread2.launch(value);
 
+
+    boost::asio::io_context io_context;
     boost::asio::ip::tcp::resolver resolver(io_context);
     boost::asio::ip::tcp::resolver::results_type endpoints = resolver.resolve(nwi.getIp(), std::to_string(nwi.getPort()));
     boost::asio::ip::tcp::endpoint endpoint(boost::asio::ip::tcp::v4(), nwi.getPort());
+
 
     BabelServer::Socket socket1(nwi);
     socket1.launch();

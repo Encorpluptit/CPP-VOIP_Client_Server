@@ -9,32 +9,43 @@
 #define CPP_BABEL_2020_ATHREAD_HPP
 
 
-#include "IThread.hpp"
+#include <functional>
 
 namespace BabelUtils {
 
     template<typename T>
-    class AThread : virtual public IThread {
+    class AThread {
 
         /* <- Constructor - Destructor -> */
     public:
-        explicit AThread(int nb_threads = 10) : _nb_threads(nb_threads) {};
+        AThread() = default;
 
-        ~AThread() override = default;
+        template<typename ... Args>
+        explicit AThread(Args ... args) : _thread(args ...) {};
+
+        virtual ~AThread() = default;
 
         /* <- Methods -> */
     public:
 
+        virtual void run() = 0;
+
+        virtual void stop() = 0;
+
+        virtual void waitExecution() = 0;
+
+
         /* <- Getters / Setters -> */
     public:
-        [[nodiscard]] int getNbThreads() const { return _nb_threads; };
+        T getThread() const
+        {
+            return _thread;
+        }
 
-        void setNbThreads(int nbThreads) { _nb_threads = nbThreads; };
 
         /* <- Attributes -> */
     protected:
-//        T _handler;
-        int _nb_threads;
+        T _thread;
     };
 
 }

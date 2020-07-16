@@ -12,13 +12,15 @@
 #include <boost/cstdint.hpp>
 
 namespace BabelNetwork {
-    #define DEFAULT_PORT() ("5342")
+    #define DEFAULT_PORT() ("8080")
 
     class NetworkInfos {
 
         /* <- Constructor - Destructor -> */
     public:
-        explicit NetworkInfos(std::string ip, const std::string &port = DEFAULT_PORT());
+//        explicit NetworkInfos(const std::string &port = DEFAULT_PORT());
+
+        explicit NetworkInfos(std::string ip = "0.0.0.0", const std::string &port = DEFAULT_PORT());
 
         ~NetworkInfos() = default;
 
@@ -29,8 +31,12 @@ namespace BabelNetwork {
         bool operator==(const NetworkInfos &other) const;
 
 
-        /* <- Methods -> */
+        /* <- Public Methods -> */
     public:
+
+        /* <- Private Methods -> */
+    private:
+        static uint16_t parsePort(const std::string &port);
 
         /* <- Getters / Setters -> */
     public:
@@ -44,9 +50,8 @@ namespace BabelNetwork {
 
         /* <- Attributes -> */
     private:
-        uint16_t _port;
-//        boost::uint16_t _port;
         std::string _ip;
+        uint16_t _port;
     };
 
     /* <- Operators -> */

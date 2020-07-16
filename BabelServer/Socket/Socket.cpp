@@ -21,53 +21,38 @@ Socket::Socket(const BabelNetwork::NetworkInfos &networkInfos)
               )
           )
       ),
-      _signals(_context)
+      _signals(_context),
+      _thread([ObjectPtr = &_context] {
+          std::cout << "THREAD LAUNCHED" << std::endl;
+          ObjectPtr->run();
+          std::cout << "THREAD FINISHED" << std::endl;
+      })
 {
     setSocketOptions();
     setSignalsHandeled();
-//    _thread = boost::thread([] { std::cout << "THREAD LAUNCHED" << std::endl;});
-//    boost::thread _thread([ObjectPtr = &_context] { ObjectPtr->run(); });
-
-//    boost::asio::ip::tcp::endpoint endpoint(
-//        boost::asio::ip::address::from_string(_networkInfos.getIp()),
-//        _networkInfos.getPort()
-//    );
-//    _acceptor = boost::asio::ip::tcp::acceptor(_context, endpoint);
 }
+
+#include "BoostThread.hpp"
 
 void Socket::launch()
 {
-//    _thread = boost::thread([] { std::cout << "THREAD LAUNCHED" << std::endl;});
-    _thread = boost::thread([ObjectPtr = &_context, this] {
-        std::cout << "THREAD LAUNCHED" << std::endl;
-        ObjectPtr->run();
-//        this->_thread.join();
-        std::cout << "THREAD FINISHED" << std::endl;
-    });
-//    _thread = boost::thread([this] {
+//    _thread = BabelUtils::BoostThread([ObjectPtr = &_context, this] {
 //        std::cout << "THREAD LAUNCHED" << std::endl;
-//        this->start_accept();
+//        ObjectPtr->run();
 //        std::cout << "THREAD FINISHED" << std::endl;
 //    });
     start_accept();
+
 //    _thread = boost::thread([this] {
 //        std::cout << "THREAD LAUNCHED" << std::endl;
 //        this->start_accept();
 //        std::cout << "THREAD FINISHED" << std::endl;
 //    });
+//    _context.run();
 
-    char line[50 + 1];
-    while (std::cin.getline(line, 50 + 1));
-//    boost::asio::post(_context,
-//        boost::bind(&chat_client::do_close, this)
-//    );
-
-    _thread.join();
-//    boost::asio::ip::tcp::endpoint endpoint(
-//        boost::asio::ip::address::from_string(_networkInfos.getIp()),
-//        _networkInfos.getPort()
-//    );
-//    _acceptor
+    std::cout << "VOUS ICI ?" << std::endl;
+    _thread.waitExecution();
+    std::cout << "VOUS ICI 2?" << std::endl;
 }
 
 void Socket::start_accept()
@@ -77,6 +62,7 @@ void Socket::start_accept()
         _socket,
         boost::bind(&Socket::handle_accept, this, boost::asio::placeholders::error)
     );
+//    start_accept();
 }
 
 void Socket::lol(const std::string &buffer)
