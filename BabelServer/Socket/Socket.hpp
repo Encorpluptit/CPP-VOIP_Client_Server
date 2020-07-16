@@ -10,7 +10,6 @@
 
 #include <list>
 #include <memory>
-#include <boost/thread/thread.hpp>
 #include <boost/asio.hpp>
 #include "ASocket.hpp"
 #include "AResponse.hpp"
@@ -18,11 +17,15 @@
 
 namespace BabelServer {
     class Socket final : virtual public BabelNetwork::ASocket {
+
+        /* <- Constructor - Destructor -> */
     public:
         explicit Socket(const BabelNetwork::NetworkInfos &networkInfos);
 
+        /* <- Public Methods -> */
     public:
-        void launch() final;
+
+        void start() final;
 
         void stop() final;
 
@@ -32,6 +35,7 @@ namespace BabelServer {
 
         void lol(const std::string &buffer);
 
+        /* <- Private Methods -> */
     private:
         void setSocketOptions();
 
@@ -40,7 +44,6 @@ namespace BabelServer {
         /* <- Attributes -> */
     private:
         boost::asio::io_context _context;
-        boost::asio::ip::tcp::socket _socket;
         boost::asio::ip::tcp::acceptor _acceptor;
         boost::asio::signal_set _signals;
         BabelUtils::BoostThread _thread;

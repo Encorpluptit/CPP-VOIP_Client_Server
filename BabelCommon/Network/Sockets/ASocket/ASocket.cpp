@@ -7,7 +7,9 @@
 
 #include "ASocket.hpp"
 
-BabelNetwork::ASocket::ASocket(const BabelNetwork::NetworkInfos &networkInfos)
+using namespace BabelNetwork;
+
+BabelNetwork::ASocket::ASocket(const NetworkInfos &networkInfos)
     : _networkInfos(networkInfos)
 {}
 
@@ -21,10 +23,21 @@ void BabelNetwork::ASocket::setReady()
     _ready = true;
 }
 
-const BabelNetwork::NetworkInfos &BabelNetwork::ASocket::getNetworkInfos() const
+const NetworkInfos &ASocket::getNetworkInfos() const
 {
     return _networkInfos;
 }
+
+[[nodiscard]] const boost::shared_ptr<BabelUtils::BoostThread> &ASocket::getThread() const
+{
+    return _thread;
+}
+
+void ASocket::setThread(const boost::shared_ptr<BabelUtils::BoostThread> &thread)
+{
+    _thread = thread;
+}
+
 
 bool BabelNetwork::ASocket::operator==(const BabelNetwork::NetworkInfos &other) const
 {

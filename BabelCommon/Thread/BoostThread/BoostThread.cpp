@@ -15,7 +15,7 @@ using namespace BabelUtils;
 //    return false;
 //}
 //
-//bool BoostThread::launch()
+//bool BoostThread::start()
 //{
 //    return false;
 //}

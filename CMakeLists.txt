@@ -78,6 +78,7 @@ set(
 
         ${COMMON_DIR}/Network/Sockets/ISocket
         ${COMMON_DIR}/Network/Sockets/ASocket
+        ${COMMON_DIR}/Network/Sockets/AsioSocket/
 #        ${COMMON_DIR}/Network/Sockets/TcpSocket
 
         ${COMMON_DIR}/Thread/AThread
@@ -117,6 +118,7 @@ set(
         SERVER_INCLUDES
         ${SERVER_DIR}/Server
         ${SERVER_DIR}/Socket
+        ${SERVER_DIR}/Listener
 )
 
 
@@ -126,7 +128,7 @@ set(
         SERVER_SOURCES
         ${SERVER_DIR}/test.cpp
         ${SERVER_DIR}/Server/Server.cpp
-        ${SERVER_DIR}/Socket/Socket.cpp
+#        ${SERVER_DIR}/Socket/Socket.cpp
 )
 
 

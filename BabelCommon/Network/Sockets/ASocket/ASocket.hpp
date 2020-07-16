@@ -9,6 +9,8 @@
 #define CPP_BABEL_2020_ASOCKET_HPP
 
 #include "ISocket.hpp"
+#include "AResponse.hpp"
+#include "BoostThread.hpp"
 
 namespace BabelNetwork {
 
@@ -20,6 +22,11 @@ namespace BabelNetwork {
 
         ~ASocket() override = default;
 
+        /* <- Public Methods -> */
+    public:
+
+//        [[nodiscard]] virtual bool sendResponse(const AResponse &response) = 0;
+
         /* <- Getters / Setters -> */
     public:
         [[nodiscard]] bool isReady() const;
@@ -27,6 +34,10 @@ namespace BabelNetwork {
         void setReady();
 
         [[nodiscard]] const NetworkInfos &getNetworkInfos() const;
+
+        [[nodiscard]] const boost::shared_ptr<BabelUtils::BoostThread> &getThread() const;
+
+        void setThread(const boost::shared_ptr<BabelUtils::BoostThread> &thread);
 
         /* <- Operators -> */
     public:
@@ -38,6 +49,7 @@ namespace BabelNetwork {
     protected:
         const NetworkInfos &_networkInfos;
         bool _ready = false;
+        boost::shared_ptr<BabelUtils::BoostThread> _thread;
     };
 
 }

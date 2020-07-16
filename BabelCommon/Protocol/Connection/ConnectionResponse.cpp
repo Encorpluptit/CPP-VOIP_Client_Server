@@ -9,12 +9,8 @@
 
 using namespace BabelNetwork;
 
-ConnectionResponse::ConnectionResponse()
-    : _description("Connection between server and client")
-{}
-
 ConnectionResponse::ConnectionResponse(const ResponseHeader *response, const char *data)
-    : AResponse(response, data), _description("Connection between server and client")
+    : AResponse(response, data)
 {}
 
 bool BabelNetwork::ConnectionResponse::isOk()

@@ -22,6 +22,7 @@ namespace BabelNetwork {
             uint16_t returnCode;
             uint32_t dataLength;
         };
+        size_t ResponseHeaderSize = sizeof(ResponseHeader);
 
 
 

@@ -12,7 +12,6 @@ using namespace BabelServer;
 
 Socket::Socket(const BabelNetwork::NetworkInfos &networkInfos)
     : ASocket(networkInfos),
-      _socket(_context),
       _acceptor(
           boost::asio::ip::tcp::acceptor(
               _context,
@@ -32,24 +31,9 @@ Socket::Socket(const BabelNetwork::NetworkInfos &networkInfos)
     setSignalsHandeled();
 }
 
-#include "BoostThread.hpp"
-
-void Socket::launch()
+void Socket::start()
 {
-//    _thread = BabelUtils::BoostThread([ObjectPtr = &_context, this] {
-//        std::cout << "THREAD LAUNCHED" << std::endl;
-//        ObjectPtr->run();
-//        std::cout << "THREAD FINISHED" << std::endl;
-//    });
     start_accept();
-
-//    _thread = boost::thread([this] {
-//        std::cout << "THREAD LAUNCHED" << std::endl;
-//        this->start_accept();
-//        std::cout << "THREAD FINISHED" << std::endl;
-//    });
-//    _context.run();
-
     std::cout << "VOUS ICI ?" << std::endl;
     _thread.waitExecution();
     std::cout << "VOUS ICI 2?" << std::endl;

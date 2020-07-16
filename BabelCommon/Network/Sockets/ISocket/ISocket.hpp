@@ -9,6 +9,7 @@
 #define CPP_BABEL_2020_ISOCKET_HPP
 
 #include "NetworkInfos.hpp"
+#include "AResponse.hpp"
 
 namespace BabelNetwork {
     class ISocket {
@@ -26,9 +27,11 @@ namespace BabelNetwork {
 
         /* <- Methods -> */
     public:
-        virtual void launch() = 0;
+        virtual void start() = 0;
 
         virtual void stop() = 0;
+
+        [[nodiscard]] virtual bool sendResponse(const AResponse &response) = 0;
 
     };
 

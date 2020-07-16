@@ -15,7 +15,7 @@ namespace BabelNetwork {
 
         /* <- Constructor - Destructor -> */
     public:
-        ConnectionResponse();
+        ConnectionResponse() = default;
 
         ConnectionResponse(const ResponseHeader *response, const char *data);
 
@@ -28,7 +28,7 @@ namespace BabelNetwork {
         void setOk() final;
 
     private:
-        std::string _description = "Connection between server and client";
+        const std::string _description = "Connection between server and client";
     };
 }
 
