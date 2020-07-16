@@ -78,7 +78,7 @@ set(
 
         ${COMMON_DIR}/Network/Sockets/ISocket
         ${COMMON_DIR}/Network/Sockets/ASocket
-        ${COMMON_DIR}/Network/Sockets/AsioSocket/
+        ${COMMON_DIR}/Network/Sockets/AsioSocket
 #        ${COMMON_DIR}/Network/Sockets/TcpSocket
 
         ${COMMON_DIR}/Thread/AThread
@@ -119,6 +119,7 @@ set(
         ${SERVER_DIR}/Server
         ${SERVER_DIR}/Socket
         ${SERVER_DIR}/Listener
+        ${SERVER_DIR}/Client
 )
 
 

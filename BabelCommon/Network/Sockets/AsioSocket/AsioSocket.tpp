@@ -18,14 +18,15 @@
 namespace BabelNetwork {
     /* <- Asio Listener Structure -> */
     using AsioListener = struct Listener {
-        Listener(boost::asio::io_context &context, boost::asio::ip::tcp::acceptor acceptor);
-
+//        Listener(boost::asio::io_context &context, boost::asio::ip::tcp::acceptor acceptor);
+        Listener(boost::asio::io_context &context, boost::asio::ip::tcp::acceptor acceptor)
+            : _acceptor(std::move(acceptor)), _signals(context) {};
         boost::asio::ip::tcp::acceptor _acceptor;
         boost::asio::signal_set _signals;
     };
 
-    AsioListener::Listener(boost::asio::io_context &context, boost::asio::ip::tcp::acceptor acceptor)
-        : _acceptor(std::move(acceptor)), _signals(context) {};
+//    AsioListener::Listener(boost::asio::io_context &context, boost::asio::ip::tcp::acceptor acceptor)
+//        : _acceptor(std::move(acceptor)), _signals(context) {};
 
     template<class T>
     class AsioSocket : virtual public ASocket {
@@ -39,11 +40,6 @@ namespace BabelNetwork {
 
         /* <- Public Methods -> */
     public:
-        [[nodiscard]] boost::asio::io_context &getContext() const
-        {
-            return _context;
-        }
-
         void stop() override
         {
             _context.stop();
@@ -51,6 +47,9 @@ namespace BabelNetwork {
 
         /* <- Private Methods -> */
     private:
+        /* <- Getters / Setters -> */
+    public:
+        [[nodiscard]] boost::asio::io_context &getContext() const { return _context; }
 
         /* <- Attributes -> */
     protected:
@@ -70,7 +69,7 @@ namespace BabelNetwork {
 
         /* <- Public Methods -> */
     public:
-        [[nodiscard]] const boost::asio::ip::tcp::socket &getSocket() const
+        [[nodiscard]] boost::asio::ip::tcp::socket &getSocket()
         {
             return _handler;
         }
@@ -78,7 +77,10 @@ namespace BabelNetwork {
         /* <- Private Methods -> */
     private:
 
-//        [[nodiscard]] virtual bool sendResponse(const AResponse &response) = 0;
+        /* <- Getters / Setters -> */
+    public:
+        [[nodiscard]] boost::asio::io_context &getContext() const { return _context; }
+
 
         /* <- Attributes -> */
     protected:
@@ -104,9 +106,6 @@ namespace BabelNetwork {
         }
         /* <- Public Methods -> */
     public:
-        [[nodiscard]] boost::asio::ip::tcp::acceptor &getAcceptor() { return _handler._acceptor; }
-
-        [[nodiscard]] boost::asio::signal_set &getSignals() { return _handler._signals; }
 
         [[nodiscard]] bool sendResponse(const AResponse &response) final
         {
@@ -123,6 +122,14 @@ namespace BabelNetwork {
 
         /* <- Private Methods -> */
     private:
+
+        /* <- Getters / Setters -> */
+    public:
+        [[nodiscard]] boost::asio::ip::tcp::acceptor &getAcceptor() { return _handler._acceptor; }
+
+        [[nodiscard]] boost::asio::signal_set &getSignals() { return _handler._signals; }
+
+        [[nodiscard]] boost::asio::io_context &getContext() const { return _context; }
 
         /* <- Attributes -> */
     protected:
