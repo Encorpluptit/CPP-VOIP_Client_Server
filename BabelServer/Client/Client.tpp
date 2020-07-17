@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2020
 ** CPP_babel_2020 (Copyright (c) ENCORPLUPTIT on 7/16/20).
 ** File description:
-** [Client.hpp]: Header file for Clientpp feature.
+** [Client.hpp]: Header file for Client feature.
 */
 
 #ifndef CPP_BABEL_2020_CLIENT_HPP

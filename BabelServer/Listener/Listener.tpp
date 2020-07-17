@@ -10,8 +10,6 @@
 
 #include "Client.tpp"
 
-// TODO: change namespace
-// TODO: template in common and ListenerClass derived from AsioSocket<Listener> ?
 namespace BabelServer {
     class Listener final : virtual public BabelNetwork::AsioSocket<BabelNetwork::Listener> {
     public:
@@ -41,7 +39,8 @@ namespace BabelServer {
         void start() final
         {
             std::cout << "START / RESTART" << std::endl;
-            boost::shared_ptr<ClientSocket> new_session(new ClientSocket(_context, getNetworkInfos(), "msg"));
+            boost::shared_ptr<ClientSocket> new_session(
+                new ClientSocket(AsioSocket<BabelNetwork::AsioListener>::getContext(), getNetworkInfos(), "msg"));
             getAcceptor().async_accept(
                 new_session->getSocket(),
                 boost::bind(&BabelServer::Listener::handle_accept, this, new_session, boost::asio::placeholders::error)
@@ -61,10 +60,9 @@ namespace BabelServer {
         {
             getSignals().add(SIGINT);
             getSignals().add(SIGTERM);
-            getSignals().async_wait(boost::bind(&AsioSocket::stop, this));
+            getSignals().async_wait(boost::bind(&Listener::stop, this));
         }
     };
-
 }
 
 #endif /* CPP_BABEL_2020_SERVERLISTENER_HPP */

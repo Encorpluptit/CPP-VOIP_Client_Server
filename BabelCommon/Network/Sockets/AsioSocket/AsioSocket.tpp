@@ -109,14 +109,15 @@ namespace BabelNetwork {
 
         [[nodiscard]] bool sendResponse(const AResponse &response) final
         {
-            std::cerr << "Listener cannot send responses" << std::endl;
+//            std::cerr << "Listener cannot send responses" << std::endl;
+            std::cerr << "Listener cannot send response" << response << std::endl;
             return false;
         };
 
         void stop() final
         {
             std::cout << "LISTENER STOPPED" << std::endl;
-            _context.stop();
+            AsioSocket<AsioListener>::getContext().stop();
         };
 
 
