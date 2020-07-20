@@ -7,15 +7,11 @@
 
 #include <QtNetwork/QUdpSocket>
 
-class Core : public QObject
+class Core
 {
     public:
         Core();
-        void HelloUDP();
         ~Core() noexcept;
-
-    public slots:
-        void readyRead();
     private:
         QUdpSocket *socket;
 };

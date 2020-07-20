@@ -41,5 +41,6 @@ void AResponse::setData(const std::string &data)
 
 std::unique_ptr<IResponse> AResponse::getResponse(const std::string &input)
 {
+    (void)input;
     return std::unique_ptr<IResponse>();
 }
