@@ -5,24 +5,17 @@
 ** Core
 */
 
-#include <QtNetwork/QTcpSocket>
-#include "portaudio.h"
+#include <QtNetwork/QUdpSocket>
 
-class Core
+class Core : public QObject
 {
     public:
-        Core(const std::string ip, const std::string port) noexcept;
-        void Loop(const std::string ip, const std::string port);
-        bool connect(const std::string ip, const int port);
-        bool writeData(std::string str);
-        bool init_audio();
-        bool init_input();
-        bool init_output();
-        bool stop_audio();
-        ~Core();
+        Core();
+        void HelloUDP();
+        ~Core() noexcept;
+
+    public slots:
+        void readyRead();
     private:
-        QTcpSocket *socket;
-        PaStreamParameters input;
-        PaStreamParameters output;
-        PaStream *stream;
+        QUdpSocket *socket;
 };
