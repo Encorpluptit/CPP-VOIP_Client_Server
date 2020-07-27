@@ -211,10 +211,11 @@ add_executable(
 
 target_compile_definitions(unit_tests PRIVATE _UNIT_TESTS_)
 
+target_compile_options(unit_tests PRIVATE --coverage)
 
 target_include_directories(unit_tests PRIVATE tests/criterion_unit_tests/include)
 
-target_link_libraries(unit_tests criterion pthread)
+target_link_libraries(unit_tests criterion pthread gcov)
 
 ##########################
 # Test Executable
@@ -230,6 +231,7 @@ add_executable(
         tests/server/Chat_Message.hpp
         tests/server/Chat_Client.cpp
 )
+
 
 target_link_libraries(test_client pthread ${CONAN_LIBS})
 #target_link_libraries(babel_client ${CONAN_LIBS} Qt5::Widgets)

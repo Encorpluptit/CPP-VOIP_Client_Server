@@ -75,6 +75,8 @@ tests_run: setup-build-tree
 	-@$(MAKE) -j `nproc` --no-print-directory -C $(BUILD_DIR) test_server
 	-@$(MAKE) -j `nproc` --no-print-directory -C $(BUILD_DIR) test_client
 	@cp $(BUILD_DIR)/bin/test_client $(BUILD_DIR)/bin/test_server .
+	@gcovr -r . -s --exclude='tests|lib'
+	@gcovr -b . -s --exclude='tests|lib'
 
 
 
@@ -102,8 +104,6 @@ clean:
 
 fclean: clean server_fclean client_fclean
 	@$(RM) -r $(BUILD_DIR) $(CRITERION_BIN)
-
-tests_run:
 
 re: fclean all
 
