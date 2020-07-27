@@ -1,3 +1,10 @@
+/*
+** EPITECH PROJECT, 2020
+** CPP_babel_2020 (Copyright (c) ENCORPLUPTIT on 7/8/20).
+** File description:
+** [main.cpp]: Main program entry.
+*/
+
 #include <iostream>
 #include "Debug.hpp"
 #include "ConnectionResponse.hpp"

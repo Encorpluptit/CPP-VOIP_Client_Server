@@ -69,7 +69,7 @@ bool AResponse::encode_header()
 bool AResponse::decode_header()
 {
     memcpy(&_header, _headerData, ResponseHeaderSize);
-    return false;
+    return true;
 }
 
 constexpr size_t AResponse::getResponseHeaderSize()

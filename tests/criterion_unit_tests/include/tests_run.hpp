@@ -19,6 +19,10 @@ static inline void redirect_all_std()
 
 #define ASSERT_INT(actual, expected) cr_assert_eq(actual, expected, "Expected %d, got %d\n", expected, actual)
 #define EXPECT_INT(actual, expected) cr_expect_eq(actual, expected, "Expected %d, got %d\n", expected, actual)
+#define ASSERT_UINT(actual, expected) cr_assert_eq(actual, expected, "Expected %u, got %u\n", expected, actual)
+#define EXPECT_UINT(actual, expected) cr_expect_eq(actual, expected, "Expected %u, got %u\n", expected, actual)
+#define ASSERT_SIZET(actual, expected) cr_assert_eq(actual, expected, "Expected %zu, got %zu\n", expected, actual)
+#define EXPECT_SIZET(actual, expected) cr_expect_eq(actual, expected, "Expected %zu, got %zu\n", expected, actual)
 #define ASSERT_BOOL(actual, expected) cr_assert_eq(actual, expected, "Expected %s, got %s\n", expected ? "true" : "false", actual ? "true" : "false")
 #define EXPECT_BOOL(actual, expected) cr_expect_eq(actual, expected, "Expected %s, got %s\n", expected ? "true" : "false", actual ? "true" : "false")
 

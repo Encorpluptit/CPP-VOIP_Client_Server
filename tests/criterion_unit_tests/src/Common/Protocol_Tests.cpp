@@ -27,8 +27,7 @@ Test(Common, ConnectionResponse_3)
     static const BabelNetwork::AResponse::ResponseHeader hdr = {
         .returnCode = 84, .dataLength = 0
     };
-    const char *data = "";
-    BabelNetwork::ConnectionResponse test(&hdr, data);
+    BabelNetwork::ConnectionResponse test(&hdr);
 
     ASSERT_BOOL(test.isOk(), false);
 }
@@ -38,9 +37,45 @@ Test(Common, ConnectionResponse_4)
     static const BabelNetwork::AResponse::ResponseHeader hdr = {
         .returnCode = 84, .dataLength = 0
     };
-    const char *data = nullptr;
-    BabelNetwork::ConnectionResponse test(&hdr, data);
+    BabelNetwork::ConnectionResponse test(&hdr);
 
     ASSERT_BOOL(test.isOk(), false);
+}
+
+Test(Common, ConnectionResponse_5)
+{
+    static const BabelNetwork::AResponse::ResponseHeader hdr = {
+        .returnCode = 0, .dataLength = 5
+    };
+    BabelNetwork::ConnectionResponse test(&hdr);
+
+    ASSERT_UINT(test.getHeaderDataLength(), hdr.dataLength);
+}
+
+Test(Common, ConnectionResponse_6)
+{
+    static const BabelNetwork::AResponse::ResponseHeader hdr = {
+        .returnCode = 0, .dataLength = 0
+    };
+    BabelNetwork::ConnectionResponse test(&hdr);
+
+    test.encode_header();
+    test.decode_header();
+
+    ASSERT_UINT(test.getHeaderDataLength(), hdr.dataLength);
+}
+
+Test(Common, ConnectionResponse_7)
+{
+    static const BabelNetwork::AResponse::ResponseHeader hdr = {
+        .returnCode = 40, .dataLength = 50
+    };
+    BabelNetwork::ConnectionResponse test(&hdr);
+
+    test.encode_header();
+    test.decode_header();
+
+    ASSERT_UINT(test.getCode(), hdr.returnCode);
+    ASSERT_UINT(test.getHeaderDataLength(), hdr.dataLength);
 }
 

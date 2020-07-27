@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2020
 ** CPP_babel_2020 (Copyright (c) ENCORPLUPTIT on 7/16/20).
 ** File description:
-** [Listener.hpp]: Header file for ServerListenerpp feature.
+** [Listener.hpp]: Header file for ServerListener feature.
 */
 
 #ifndef CPP_BABEL_2020_SERVERLISTENER_HPP
@@ -60,7 +60,7 @@ namespace BabelServer {
         {
             getSignals().add(SIGINT);
             getSignals().add(SIGTERM);
-            getSignals().async_wait(boost::bind(&Listener::stop, this));
+            getSignals().async_wait([this] { stop(); });
         }
     };
 }
