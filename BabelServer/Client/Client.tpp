@@ -8,6 +8,7 @@
 #ifndef CPP_BABEL_2020_CLIENT_HPP
 #define CPP_BABEL_2020_CLIENT_HPP
 
+#include <queue>
 #include "AsioSocket.tpp"
 
 namespace BabelServer {
@@ -52,6 +53,7 @@ namespace BabelServer {
             if (!error) {
                 std::cout << "START READ HEADER" << std::endl;
                 std::cout << "Data before :" << _data << std::endl;
+                BabelNetwork::AResponse::ResponseHeader hdr;
                 boost::asio::async_read(
                     getSocket(),
                     boost::asio::buffer(_data, DATALENGTH),
@@ -131,6 +133,7 @@ namespace BabelServer {
 
         /* <- Attributes -> */
     private:
+        std::queue <std::unique_ptr<BabelNetwork::IResponse>> _responses;
         std::string _msg;
         static const size_t DATALENGTH = 3;
         char _data[DATALENGTH] = {0};

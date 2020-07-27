@@ -60,7 +60,7 @@ namespace BabelServer {
         {
             getSignals().add(SIGINT);
             getSignals().add(SIGTERM);
-            getSignals().async_wait([this] { stop(); });
+            getSignals().async_wait(boost::bind(&Listener::stop, this));
         }
     };
 }
