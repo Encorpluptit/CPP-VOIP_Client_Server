@@ -23,6 +23,13 @@ namespace BabelNetwork {
             UnknownError = 1000
         };
 
+        /* <- Class Enum -> */
+    public:
+        enum ResponseType {
+            Connection,
+
+        };
+
         /* <- Constructor - Destructor -> */
     public:
         IResponse() = default;
@@ -34,8 +41,6 @@ namespace BabelNetwork {
 
         /* <- Methods -> */
     public:
-//        [[nodiscard]] static virtual std::unique_ptr<IResponse> getResponse(const std::string &input) = 0;
-
         [[nodiscard]] virtual bool encode_header() = 0;
 
         [[nodiscard]] virtual bool decode_header() = 0;
@@ -47,7 +52,6 @@ namespace BabelNetwork {
         [[nodiscard]] virtual bool isOk() = 0;
 
         virtual void setOk() = 0;
-
     };
 
 }

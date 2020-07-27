@@ -25,8 +25,6 @@ namespace BabelNetwork {
         /* <- Public Methods -> */
     public:
 
-//        [[nodiscard]] virtual bool sendResponse(const AResponse &response) = 0;
-
         /* <- Getters / Setters -> */
     public:
         [[nodiscard]] bool isReady() const;

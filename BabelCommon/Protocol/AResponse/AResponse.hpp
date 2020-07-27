@@ -60,7 +60,7 @@ namespace BabelNetwork {
 
         [[nodiscard]] virtual const std::string &getDescription() const = 0;
 
-        [[nodiscard]] constexpr static size_t getResponseHeaderSize();
+        [[nodiscard]] constexpr static size_t getResponseHeaderSize() { return ResponseHeaderSize; };
 
         [[nodiscard]] virtual size_t getResponseDataSize() = 0;
 

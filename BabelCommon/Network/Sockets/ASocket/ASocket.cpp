@@ -38,7 +38,6 @@ void ASocket::setThread(const boost::shared_ptr<BabelUtils::BoostThread> &thread
     _thread = thread;
 }
 
-
 bool BabelNetwork::ASocket::operator==(const BabelNetwork::NetworkInfos &other) const
 {
     return this->getNetworkInfos() == other;

@@ -33,20 +33,12 @@ uint16_t AResponse::getCode() const
 {
     return _header.dataLength;
 }
-//
-//const std::string &BabelNetwork::AResponse::getDescription() const
-//{
-//    return _description;
-//}
 
 std::shared_ptr<IResponse> AResponse::getResponse(ResponseHeader *response, const char *data)
 {
     //Todo Switch case for returning good ptr
     if (response->returnCode >= IResponse::ResponseCode::ConnectionOk)
         return std::unique_ptr<IResponse>(new ConnectionResponse(response));
-//    switch {
-//        case (IResponse::ResponseCode::
-//    }
     return std::unique_ptr<IResponse>(new ConnectionResponse(response));
 }
 
@@ -70,11 +62,6 @@ bool AResponse::decode_header()
 {
     memcpy(&_header, _headerData, ResponseHeaderSize);
     return true;
-}
-
-constexpr size_t AResponse::getResponseHeaderSize()
-{
-    return ResponseHeaderSize;
 }
 
 const char *AResponse::getHeaderData() const

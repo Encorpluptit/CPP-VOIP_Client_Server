@@ -79,6 +79,7 @@ set(
         ${COMMON_DIR}/Network/Sockets/ISocket
         ${COMMON_DIR}/Network/Sockets/ASocket
         ${COMMON_DIR}/Network/Sockets/AsioSocket
+        ${COMMON_DIR}/Network/Sockets/AsioClientSocket
 
         ${COMMON_DIR}/Thread/AThread
         ${COMMON_DIR}/Thread/BoostThread
@@ -98,6 +99,7 @@ set(
 
         ${COMMON_DIR}/Network/Sockets/ISocket/ISocket.cpp
         ${COMMON_DIR}/Network/Sockets/ASocket/ASocket.cpp
+        ${COMMON_DIR}/Network/Sockets/AsioClientSocket/AsioClientSocket.cpp
 
         ${COMMON_DIR}/Thread/BoostThread/BoostThread.cpp
 
@@ -118,6 +120,7 @@ set(
         ${SERVER_DIR}/Socket
         ${SERVER_DIR}/Listener
         ${SERVER_DIR}/Client
+        ${SERVER_DIR}/AsioListenerSocket
 )
 
 
@@ -127,7 +130,6 @@ set(
         SERVER_SOURCES
         ${SERVER_DIR}/test.cpp
         ${SERVER_DIR}/Server/Server.cpp
-#        ${SERVER_DIR}/Socket/Socket.cpp
 )
 
 
@@ -136,8 +138,8 @@ set(
 add_executable(
         babel_server
         ${SERVER_DIR}/main.cpp
-        ${SERVER_SOURCES}
         ${COMMON_SOURCES}
+        ${SERVER_SOURCES}
 )
 
 target_include_directories(
