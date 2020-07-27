@@ -48,9 +48,12 @@ namespace BabelNetwork {
 
         void setIp(const std::string &ip);
 
+        [[nodiscard]] const std::string &getPortStr() const;
+
         /* <- Attributes -> */
     private:
         std::string _ip;
+        std::string _port_str;
         uint16_t _port;
     };
 

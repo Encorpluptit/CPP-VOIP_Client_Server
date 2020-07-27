@@ -6,15 +6,9 @@
 */
 
 #include <iostream>
-#include "Debug.hpp"
-#include "ConnectionResponse.hpp"
-#include "Logger.hpp"
 #include "NetworkInfos.hpp"
-#include "Server.hpp"
 #include <functional>
 #include "Socket.hpp"
-#include "BoostThread.hpp"
-//#include "Listener.tpp"
 #include "AsioListenerSocket.hpp"
 #include "AsioClientSocket.hpp"
 

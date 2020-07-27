@@ -20,6 +20,12 @@ namespace BabelNetwork {
     class AsioSocket : public ASocket {
         /* <- Constructor - Destructor -> */
     public:
+//        explicit AsioSocket(const NetworkInfos &networkInfos)
+//            : ASocket(networkInfos)
+//        {
+//            _context = boost::asio::io_context;
+//        };
+
         explicit AsioSocket(const NetworkInfos &networkInfos, io_context &context)
             : ASocket(networkInfos), _context(context) {};
 

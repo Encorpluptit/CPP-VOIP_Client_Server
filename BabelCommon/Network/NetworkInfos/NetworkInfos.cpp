@@ -13,7 +13,7 @@
 using namespace BabelNetwork;
 
 NetworkInfos::NetworkInfos(std::string ip, const std::string &port)
-    : _ip(std::move(ip)), _port(parsePort(port))
+    : _ip(std::move(ip)), _port_str(port), _port(parsePort(port))
 {
 }
 
@@ -61,4 +61,9 @@ void NetworkInfos::setIp(const std::string &ip)
 bool NetworkInfos::operator==(const NetworkInfos &other) const
 {
     return this->getPort() == other.getPort() && this->getIp() == other.getIp();
+}
+
+const std::string &NetworkInfos::getPortStr() const
+{
+    return _port_str;
 }

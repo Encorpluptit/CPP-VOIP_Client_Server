@@ -51,10 +51,26 @@ namespace BabelNetwork {
 
         /* <- Private Methods -> */
     private:
-        [[nodiscard]] ip::tcp::socket &connect()
+        void connect()
         {
-//            ip::tcp::resolver resolver(_context);
-//            ip::tcp::resolver::results_type endpoints = resolver.resolve(_networkInfos.getIp(), _networkInfos.getPort());
+            ip::tcp::resolver resolver(_context);
+            _endpoints = resolver.resolve(_networkInfos.getIp(), _networkInfos.getPortStr());
+            boost::asio::async_connect(
+                _socket,
+                _endpoints,
+                boost::bind(&AsioClientSocket::handle_connect, this, boost::asio::placeholders::error)
+            );
+        }
+
+        void handle_connect(const boost::system::error_code &error)
+        {
+            if (!error) {
+                std::cout << "HANDLE CONNECT (DO FCT TO LAUNCH SOCKET)" << std::endl;
+//                boost::asio::async_read(_socket,
+//                    boost::asio::buffer(read_msg_.data(), chat_message::header_length),
+//                    boost::bind(&chat_client::handle_read_header, this, boost::asio::placeholders::error)
+//                );
+            }
         }
 
         void handle_read_header(const boost::system::error_code &error)

@@ -36,6 +36,11 @@ namespace BabelServer {
                 );
             };
 
+        ~AsioListenerSocket() final
+        {
+            stop();
+        }
+
         /* <- Public Methods -> */
     public:
         void start() final
@@ -55,7 +60,7 @@ namespace BabelServer {
             _context.stop();
         };
 
-        [[nodiscard]] bool sendResponse(const BabelNetwork::AResponse &response) final
+        [[nodiscard]] bool sendResponse(__attribute__((unused))const BabelNetwork::AResponse &response) final
         {
             std::cerr << "Listener cannot send response" << response << std::endl;
             return false;
@@ -82,6 +87,20 @@ namespace BabelServer {
 
         /* <- Getters / Setters -> */
     public:
+        [[nodiscard]] const ip::tcp::endpoint &getEndpoint() const
+        {
+            return _endpoint;
+        }
+
+        [[nodiscard]] const ip::tcp::acceptor &getAcceptor() const
+        {
+            return _acceptor;
+        }
+
+        [[nodiscard]] const signal_set &getSignals() const
+        {
+            return _signals;
+        }
 
         /* <- Attributes -> */
     private:

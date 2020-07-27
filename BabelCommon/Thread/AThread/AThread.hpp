@@ -42,7 +42,6 @@ namespace BabelUtils {
             return _thread;
         }
 
-
         /* <- Attributes -> */
     protected:
         T _thread;
