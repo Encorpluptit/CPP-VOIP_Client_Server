@@ -9,16 +9,39 @@
 
 using namespace BabelNetwork;
 
-ConnectionResponse::ConnectionResponse(const ResponseHeader *response, const char *data)
-    : AResponse(response, data)
+ConnectionResponse::ConnectionResponse(const ResponseHeader *response)
+    : AResponse(response)
 {}
 
 bool BabelNetwork::ConnectionResponse::isOk()
 {
-    return _code == IResponse::ResponseCode::ConnectionOk;
+    return _header.returnCode == IResponse::ResponseCode::ConnectionOk;
 }
 
 void BabelNetwork::ConnectionResponse::setOk()
 {
-    _code = IResponse::ResponseCode::ConnectionOk;
+    _header.returnCode = IResponse::ResponseCode::ConnectionOk;
 }
+
+bool ConnectionResponse::decode_data()
+{
+    // TODO: Implement
+    return true;
+}
+
+const char *ConnectionResponse::getBodyData() const
+{
+    return _bodyData;
+}
+
+const std::string &ConnectionResponse::getDescription() const
+{
+    return _description;
+}
+
+size_t ConnectionResponse::getResponseDataSize()
+{
+    return sizeof(_bodyData);
+}
+
+

@@ -5,15 +5,18 @@
 ** [AResponse.cpp]: Source file for AResponse feature.
 */
 
+#include <cstring>
 #include "AResponse.hpp"
 #include "ConnectionResponse.hpp"
 
 using namespace BabelNetwork;
 
-AResponse::AResponse(const ResponseHeader *response, const char *data)
-    : _code(response->returnCode),
-    _data(data ? data : std::string().c_str())
-{}
+// TODO: real constructor for ResponseHeader Structure
+AResponse::AResponse(const AResponse::ResponseHeader *response)
+{
+    _header.returnCode = response->returnCode;
+    _header.dataLength = response->dataLength;
+}
 
 std::ostream &BabelNetwork::operator<<(std::ostream &os, const BabelNetwork::AResponse &response)
 {
@@ -21,38 +24,60 @@ std::ostream &BabelNetwork::operator<<(std::ostream &os, const BabelNetwork::ARe
     return os;
 }
 
-uint16_t BabelNetwork::AResponse::getCode() const
+uint16_t AResponse::getCode() const
 {
-    return _code;
+    return _header.returnCode;
 }
 
-const std::string &BabelNetwork::AResponse::getDescription() const
+[[nodiscard]] uint32_t AResponse::getHeaderDataLength() const
 {
-    return _description;
+    return _header.dataLength;
 }
+//
+//const std::string &BabelNetwork::AResponse::getDescription() const
+//{
+//    return _description;
+//}
 
-const std::string &AResponse::getData() const
+std::shared_ptr<IResponse> AResponse::getResponse(ResponseHeader *response, const char *data)
 {
-    return _data;
-}
-
-void AResponse::setData(const std::string &data)
-{
-    _data = data;
-}
-
-std::unique_ptr<IResponse> AResponse::getResponse(ResponseHeader *response, const char *data)
-{
-
-    return std::unique_ptr<IResponse>(new ConnectionResponse(response, data));
+    //Todo Switch case for returning good ptr
+    if (response->returnCode >= IResponse::ResponseCode::ConnectionOk)
+        return std::unique_ptr<IResponse>(new ConnectionResponse(response));
+//    switch {
+//        case (IResponse::ResponseCode::
+//    }
+    return std::unique_ptr<IResponse>(new ConnectionResponse(response));
 }
 
 std::string AResponse::serialize() const
 {
     std::string response = \
     R"({"Code": )" + std::to_string(getCode())      \
-    + R"(, "Desc": ")" + getDescription() + "\""        \
-    + R"(, "Data": ")" + getData()                      \
-    + "\"}";
+ + R"(, "Desc": ")" + getDescription() + "\""        \
+ + R"(, "Data": ")" + getBodyData()                  \
+ + "\"}";
     return response;
+}
+
+bool AResponse::encode_header()
+{
+    memcpy(_headerData, &_header, ResponseHeaderSize);
+    return true;
+}
+
+bool AResponse::decode_header()
+{
+    memcpy(&_header, _headerData, ResponseHeaderSize);
+    return false;
+}
+
+constexpr size_t AResponse::getResponseHeaderSize()
+{
+    return ResponseHeaderSize;
+}
+
+const char *AResponse::getHeaderData() const
+{
+    return _headerData;
 }

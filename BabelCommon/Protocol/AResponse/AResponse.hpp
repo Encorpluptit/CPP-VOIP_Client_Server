@@ -22,7 +22,6 @@ namespace BabelNetwork {
             uint16_t returnCode;
             uint32_t dataLength;
         };
-        size_t ResponseHeaderSize = sizeof(ResponseHeader);
 
 
 
@@ -30,7 +29,7 @@ namespace BabelNetwork {
     public:
         AResponse() = default;
 
-        explicit AResponse(const ResponseHeader *response, const char *data);
+        explicit AResponse(const ResponseHeader *response);
 
         ~AResponse() override = default;
 
@@ -39,37 +38,46 @@ namespace BabelNetwork {
     public:
         friend std::ostream &operator<<(std::ostream &os, const AResponse &response);
 
-//        friend istream &operator>>( istream  &input, Distance &D );
         /* <- Methods -> */
     public:
-        [[nodiscard]] std::unique_ptr<IResponse> getResponse(ResponseHeader *response, const char *data);
+        [[nodiscard]] static std::shared_ptr<IResponse> getResponse(ResponseHeader *response, const char *data);
 
-        [[nodiscard]] bool isOk() override = 0;
+        [[nodiscard]] bool encode_header() override;
+
+        [[nodiscard]] bool decode_header() override;
 
         [[nodiscard]] std::string serialize() const;
 
-        void setOk() override = 0;
-
+//        [[nodiscard]] bool isOk() override = 0;
+//
+//        void setOk() override = 0;
+//
         /* <- Getters / Setters -> */
     public:
         [[nodiscard]] uint16_t getCode() const;
 
-        [[nodiscard]] const std::string &getDescription() const;
+        [[nodiscard]] uint32_t getHeaderDataLength() const;
 
-        [[nodiscard]] const std::string &getData() const;
+        [[nodiscard]] virtual const std::string &getDescription() const = 0;
 
-        void setData(const std::string &data);
+        [[nodiscard]] constexpr static size_t getResponseHeaderSize();
+
+        [[nodiscard]] virtual size_t getResponseDataSize() = 0;
+
+        [[nodiscard]] const char *getHeaderData() const;
 
         /* <- Attributes -> */
     protected:
-        uint16_t _code = IResponse::ResponseCode::UnknownError;
-        const std::string _description;
-        std::string _data;
+        static const size_t ResponseHeaderSize = sizeof(ResponseHeader);
+        ResponseHeader _header = {
+            .returnCode = IResponse::ResponseCode::UnknownError,
+            .dataLength = 0
+        };
+        char _headerData[ResponseHeaderSize] = {0};
     };
 
     /* <- Operators -> */
     std::ostream &operator<<(std::ostream &os, const AResponse &response);
-
 }
 
 #endif /* CPP_BABEL_2020_ARESPONSE_HPP */

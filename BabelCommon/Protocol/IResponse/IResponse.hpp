@@ -34,11 +34,19 @@ namespace BabelNetwork {
 
         /* <- Methods -> */
     public:
-//        [[nodiscard]] virtual std::unique_ptr<IResponse> getResponse(const std::string &input) = 0;
+//        [[nodiscard]] static virtual std::unique_ptr<IResponse> getResponse(const std::string &input) = 0;
+
+        [[nodiscard]] virtual bool encode_header() = 0;
+
+        [[nodiscard]] virtual bool decode_header() = 0;
+
+        [[nodiscard]] virtual bool decode_data() = 0;
+
+        [[nodiscard]] virtual const char *getBodyData() const = 0;
 
         [[nodiscard]] virtual bool isOk() = 0;
 
-        virtual void setOk()  = 0;
+        virtual void setOk() = 0;
 
     };
 

@@ -52,7 +52,8 @@ namespace BabelServer {
             if (!error) {
                 std::cout << "START READ HEADER" << std::endl;
                 std::cout << "Data before :" << _data << std::endl;
-                boost::asio::async_read(getSocket(),
+                boost::asio::async_read(
+                    getSocket(),
                     boost::asio::buffer(_data, DATALENGTH),
                     boost::bind(&ClientSocket::handle_read_body, shared_from_this(), boost::asio::placeholders::error)
                 );
