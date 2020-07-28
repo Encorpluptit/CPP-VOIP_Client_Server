@@ -48,9 +48,6 @@ namespace BabelNetwork {
             return true;
         }
 
-
-        /* <- Private Methods -> */
-    private:
         void connect()
         {
             ip::tcp::resolver resolver(_context);
@@ -61,6 +58,10 @@ namespace BabelNetwork {
                 boost::bind(&AsioClientSocket::handle_connect, this, boost::asio::placeholders::error)
             );
         }
+
+
+        /* <- Private Methods -> */
+    private:
 
         void handle_connect(const boost::system::error_code &error)
         {

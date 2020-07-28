@@ -1,10 +1,30 @@
+/*
+** EPITECH PROJECT, 2020
+** CPP_babel_2020 (Copyright (c) ENCORPLUPTIT on 7/8/20).
+** File description:
+** [main.cpp]: Main program entry.
+*/
+
 #include <iostream>
 #include "Debug.hpp"
+#include "AsioClientSocket.hpp"
 
 int feature1();
 int feature2();
 
-int main()
+static void socket_testing(char **av)
+{
+    BabelNetwork::NetworkInfos nwi(av[1], av[2]);
+    boost::asio::io_context context;
+    BabelNetwork::AsioClientSocket client(nwi, context);
+    client.connect();
+    char data[10] = {0};
+    while (std::cin.getline(data, 10 + 1)) {
+        std::cout << "loop" << std::endl;
+    }
+}
+
+int main(int ac, char **av)
 {
     std::cout << "Babel client!" << std::endl;
     feature1();
@@ -16,5 +36,6 @@ int main()
     #ifdef _BABEL_LOG_
     std::cerr << "Log Mode" << std::endl;
     #endif
+    socket_testing(av);
     return 0;
 }

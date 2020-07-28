@@ -10,7 +10,6 @@
 #include <functional>
 #include "Socket.hpp"
 #include "AsioListenerSocket.hpp"
-#include "AsioClientSocket.hpp"
 
 void launch(char **av);
 
@@ -26,8 +25,6 @@ static void tests(char **av)
     }
     std::cout << nwi << std::endl;
 
-//    boost::asio::io_context context;
-//    BabelServer::Listener listener(context, nwi);
     boost::asio::io_context context;
     BabelServer::AsioListenerSocket listener(nwi, context);
 
