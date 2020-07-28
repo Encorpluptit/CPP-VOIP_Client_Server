@@ -10,6 +10,7 @@
 #include "AsioClientSocket.hpp"
 
 int feature1();
+
 int feature2();
 
 static void socket_testing(char **av)
@@ -18,6 +19,14 @@ static void socket_testing(char **av)
     boost::asio::io_context context;
     BabelNetwork::AsioClientSocket client(nwi, context);
     client.connect();
+//    client.setThread(boost::make_shared<BabelUtils::BoostThread>(
+//        [&client] {
+//            std::cout << "CLIENT THREAD LAUNCHED" << std::endl;
+//            client.getContext().run();
+//            std::cout << "CLIENT THREAD FINISHED" << std::endl;
+//        }
+//        )
+//    );
     char data[10] = {0};
     while (std::cin.getline(data, 10 + 1)) {
         std::cout << "loop" << std::endl;

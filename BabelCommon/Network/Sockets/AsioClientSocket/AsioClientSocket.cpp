@@ -20,7 +20,7 @@ void AsioClientSocket::start()
 {
     std::cout << "START SESSION" << std::endl;
     boost::asio::async_read(
-        getSocket(),
+        _socket,
         boost::asio::buffer(_data, DATALENGTH),
         boost::bind(&AsioClientSocket::handle_read_header, shared_from_this(), boost::asio::placeholders::error)
     );
@@ -77,6 +77,7 @@ void AsioClientSocket::handle_read_header(const boost::system::error_code &error
     } else {
         std::cerr << "ERROR IN HANDLE READ HEADER (close here ?)" << std::endl;
         //TODO: Throw error to differenciate between server use and client use ?
+
 //                stop();
 //            room_.leave(shared_from_this());
     }
