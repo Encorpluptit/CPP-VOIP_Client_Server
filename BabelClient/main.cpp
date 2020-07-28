@@ -9,24 +9,20 @@
 #include "Debug.hpp"
 #include "AsioClientSocket.hpp"
 
-int feature1();
-
-int feature2();
-
 static void socket_testing(char **av)
 {
     BabelNetwork::NetworkInfos nwi(av[1], av[2]);
     boost::asio::io_context context;
     BabelNetwork::AsioClientSocket client(nwi, context);
+    client.setThread(boost::make_shared<BabelUtils::BoostThread>(
+        [&client] {
+            std::cout << "CLIENT THREAD LAUNCHED" << std::endl;
+            client.getContext().run();
+        }
+        )
+    );
+
     client.connect();
-//    client.setThread(boost::make_shared<BabelUtils::BoostThread>(
-//        [&client] {
-//            std::cout << "CLIENT THREAD LAUNCHED" << std::endl;
-//            client.getContext().run();
-//            std::cout << "CLIENT THREAD FINISHED" << std::endl;
-//        }
-//        )
-//    );
     char data[10] = {0};
     while (std::cin.getline(data, 10 + 1)) {
         std::cout << "loop" << std::endl;
@@ -36,8 +32,6 @@ static void socket_testing(char **av)
 int main(int ac, char **av)
 {
     std::cout << "Babel client!" << std::endl;
-    feature1();
-    feature2();
     dbg("%s", "DEBUG");
     #ifdef _DEBUG_
     std::cerr << "Debug Mode" << std::endl;

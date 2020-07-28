@@ -173,8 +173,6 @@ set(
 # Client Sources
 set(
         CLIENT_SOURCES
-        #${CLIENT_DIR}/src/feature1/feature1.cpp
-        #${CLIENT_DIR}/src/feature2/feature2.cpp
 )
 
 
@@ -182,7 +180,7 @@ set(
 # Client Executable
 add_executable(
         babel_client
-        ${CLIENT_DIR}/src/test.cpp
+        ${CLIENT_DIR}/main.cpp
         ${CLIENT_SOURCES}
         ${COMMON_SOURCES}
 )
@@ -243,6 +241,4 @@ add_executable(
         tests/server/Chat_Client.cpp
 )
 
-
 target_link_libraries(test_client pthread ${CONAN_LIBS})
-#target_link_libraries(babel_client ${CONAN_LIBS} Qt5::Widgets)

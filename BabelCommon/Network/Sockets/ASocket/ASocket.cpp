@@ -11,7 +11,9 @@ using namespace BabelNetwork;
 
 BabelNetwork::ASocket::ASocket(const NetworkInfos &networkInfos)
     : _networkInfos(networkInfos)
-{}
+{
+
+}
 
 bool BabelNetwork::ASocket::isReady() const
 {

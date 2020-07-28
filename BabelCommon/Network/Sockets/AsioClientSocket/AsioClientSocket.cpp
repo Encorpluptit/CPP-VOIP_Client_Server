@@ -26,7 +26,6 @@ void AsioClientSocket::start()
     );
 }
 
-
 bool AsioClientSocket::sendResponse(const BabelNetwork::AResponse &response)
 {
     std::cout << "START DELIVER" << std::endl;

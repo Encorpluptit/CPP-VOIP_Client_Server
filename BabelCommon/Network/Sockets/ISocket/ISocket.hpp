@@ -23,7 +23,7 @@ namespace BabelNetwork {
 
         /* <- Constructor - Destructor -> */
     public:
-        virtual ~ISocket() = 0;
+        virtual ~ISocket() = default;
 
         /* <- Methods -> */
     public:
