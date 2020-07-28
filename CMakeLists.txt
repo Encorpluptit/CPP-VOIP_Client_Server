@@ -131,6 +131,7 @@ set(
         SERVER_SOURCES
         ${SERVER_DIR}/test.cpp
         ${SERVER_DIR}/Server/Server.cpp
+        ${SERVER_DIR}/AsioListenerSocket/AsioListenerSocket.cpp
 )
 
 

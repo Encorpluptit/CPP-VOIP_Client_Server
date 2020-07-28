@@ -17,90 +17,25 @@ namespace BabelServer {
 
         /* <- Constructor - Destructor -> */
     public:
-        explicit AsioListenerSocket(const BabelNetwork::NetworkInfos &networkInfos, io_context &context)
-            : BabelNetwork::AsioSocket(networkInfos, context),
-            _endpoint(ip::address::from_string(_networkInfos.getIp()), _networkInfos.getPort()),
-            _acceptor(_context, _endpoint),
-            _signals(_context)
-            {
-                setReady();
-                setSignalsHandeled();
-                start();
-                setThread(boost::make_shared<BabelUtils::BoostThread>(
-                    [this] {
-                        std::cout << "THREAD LAUNCHED" << std::endl;
-                        _context.run();
-                        std::cout << "THREAD FINISHED" << std::endl;
-                    }
-                    )
-                );
-            };
+        explicit AsioListenerSocket(const BabelNetwork::NetworkInfos &networkInfos, io_context &context);
 
-        ~AsioListenerSocket() final
-        {
-            stop();
-        }
+        ~AsioListenerSocket() final;
 
         /* <- Public Methods -> */
     public:
-        void start() final
-        {
-            std::cout << "START / RESTART" << std::endl;
-            boost::shared_ptr<BabelNetwork::AsioClientSocket> new_session(
-                new BabelNetwork::AsioClientSocket(getNetworkInfos(), _context));
-            _acceptor.async_accept(
-                new_session->getSocket(),
-                boost::bind(&AsioListenerSocket::handle_accept, this, new_session, boost::asio::placeholders::error)
-            );
-        };
+        void start() final;
 
-        void handle_read_header(const boost::system::error_code &error)
-        {
-            if (!error) {
-                std::cout << "START READ HEADER" << std::endl;
-                std::cout << "Data before :" << _data << std::endl;
-                boost::asio::async_read(
-                    getSocket(),
-                    boost::asio::buffer(&_hdr, BabelNetwork::AResponse::getResponseHeaderSize()),
-                    boost::bind(&AsioSocket::handle_read_body, shared_from_this(), boost::asio::placeholders::error)
-                );
-            } else {
-                std::cerr << "ERROR IN HANDLE READ HEADER (close here ?)" << std::endl;
-                stop();
-//            room_.leave(shared_from_this());
-            }
+        void stop() final;
 
-
-            void stop() final
-        {
-            std::cout << "LISTENER STOPPED" << std::endl;
-            _context.stop();
-        };
-
-        [[nodiscard]] bool sendResponse(__attribute__((unused))const BabelNetwork::AResponse &response) final
-        {
-            std::cerr << "Listener cannot send response" << response << std::endl;
-            return false;
-        };
+        [[nodiscard]] bool sendResponse(__attribute__((unused))const BabelNetwork::AResponse &response) final;
 
         /* <- Private Methods -> */
     private:
 
-        void handle_accept(const boost::shared_ptr<BabelNetwork::AsioClientSocket> &session, const boost::system::error_code &error)
-        {
-            if (!error) {
-                std::cout << "ACCEPT OK" << std::endl;
-                session->start();
-            }
-            start();
-        }
+        void handle_accept(const boost::shared_ptr<BabelNetwork::AsioClientSocket> &session,
+            const boost::system::error_code &error);
 
-        void setSignalsHandeled()
-        {
-            _signals.add(SIGINT);
-            _signals.add(SIGTERM);
-            _signals.async_wait(boost::bind(&BabelNetwork::AsioSocket::stop, this));
-        }
+        void setSignalsHandeled();
 
         /* <- Getters / Setters -> */
     public:

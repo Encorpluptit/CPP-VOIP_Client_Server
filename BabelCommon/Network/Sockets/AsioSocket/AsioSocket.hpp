@@ -25,6 +25,7 @@ namespace BabelNetwork {
         /* <- Public Methods -> */
     public:
         void stop() override;
+//        virtual void handle_read_header(const boost::system::error_code &error) = 0;
 
         /* <- Private Methods -> */
     private:
