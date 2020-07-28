@@ -147,7 +147,7 @@ target_include_directories(
         ${SERVER_INCLUDES}
 )
 
-target_link_libraries(babel_server ${CONAN_LIBS})
+target_link_libraries(babel_server ${CONAN_LIBS} stdc++fs)
 
 
 ###############################################################################
@@ -185,7 +185,7 @@ target_include_directories(
         ${CLIENT_INCLUDES}
 )
 
-target_link_libraries(babel_client ${CONAN_LIBS} Qt5::Widgets)
+target_link_libraries(babel_client ${CONAN_LIBS} stdc++fs Qt5::Widgets)
 
 
 ###############################################################################
