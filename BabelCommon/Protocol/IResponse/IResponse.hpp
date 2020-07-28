@@ -12,10 +12,14 @@
 
 namespace BabelNetwork {
     class IResponse {
+
         /* <- Class Enum -> */
     public:
         enum ResponseCode {
             ConnectionOk = 100,
+            LoginOk = 210,
+            AccountCreated = 220,
+            AccountDeleted = 230,
             UnknownError = 1000
         };
 
@@ -30,9 +34,11 @@ namespace BabelNetwork {
 
         /* <- Methods -> */
     public:
-        [[nodiscard]] virtual std::unique_ptr<IResponse> getResponse(const std::string &input) = 0;
+//        [[nodiscard]] virtual std::unique_ptr<IResponse> getResponse(const std::string &input) = 0;
 
         [[nodiscard]] virtual bool isOk() = 0;
+
+        virtual void setOk()  = 0;
 
     };
 

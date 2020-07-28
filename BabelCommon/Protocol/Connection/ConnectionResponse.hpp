@@ -11,21 +11,24 @@
 #include "AResponse.hpp"
 
 namespace BabelNetwork {
-    class ConnectionResponse final : virtual public AResponse {
-
-        /* <- Class Enum -> */
-    public:
-        enum ResponseCode {
-//            UnknownError = 1000
-        };
-
-        [[nodiscard]] bool isOk() final ;
+    class ConnectionResponse final : public AResponse {
 
         /* <- Constructor - Destructor -> */
     public:
         ConnectionResponse() = default;
 
+        ConnectionResponse(const ResponseHeader *response, const char *data);
+
         ~ConnectionResponse() override = default;
+
+        /* <- Methods -> */
+    public:
+        [[nodiscard]] bool isOk() final;
+
+        void setOk() final;
+
+    private:
+        const std::string _description = "Connection between server and client";
     };
 }
 

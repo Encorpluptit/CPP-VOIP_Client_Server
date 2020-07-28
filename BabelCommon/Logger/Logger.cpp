@@ -6,7 +6,7 @@
 */
 
 #include <iostream>
-#include <time.h>
+#include <ctime>
 #include "Logger.hpp"
 #include "LoggerError.hpp"
 
@@ -19,10 +19,10 @@ Logger::Logger(Logger::LogType type)
         std::filesystem::path tmpPath = createLogDirectories();
         createLogFile(tmpPath);
         _ok = true;
-    } catch (const std::filesystem::filesystem_error &e) {
-        std::cerr << e.what() << std::endl;
     } catch (const LoggerError &e) {
-        e.what();
+        std::cerr << e.what() << std::endl;
+    } catch (const std::exception &e) {
+        std::cerr << e.what() << std::endl;
     }
 }
 
@@ -32,15 +32,7 @@ Logger::~Logger()
     _logFile.close();
 }
 
-void Logger::logThis(const std::string &data)
-{
-    if (!isOk())
-        return;
-    _logFile << data + "\n";
-}
-
-
-bool Logger::isOk()
+bool Logger::isOk() const
 {
     return _ok;
 }
@@ -73,7 +65,6 @@ std::filesystem::path Logger::createLogDirectories()
     std::filesystem::create_directory(tmpPath);
     tmpPath /= TargetLogDir;
     std::filesystem::create_directory(tmpPath);
-//    std::cout << tmpPath << std::endl;
     return tmpPath;
 }
 
@@ -82,8 +73,7 @@ void Logger::createLogFile(std::filesystem::path filePath)
     time_t rawtime;
     struct tm *timeinfo;
     size_t sz = FILENAME_MAX - filePath.string().size();
-    char fileName[sz]{};
-
+    char fileName[FILENAME_MAX] = {0};
 
     if (time(&rawtime) == ((time_t) -1) || !(timeinfo = localtime(&rawtime))
         || !strftime(fileName, sz, "%Y-%m-%d_%H-%M-%S.log", timeinfo)) {
@@ -92,7 +82,5 @@ void Logger::createLogFile(std::filesystem::path filePath)
         return;
     }
     filePath /= std::string(fileName);
-//    std::cout << filePath << std::endl;
     _logFile = std::ofstream(filePath.string());
 }
-

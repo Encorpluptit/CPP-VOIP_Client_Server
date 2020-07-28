@@ -7,7 +7,18 @@
 
 #include "ConnectionResponse.hpp"
 
+using namespace BabelNetwork;
+
+ConnectionResponse::ConnectionResponse(const ResponseHeader *response, const char *data)
+    : AResponse(response, data)
+{}
+
 bool BabelNetwork::ConnectionResponse::isOk()
 {
     return _code == IResponse::ResponseCode::ConnectionOk;
+}
+
+void BabelNetwork::ConnectionResponse::setOk()
+{
+    _code = IResponse::ResponseCode::ConnectionOk;
 }

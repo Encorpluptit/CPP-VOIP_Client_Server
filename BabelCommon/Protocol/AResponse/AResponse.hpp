@@ -14,17 +14,23 @@
 
 namespace BabelNetwork {
 
-    class AResponse : public IResponse {
+    class AResponse : virtual public IResponse {
 
-        /* <- Class Enum -> */
+        /* <- Class Structure -> */
     public:
-        enum ResponseCode {
-//            UnknownError = 1000
+        using ResponseHeader = struct __attribute__((packed)) Response {
+            uint16_t returnCode;
+            uint32_t dataLength;
         };
+        size_t ResponseHeaderSize = sizeof(ResponseHeader);
+
+
 
         /* <- Constructor - Destructor -> */
     public:
         AResponse() = default;
+
+        explicit AResponse(const ResponseHeader *response, const char *data);
 
         ~AResponse() override = default;
 
@@ -34,15 +40,19 @@ namespace BabelNetwork {
         friend std::ostream &operator<<(std::ostream &os, const AResponse &response);
 
 //        friend istream &operator>>( istream  &input, Distance &D );
-            /* <- Methods -> */
+        /* <- Methods -> */
     public:
-        [[nodiscard]] std::unique_ptr<IResponse> getResponse(const std::string &input) override;
+        [[nodiscard]] std::unique_ptr<IResponse> getResponse(ResponseHeader *response, const char *data);
 
         [[nodiscard]] bool isOk() override = 0;
 
+        [[nodiscard]] std::string serialize() const;
+
+        void setOk() override = 0;
+
         /* <- Getters / Setters -> */
     public:
-        [[nodiscard]] int getCode() const;
+        [[nodiscard]] uint16_t getCode() const;
 
         [[nodiscard]] const std::string &getDescription() const;
 
@@ -52,11 +62,12 @@ namespace BabelNetwork {
 
         /* <- Attributes -> */
     protected:
-        IResponse::ResponseCode _code = IResponse::ResponseCode::UnknownError;
-        std::string _description = "Connection between server and client";
+        uint16_t _code = IResponse::ResponseCode::UnknownError;
+        const std::string _description;
         std::string _data;
     };
 
+    /* <- Operators -> */
     std::ostream &operator<<(std::ostream &os, const AResponse &response);
 
 }

@@ -25,6 +25,10 @@ SERVER_BIN				=	babel_server
 
 SERVER_DIR				=	server
 
+#################################################
+# Tests
+CRITERION_BIN			=	unit_tests
+
 
 ################################################################################
 .DEFAULT: all
@@ -63,6 +67,18 @@ client_fclean:
 
 
 ################################################################################
+# TESTS RULES
+tests_run: setup-build-tree
+	@$(MAKE) -j `nproc` --no-print-directory -C $(BUILD_DIR) $(CRITERION_BIN)
+	@cp $(BUILD_DIR)/bin/$(CRITERION_BIN) .
+	@./$(CRITERION_BIN)
+	-@$(MAKE) -j `nproc` --no-print-directory -C $(BUILD_DIR) test_server
+	-@$(MAKE) -j `nproc` --no-print-directory -C $(BUILD_DIR) test_client
+	@cp $(BUILD_DIR)/bin/test_client $(BUILD_DIR)/bin/test_server .
+
+
+
+################################################################################
 # OTHERS RULES
 
 setup-build-tree:
@@ -73,7 +89,9 @@ setup-build-tree:
 gh-install:
 	@mkdir -p $(BUILD_DIR) && cd $(BUILD_DIR) && conan install .. --build=portaudio --build=qt
 
-mouli-install:
+mouli-install: fclean
+	-conan remote add tech-repo https://api.bintray.com/conan/epitech/public-conan
+	-conan remote add public-repo https://api.bintray.com/conan/bincrafters/public-conan
 	@mkdir -p $(BUILD_DIR) && cd $(BUILD_DIR) && conan install .. --build=missing
 
 mouli: fclean
@@ -83,7 +101,7 @@ clean:
 	@$(RM) -r $(BUILD_DIR)
 
 fclean: clean server_fclean client_fclean
-	@$(RM) -r $(BUILD_DIR)
+	@$(RM) -r $(BUILD_DIR) $(CRITERION_BIN)
 
 tests_run:
 

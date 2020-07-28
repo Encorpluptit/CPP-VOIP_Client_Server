@@ -13,16 +13,18 @@
 
 #define __F__ (std::string(__FILE__).substr(std::string(__FILE__).find_last_of('/')).c_str() + 1)
 
+#define DEBUG_INFOS() __F__, __func__, __LINE__
+
 #define dbg_local()                                                                             \
-    std::cerr << std::format("<-- START DEBUG -->\n[ %s ] - [ %s():%d ]",       \
-        __F__, __func__, __LINE__) << std::endl;                                \
+    std::cerr << BabelUtils::format("<-- START DEBUG -->\n[ %s ] - [ %s():%d ]", DEBUG_INFOS()) << std::endl;
 
 #define dbg(x, ...)                                                             \
     dbg_local();                                                                \
-    std::cerr << std::format(x"\n<-- END DEBUG -->\n", __VA_ARGS__);            \
+    std::cerr << BabelUtils::format(x"\n<-- END DEBUG -->\n", __VA_ARGS__);     \
 
 #else
 
+#define DEBUG_INFOS() ""
 #define dbg_local()
 #define dbg(x, ...)
 

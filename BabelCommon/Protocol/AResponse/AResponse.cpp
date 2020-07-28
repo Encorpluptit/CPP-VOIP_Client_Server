@@ -6,20 +6,22 @@
 */
 
 #include "AResponse.hpp"
+#include "ConnectionResponse.hpp"
 
 using namespace BabelNetwork;
 
+AResponse::AResponse(const ResponseHeader *response, const char *data)
+    : _code(response->returnCode),
+    _data(data ? data : std::string().c_str())
+{}
+
 std::ostream &BabelNetwork::operator<<(std::ostream &os, const BabelNetwork::AResponse &response)
 {
-    os << "{Code: " << response.getCode() << ",Desc: \"" << response.getDescription() << "\"";
-    if (response.getData().empty())
-        os << ",Data: \"" << "" << "\"}";
-    else
-        os << ",Data: \"" << response.getData() << "\"}";
+    os << response.serialize();
     return os;
 }
 
-int BabelNetwork::AResponse::getCode() const
+uint16_t BabelNetwork::AResponse::getCode() const
 {
     return _code;
 }
@@ -39,8 +41,18 @@ void AResponse::setData(const std::string &data)
     _data = data;
 }
 
-std::unique_ptr<IResponse> AResponse::getResponse(const std::string &input)
+std::unique_ptr<IResponse> AResponse::getResponse(ResponseHeader *response, const char *data)
 {
-    (void)input;
-    return std::unique_ptr<IResponse>();
+
+    return std::unique_ptr<IResponse>(new ConnectionResponse(response, data));
+}
+
+std::string AResponse::serialize() const
+{
+    std::string response = \
+    R"({"Code": )" + std::to_string(getCode())      \
+    + R"(, "Desc": ")" + getDescription() + "\""        \
+    + R"(, "Data": ")" + getData()                      \
+    + "\"}";
+    return response;
 }

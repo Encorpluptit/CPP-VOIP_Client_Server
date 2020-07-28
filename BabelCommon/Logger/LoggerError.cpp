@@ -5,15 +5,15 @@
 ** [LoggerError.cpp]: Source file for LoggerError feature.
 */
 
+#include <utility>
 #include "LoggerError.hpp"
 
-BabelUtils::LoggerError::LoggerError(const std::string &msg)
-    : _msg(msg)
+BabelUtils::LoggerError::LoggerError(std::string msg)
+    : _msg(std::move(msg))
 {
-
 }
 
 char const *BabelUtils::LoggerError::what() const noexcept
 {
-    return exception::what();
+    return _msg.c_str();
 }
