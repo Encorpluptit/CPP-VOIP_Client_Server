@@ -30,7 +30,7 @@ bool AsioClientSocket::sendResponse(const BabelNetwork::AResponse &response)
 {
     std::cout << "START DELIVER" << std::endl;
     boost::asio::async_write(
-        getSocket(),
+        _socket,
         boost::asio::buffer(_msg.c_str(), _msg.length()),
         boost::bind(&AsioClientSocket::handle_write, shared_from_this(), boost::asio::placeholders::error)
     );

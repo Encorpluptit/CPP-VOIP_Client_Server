@@ -2,24 +2,24 @@
 ** EPITECH PROJECT, 2020
 ** CPP_babel_2020 (Copyright (c) ENCORPLUPTIT on 7/27/20).
 ** File description:
-** [AsioListenerSocket.hpp]: Header file for AsioListenerSocket feature.
+** [AsioListener.hpp]: Header file for AsioListener feature.
 */
 
-#ifndef CPP_BABEL_2020_ASIOLISTENERSOCKET_HPP
-#define CPP_BABEL_2020_ASIOLISTENERSOCKET_HPP
+#ifndef CPP_BABEL_2020_ASIOLISTENER_HPP
+#define CPP_BABEL_2020_ASIOLISTENER_HPP
 
 #include "AsioClientSocket.hpp"
 
 namespace BabelServer {
     using namespace boost::asio;
 
-    class AsioListenerSocket final : public BabelNetwork::AsioSocket {
+    class AsioListener final : public BabelNetwork::AsioSocket {
 
         /* <- Constructor - Destructor -> */
     public:
-        explicit AsioListenerSocket(const BabelNetwork::NetworkInfos &networkInfos, io_context &context);
+        explicit AsioListener(const BabelNetwork::NetworkInfos &networkInfos, io_context &context);
 
-        ~AsioListenerSocket() final;
+        ~AsioListener() final;
 
         /* <- Public Methods -> */
     public:
@@ -63,4 +63,4 @@ namespace BabelServer {
 
 }
 
-#endif /* CPP_BABEL_2020_ASIOLISTENERSOCKET_HPP */
+#endif /* CPP_BABEL_2020_ASIOLISTENER_HPP */

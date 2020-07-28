@@ -8,7 +8,7 @@
 #include <iostream>
 #include "NetworkInfos.hpp"
 #include <functional>
-#include "AsioListenerSocket.hpp"
+#include "AsioListener.hpp"
 
 void launch(char **av);
 
@@ -25,51 +25,20 @@ static void tests(char **av)
     std::cout << nwi << std::endl;
 
     boost::asio::io_context context;
-    BabelServer::AsioListenerSocket listener(nwi, context);
+    BabelServer::AsioListener listener(nwi, context);
 
     char data[10] = {0};
     while (std::cin.getline(data, 10 + 1)) {
         std::cout << "loop" << std::endl;
     }
 }
-//
-//static void response_testing()
-//{
-//    BabelNetwork::ConnectionResponse lol;
-//    std::cout << "After init: " << lol << std::endl;
-//    lol.setOk();
-//    std::cout << "After setOk: " << lol << std::endl;
-//    lol.encode_header();
-//    std::cout << "After encodeHeader: " << lol << " length: " << lol.getHeaderDataLength() << std::endl;
-//    lol.decode_header();
-//    std::cout << "After decodeHeader: " << lol << " length: " << lol.getHeaderDataLength() << std::endl;
-//    std::cout << std::string(50, '=') << std::endl;
-//
-//    BabelNetwork::AResponse::ResponseHeader header{
-//        .returnCode = BabelNetwork::IResponse::ResponseCode::LoginOk,
-//        .dataLength = 5};
-//    BabelNetwork::ConnectionResponse lol2(&header);
-//    std::cout << "After init: " << lol2 << std::endl;
-//    lol2.encode_header();
-//    std::cout << "After encodeHeader: " << lol2 << " length: " << lol2.getHeaderDataLength() << std::endl;
-//    lol2.decode_header();
-//    std::cout << "After decodeHeader: " << lol2 << " length: " << lol2.getHeaderDataLength() << std::endl;
-//    lol2.setOk();
-//    std::cout << "After setOk: " << lol2 << std::endl;
-//    lol2.encode_header();
-//    std::cout << "After encodeHeader: " << lol2 << " length: " << lol2.getHeaderDataLength() << std::endl;
-//    lol2.decode_header();
-//    std::cout << "After decodeHeader: " << lol2 << " length: " << lol2.getHeaderDataLength() << std::endl;
-//}
-//
+
 int main(int ac, char **av)
 {
     if (ac < 2)
         return 84;
     try {
-//        start(av);
         tests(av);
-//        response_testing();
     }
     catch (std::exception &e) {
         std::cerr << e.what() << std::endl;

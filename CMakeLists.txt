@@ -70,9 +70,7 @@ set(
         COMMON_INCLUDES
         ${COMMON_DIR}/Logger
 
-        ${COMMON_DIR}/Debug
-
-        ${COMMON_DIR}/StringFormat
+        ${COMMON_DIR}/Utils
 
         ${COMMON_DIR}/Protocol/AResponse
         ${COMMON_DIR}/Protocol/Connection
@@ -81,7 +79,6 @@ set(
 
         ${COMMON_DIR}/Network/Sockets/ASocket
         ${COMMON_DIR}/Network/Sockets/AsioSocket
-        ${COMMON_DIR}/Network/Sockets/AsioClientSocket
 
         ${COMMON_DIR}/Thread
 )
@@ -101,8 +98,6 @@ set(
         ${COMMON_DIR}/Network/Sockets/AsioSocket/AsioClientSocket.cpp
 
         ${COMMON_DIR}/Thread/BoostThread.cpp
-
-        #        ${COMMON_DIR}/Network/Sockets/TcpSocket/TcpSocket.cpp
 )
 
 include_directories(${COMMON_INCLUDES})
@@ -119,7 +114,7 @@ set(
         ${SERVER_DIR}/Socket
         ${SERVER_DIR}/Listener
         ${SERVER_DIR}/Client
-        ${SERVER_DIR}/AsioListenerSocket
+        ${SERVER_DIR}/AsioListener
 )
 
 
@@ -127,9 +122,8 @@ set(
 # Server Sources
 set(
         SERVER_SOURCES
-#        ${SERVER_DIR}/test.cpp
         ${SERVER_DIR}/Server/Server.cpp
-        ${SERVER_DIR}/AsioListenerSocket/AsioListenerSocket.cpp
+        ${SERVER_DIR}/AsioListener/AsioListener.cpp
 )
 
 
