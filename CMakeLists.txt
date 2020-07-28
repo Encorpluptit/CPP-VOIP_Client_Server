@@ -99,6 +99,7 @@ set(
 
         ${COMMON_DIR}/Network/Sockets/ISocket/ISocket.cpp
         ${COMMON_DIR}/Network/Sockets/ASocket/ASocket.cpp
+        ${COMMON_DIR}/Network/Sockets/AsioSocket/AsioSocket.cpp
         ${COMMON_DIR}/Network/Sockets/AsioClientSocket/AsioClientSocket.cpp
 
         ${COMMON_DIR}/Thread/BoostThread/BoostThread.cpp

@@ -20,15 +20,11 @@ namespace BabelNetwork {
     class AsioSocket : public ASocket {
         /* <- Constructor - Destructor -> */
     public:
-        explicit AsioSocket(const NetworkInfos &networkInfos, io_context &context)
-            : ASocket(networkInfos), _context(context) {};
+        explicit AsioSocket(const NetworkInfos &networkInfos, io_context &context);
 
         /* <- Public Methods -> */
     public:
-        void stop() override
-        {
-            _context.stop();
-        };
+        void stop() override;
 
         /* <- Private Methods -> */
     private:

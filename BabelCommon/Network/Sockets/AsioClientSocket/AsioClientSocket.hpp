@@ -8,7 +8,6 @@
 #ifndef CPP_BABEL_2020_ASIOCLIENTSOCKET_HPP
 #define CPP_BABEL_2020_ASIOCLIENTSOCKET_HPP
 
-#include <queue>
 #include "AsioSocket.hpp"
 
 namespace BabelNetwork {
@@ -67,10 +66,11 @@ namespace BabelNetwork {
         {
             if (!error) {
                 std::cout << "HANDLE CONNECT (DO FCT TO LAUNCH SOCKET)" << std::endl;
-//                boost::asio::async_read(_socket,
-//                    boost::asio::buffer(read_msg_.data(), chat_message::header_length),
-//                    boost::bind(&chat_client::handle_read_header, this, boost::asio::placeholders::error)
-//                );
+                boost::asio::async_read(
+                    getSocket(),
+                    boost::asio::buffer(_data, DATALENGTH),
+                    boost::bind(&AsioClientSocket::handle_read_header, shared_from_this(), boost::asio::placeholders::error)
+                );
             }
         }
 
@@ -156,8 +156,8 @@ namespace BabelNetwork {
     private:
         ip::tcp::socket _socket;
         ip::tcp::resolver::results_type _endpoints;
-        BabelNetwork::AResponse::ResponseHeader _hdr{};
-        std::queue <std::shared_ptr<BabelNetwork::IResponse>> _responses;
+//        BabelNetwork::AResponse::ResponseHeader _hdr{};
+//        std::queue <std::shared_ptr<BabelNetwork::IResponse>> _responses;
         std::string _msg;
         static const size_t DATALENGTH = 3;
         char _data[DATALENGTH] = {0};

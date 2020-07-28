@@ -54,7 +54,24 @@ namespace BabelServer {
             );
         };
 
-        void stop() final
+        void handle_read_header(const boost::system::error_code &error)
+        {
+            if (!error) {
+                std::cout << "START READ HEADER" << std::endl;
+                std::cout << "Data before :" << _data << std::endl;
+                boost::asio::async_read(
+                    getSocket(),
+                    boost::asio::buffer(&_hdr, BabelNetwork::AResponse::getResponseHeaderSize()),
+                    boost::bind(&AsioSocket::handle_read_body, shared_from_this(), boost::asio::placeholders::error)
+                );
+            } else {
+                std::cerr << "ERROR IN HANDLE READ HEADER (close here ?)" << std::endl;
+                stop();
+//            room_.leave(shared_from_this());
+            }
+
+
+            void stop() final
         {
             std::cout << "LISTENER STOPPED" << std::endl;
             _context.stop();

@@ -8,6 +8,7 @@
 #ifndef CPP_BABEL_2020_ASOCKET_HPP
 #define CPP_BABEL_2020_ASOCKET_HPP
 
+#include <queue>
 #include "ISocket.hpp"
 #include "AResponse.hpp"
 #include "BoostThread.hpp"
@@ -47,6 +48,8 @@ namespace BabelNetwork {
     protected:
         const NetworkInfos &_networkInfos;
         bool _ready = false;
+        BabelNetwork::AResponse::ResponseHeader _hdr{};
+        std::queue <std::shared_ptr<BabelNetwork::IResponse>> _responses;
         boost::shared_ptr<BabelUtils::BoostThread> _thread;
     };
 
