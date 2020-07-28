@@ -5,112 +5,116 @@
 ** Test.cpp
 */
 
-#include <stdio.h>
-#include <math.h>
-#include "portaudio.h"
+#include <arpa/inet.h>
 #include <iostream>
+#include "Core.hpp"
+#include "Exception.hpp"
 
-#define SAMPLE_RATE         (44100)
-#define PA_SAMPLE_TYPE      paFloat32
-#define FRAMES_PER_BUFFER   (64)
+#define SAMPLE_RATE (48000)
+#define FRAMES_PER_BUFFER (480)
 
-float CubicAmplifier(float input)
-{
-    float output, temp;
-
-    if (input < 0.0) {
-        temp = input + 1.0f;
-        output = (temp * temp * temp) - 1.0f;
-    } else {
-        temp = input - 1.0f;
-        output = (temp * temp * temp) + 1.0f;
-    }
-    return output;
-}
-
-#define FUZZ(x) CubicAmplifier(CubicAmplifier(CubicAmplifier(CubicAmplifier(x))))
-static int gNumNoInputs = 0;
-
-static int fuzzCallback( const void *inputBuffer, void *outputBuffer, unsigned long framesPerBuffer, const PaStreamCallbackTimeInfo* timeInfo, PaStreamCallbackFlags statusFlags, void *userData )
-{
-    float *out = (float*)outputBuffer;
-    const float *in = (const float*)inputBuffer;
-    unsigned int i;
-    (void) timeInfo;
-    (void) statusFlags;
-    (void) userData;
-
-    if (inputBuffer == NULL) {
-        for(i = 0; i < framesPerBuffer; i++) {
-            *out++ = 0;
-            *out++ = 0;
-        }
-        gNumNoInputs += 1;
-    } else {
-        for (i = 0; i<framesPerBuffer; i++) {
-            *out++ = FUZZ(*in++);
-            *out++ = *in++;
-        }
-    }
-    return paContinue;
-}
-
-int error()
+bool error()
 {
     Pa_Terminate();
-    return (84);
+    return (false);
 }
 
-int main(void)
+Core::Core(const std::string ip, const std::string port) noexcept
 {
-    PaStreamParameters inputParameters, outputParameters;
-    PaStream *stream;
-    PaError err;
-
+    socket = new QTcpSocket();
     if (Pa_Initialize() != paNoError)
+        throw(Exception("Pa_Initialize failed"));
+    Loop(ip, port);
+}
+
+bool Core::init_input()
+{
+    input.device = Pa_GetDefaultInputDevice();
+    if (input.device == paNoDevice)
         return (error());
-    std::cout << "Input device Start" << std::endl;
-    inputParameters.device = Pa_GetDefaultInputDevice();
-    if (inputParameters.device == paNoDevice) {
-        Pa_Terminate();
-        fprintf(stderr,"Error: No default input device.\n");
+    input.channelCount = 2;
+    input.sampleFormat = paFloat32;
+    input.suggestedLatency = Pa_GetDeviceInfo(input.device)->defaultLowInputLatency;
+    input.hostApiSpecificStreamInfo = NULL;
+    return (true);
+}
+
+bool Core::init_output()
+{
+    output.device = Pa_GetDefaultOutputDevice();
+    if (output.device == paNoDevice)
+        return (error());
+    output.channelCount = 2;
+    output.sampleFormat = paFloat32;
+    output.suggestedLatency = Pa_GetDeviceInfo(output.device)->defaultLowOutputLatency;
+    output.hostApiSpecificStreamInfo = NULL;
+    return (true);
+}
+
+bool Core::init_audio()
+{
+    if (Pa_OpenStream(&stream, &input, &output, SAMPLE_RATE, FRAMES_PER_BUFFER, 0, NULL, NULL) != paNoError)
+        return (error());
+    if (Pa_StartStream(stream) != paNoError)
+        return (error());
+    return (true);
+}
+
+bool Core::stop_audio()
+{
+    if (Pa_CloseStream(stream) != paNoError)
+        return (error());
+    return (true);
+}
+
+void Core::Loop(const std::string ip, const std::string port) noexcept
+{
+    init_input();
+    init_output();
+    init_audio();
+    std::cout << "Press a key when the two client are running" << std::endl;
+    getchar();
+    /*connect(ip, std::stoi(ip));
+    while (1) {
+        //receive_voice;
+        //send_voice;
+    }*/
+    stop_audio();
+}
+
+bool Core::connect(const std::string ip, const int port) noexcept
+{
+    socket->connectToHost(QString::fromStdString(ip), port);
+    if (socket->waitForConnected(1000) == false)
+        return (false);
+    return (true);
+}
+
+bool Core::writeData(const std::string str) noexcept
+{
+    if (socket->state() == QAbstractSocket::ConnectedState) {
+        socket->write(str.c_str(), str.size());
+        return (socket->waitForBytesWritten());
+    }
+    return (false);
+}
+
+Core::~Core() noexcept
+{
+    socket->disconnectFromHost();
+    socket->waitForDisconnected();
+    delete socket;
+}
+
+int main(int ac, char **av)
+{
+    try {
+    if (ac != 2)
+        return (84);
+    Core prog();
+    return (0);
+    } catch (Exception& err) {
+        std::cerr << err.what() << std::endl;
         return (84);
     }
-    inputParameters.channelCount = 3;
-    inputParameters.sampleFormat = PA_SAMPLE_TYPE;
-    inputParameters.suggestedLatency = Pa_GetDeviceInfo( inputParameters.device )->defaultLowInputLatency;
-    inputParameters.hostApiSpecificStreamInfo = NULL;
-    std::cout << "Input device End" << std::endl;
-
-    std::cout << "Output device Start" << std::endl;
-    outputParameters.device = Pa_GetDefaultOutputDevice();
-    if (outputParameters.device == paNoDevice) {
-        Pa_Terminate();
-        fprintf(stderr,"Error: No default output device.\n");
-    }
-    outputParameters.channelCount = 2;
-    outputParameters.sampleFormat = PA_SAMPLE_TYPE;
-    outputParameters.suggestedLatency = Pa_GetDeviceInfo(outputParameters.device)->defaultLowOutputLatency;
-    outputParameters.hostApiSpecificStreamInfo = NULL;
-    std::cout << "Output device End" << std::endl;
-
-
-    std::cout << "Before open stream" << std::endl;
-    err = Pa_OpenStream(&stream, &inputParameters, &outputParameters, SAMPLE_RATE, FRAMES_PER_BUFFER, 0, fuzzCallback, NULL);
-    if (err != paNoError)
-        return (error());
-    std::cout << "Before start stream" << std::endl;
-    err = Pa_StartStream(stream);
-    std::cout << "LOLOL3\n" << std::endl;
-    if (err != paNoError)
-        return (error());
-    std::cout << "LOLOL5\n" << std::endl;
-    printf("Hit ENTER to stop program.\n");
-    getchar();
-    err = Pa_CloseStream(stream);
-    if (err != paNoError)
-        return (error());
-    printf("Finished. gNumNoInputs = %d\n", gNumNoInputs);
-    Pa_Terminate();
-    return 0;
 }

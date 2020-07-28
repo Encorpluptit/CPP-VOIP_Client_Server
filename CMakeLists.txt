@@ -4,6 +4,10 @@ cmake_minimum_required(VERSION 3.14)
 project(CPP_babel_2020)
 
 
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
+
 ###############################################################################
 # Language Configuration
 set(CMAKE_CXX_STANDARD 17)
@@ -161,6 +165,7 @@ set(CLIENT_DIR BabelClient)
 set(
         CLIENT_INCLUDES
         ${CLIENT_DIR}/include
+        ${CLIENT_DIR}/src
 )
 
 
@@ -168,8 +173,8 @@ set(
 # Client Sources
 set(
         CLIENT_SOURCES
-        ${CLIENT_DIR}/src/feature1/feature1.cpp
-        ${CLIENT_DIR}/src/feature2/feature2.cpp
+        #${CLIENT_DIR}/src/feature1/feature1.cpp
+        #${CLIENT_DIR}/src/feature2/feature2.cpp
 )
 
 
@@ -177,7 +182,7 @@ set(
 # Client Executable
 add_executable(
         babel_client
-        ${CLIENT_DIR}/main.cpp
+        ${CLIENT_DIR}/src/test.cpp
         ${CLIENT_SOURCES}
         ${COMMON_SOURCES}
 )
@@ -187,7 +192,9 @@ target_include_directories(
         ${CLIENT_INCLUDES}
 )
 
-target_link_libraries(babel_client ${CONAN_LIBS} stdc++fs Qt5::Widgets)
+find_package(Qt5 COMPONENTS Network REQUIRED)
+
+target_link_libraries(babel_client ${CONAN_LIBS} stdc++fs Qt5::Widgets Qt5::Network)
 
 
 ###############################################################################
