@@ -12,7 +12,7 @@
 #include <boost/asio.hpp>
 #include "ASocket.hpp"
 #include "NetworkInfos.hpp"
-#include "BoostThread.hpp"
+#include "../../../Thread/BoostThread.hpp"
 
 namespace BabelNetwork {
     using namespace boost::asio;

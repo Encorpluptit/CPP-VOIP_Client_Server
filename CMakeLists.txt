@@ -74,20 +74,16 @@ set(
 
         ${COMMON_DIR}/StringFormat
 
-        ${COMMON_DIR}/Protocol/IResponse
         ${COMMON_DIR}/Protocol/AResponse
         ${COMMON_DIR}/Protocol/Connection
 
         ${COMMON_DIR}/Network/NetworkInfos
 
-        ${COMMON_DIR}/Network/Sockets/ISocket
         ${COMMON_DIR}/Network/Sockets/ASocket
         ${COMMON_DIR}/Network/Sockets/AsioSocket
         ${COMMON_DIR}/Network/Sockets/AsioClientSocket
 
-        ${COMMON_DIR}/Thread/AThread
-        ${COMMON_DIR}/Thread/BoostThread
-
+        ${COMMON_DIR}/Thread
 )
 
 set(
@@ -95,7 +91,6 @@ set(
         ${COMMON_DIR}/Logger/Logger.cpp
         ${COMMON_DIR}/Logger/LoggerError.cpp
 
-        ${COMMON_DIR}/Protocol/IResponse/IResponse.cpp
         ${COMMON_DIR}/Protocol/AResponse/AResponse.cpp
         ${COMMON_DIR}/Protocol/Connection/ConnectionResponse.cpp
 
@@ -103,9 +98,9 @@ set(
 
         ${COMMON_DIR}/Network/Sockets/ASocket/ASocket.cpp
         ${COMMON_DIR}/Network/Sockets/AsioSocket/AsioSocket.cpp
-        ${COMMON_DIR}/Network/Sockets/AsioClientSocket/AsioClientSocket.cpp
+        ${COMMON_DIR}/Network/Sockets/AsioSocket/AsioClientSocket.cpp
 
-        ${COMMON_DIR}/Thread/BoostThread/BoostThread.cpp
+        ${COMMON_DIR}/Thread/BoostThread.cpp
 
         #        ${COMMON_DIR}/Network/Sockets/TcpSocket/TcpSocket.cpp
 )

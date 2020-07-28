@@ -11,7 +11,7 @@
 #include <queue>
 #include "ISocket.hpp"
 #include "AResponse.hpp"
-#include "BoostThread.hpp"
+#include "../../../Thread/BoostThread.hpp"
 
 namespace BabelNetwork {
 

@@ -34,7 +34,7 @@ namespace BabelNetwork {
     public:
         IResponse() = default;
 
-        virtual ~IResponse() = 0;
+        virtual ~IResponse() = default;
 
         /* <- Operators -> */
     public:

@@ -8,7 +8,6 @@
 #include <iostream>
 #include "NetworkInfos.hpp"
 #include <functional>
-#include "Socket.hpp"
 #include "AsioListenerSocket.hpp"
 
 void launch(char **av);
