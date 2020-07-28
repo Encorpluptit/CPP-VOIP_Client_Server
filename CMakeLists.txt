@@ -101,7 +101,6 @@ set(
 
         ${COMMON_DIR}/Network/NetworkInfos/NetworkInfos.cpp
 
-        ${COMMON_DIR}/Network/Sockets/ISocket/ISocket.cpp
         ${COMMON_DIR}/Network/Sockets/ASocket/ASocket.cpp
         ${COMMON_DIR}/Network/Sockets/AsioSocket/AsioSocket.cpp
         ${COMMON_DIR}/Network/Sockets/AsioClientSocket/AsioClientSocket.cpp
@@ -133,7 +132,7 @@ set(
 # Server Sources
 set(
         SERVER_SOURCES
-        ${SERVER_DIR}/test.cpp
+#        ${SERVER_DIR}/test.cpp
         ${SERVER_DIR}/Server/Server.cpp
         ${SERVER_DIR}/AsioListenerSocket/AsioListenerSocket.cpp
 )
