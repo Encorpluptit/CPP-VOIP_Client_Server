@@ -11,7 +11,7 @@
 #include <queue>
 #include "ISocket.hpp"
 #include "AResponse.hpp"
-#include "../../../Thread/BoostThread.hpp"
+#include "BoostThread.hpp"
 
 namespace BabelNetwork {
 
@@ -49,7 +49,9 @@ namespace BabelNetwork {
         const NetworkInfos &_networkInfos;
         bool _ready = false;
         BabelNetwork::AResponse::ResponseHeader _hdr{};
-        std::queue <std::shared_ptr<BabelNetwork::IResponse>> _responses;
+        std::shared_ptr<AResponse> _read_msg = nullptr;
+        std::queue<std::shared_ptr<BabelNetwork::AResponse>> _read_queue;
+        std::queue<std::shared_ptr<BabelNetwork::AResponse>> _write_queue;
         boost::shared_ptr<BabelUtils::BoostThread> _thread;
     };
 

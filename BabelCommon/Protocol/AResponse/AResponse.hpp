@@ -9,19 +9,39 @@
 #define CPP_BABEL_2020_ARESPONSE_HPP
 
 #include <string>
+#include <cstring>
 #include <ostream>
-#include "IResponse.hpp"
+#include <memory>
 
 namespace BabelNetwork {
 
-    class AResponse : virtual public IResponse {
+    class AResponse {
+        /* <- Class Enum -> */
+    public:
+        enum ResponseCode {
+            ConnectionOk = 100,
+            LoginOk = 210,
+            AccountCreated = 220,
+            AccountDeleted = 230,
+            UnknownError = 1000
+        };
+
+        /* <- Class Enum -> */
+    public:
+        enum ResponseType {
+            UnknownType,
+            Connection,
+
+        };
 
         /* <- Class Structure -> */
     public:
         using ResponseHeader = struct __attribute__((packed)) Response {
             uint16_t returnCode;
+            ResponseType responseType;
             uint32_t dataLength;
         };
+        static const size_t ResponseHeaderSize = sizeof(ResponseHeader);
 
 
 
@@ -29,9 +49,15 @@ namespace BabelNetwork {
     public:
         AResponse() = default;
 
-        explicit AResponse(const ResponseHeader *response);
+        explicit AResponse(const ResponseHeader &headerResponse);
 
-        ~AResponse() override = default;
+        AResponse(const AResponse &other) : AResponse(other._header)
+        {
+//            _header = other._header;
+            memcpy(_headerData, other._headerData, sizeof(_headerData));
+        }
+
+        ~AResponse() = default;
 
 
         /* <- Operators -> */
@@ -40,40 +66,52 @@ namespace BabelNetwork {
 
         /* <- Methods -> */
     public:
-        [[nodiscard]] static std::shared_ptr<IResponse> getResponse(ResponseHeader *response, const char *data);
+        [[nodiscard]] static std::shared_ptr<AResponse> getResponse(const ResponseHeader &response) ;
+//
+//        [[nodiscard]] std::shared_ptr<AResponse> getResponse();
+        [[nodiscard]] virtual std::shared_ptr<AResponse> getResponse() const = 0;
 
-        [[nodiscard]] bool encode_header() override;
+        [[nodiscard]] bool encode_header() noexcept;
 
-        [[nodiscard]] bool decode_header() override;
+        [[nodiscard]] bool decode_header() noexcept;
+
+        [[nodiscard]] virtual bool encode_data() noexcept = 0;
+
+        [[nodiscard]] virtual bool decode_data() noexcept = 0;
 
         [[nodiscard]] std::string serialize() const;
 
-//        [[nodiscard]] bool isOk() override = 0;
-//
-//        void setOk() override = 0;
-//
+        [[nodiscard]] virtual bool isOk() noexcept = 0;
+
+        virtual void setOk() noexcept = 0;
+
         /* <- Getters / Setters -> */
     public:
-        [[nodiscard]] uint16_t getCode() const;
 
-        [[nodiscard]] uint32_t getHeaderDataLength() const;
+        [[nodiscard]] uint16_t getCode() const noexcept;
 
-        [[nodiscard]] virtual const std::string &getDescription() const = 0;
+        [[nodiscard]] uint32_t getHeaderDataLength() const noexcept;
 
-        [[nodiscard]] constexpr static size_t getResponseHeaderSize() { return ResponseHeaderSize; };
+        [[nodiscard]] virtual const std::string &getDescription() const noexcept = 0;
 
-        [[nodiscard]] virtual size_t getResponseDataSize() = 0;
+//        [[nodiscard]] constexpr static size_t getHeaderSize();
+        [[nodiscard]] constexpr static size_t getHeaderSize() { return ResponseHeaderSize;};
 
-        [[nodiscard]] const char *getHeaderData() const;
+        [[nodiscard]] char *getHeaderData();
+
+        [[nodiscard]] virtual char *getBodyData() noexcept = 0;
+
+        [[nodiscard]] const ResponseType &getResponseType() const;
 
         /* <- Attributes -> */
     protected:
-        static const size_t ResponseHeaderSize = sizeof(ResponseHeader);
         ResponseHeader _header = {
-            .returnCode = IResponse::ResponseCode::UnknownError,
+            .returnCode = AResponse::ResponseCode::UnknownError,
+            .responseType = UnknownType,
             .dataLength = 0
         };
         char _headerData[ResponseHeaderSize] = {0};
+
     };
 
     /* <- Operators -> */

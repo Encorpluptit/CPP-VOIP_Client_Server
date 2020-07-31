@@ -12,34 +12,65 @@
 
 namespace BabelNetwork {
     class ConnectionResponse final : virtual public AResponse {
+        /* <- Class Structure -> */
+    private:
+        enum DataSize {
+            Login = 128,
+            Password = 128
+        };
+
+        /* <- Class Structure -> */
+    public:
+        using ConnectionData = struct __attribute__((packed)) ConnectionDataStruct {
+            char login[DataSize::Login];
+            char password[DataSize::Password];
+        };
+        static const size_t _data_size = sizeof(ConnectionData);
 
         /* <- Constructor - Destructor -> */
     public:
-        ConnectionResponse() = default;
+        ConnectionResponse() {
+            _header.responseType = Connection;
 
-        explicit ConnectionResponse(const ResponseHeader *response);
+            //TODO: remove
+            strcat(_data.login, "lol");
+        };
 
-        ~ConnectionResponse() override = default;
+        explicit ConnectionResponse(const ResponseHeader &headerResponse);
+
+        ConnectionResponse(const ConnectionResponse &other) : AResponse(other)
+        {
+            memcpy(_body_data, other._body_data, sizeof(_body_data));
+            memcpy(&_data, &other._data, sizeof(_data));
+        }
+
+        ~ConnectionResponse() = default;
 
         /* <- Methods -> */
     public:
-        [[nodiscard]] bool isOk() final;
+        [[nodiscard]] bool isOk() noexcept final;
 
-        void setOk() final;
+        void setOk() noexcept final;
 
-        [[nodiscard]] bool decode_data() final;
+        [[nodiscard]] bool encode_data() noexcept final;
 
-        [[nodiscard]] size_t getResponseDataSize() final;
+        [[nodiscard]] bool decode_data() noexcept final;
 
-        [[nodiscard]] const char *getBodyData() const final;
+        [[nodiscard]] char *getBodyData() noexcept final;
+
+        [[nodiscard]] std::shared_ptr<AResponse> getResponse() const final;
+
+//        [[nodiscard]] const char *getResponseType() const noexcept final;
+
 
         /* <- Getters / Setters -> */
     public:
-        [[nodiscard]] const std::string &getDescription() const final;
+        [[nodiscard]] const std::string &getDescription() const noexcept final;
 
     private:
         const std::string _description = "Connection between server and client";
-        char _bodyData[5] = {0};
+        char _body_data[_data_size]{};
+        ConnectionData _data{};
     };
 }
 

@@ -12,7 +12,7 @@
 #include <boost/asio.hpp>
 #include "ASocket.hpp"
 #include "NetworkInfos.hpp"
-#include "../../../Thread/BoostThread.hpp"
+#include "BoostThread.hpp"
 
 namespace BabelNetwork {
     using namespace boost::asio;
@@ -25,7 +25,6 @@ namespace BabelNetwork {
         /* <- Public Methods -> */
     public:
         void stop() override;
-//        virtual void handle_read_header(const boost::system::error_code &error) = 0;
 
         /* <- Private Methods -> */
     private:

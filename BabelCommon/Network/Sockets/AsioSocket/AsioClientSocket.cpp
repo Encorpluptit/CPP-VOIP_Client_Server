@@ -21,7 +21,7 @@ void AsioClientSocket::start()
     std::cout << "START SESSION" << std::endl;
     boost::asio::async_read(
         _socket,
-        boost::asio::buffer(_data, DATALENGTH),
+        boost::asio::buffer(&_hdr, BabelNetwork::AResponse::getHeaderSize()),
         boost::bind(&AsioClientSocket::handle_read_header, shared_from_this(), boost::asio::placeholders::error)
     );
 }
@@ -29,10 +29,10 @@ void AsioClientSocket::start()
 bool AsioClientSocket::sendResponse(const BabelNetwork::AResponse &response)
 {
     std::cout << "START DELIVER" << std::endl;
-    boost::asio::async_write(
-        _socket,
-        boost::asio::buffer(_msg.c_str(), _msg.length()),
-        boost::bind(&AsioClientSocket::handle_write, shared_from_this(), boost::asio::placeholders::error)
+
+    boost::asio::post(
+        _context,
+        boost::bind(&AsioClientSocket::do_write, shared_from_this(), boost::ref(response))
     );
     return true;
 }
@@ -44,7 +44,7 @@ void AsioClientSocket::connect()
     boost::asio::async_connect(
         _socket,
         _endpoints,
-        boost::bind(&AsioClientSocket::handle_connect, this, boost::asio::placeholders::error)
+        boost::bind(&AsioClientSocket::handle_connect, shared_from_this(), boost::asio::placeholders::error)
     );
 }
 
@@ -54,7 +54,7 @@ void AsioClientSocket::handle_connect(const boost::system::error_code &error)
         std::cout << "HANDLE CONNECT (DO FCT TO LAUNCH SOCKET)" << std::endl;
         boost::asio::async_read(
             getSocket(),
-            boost::asio::buffer(_data, DATALENGTH),
+            boost::asio::buffer(&_hdr, AResponse::getHeaderSize()),
             boost::bind(&AsioClientSocket::handle_read_header, shared_from_this(), boost::asio::placeholders::error)
         );
     } else {
@@ -64,73 +64,107 @@ void AsioClientSocket::handle_connect(const boost::system::error_code &error)
 
 void AsioClientSocket::handle_read_header(const boost::system::error_code &error)
 {
-    if (!error) {
+    _read_msg = BabelNetwork::AResponse::getResponse(_hdr);
+
+    if (!_read_msg) {
+        std::cout << "Read msg null" << std::endl;
+        std::cout << _hdr.responseType << std::endl;
+        std::cout << _hdr.returnCode << std::endl;
+        return;
+    }
+    if (!error && _read_msg && _read_msg->decode_header()) {
+//    if (!error ) {
         std::cout << "START READ HEADER" << std::endl;
-        std::cout << "Data before :" << _data << std::endl;
+//        if (!_read_msg || !_read_msg->decode_header()) {
+//            std::cout << "error in read header" << _read_msg << "|" << _read_msg->getResponseType() << std::endl;
+//            return;
+//        }
         boost::asio::async_read(
-            getSocket(),
-            boost::asio::buffer(&_hdr, BabelNetwork::AResponse::getResponseHeaderSize()),
+            _socket,
+            boost::asio::buffer(_read_msg->getBodyData(), _read_msg->getHeaderDataLength()),
             boost::bind(&AsioClientSocket::handle_read_body, shared_from_this(), boost::asio::placeholders::error)
         );
-        std::cout << "Data After :" << _data << std::endl;
     } else {
         std::cerr << "ERROR IN HANDLE READ HEADER (close here ?)" << std::endl;
+//        if (error.category() == )
+//        if (error.value())
         //TODO: Throw error to differenciate between server use and client use ?
 
 //                stop();
 //            room_.leave(shared_from_this());
     }
-//        if (!error && read_msg_.decode_header()) {
-//            std::cout << "START READ HEADER" << std::endl;
-//            boost::asio::async_read(socket_,
-//                boost::asio::buffer(read_msg_.body(), read_msg_.body_length()),
-//                boost::bind(&ClientSocket::handle_read_body, shared_from_this(), boost::asio::placeholders::error)
-//            );
-//        } else {
-//            room_.leave(shared_from_this());
-//        }
 }
 
 void AsioClientSocket::handle_read_body(const boost::system::error_code &error)
 {
-    auto new_msg = BabelNetwork::AResponse::getResponse(&_hdr, nullptr);
-
-    if (!error && new_msg->decode_header()) {
+    if (!error && _read_msg->decode_data()) {
         std::cout << "START READ BODY" << std::endl;
-        std::cout << "Data before :" << _data << std::endl;
-        _responses.push(new_msg);
-        boost::asio::async_read(getSocket(),
-            boost::asio::buffer(_data, DATALENGTH),
+        std::cout << "DATA = " << _read_msg->getBodyData() << std::endl;
+        _read_queue.push(_read_msg);
+        boost::asio::async_read(
+            _socket,
+            boost::asio::buffer(&_hdr, BabelNetwork::AResponse::getHeaderSize()),
             boost::bind(&AsioClientSocket::handle_read_header, shared_from_this(), boost::asio::placeholders::error)
         );
-        std::cout << "Data After :" << _data << std::endl;
     } else {
         std::cerr << "ERROR IN HANDLE READ BODY" << std::endl;
         stop();
     }
-//        if (!error) {
-//            std::cout << "START READ BODY" << std::endl;
-//            boost::asio::async_read(
-//                socket_,
-//                boost::asio::buffer(read_msg_.data(), chat_message::header_length),
-//                boost::bind(&ClientSocket::handle_read_header, shared_from_this(), boost::asio::placeholders::error)
-//            );
-//        } else {
-//            std::cerr << "ERROR IN HANDLE READ BODY" << std::endl;
-//            room_.leave(shared_from_this());
-//        }
+}
+
+void AsioClientSocket::do_write(const BabelNetwork::AResponse &response)
+{
+    bool write_in_progress = !_write_queue.empty() ;
+    std ::cout << "do write" << std::endl;
+
+    _write_queue.push(response.getResponse());
+//    if (!write_in_progress && _write_queue.front()->encode_header()) {
+    if (!write_in_progress) {
+        std ::cout << "ici" << std::endl;
+        _write_queue.front()->encode_header();
+        boost::asio::async_write(
+            _socket,
+            boost::asio::buffer(_write_queue.front()->getHeaderData(), _write_queue.front()->getHeaderSize()),
+            boost::bind(&AsioClientSocket::handle_write, shared_from_this(), boost::asio::placeholders::error)
+        );
+    }
+//    if (!_write_queue.empty() && _write_queue.front()->encode_header()) {
+//
+//        std::cout << "Writing response in do write" << std::endl;
+//        boost::asio::async_write(
+//            _socket,
+//            boost::asio::buffer(_write_queue.front()->getHeaderData(), _write_queue.front()->getHeaderSize()),
+//            boost::bind(&AsioClientSocket::handle_write, shared_from_this(), boost::asio::placeholders::error)
+//        );
+//    }
+//    std::cout << "ICI" << std::endl;
 }
 
 void AsioClientSocket::handle_write(const boost::system::error_code &error)
 {
+    std ::cout << "handle write" << std::endl;
     if (!error) {
-        boost::asio::async_write(
-            getSocket(),
-            boost::asio::buffer(_msg.c_str(), _msg.length()),
-            boost::bind(&AsioClientSocket::handle_write, shared_from_this(), boost::asio::placeholders::error)
-        );
+        _write_queue.pop();
+        if (!_write_queue.empty() && _write_queue.front()->encode_header()) {
+            boost::asio::async_write(
+                _socket,
+                boost::asio::buffer(_write_queue.front()->getHeaderData(), _write_queue.front()->getHeaderSize()),
+                boost::bind(&AsioClientSocket::handle_write, shared_from_this(), boost::asio::placeholders::error)
+            );
+        }
     } else {
-        std::cerr << "ERROR IN HANDLE WRITE" << std::endl;
+//        do_close();
     }
+
+//    if (!error) {
+//        std::cout << "Writing response in handle write" << std::endl;
+////        boost::asio::async_write(
+////            _socket,
+////            boost::asio::buffer(_write_queue.front().data(), write_msgs_.front().length()),
+////            boost::bind(&chat_client::handle_write, this, boost::asio::placeholders::error)
+////        );
+//    } else {
+//        std::cerr << "ERROR IN HANDLE WRITE" << std::endl;
+//    }
 }
 

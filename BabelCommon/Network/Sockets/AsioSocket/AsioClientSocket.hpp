@@ -37,6 +37,8 @@ namespace BabelNetwork {
 
         void handle_read_body(const boost::system::error_code &error);
 
+        void do_write(const BabelNetwork::AResponse &response);
+
         void handle_write(const boost::system::error_code &error);
 
 
@@ -51,9 +53,6 @@ namespace BabelNetwork {
     private:
         ip::tcp::socket _socket;
         ip::tcp::resolver::results_type _endpoints;
-        std::string _msg;
-        static const size_t DATALENGTH = 3;
-        char _data[DATALENGTH] = {0};
     };
 
 }

@@ -8,23 +8,40 @@
 #include <iostream>
 #include "Debug.hpp"
 #include "AsioClientSocket.hpp"
+#include "ConnectionResponse.hpp"
 
 static void socket_testing(char **av)
 {
     BabelNetwork::NetworkInfos nwi(av[1], av[2]);
     boost::asio::io_context context;
-    BabelNetwork::AsioClientSocket client(nwi, context);
-    client.setThread(boost::make_shared<BabelUtils::BoostThread>(
+    boost::shared_ptr<BabelNetwork::AsioClientSocket> client(new BabelNetwork::AsioClientSocket(nwi, context));
+    client->connect();
+    client->setThread(boost::make_shared<BabelUtils::BoostThread>(
         [&client] {
             std::cout << "CLIENT THREAD LAUNCHED" << std::endl;
-            client.getContext().run();
+            client->getContext().run();
         }
         )
     );
-
-    client.connect();
+//    client->connect();
+//    BabelNetwork::AsioClientSocket client(nwi, context);
+//    auto lol = boost::make_shared<BabelNetwork::AsioClientSocket>(client);
+//    client.getContext().run();
+//    sleep(1);
+//    client.connect();
+//    client.setThread(boost::make_shared<BabelUtils::BoostThread>(
+//        [&client] {
+//            std::cout << "CLIENT THREAD LAUNCHED" << std::endl;
+//            client.getContext().run();
+//        }
+//        )
+//    );
+//
     char data[10] = {0};
     while (std::cin.getline(data, 10 + 1)) {
+        BabelNetwork::ConnectionResponse test;
+//        test.setOk();
+        client->sendResponse(test);
         std::cout << "loop" << std::endl;
     }
 }
