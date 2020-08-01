@@ -25,25 +25,27 @@ namespace BabelNetwork {
             char login[DataSize::Login];
             char password[DataSize::Password];
         };
-        static const size_t _data_size = sizeof(ConnectionData);
+        static const size_t ResponseDataSize = sizeof(ConnectionData);
 
         /* <- Constructor - Destructor -> */
     public:
-        ConnectionResponse() {
+        ConnectionResponse()
+        {
             _header.responseType = Connection;
             _header.dataLength = sizeof(ConnectionData);
 
             //TODO: remove
             strcat(_data.login, "lol");
+            strcat(_data.password, "xd");
         };
 
         explicit ConnectionResponse(const ResponseHeader &headerResponse);
 
-        ConnectionResponse(const ConnectionResponse &other) : AResponse(other)
-        {
-            memcpy(_body_data, other._body_data, sizeof(_body_data));
-            memcpy(&_data, &other._data, sizeof(_data));
-        }
+//        ConnectionResponse(const ConnectionResponse &other) : AResponse(other._header)
+//        {
+////            memcpy(_body_data, other._body_data, sizeof(_body_data));
+////            memcpy(&_data, &other._data, sizeof(_data));
+//        }
 
         ~ConnectionResponse() = default;
 
@@ -53,26 +55,33 @@ namespace BabelNetwork {
 
         void setOk() noexcept final;
 
-        [[nodiscard]] bool encode_data() noexcept final;
+        [[nodiscard]] bool encode() noexcept final;
+
+        [[nodiscard]] bool decode_header() noexcept final;
 
         [[nodiscard]] bool decode_data() noexcept final;
 
-        [[nodiscard]] char *getBodyData() noexcept final;
-
-        [[nodiscard]] char *getBody() noexcept final;
+        [[nodiscard]] char *getBody() const noexcept final;
 
         [[nodiscard]] std::shared_ptr<AResponse> getResponse() const final;
 
-//        [[nodiscard]] const char *getResponseType() const noexcept final;
+        [[nodiscard]] char *getDataByte() noexcept final;
 
+        [[nodiscard]] uint32_t getResponseSize() const noexcept final;
+
+        [[nodiscard]] std::string serialize_data() const final;
 
         /* <- Getters / Setters -> */
     public:
         [[nodiscard]] const std::string &getDescription() const noexcept final;
 
+        [[nodiscard]] const char *getLogin() const noexcept { return _data.login; };
+
+        [[nodiscard]] const char *getPassword() const noexcept { return _data.password; };
+
     private:
         const std::string _description = "Connection between server and client";
-        char _body_data[_data_size]{};
+        char _data_byte[ResponseHeaderSize + ResponseDataSize] = {0};
         ConnectionData _data{};
     };
 }

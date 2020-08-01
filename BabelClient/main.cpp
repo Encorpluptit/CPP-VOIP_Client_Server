@@ -46,6 +46,17 @@ static void socket_testing(char **av)
     }
 }
 
+static void response_testing()
+{
+    BabelNetwork::ConnectionResponse test;
+    std::cout << "before encode login = " << test.getLogin() << " password = " << test.getPassword() << std::endl;
+    test.encode();
+    std::cout << "after encode login = " << test.getLogin() << " password = " << test.getPassword() << std::endl;
+    test.decode_header();
+    test.decode_data();
+    std::cout << "after decode login = " << test.getLogin() << " password = " << test.getPassword() << std::endl;
+}
+
 int main(int ac, char **av)
 {
     std::cout << "Babel client!" << std::endl;
@@ -57,5 +68,6 @@ int main(int ac, char **av)
     std::cerr << "Log Mode" << std::endl;
     #endif
     socket_testing(av);
+//    response_testing();
     return 0;
 }

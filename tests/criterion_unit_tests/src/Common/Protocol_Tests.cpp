@@ -49,7 +49,7 @@ Test(Common, ConnectionResponse_5)
     };
     BabelNetwork::ConnectionResponse test(&hdr);
 
-    ASSERT_UINT(test.getHeaderDataLength(), hdr.dataLength);
+    ASSERT_UINT(test.getBodySize(), hdr.dataLength);
 }
 
 Test(Common, ConnectionResponse_6)
@@ -62,7 +62,7 @@ Test(Common, ConnectionResponse_6)
     ASSERT_BOOL(test.encode_header(), true);
     ASSERT_BOOL(test.decode_header(), true);
 
-    ASSERT_UINT(test.getHeaderDataLength(), hdr.dataLength);
+    ASSERT_UINT(test.getBodySize(), hdr.dataLength);
 }
 
 Test(Common, ConnectionResponse_7)
@@ -76,6 +76,6 @@ Test(Common, ConnectionResponse_7)
     ASSERT_BOOL(test.decode_header(), true);
 
     ASSERT_UINT(test.getCode(), hdr.returnCode);
-    ASSERT_UINT(test.getHeaderDataLength(), hdr.dataLength);
+    ASSERT_UINT(test.getBodySize(), hdr.dataLength);
 }
 

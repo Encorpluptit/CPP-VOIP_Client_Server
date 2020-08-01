@@ -13,6 +13,7 @@ ConnectionResponse::ConnectionResponse(const ResponseHeader &headerResponse)
     : AResponse(headerResponse)
 {
     _header.responseType = Connection;
+    _header.dataLength = headerResponse.dataLength;
 }
 
 bool BabelNetwork::ConnectionResponse::isOk() noexcept
@@ -24,42 +25,80 @@ void BabelNetwork::ConnectionResponse::setOk() noexcept
 {
     _header.returnCode = AResponse::ResponseCode::ConnectionOk;
 }
-
-bool ConnectionResponse::decode_data() noexcept
-{
-    memcpy(&_data, _body_data, _data_size);
-    return true;
-}
-
-char *ConnectionResponse::getBodyData() noexcept
-{
-    return _body_data;
-}
-
 const std::string &ConnectionResponse::getDescription() const noexcept
 {
     return _description;
 }
-//
-//size_t ConnectionResponse::getDataSize() noexcept
-//{
-//    return sizeof(ConnectionData);
-//}
-
-bool ConnectionResponse::encode_data() noexcept
-{
-    memcpy(_body_data, &_data, _data_size);
-    return true;
-}
-
 std::shared_ptr<AResponse> ConnectionResponse::getResponse() const
 {
     return std::make_shared<ConnectionResponse>(*this);
 }
 
-char *ConnectionResponse::getBody() noexcept
+char *ConnectionResponse::getBody() const noexcept
 {
-    return reinterpret_cast<char *>(&_data);
+    return const_cast<char *>(_data_byte + ResponseHeaderSize);
 }
 
+bool ConnectionResponse::encode() noexcept
+{
+    memcpy(_data_byte, &_header, ResponseHeaderSize);
+    memcpy(_data_byte + ResponseHeaderSize, &_data, ResponseDataSize);
+    return true;
+}
+
+bool ConnectionResponse::decode_header() noexcept
+{
+    memcpy(&_header, _data_byte, ResponseHeaderSize);
+    return true;
+}
+
+bool ConnectionResponse::decode_data() noexcept
+{
+    memcpy(&_data, _data_byte + ResponseHeaderSize, ResponseDataSize);
+    return true;
+}
+
+char *ConnectionResponse::getDataByte() noexcept
+{
+    return _data_byte;
+}
+
+uint32_t ConnectionResponse::getResponseSize() const noexcept
+{
+    return ResponseHeaderSize + ResponseDataSize;
+}
+
+std::string ConnectionResponse::serialize_data() const
+{
+    std::string rt;
+
+    rt +=  _data.login;
+    rt += "|";
+    rt += _data.password;
+    return rt;
+}
+
+
+//bool ConnectionResponse::decode_data() noexcept
+//{
+//    memcpy(&_data, _body_data, ResponseDataSize);
+//    return true;
+//}
+//
+//char *ConnectionResponse::getBodyData() noexcept
+//{
+//    return _body_data;
+//}
+
+//
+//size_t ConnectionResponse::getDataSize() noexcept
+//{
+//    return sizeof(ConnectionData);
+//}
+//
+//bool ConnectionResponse::encode_data() noexcept
+//{
+//    memcpy(_body_data, &_data, ResponseDataSize);
+//    return true;
+//}
 

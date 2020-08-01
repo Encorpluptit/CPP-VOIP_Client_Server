@@ -35,13 +35,13 @@ namespace BabelNetwork {
 
         void handle_read_header(const boost::system::error_code &error);
 
-        void handle_read_body(const boost::system::error_code &error);
+        void finish_read_body(const boost::system::error_code &error);
 
         void do_write(const BabelNetwork::AResponse &response);
 
         void handle_write(const boost::system::error_code &error);
 
-        void write_body(const boost::system::error_code &error);
+//        void write_body(const boost::system::error_code &error);
 
 
         /* <- Getters / Setters -> */
