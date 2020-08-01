@@ -49,12 +49,17 @@ const std::string &ConnectionResponse::getDescription() const noexcept
 bool ConnectionResponse::encode_data() noexcept
 {
     memcpy(_body_data, &_data, _data_size);
-    return false;
+    return true;
 }
 
 std::shared_ptr<AResponse> ConnectionResponse::getResponse() const
 {
     return std::make_shared<ConnectionResponse>(*this);
+}
+
+char *ConnectionResponse::getBody() noexcept
+{
+    return reinterpret_cast<char *>(&_data);
 }
 
 

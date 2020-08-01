@@ -41,6 +41,8 @@ namespace BabelNetwork {
 
         void handle_write(const boost::system::error_code &error);
 
+        void write_body(const boost::system::error_code &error);
+
 
         /* <- Getters / Setters -> */
     public:
@@ -53,6 +55,7 @@ namespace BabelNetwork {
     private:
         ip::tcp::socket _socket;
         ip::tcp::resolver::results_type _endpoints;
+
     };
 
 }

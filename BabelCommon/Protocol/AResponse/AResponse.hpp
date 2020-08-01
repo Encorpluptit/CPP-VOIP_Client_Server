@@ -101,6 +101,8 @@ namespace BabelNetwork {
 
         [[nodiscard]] virtual char *getBodyData() noexcept = 0;
 
+        [[nodiscard]] virtual char *getBody() noexcept = 0;
+
         [[nodiscard]] const ResponseType &getResponseType() const;
 
         /* <- Attributes -> */

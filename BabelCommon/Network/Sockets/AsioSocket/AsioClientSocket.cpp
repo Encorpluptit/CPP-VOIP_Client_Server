@@ -53,7 +53,7 @@ void AsioClientSocket::handle_connect(const boost::system::error_code &error)
     if (!error) {
         std::cout << "HANDLE CONNECT (DO FCT TO LAUNCH SOCKET)" << std::endl;
         boost::asio::async_read(
-            getSocket(),
+            _socket,
             boost::asio::buffer(&_hdr, AResponse::getHeaderSize()),
             boost::bind(&AsioClientSocket::handle_read_header, shared_from_this(), boost::asio::placeholders::error)
         );
@@ -68,17 +68,16 @@ void AsioClientSocket::handle_read_header(const boost::system::error_code &error
 
     if (!_read_msg) {
         std::cout << "Read msg null" << std::endl;
+        std::cout << _hdr.dataLength << std::endl;
         std::cout << _hdr.responseType << std::endl;
         std::cout << _hdr.returnCode << std::endl;
         return;
+    } else {
+        std::cout << "HEADER OK\tdata length: " << _hdr.dataLength << "\t rt: " << _hdr.returnCode << std::endl;
+        std::cout << _hdr.responseType << std::endl;
     }
     if (!error && _read_msg && _read_msg->decode_header()) {
-//    if (!error ) {
-        std::cout << "START READ HEADER" << std::endl;
-//        if (!_read_msg || !_read_msg->decode_header()) {
-//            std::cout << "error in read header" << _read_msg << "|" << _read_msg->getResponseType() << std::endl;
-//            return;
-//        }
+        std::cout << "START READ HEADER with data " << _hdr.dataLength << " length" << std::endl;
         boost::asio::async_read(
             _socket,
             boost::asio::buffer(_read_msg->getBodyData(), _read_msg->getHeaderDataLength()),
@@ -101,6 +100,8 @@ void AsioClientSocket::handle_read_body(const boost::system::error_code &error)
         std::cout << "START READ BODY" << std::endl;
         std::cout << "DATA = " << _read_msg->getBodyData() << std::endl;
         _read_queue.push(_read_msg);
+//        sleep(5);
+        memset(&_hdr, 0, BabelNetwork::AResponse::getHeaderSize());
         boost::asio::async_read(
             _socket,
             boost::asio::buffer(&_hdr, BabelNetwork::AResponse::getHeaderSize()),
@@ -118,14 +119,14 @@ void AsioClientSocket::do_write(const BabelNetwork::AResponse &response)
     std ::cout << "do write" << std::endl;
 
     _write_queue.push(response.getResponse());
-//    if (!write_in_progress && _write_queue.front()->encode_header()) {
-    if (!write_in_progress) {
-        std ::cout << "ici" << std::endl;
+    if (!write_in_progress && _write_queue.front()->encode_header()) {
+//    if (!write_in_progress) {
+        std ::cout << "Sending message" << std::endl;
         _write_queue.front()->encode_header();
         boost::asio::async_write(
             _socket,
             boost::asio::buffer(_write_queue.front()->getHeaderData(), _write_queue.front()->getHeaderSize()),
-            boost::bind(&AsioClientSocket::handle_write, shared_from_this(), boost::asio::placeholders::error)
+            boost::bind(&AsioClientSocket::write_body, shared_from_this(), boost::asio::placeholders::error)
         );
     }
 //    if (!_write_queue.empty() && _write_queue.front()->encode_header()) {
@@ -143,16 +144,25 @@ void AsioClientSocket::do_write(const BabelNetwork::AResponse &response)
 void AsioClientSocket::handle_write(const boost::system::error_code &error)
 {
     std ::cout << "handle write" << std::endl;
+//    if (!error && _write_queue.front()->encode_data()) {
     if (!error) {
+        std ::cout << "handle write OK" << std::endl;
+//        boost::asio::async_write(
+//            _socket,
+//            boost::asio::buffer(_write_queue.front()->getBodyData(), _write_queue.front()->getHeaderDataLength()),
+//            boost::bind(&AsioClientSocket::handle_write, shared_from_this(), boost::asio::placeholders::error)
+//        );
         _write_queue.pop();
         if (!_write_queue.empty() && _write_queue.front()->encode_header()) {
+            std ::cout << "2 or messages to send" << std::endl;
             boost::asio::async_write(
                 _socket,
                 boost::asio::buffer(_write_queue.front()->getHeaderData(), _write_queue.front()->getHeaderSize()),
-                boost::bind(&AsioClientSocket::handle_write, shared_from_this(), boost::asio::placeholders::error)
+                boost::bind(&AsioClientSocket::write_body, shared_from_this(), boost::asio::placeholders::error)
             );
         }
     } else {
+        std ::cout << "handle write NOT OK" << std::endl;
 //        do_close();
     }
 
@@ -166,5 +176,26 @@ void AsioClientSocket::handle_write(const boost::system::error_code &error)
 //    } else {
 //        std::cerr << "ERROR IN HANDLE WRITE" << std::endl;
 //    }
+}
+
+void AsioClientSocket::write_body(const boost::system::error_code &error)
+{
+    std ::cout << "write body" << std::endl;
+
+    if (!error) {
+        std ::cout << "write body OK" << std::endl;
+        if (_write_queue.front()->encode_data()) {
+            std ::cout << "writing body with " << _write_queue.front()->getHeaderDataLength() << " length" << std::endl;
+            std ::cout << "writing body= "<< _write_queue.front()->getBodyData() << std::endl;
+            boost::asio::async_write(
+                _socket,
+                boost::asio::buffer(_write_queue.front()->getBodyData(), _write_queue.front()->getHeaderDataLength()),
+                boost::bind(&AsioClientSocket::handle_write, shared_from_this(), boost::asio::placeholders::error)
+            );
+        }
+    } else {
+        std ::cout << "write body NOT OK" << std::endl;
+    }
+
 }
 

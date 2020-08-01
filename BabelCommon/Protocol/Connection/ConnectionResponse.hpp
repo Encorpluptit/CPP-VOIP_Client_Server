@@ -31,6 +31,7 @@ namespace BabelNetwork {
     public:
         ConnectionResponse() {
             _header.responseType = Connection;
+            _header.dataLength = sizeof(ConnectionData);
 
             //TODO: remove
             strcat(_data.login, "lol");
@@ -57,6 +58,8 @@ namespace BabelNetwork {
         [[nodiscard]] bool decode_data() noexcept final;
 
         [[nodiscard]] char *getBodyData() noexcept final;
+
+        [[nodiscard]] char *getBody() noexcept final;
 
         [[nodiscard]] std::shared_ptr<AResponse> getResponse() const final;
 

@@ -40,7 +40,7 @@ static void socket_testing(char **av)
     char data[10] = {0};
     while (std::cin.getline(data, 10 + 1)) {
         BabelNetwork::ConnectionResponse test;
-//        test.setOk();
+        test.setOk();
         client->sendResponse(test);
         std::cout << "loop" << std::endl;
     }
