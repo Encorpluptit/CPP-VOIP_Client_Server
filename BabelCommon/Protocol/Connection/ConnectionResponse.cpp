@@ -25,10 +25,12 @@ void BabelNetwork::ConnectionResponse::setOk() noexcept
 {
     _header.returnCode = AResponse::ResponseCode::ConnectionOk;
 }
+
 const std::string &ConnectionResponse::getDescription() const noexcept
 {
     return _description;
 }
+
 std::shared_ptr<AResponse> ConnectionResponse::getResponse() const
 {
     return std::make_shared<ConnectionResponse>(*this);
@@ -77,28 +79,3 @@ std::string ConnectionResponse::serialize_data() const
     rt += _data.password;
     return rt;
 }
-
-
-//bool ConnectionResponse::decode_data() noexcept
-//{
-//    memcpy(&_data, _body_data, ResponseDataSize);
-//    return true;
-//}
-//
-//char *ConnectionResponse::getBodyData() noexcept
-//{
-//    return _body_data;
-//}
-
-//
-//size_t ConnectionResponse::getDataSize() noexcept
-//{
-//    return sizeof(ConnectionData);
-//}
-//
-//bool ConnectionResponse::encode_data() noexcept
-//{
-//    memcpy(_body_data, &_data, ResponseDataSize);
-//    return true;
-//}
-

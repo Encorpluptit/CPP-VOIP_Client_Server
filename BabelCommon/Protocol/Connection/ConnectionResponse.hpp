@@ -41,12 +41,6 @@ namespace BabelNetwork {
 
         explicit ConnectionResponse(const ResponseHeader &headerResponse);
 
-//        ConnectionResponse(const ConnectionResponse &other) : AResponse(other._header)
-//        {
-////            memcpy(_body_data, other._body_data, sizeof(_body_data));
-////            memcpy(&_data, &other._data, sizeof(_data));
-//        }
-
         ~ConnectionResponse() = default;
 
         /* <- Methods -> */

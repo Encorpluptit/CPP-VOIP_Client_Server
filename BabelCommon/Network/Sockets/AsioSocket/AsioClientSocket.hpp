@@ -33,7 +33,9 @@ namespace BabelNetwork {
 
         void handle_connect(const boost::system::error_code &error);
 
-        void handle_read_header(const boost::system::error_code &error);
+        void handle_read_header();
+
+        void handle_read_body(const boost::system::error_code &error);
 
         void finish_read_body(const boost::system::error_code &error);
 

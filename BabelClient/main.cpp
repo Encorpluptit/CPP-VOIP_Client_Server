@@ -37,6 +37,12 @@ static void socket_testing(char **av)
 //        )
 //    );
 //
+//    sleep(5);
+//    for (int i = 0; i < 100; i += 1) {
+//        BabelNetwork::ConnectionResponse test;
+//        test.setOk();
+//        client->sendResponse(test);
+//    }
     char data[10] = {0};
     while (std::cin.getline(data, 10 + 1)) {
         BabelNetwork::ConnectionResponse test;
