@@ -20,9 +20,9 @@ AsioListener::AsioListener(const BabelNetwork::NetworkInfos &networkInfos, io_co
     start();
     setThread(boost::make_shared<BabelUtils::BoostThread>(
         [this] {
-            std::cout << "THREAD LAUNCHED" << std::endl;
+            std::cout << "THREAD LAUNCHED on "<< _networkInfos << std::endl;
             _context.run();
-            std::cout << "THREAD FINISHED" << std::endl;
+            std::cout << "THREAD FINISHED on "<< _networkInfos << std::endl;
         }
         )
     );

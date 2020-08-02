@@ -6,9 +6,10 @@
 */
 
 #include <iostream>
-#include "NetworkInfos.hpp"
 #include <functional>
 #include "AsioListener.hpp"
+#include "NetworkInfos.hpp"
+#include "Server.hpp"
 
 void launch(char **av);
 
@@ -38,6 +39,8 @@ int main(int ac, char **av)
     if (ac < 2)
         return 84;
     try {
+//        BabelServer::Server server(ac - 1, av + 1);
+//        server.run();
         tests(av);
     }
     catch (std::exception &e) {

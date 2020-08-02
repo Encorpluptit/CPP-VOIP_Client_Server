@@ -16,27 +16,42 @@
 #ifndef CPP_BABEL_2020_SERVER_HPP
 #define CPP_BABEL_2020_SERVER_HPP
 
-class Server {
+#include "AsioListener.hpp"
+#include "Logger.hpp"
+
+namespace BabelServer {
+    class Server {
 
 /* <- Constructor - Destructor -> */
-public:
-    Server() = default;
-    ~Server() = default;
+    public:
+        explicit Server(int ac, char **av);
 
-/* <- Methods -> */
-public:
-//    void run();
+        ~Server() = default;
+
+/* <- Public Methods -> */
+    public:
+    void run();
 //    void accept_client();
 //    void login();
 
+/* <- Private Methods -> */
+    private:
+        void initServers(int ac, char **av);
+
 /* <- Getters / Setters -> */
-public:
+    public:
 
 /* <- Attributes -> */
-protected:
+    private:
+        BabelUtils::Logger _logger;
+//        BabelNetwork::NetworkInfos _nwi;
+        std::vector<boost::shared_ptr<BabelServer::AsioListener>> _servers;
+//        BabelServer::AsioListener _server;
+
 //    void *db;
 
-};
+    };
 
+}
 
 #endif /* CPP_BABEL_2020_SERVER_HPP */
