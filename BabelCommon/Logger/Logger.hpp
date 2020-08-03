@@ -38,29 +38,17 @@ namespace BabelUtils {
             if (!isOk())
                 return;
             getTime();
-            _logFile << "[ " << _description << " ]  - " << _buffer << " ==> " << format(format, args...) + "\n";
+            _logFile << "[ " << _description << " ]  - " << _timeBuffer << " ==> " << format(format, args...) + "\n";
         }
 
         void logThis(const std::string &msg, const std::shared_ptr<BabelNetwork::AResponse> &response);
-//        void logThis(const std::string &msg, const std::shared_ptr<BabelNetwork::AResponse> &response) {
-//            if (!isOk())
-//                return;
-//            _logFile << "[ " << _description << " ] ==> " << msg + "\n" << *response << "\n";
-//        }
 
         void logThis(const std::shared_ptr<BabelNetwork::AResponse> &response);
-//        void logThis(const std::shared_ptr<BabelNetwork::AResponse> &response) {
-//            if (!isOk())
-//                return;
-//            _logFile << "[ " << _description << " ] ==> " << response << "\n";
-//        }
 
-        /* <- Public Methods -> */
+        /* <- Private Methods -> */
     private:
         void getTime();
-
-    private:
-        void initLogType(Logger::LogType type);
+        void initLogType();
         std::filesystem::path createLogDirectories();
         void createLogFile(std::filesystem::path filePath);
 
@@ -74,7 +62,7 @@ namespace BabelUtils {
         bool _ok = false;
         LogType _type = UnknownLog;
         std::string _description;
-        char _buffer[FILENAME_MAX] = {0};
+        char _timeBuffer[FILENAME_MAX] = {0};
     };
 }
 
