@@ -17,12 +17,21 @@ Server::Server(int ac, char **av)
 
 Server::~Server()
 {
-    getThread()->stop();
+    for (const auto& server : _servers)
+        server->stop();
+//    getThread()->stop();
 }
-
 
 void Server::run()
 {
+    std::string data;
+    while (std::getline(std::cin, data)) {
+        std::cout << data << std::endl;
+        if (data == "exit") {
+            std::cout << "exit loop" << std::endl;
+            break;
+        }
+    }
 //    while (!_servers.empty());
 }
 
@@ -31,9 +40,15 @@ void Server::initServers(int ac, char **av)
     using namespace BabelNetwork;
     boost::asio::io_context context;
 
+//    _servers.emplace_back(new AsioListener(av[0], av[1]));
+
     for (int i = 1; i < ac; i++)
-        _servers.emplace_back(new AsioListener(av[0], av[i], context));
-//    setThread(boost::make_shared<BabelUtils::BoostThread>(boost::bind(&BabelNetwork::AsioSocket::startContext, boost::ref(context))));
+        _servers.emplace_back(new AsioListener(av[0], av[i]));
+
+//    setThread(boost::make_shared<BabelUtils::BoostThread>(
+//        boost::bind(&BabelNetwork::AsioSocket::startContext2, _servers.front())));
+//    setThread(boost::make_shared<BabelUtils::BoostThread>(
+//        boost::bind(&BabelNetwork::AsioSocket::startContext, boost::ref(context))));
 //    setThread(boost::make_shared<BabelUtils::BoostThread>(
 //        [objPtr = &context] {
 //            std::cout << "THREAD LAUNCHED" << std::endl;
@@ -42,10 +57,20 @@ void Server::initServers(int ac, char **av)
 //        }
 //        )
 //    );
-//    char data[10] = {0};
-//    while (std::cin.getline(data, 10 + 1)) {
-//        std::cout << "loop" << std::endl;
+
+//    for (auto &server: _servers)
+//        server->start();
+//    context.run();
+//    std::string data;
+//    while (std::getline(std::cin, data)) {
+//        std::cout << data << std::endl;
+//        if (data == "exit") {
+//            std::cout << "exit loop" << std::endl;
+//            break;
+//        }
 //    }
+//    context.stop();
+//    getThread()->stop();
 }
 
 [[nodiscard]] const boost::shared_ptr<BabelUtils::BoostThread> &Server::getThread() const

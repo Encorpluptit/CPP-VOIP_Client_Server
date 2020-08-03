@@ -20,6 +20,7 @@ static void socket_testing(char **av)
         [&client] {
             std::cout << "CLIENT THREAD LAUNCHED" << std::endl;
             client->getContext().run();
+            std::cout << "CLIENT THREAD FINISHED" << std::endl;
         }
         )
     );

@@ -111,9 +111,9 @@ namespace BabelNetwork {
         /* <- Attributes -> */
     protected:
         ResponseHeader _header = {
-            .returnCode = AResponse::ResponseCode::UnknownError,
-            .responseType = UnknownType,
-            .dataLength = 0
+            AResponse::ResponseCode::UnknownError,
+            UnknownType,
+            0
         };
     };
 

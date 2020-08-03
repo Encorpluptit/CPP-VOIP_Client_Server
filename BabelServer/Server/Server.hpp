@@ -47,7 +47,8 @@ namespace BabelServer {
     private:
         BabelUtils::Logger _logger;
         std::vector<boost::shared_ptr<BabelServer::AsioListener>> _servers;
-//        BabelServer::AsioListener _server;
+        boost::shared_ptr<BabelServer::AsioListener> _asioServer;
+//        boost::shared_ptr<BabelServer::AsioListener> _asioClients;
         boost::shared_ptr<BabelUtils::BoostThread> _thread;
         //Db
     };

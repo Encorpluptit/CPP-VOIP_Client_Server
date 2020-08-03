@@ -10,12 +10,9 @@
 
 using namespace BabelNetwork;
 
-// TODO: real constructor for ResponseHeader Structure
 AResponse::AResponse(const ResponseHeader &headerResponse)
 {
-    _header.returnCode = headerResponse.returnCode;
-    _header.dataLength = headerResponse.dataLength;
-    _header.responseType = headerResponse.responseType;
+    _header = Response(headerResponse);
 }
 
 std::shared_ptr<AResponse> AResponse::getResponse(const ResponseHeader &response)

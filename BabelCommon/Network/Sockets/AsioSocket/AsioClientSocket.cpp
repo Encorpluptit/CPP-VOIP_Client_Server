@@ -9,14 +9,26 @@
 
 using namespace BabelNetwork;
 
-AsioClientSocket::AsioClientSocket(const std::string &address, const std::string &port, io_context &context, SocketHandler handlerType)
-    : BabelNetwork::AsioSocket(address, port, context),
+AsioClientSocket::AsioClientSocket(const std::string &address, const std::string &port, io_context &context,
+    SocketHandler handlerType)
+    : BabelNetwork::AsioSocket(address, port),
+      _context(context),
       _socket(_context),
       _handler(handlerType)
 {
 
 }
 
+AsioClientSocket::~AsioClientSocket()
+{
+    _socket.close();
+//    _read_msg.reset();
+//    while (!_read_queue.empty())
+//        _read_queue.pop();
+//    while (!_write_queue.empty())
+//        _write_queue.pop();
+//    _socket.close();
+}
 void AsioClientSocket::start()
 {
     std::cout << "START SESSION" << std::endl;
@@ -84,8 +96,8 @@ void AsioClientSocket::handle_read_body(const boost::system::error_code &error)
         } else {
             std::cout << *_read_msg << std::endl;
         }
-        std::cout << "HEADER READ with data lentgth" << _hdr.dataLength << std::endl;
-        std::cout << "HEADER READ with data lentgth" << _read_msg->getBodySize() << std::endl;
+        std::cout << "HEADER READ with data length" << _hdr.dataLength << std::endl;
+        std::cout << "HEADER READ with data length" << _read_msg->getBodySize() << std::endl;
         boost::asio::async_read(
             _socket,
             boost::asio::buffer(_read_msg->getBody(), _hdr.dataLength),
@@ -97,6 +109,7 @@ void AsioClientSocket::handle_read_body(const boost::system::error_code &error)
             stop();
         } else {
             std::cerr << "Throw Exeption ?" << std::endl;
+            throw std::runtime_error("CLIENT DISCONNECT");
         }
     }
 }

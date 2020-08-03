@@ -20,28 +20,22 @@ namespace BabelNetwork {
     class AsioSocket : public ASocket {
         /* <- Constructor - Destructor -> */
     public:
-        explicit AsioSocket(const std::string &address, const std::string &port, io_context &context);
+        explicit AsioSocket(const std::string &address, const std::string &port);
 
         /* <- Public Methods -> */
     public:
-        void stop() override;
-
-        static void startContext(io_context &context) {
-            std::cout << "THREAD LAUNCHED" << std::endl;
-            context.run();
-            std::cout << "THREAD FINISHED" << std::endl;
-        };
+//        void stop() override;
 
         /* <- Private Methods -> */
     private:
 
         /* <- Getters / Setters -> */
     public:
-        [[nodiscard]] io_context &getContext() const { return _context; }
+//        [[nodiscard]] io_context &getContext() const { return _context; }
 
         /* <- Attributes -> */
     protected:
-        io_context &_context;
+//        io_context &_context;
     };
 }
 

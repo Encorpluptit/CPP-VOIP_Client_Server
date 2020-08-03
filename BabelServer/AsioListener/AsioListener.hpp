@@ -19,9 +19,7 @@ namespace BabelServer {
     public:
         explicit AsioListener(
             const std::string &address,
-            const std::string &port,
-            io_context &context
-        );
+            const std::string &port);
 
         ~AsioListener() final;
 
@@ -60,13 +58,24 @@ namespace BabelServer {
             return _signals;
         }
 
+        [[nodiscard]] io_context &getContext() const { return const_cast<io_context &>(_context); }
+
+        void startContext() {
+            std::cout << "THREAD LAUNCHED on " << _networkInfos << std::endl;
+            _context.run();
+            std::cout << "THREAD FINISHED on " << _networkInfos << std::endl;
+        }
+
+        void stopContext() { _context.stop();}
+
         /* <- Attributes -> */
     private:
+        io_context _context{};
         ip::tcp::endpoint _endpoint;
         boost::asio::ip::tcp::acceptor _acceptor;
         boost::asio::signal_set _signals;
+        std::vector<boost::shared_ptr<BabelNetwork::AsioClientSocket>> _asioClients;
     };
-
 }
 
 #endif /* CPP_BABEL_2020_ASIOLISTENER_HPP */

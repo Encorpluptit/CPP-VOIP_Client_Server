@@ -32,10 +32,14 @@ namespace BabelNetwork {
             SocketHandler handlerType
         );
 
+        ~AsioClientSocket() final;
+
         /* <- Public Methods -> */
     public:
 
         void start() final;
+
+        void stop() final {_context.stop();};
 
         bool sendResponse(const BabelNetwork::AResponse &response) final;
 
@@ -72,8 +76,12 @@ namespace BabelNetwork {
             return _handler;
         }
 
+        [[nodiscard]] io_context &getContext() const { return _context; }
+
+
         /* <- Attributes -> */
     private:
+        io_context &_context;
         ip::tcp::socket _socket;
         ip::tcp::resolver::results_type _endpoints;
         SocketHandler _handler;

@@ -15,21 +15,32 @@ void launch(char **av);
 static void tests(char **av)
 {
     std::cout << "TEST LAUNCHED" << std::endl;
-    boost::asio::io_context context;
-    BabelServer::AsioListener listener(av[1], av[2], context);
-    listener.setThread(boost::make_shared<BabelUtils::BoostThread>(
-        [objPtr = &listener] {
-            std::cout << "THREAD LAUNCHED on " << objPtr->getNetworkInfos() << std::endl;
-            objPtr->getContext().run();
-            std::cout << "THREAD FINISHED on " << objPtr->getNetworkInfos() << std::endl;
+//    boost::asio::io_context context;
+    BabelServer::AsioListener listener(av[1], av[2]);
+//    auto lol = boost::make_shared<BabelUtils::BoostThread>(
+//        [listener = &listener] {listener->start();}
+//        );
+//    listener.setThread(boost::make_shared<BabelUtils::BoostThread>(
+//        [objPtr = &listener] {
+//            std::cout << "THREAD LAUNCHED on " << objPtr->getNetworkInfos() << std::endl;
+//            objPtr->getContext().run();
+//            std::cout << "THREAD FINISHED on " << objPtr->getNetworkInfos() << std::endl;
+//        }
+//        )
+//    );
+//    lol->run();
+    std::string data;
+    while (std::getline(std::cin, data)) {
+        std::cout << data << std::endl;
+        if (data == "exit") {
+            std::cout << "exit loop" << std::endl;
+            break;
         }
-        )
-    );
-
-    char data[10] = {0};
-    while (std::cin.getline(data, 10 + 1)) {
-        std::cout << "loop" << std::endl;
     }
+    listener.stop();
+//    lol->stop();
+//    listener.start();
+//    listener.getContext().run();
 }
 
 int main(int ac, char **av)
@@ -37,12 +48,13 @@ int main(int ac, char **av)
     if (ac < 3)
         return 84;
     try {
-//        BabelServer::Server server(ac - 1, av + 1);
-//        server.run();
-        tests(av);
+        BabelServer::Server server(ac - 1, av + 1);
+        server.run();
+//        tests(av);
     }
     catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
     }
+    std::cout << "End main" <<std::endl;
     return 0;
 }
