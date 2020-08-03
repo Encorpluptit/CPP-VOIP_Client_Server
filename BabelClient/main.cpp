@@ -14,7 +14,7 @@ static void socket_testing(char **av)
 {
     BabelNetwork::NetworkInfos nwi(av[1], av[2]);
     boost::asio::io_context context;
-    boost::shared_ptr<BabelNetwork::AsioClientSocket> client(new BabelNetwork::AsioClientSocket(nwi, context));
+    boost::shared_ptr<BabelNetwork::AsioClientSocket> client(new BabelNetwork::AsioClientSocket(av[1], av[2], context, BabelNetwork::AsioClientSocket::SocketHandler::Client));
     client->connect();
     client->setThread(boost::make_shared<BabelUtils::BoostThread>(
         [&client] {
@@ -37,6 +37,7 @@ static void socket_testing(char **av)
         std::cout << "loop" << std::endl;
     }
 }
+
 int main(int ac, char **av)
 {
     std::cout << "Babel client!" << std::endl;

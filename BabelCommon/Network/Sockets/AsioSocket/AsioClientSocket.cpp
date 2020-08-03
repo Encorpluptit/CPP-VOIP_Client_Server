@@ -9,9 +9,10 @@
 
 using namespace BabelNetwork;
 
-AsioClientSocket::AsioClientSocket(const BabelNetwork::NetworkInfos &networkInfos, io_context &context)
-    : BabelNetwork::AsioSocket(networkInfos, context),
-      _socket(_context)
+AsioClientSocket::AsioClientSocket(const std::string &address, const std::string &port, io_context &context, SocketHandler handlerType)
+    : BabelNetwork::AsioSocket(address, port, context),
+      _socket(_context),
+      _handler(handlerType)
 {
 
 }
@@ -91,10 +92,12 @@ void AsioClientSocket::handle_read_body(const boost::system::error_code &error)
             boost::bind(&AsioClientSocket::finish_read_body, shared_from_this(), boost::asio::placeholders::error)
         );
     } else {
-        std::cerr << "ERROR IN HANDLE READ HEADER (close here ?)" << std::endl;
-        //TODO: Throw AsioSocket error to differenciate between server use and client use ?
-//                stop();
-//            room_.leave(shared_from_this());
+        std::cerr << "ERROR IN HANDLE READ BODY" << std::endl;
+        if (getHandler() == SocketHandler::Client) {
+            stop();
+        } else {
+            std::cerr << "Throw Exeption ?" << std::endl;
+        }
     }
 }
 
@@ -105,8 +108,12 @@ void AsioClientSocket::finish_read_body(const boost::system::error_code &error)
         _read_queue.push(_read_msg);
         handle_read_header();
     } else {
-        std::cerr << "ERROR IN HANDLE READ BODY" << std::endl;
-        stop();
+        std::cerr << "ERROR IN FINISH READ BODY" << std::endl;
+        if (getHandler() == SocketHandler::Client) {
+            stop();
+        } else {
+            std::cerr << "Throw Exeption ?" << std::endl;
+        }
     }
 }
 

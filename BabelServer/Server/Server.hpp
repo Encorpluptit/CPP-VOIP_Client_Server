@@ -22,34 +22,34 @@
 namespace BabelServer {
     class Server {
 
-/* <- Constructor - Destructor -> */
+        /* <- Constructor - Destructor -> */
     public:
         explicit Server(int ac, char **av);
 
-        ~Server() = default;
+        ~Server();
 
-/* <- Public Methods -> */
+        /* <- Public Methods -> */
     public:
-    void run();
-//    void accept_client();
-//    void login();
+        void run();
 
-/* <- Private Methods -> */
+        /* <- Private Methods -> */
     private:
         void initServers(int ac, char **av);
 
-/* <- Getters / Setters -> */
+        /* <- Getters / Setters -> */
     public:
+        [[nodiscard]] const boost::shared_ptr<BabelUtils::BoostThread> &getThread() const;
 
-/* <- Attributes -> */
+        void setThread(const boost::shared_ptr<BabelUtils::BoostThread> &thread);
+
+
+        /* <- Attributes -> */
     private:
         BabelUtils::Logger _logger;
-//        BabelNetwork::NetworkInfos _nwi;
         std::vector<boost::shared_ptr<BabelServer::AsioListener>> _servers;
 //        BabelServer::AsioListener _server;
-
-//    void *db;
-
+        boost::shared_ptr<BabelUtils::BoostThread> _thread;
+        //Db
     };
 
 }

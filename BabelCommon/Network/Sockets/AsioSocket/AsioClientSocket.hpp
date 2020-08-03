@@ -13,10 +13,24 @@
 namespace BabelNetwork {
     using namespace boost::asio;
 
-    class AsioClientSocket final : public boost::enable_shared_from_this<AsioClientSocket>, public AsioSocket {
+    class AsioClientSocket final
+        : public boost::enable_shared_from_this<AsioClientSocket>,
+          public AsioSocket {
+        /* <- Class Enum -> */
+    public:
+        enum SocketHandler {
+            Server,
+            Client
+        };
+
         /* <- Constructor - Destructor -> */
     public:
-        explicit AsioClientSocket(const BabelNetwork::NetworkInfos &networkInfos, io_context &context);
+        explicit AsioClientSocket(
+            const std::string &address,
+            const std::string &port,
+            io_context &context,
+            SocketHandler handlerType
+        );
 
         /* <- Public Methods -> */
     public:
@@ -53,11 +67,16 @@ namespace BabelNetwork {
             return _socket;
         }
 
+        [[nodiscard]] SocketHandler getHandler() const
+        {
+            return _handler;
+        }
+
         /* <- Attributes -> */
     private:
         ip::tcp::socket _socket;
         ip::tcp::resolver::results_type _endpoints;
-
+        SocketHandler _handler;
     };
 
 }

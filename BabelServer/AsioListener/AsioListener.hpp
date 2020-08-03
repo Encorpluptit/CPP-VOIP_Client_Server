@@ -17,7 +17,11 @@ namespace BabelServer {
 
         /* <- Constructor - Destructor -> */
     public:
-        explicit AsioListener(const BabelNetwork::NetworkInfos &networkInfos, io_context &context);
+        explicit AsioListener(
+            const std::string &address,
+            const std::string &port,
+            io_context &context
+        );
 
         ~AsioListener() final;
 
@@ -32,8 +36,10 @@ namespace BabelServer {
         /* <- Private Methods -> */
     private:
 
-        void handle_accept(const boost::shared_ptr<BabelNetwork::AsioClientSocket> &session,
-            const boost::system::error_code &error);
+        void handle_accept(
+            const boost::shared_ptr<BabelNetwork::AsioClientSocket> &session,
+            const boost::system::error_code &error
+        );
 
         void setSignalsHandeled();
 

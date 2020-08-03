@@ -5,7 +5,6 @@
 ** [AResponse.cpp]: Source file for AResponse feature.
 */
 
-#include <cstring>
 #include "AResponse.hpp"
 #include "ConnectionResponse.hpp"
 

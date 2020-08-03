@@ -19,7 +19,7 @@ namespace BabelNetwork {
 
         /* <- Constructor - Destructor -> */
     public:
-        explicit ASocket(const NetworkInfos &networkInfos);
+        explicit ASocket(const std::string &address, const std::string &port);
 
         ~ASocket() override = default;
 
@@ -46,7 +46,7 @@ namespace BabelNetwork {
 
         /* <- Attributes -> */
     protected:
-        const NetworkInfos &_networkInfos;
+        NetworkInfos _networkInfos;
         bool _ready = false;
         BabelNetwork::AResponse::ResponseHeader _hdr{};
         std::shared_ptr<AResponse> _read_msg = nullptr;

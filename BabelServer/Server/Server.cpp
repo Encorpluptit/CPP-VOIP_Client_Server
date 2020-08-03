@@ -15,33 +15,45 @@ Server::Server(int ac, char **av)
     initServers(ac, av);
 }
 
+Server::~Server()
+{
+    getThread()->stop();
+}
+
+
 void Server::run()
 {
-    while (!_servers.empty());
+//    while (!_servers.empty());
 }
 
 void Server::initServers(int ac, char **av)
 {
-    using namespace boost::asio::ip;
     using namespace BabelNetwork;
     boost::asio::io_context context;
-    BabelNetwork::NetworkInfos nwi;
 
-    if (ac == 1) {
-        try {
-            nwi = NetworkInfos(address::from_string(av[0]).to_string());
-        } catch (const std::exception &e) {
-            nwi = NetworkInfos(address::from_string(av[0]).to_string());
-        }
-        _servers.emplace_back(new AsioListener(nwi, context));
-    } else {
-        for (int i = 1; i < ac; i++) {
-            try {
-                nwi = NetworkInfos(address::from_string(av[0]).to_string(), av[i]);
-            } catch (const std::exception &e) {
-                nwi = NetworkInfos(address::from_string(av[0]).to_string(), av[i]);
-            }
-            _servers.emplace_back(new AsioListener(nwi, context));
-        }
-    }
+    for (int i = 1; i < ac; i++)
+        _servers.emplace_back(new AsioListener(av[0], av[i], context));
+//    setThread(boost::make_shared<BabelUtils::BoostThread>(boost::bind(&BabelNetwork::AsioSocket::startContext, boost::ref(context))));
+//    setThread(boost::make_shared<BabelUtils::BoostThread>(
+//        [objPtr = &context] {
+//            std::cout << "THREAD LAUNCHED" << std::endl;
+//            objPtr->run();
+//            std::cout << "THREAD FINISHED" << std::endl;
+//        }
+//        )
+//    );
+//    char data[10] = {0};
+//    while (std::cin.getline(data, 10 + 1)) {
+//        std::cout << "loop" << std::endl;
+//    }
+}
+
+[[nodiscard]] const boost::shared_ptr<BabelUtils::BoostThread> &Server::getThread() const
+{
+    return _thread;
+}
+
+void Server::setThread(const boost::shared_ptr<BabelUtils::BoostThread> &thread)
+{
+    _thread = thread;
 }

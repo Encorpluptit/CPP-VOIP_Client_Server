@@ -9,8 +9,8 @@
 
 using namespace BabelNetwork;
 
-AsioSocket::AsioSocket(const NetworkInfos &networkInfos, io_context &context)
-    : ASocket(networkInfos), _context(context)
+AsioSocket::AsioSocket(const std::string &address, const std::string &port, io_context &context)
+    : ASocket(address, port), _context(context)
 {
 
 }
