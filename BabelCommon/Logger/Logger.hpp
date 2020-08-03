@@ -12,6 +12,7 @@
 #include <filesystem>
 #include "LoggerError.hpp"
 #include "StringFormat.tpp"
+#include "AResponse.hpp"
 
 namespace BabelUtils {
     class Logger {
@@ -30,14 +31,33 @@ namespace BabelUtils {
         ~Logger();
 
 
-        /* <- Methods -> */
+        /* <- Public Methods -> */
     public:
         template<typename ... Args>
         void logThis(const std::string &format, Args ... args) {
             if (!isOk())
                 return;
-            _logFile << "[ " << _description << " ] ==> " << format(format, args...) + "\n";
+            getTime();
+            _logFile << "[ " << _description << " ]  - " << _buffer << " ==> " << format(format, args...) + "\n";
         }
+
+        void logThis(const std::string &msg, const std::shared_ptr<BabelNetwork::AResponse> &response);
+//        void logThis(const std::string &msg, const std::shared_ptr<BabelNetwork::AResponse> &response) {
+//            if (!isOk())
+//                return;
+//            _logFile << "[ " << _description << " ] ==> " << msg + "\n" << *response << "\n";
+//        }
+
+        void logThis(const std::shared_ptr<BabelNetwork::AResponse> &response);
+//        void logThis(const std::shared_ptr<BabelNetwork::AResponse> &response) {
+//            if (!isOk())
+//                return;
+//            _logFile << "[ " << _description << " ] ==> " << response << "\n";
+//        }
+
+        /* <- Public Methods -> */
+    private:
+        void getTime();
 
     private:
         void initLogType(Logger::LogType type);
@@ -54,6 +74,7 @@ namespace BabelUtils {
         bool _ok = false;
         LogType _type = UnknownLog;
         std::string _description;
+        char _buffer[FILENAME_MAX] = {0};
     };
 }
 

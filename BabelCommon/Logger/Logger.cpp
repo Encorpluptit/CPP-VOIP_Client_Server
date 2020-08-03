@@ -73,14 +73,41 @@ void Logger::createLogFile(std::filesystem::path filePath)
     time_t rawtime;
     struct tm *timeinfo;
     size_t sz = FILENAME_MAX - filePath.string().size();
-    char fileName[FILENAME_MAX] = {0};
 
     if (time(&rawtime) == ((time_t) -1) || !(timeinfo = localtime(&rawtime))
-        || !strftime(fileName, sz, "%Y-%m-%d_%H-%M-%S.log", timeinfo)) {
+        || !strftime(_buffer, sz, "%Y-%m-%d_%H-%M-%S.log", timeinfo)) {
         filePath /= std::string("Log_File.log");
         _logFile = std::ofstream(filePath.string());
         return;
     }
-    filePath /= std::string(fileName);
+    filePath /= std::string(_buffer);
     _logFile = std::ofstream(filePath.string());
+}
+
+void Logger::getTime()
+{
+    time_t rawtime;
+    struct tm *timeinfo;
+
+    if (time(&rawtime) == ((time_t) -1))
+        return;
+    if (!(timeinfo = localtime(&rawtime)))
+        return;
+    if (!strftime(_buffer, FILENAME_MAX, "%H-%M-%S", timeinfo))
+        return;
+
+}
+
+void Logger::logThis(const std::string &msg, const std::shared_ptr<BabelNetwork::AResponse> &response) {
+    if (!isOk())
+        return;
+    getTime();
+    _logFile << "[ " << _description << " ] - " << _buffer << " ==> " << msg + "\n" << *response << "\n";
+}
+
+void Logger::logThis(const std::shared_ptr<BabelNetwork::AResponse> &response) {
+    if (!isOk())
+        return;
+    getTime();
+    _logFile << "[ " << _description << " ] - " << _buffer << " ==> " << response << "\n";
 }
