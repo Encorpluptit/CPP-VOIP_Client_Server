@@ -78,6 +78,7 @@ set(
         ${COMMON_DIR}/Network/NetworkInfos
 
         ${COMMON_DIR}/Network/Sockets/ASocket
+        ${COMMON_DIR}/Network/Sockets/ClientSocket
         ${COMMON_DIR}/Network/Sockets/AsioSocket
 
         ${COMMON_DIR}/Thread
@@ -94,7 +95,6 @@ set(
         ${COMMON_DIR}/Network/NetworkInfos/NetworkInfos.cpp
 
         ${COMMON_DIR}/Network/Sockets/ASocket/ASocket.cpp
-#        ${COMMON_DIR}/Network/Sockets/AsioSocket/AsioSocket.cpp
         ${COMMON_DIR}/Network/Sockets/AsioSocket/AsioClientSocket.cpp
 
         ${COMMON_DIR}/Thread/BoostThread.cpp

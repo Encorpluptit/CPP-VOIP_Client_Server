@@ -17,10 +17,9 @@ static void socket_testing(char **av)
     boost::shared_ptr<BabelNetwork::AsioClientSocket> client(
         new BabelNetwork::AsioClientSocket(
             av[1],
-            av[2],
+            av[2], logger,
             context,
-            BabelNetwork::AsioClientSocket::SocketHandler::Client, logger
-        )
+            BabelNetwork::AsioClientSocket::SocketHandler::Client)
     );
     client->connect();
     client->setThread(boost::make_shared<BabelUtils::BoostThread>(

@@ -20,8 +20,11 @@ namespace BabelNetwork {
 
         /* <- Constructor - Destructor -> */
     public:
-        explicit ASocket(const std::string &address, const std::string &port,
-            BabelUtils::Logger &logger);
+        explicit ASocket(
+            const std::string &address,
+            const std::string &port,
+            BabelUtils::Logger &logger
+        );
 
         ~ASocket() override = default;
 
@@ -51,12 +54,12 @@ namespace BabelNetwork {
         NetworkInfos _networkInfos;
         BabelUtils::Logger &_logger;
         bool _ready = false;
-        //TODO: Aclient Socket with this attributes ?
-        char _headerBuffer[AResponse::HeaderSize] = {0};
-        std::shared_ptr<AResponse> _read_msg = nullptr;
-        std::queue<std::shared_ptr<AResponse>> _read_queue;
-        std::queue<std::shared_ptr<AResponse>> _write_queue;
         boost::shared_ptr<BabelUtils::AThread> _thread;
+        //TODO: Aclient Socket with this attributes ?
+//        char _headerBuffer[AResponse::HeaderSize] = {0};
+//        std::shared_ptr<AResponse> _read_msg = nullptr;
+//        std::queue<std::shared_ptr<AResponse>> _read_queue;
+//        std::queue<std::shared_ptr<AResponse>> _write_queue;
     };
 
 }

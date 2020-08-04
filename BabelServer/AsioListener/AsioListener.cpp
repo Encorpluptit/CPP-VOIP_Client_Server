@@ -28,11 +28,11 @@ AsioListener::AsioListener(const std::string &address, const std::string &port, 
 AsioListener::~AsioListener()
 {
     _asioClients.clear();
-    _read_msg.reset();
-    while (!_read_queue.empty())
-        _read_queue.pop();
-    while (!_write_queue.empty())
-        _write_queue.pop();
+//    _read_msg.reset();
+//    while (!_read_queue.empty())
+//        _read_queue.pop();
+//    while (!_write_queue.empty())
+//        _write_queue.pop();
 }
 
 void AsioListener::start()
@@ -52,9 +52,9 @@ void AsioListener::accept()
         boost::make_shared<BabelNetwork::AsioClientSocket>(
         _networkInfos.getIp(),
             _networkInfos.getPortStr(),
+            _logger,
             _context,
-            BabelNetwork::AsioClientSocket::SocketHandler::Server,
-            _logger
+            BabelNetwork::AsioClientSocket::SocketHandler::Server
         )
     );
     auto new_session = _asioClients.back();
@@ -68,8 +68,9 @@ void AsioListener::accept()
 void AsioListener::stop()
 {
     std::cout << "LISTENER STOPPED" << std::endl;
-    if (!_context.stopped())
-        _context.stop();
+    stopContext();
+    _acceptor.close();
+    _signals.clear();
     _thread->stop();
 }
 

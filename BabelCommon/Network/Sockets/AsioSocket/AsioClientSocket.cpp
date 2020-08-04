@@ -12,11 +12,12 @@ using namespace BabelNetwork;
 
 AsioClientSocket::AsioClientSocket(
     const std::string &address,
-    const std::string &port, io_context &context,
-    SocketHandler handlerType,
-    BabelUtils::Logger &logger
+    const std::string &port,
+    BabelUtils::Logger &logger,
+    io_context &context,
+    SocketHandler handlerType
 )
-    : BabelNetwork::ASocket(address, port, logger),
+    : ClientSocket(address, port, logger),
       _context(context),
       _socket(_context),
       _handler(handlerType)
@@ -27,12 +28,6 @@ AsioClientSocket::AsioClientSocket(
 AsioClientSocket::~AsioClientSocket()
 {
     _socket.close();
-//    _read_msg.reset();
-//    while (!_read_queue.empty())
-//        _read_queue.pop();
-//    while (!_write_queue.empty())
-//        _write_queue.pop();
-//    _socket.close();
 }
 
 void AsioClientSocket::start()
@@ -110,6 +105,8 @@ void AsioClientSocket::read_data_infos(const boost::system::error_code &error)
         std::cerr << "ERROR IN HANDLE READ DATA INFOS : " + error.message() << std::endl;
         if (getHandler() == SocketHandler::Client) {
             _logger.logThis("ERROR IN HANDLE READ DATA INFOS (Client Stopped)" + error.message());
+            if (error == boost::asio::error::eof)
+                std::cerr << "Connection reset" << std::endl;
             stop();
         } else {
             _logger.logThis("ERROR IN HANDLE READ DATA INFOS BY SERVER - Client disconnected : " + error.message());
