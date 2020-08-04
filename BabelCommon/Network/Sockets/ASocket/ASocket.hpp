@@ -10,7 +10,7 @@
 
 #include <queue>
 #include "Logger.hpp"
-#include "ARunnable.hpp"
+#include "Runnable/ARunnable.hpp"
 #include "BoostThread.hpp"
 
 namespace BabelNetwork {

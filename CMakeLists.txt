@@ -68,12 +68,12 @@ set(COMMON_DIR BabelCommon)
 
 set(
         COMMON_INCLUDES
-        ${COMMON_DIR}/Logger
 
         ${COMMON_DIR}/Utils
+        ${COMMON_DIR}/Utils/Logger
+        ${COMMON_DIR}/Utils/Thread
+        ${COMMON_DIR}/Utils/Runnable
 
-        ${COMMON_DIR}/Protocol/AResponse
-        ${COMMON_DIR}/Protocol/Connection
 
         ${COMMON_DIR}/Network/NetworkInfos
 
@@ -81,21 +81,23 @@ set(
         ${COMMON_DIR}/Network/Sockets/ClientSocket
         ${COMMON_DIR}/Network/Sockets/AsioSocket
 
-        ${COMMON_DIR}/Thread
+        ${COMMON_DIR}/Network/Protocol/AResponse
+        ${COMMON_DIR}/Network/Protocol/Connection
 )
 
 set(
         COMMON_SOURCES
-        ${COMMON_DIR}/Logger/Logger.cpp
-        ${COMMON_DIR}/Logger/LoggerError.cpp
-
-        ${COMMON_DIR}/Protocol/AResponse/AResponse.cpp
-        ${COMMON_DIR}/Protocol/Connection/ConnectionResponse.cpp
+        ${COMMON_DIR}/Utils/Logger/Logger.cpp
+        ${COMMON_DIR}/Utils/Logger/LoggerError.cpp
 
         ${COMMON_DIR}/Network/NetworkInfos/NetworkInfos.cpp
 
         ${COMMON_DIR}/Network/Sockets/ASocket/ASocket.cpp
         ${COMMON_DIR}/Network/Sockets/AsioSocket/AsioClientSocket.cpp
+
+        ${COMMON_DIR}/Network/Protocol/AResponse/AResponse.cpp
+        ${COMMON_DIR}/Network/Protocol/Connection/ConnectionResponse.cpp
+
 )
 
 include_directories(${COMMON_INCLUDES})
