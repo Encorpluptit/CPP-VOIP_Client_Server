@@ -9,27 +9,20 @@
 #define CPP_BABEL_2020_ATHREAD_HPP
 
 #include <functional>
+#include "ARunnable.hpp"
 
 namespace BabelUtils {
 
-    class AThread {
+    class AThread  : virtual public ARunnable {
 
         /* <- Constructor - Destructor -> */
     public:
         AThread() = default;
-//
-//        template<typename ... Args>
-//        AThread(Args ... args) = 0;
 
-        virtual ~AThread() = default;
+        ~AThread() override = default;
 
         /* <- Methods -> */
     public:
-
-        virtual void run() = 0;
-
-        virtual void stop() = 0;
-
         virtual void waitExecution() = 0;
     };
 

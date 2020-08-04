@@ -27,14 +27,15 @@ namespace BabelUtils {
 //        template<typename ... Args>
 //        explicit BoostThread(Args ... args) : AThread<boost::thread>(args ...) {};
 
-        ~BoostThread() final {
-            stop();
-        };
+        ~BoostThread() final = default;
+//        ~BoostThread() final {
+//            stop();
+//        };
 
 
         /* <- Methods -> */
     public:
-        void run() final {};
+        void start() final {};
 
         void waitExecution() final {_thread.join();}
 

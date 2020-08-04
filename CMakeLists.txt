@@ -96,8 +96,6 @@ set(
 
         ${COMMON_DIR}/Network/Sockets/ASocket/ASocket.cpp
         ${COMMON_DIR}/Network/Sockets/AsioSocket/AsioClientSocket.cpp
-
-        ${COMMON_DIR}/Thread/BoostThread.cpp
 )
 
 include_directories(${COMMON_INCLUDES})

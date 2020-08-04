@@ -74,12 +74,6 @@ void AsioListener::stop()
     _thread->stop();
 }
 
-[[nodiscard]] bool AsioListener::sendResponse(const BabelNetwork::AResponse &response)
-{
-    std::cerr << "Listener cannot send response" << response << std::endl;
-    return false;
-}
-
 void AsioListener::handle_accept(const boost::shared_ptr<BabelNetwork::AsioClientSocket> &session,
     const boost::system::error_code &error)
 {

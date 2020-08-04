@@ -10,13 +10,19 @@
 
 #include <queue>
 #include "Logger.hpp"
-#include "ISocket.hpp"
-#include "AResponse.hpp"
+#include "ARunnable.hpp"
 #include "BoostThread.hpp"
 
 namespace BabelNetwork {
 
-    class ASocket : virtual public ISocket {
+class ASocket : virtual public BabelUtils::ARunnable {
+        /* <- Class Enum -> */
+    public:
+        enum SocketType {
+            TCP,
+            UDP,
+            QT
+        };
 
         /* <- Constructor - Destructor -> */
     public:
@@ -33,9 +39,6 @@ namespace BabelNetwork {
 
         /* <- Getters / Setters -> */
     public:
-        [[nodiscard]] bool isReady() const;
-
-        void setReady();
 
         [[nodiscard]] const NetworkInfos &getNetworkInfos() const;
 
@@ -55,11 +58,6 @@ namespace BabelNetwork {
         BabelUtils::Logger &_logger;
         bool _ready = false;
         boost::shared_ptr<BabelUtils::AThread> _thread;
-        //TODO: Aclient Socket with this attributes ?
-//        char _headerBuffer[AResponse::HeaderSize] = {0};
-//        std::shared_ptr<AResponse> _read_msg = nullptr;
-//        std::queue<std::shared_ptr<AResponse>> _read_queue;
-//        std::queue<std::shared_ptr<AResponse>> _write_queue;
     };
 
 }

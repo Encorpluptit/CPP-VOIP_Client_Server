@@ -27,8 +27,6 @@ namespace BabelServer {
 
         void stop() final;
 
-        [[nodiscard]] bool sendResponse(__attribute__((unused))const BabelNetwork::AResponse &response) final;
-
         /* <- Private Methods -> */
     private:
 

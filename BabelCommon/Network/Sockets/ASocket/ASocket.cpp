@@ -20,16 +20,6 @@ BabelNetwork::ASocket::ASocket(
 
 }
 
-bool BabelNetwork::ASocket::isReady() const
-{
-    return _ready;
-}
-
-void BabelNetwork::ASocket::setReady()
-{
-    _ready = true;
-}
-
 const NetworkInfos &ASocket::getNetworkInfos() const
 {
     return _networkInfos;

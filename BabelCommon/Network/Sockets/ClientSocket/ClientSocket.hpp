@@ -24,6 +24,10 @@ namespace BabelNetwork {
 
         ~ClientSocket() override = default;
 
+        /* <- Public Methods -> */
+    public:
+        [[nodiscard]] virtual bool sendResponse(const AResponse &response) = 0;
+
         /* <- Attributes -> */
     protected:
         char _headerBuffer[AResponse::HeaderSize] = {0};
