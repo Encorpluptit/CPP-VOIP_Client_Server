@@ -51,6 +51,7 @@ namespace BabelNetwork {
         NetworkInfos _networkInfos;
         BabelUtils::Logger &_logger;
         bool _ready = false;
+        //TODO: Aclient Socket with this attributes ?
         BabelNetwork::AResponse::ResponseHeader _hdr{};
         std::shared_ptr<AResponse> _read_msg = nullptr;
         std::queue<std::shared_ptr<BabelNetwork::AResponse>> _read_queue;

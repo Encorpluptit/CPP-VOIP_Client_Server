@@ -52,11 +52,6 @@ namespace BabelNetwork {
         explicit AResponse(const ResponseHeader &headerResponse);
 
         AResponse(const AResponse &other);
-//        AResponse(const AResponse &other) : AResponse(other._header)
-//        {
-////            _header = other._header;
-////            memcpy(_headerData, other._headerData, sizeof(_headerData));
-//        }
 
         ~AResponse() = default;
 
@@ -69,8 +64,6 @@ namespace BabelNetwork {
     public:
         [[nodiscard]] static std::shared_ptr<AResponse> getResponse(const ResponseHeader &response);
 
-//
-//        [[nodiscard]] std::shared_ptr<AResponse> getResponse();
         [[nodiscard]] virtual std::shared_ptr<AResponse> getResponse() const = 0;
 
         [[nodiscard]] virtual bool encode() noexcept = 0;
