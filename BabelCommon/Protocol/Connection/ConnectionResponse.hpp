@@ -12,31 +12,47 @@
 
 namespace BabelNetwork {
     class ConnectionResponse final : virtual public AResponse {
-        /* <- Class Structure -> */
+        /* <- Class Enum -> */
     private:
-        enum DataSize {
+        enum MaxDataSize {
             Login = 128,
             Password = 128
         };
 
         /* <- Class Structure -> */
     public:
-        using ConnectionData = struct __attribute__((packed)) ConnectionDataStruct {
-            char login[DataSize::Login];
-            char password[DataSize::Password];
+        using Data = struct __attribute__((packed)) DataStruct {
+            char login[MaxDataSize::Login];
+            char password[MaxDataSize::Password];
         };
-        static const size_t ResponseDataSize = sizeof(ConnectionData);
+        static const size_t DataSize = sizeof(Data);
+
+        /* <- Class Structure -> */
+    public:
+        using DataInfos = struct __attribute__((packed)) DataInfosStruct {
+            uint16_t _loginSize;
+            uint16_t _passwordSize;
+        };
+        static const size_t DataInfosSize = sizeof(DataInfos);
+
+        /* <- Class Variables -> */
+    public:
+        static const size_t MaxResponseSize = HeaderSize + DataInfosSize + DataSize;
 
         /* <- Constructor - Destructor -> */
     public:
         ConnectionResponse()
         {
-            _header.responseType = Connection;
-            _header.bodySize = sizeof(ConnectionData);
+            _header._responseType = Connection;
+            _header._dataInfosSize = DataInfosSize;
 
             //TODO: remove
-            strcat(_data.login, "lol");
-            strcat(_data.password, "xd");
+            char lol[] = "lol";
+            char xd[] = "xd";
+            strcat(_data.login, lol);
+            strcat(_data.password, xd);
+            _dataInfos._loginSize = sizeof(lol);
+            _dataInfos._passwordSize = sizeof(xd);
         };
 
         explicit ConnectionResponse(const ResponseHeader &headerResponse);
@@ -53,18 +69,27 @@ namespace BabelNetwork {
 
         [[nodiscard]] bool decode_header() noexcept final;
 
+        [[nodiscard]] bool decode_data_infos() noexcept final;
+
         [[nodiscard]] bool decode_data() noexcept final;
 
-        [[nodiscard]] char *getBody() const noexcept final;
+        [[nodiscard]] char *getDataByteDataInfos() const noexcept final;
 
-        [[nodiscard]] std::shared_ptr<AResponse> getResponse() const noexcept final;
+        [[nodiscard]] char *getDataByteBody() const noexcept final;
+
+        [[nodiscard]] std::shared_ptr<AResponse> get_shared_from_this() const noexcept final;
 
         [[nodiscard]] char *getDataByte() noexcept final;
 
-        [[nodiscard]] uint32_t getResponseSize() const noexcept final;
+        [[nodiscard]] size_t getResponseSize() const noexcept final;
+
+        [[nodiscard]] size_t getMaxResponseSize() const noexcept final;
+
+        [[nodiscard]] size_t getDataSize() const noexcept final;
 
         [[nodiscard]] std::string serialize_data() const noexcept final;
 
+        [[nodiscard]] std::string serialize_data_infos() const noexcept final;
         /* <- Getters / Setters -> */
     public:
         [[nodiscard]] const std::string &getDescription() const noexcept final;
@@ -75,8 +100,9 @@ namespace BabelNetwork {
 
     private:
         const std::string _description = "Connection between server and client";
-        char _data_byte[ResponseHeaderSize + ResponseDataSize] = {0};
-        ConnectionData _data{};
+        char _data_byte[MaxResponseSize] = {0};
+        DataInfos _dataInfos{};
+        Data _data{};
     };
 }
 

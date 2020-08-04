@@ -28,13 +28,15 @@ namespace BabelUtils {
         /* <- Constructor - Destructor -> */
     public:
         explicit Logger(Logger::LogType type);
+
         ~Logger();
 
 
         /* <- Public Methods -> */
     public:
         template<typename ... Args>
-        void logThis(const std::string &fmt, Args ... args) {
+        void logThis(const std::string &fmt, Args ... args)
+        {
             if (!isOk())
                 return;
             getTime();
@@ -48,8 +50,11 @@ namespace BabelUtils {
         /* <- Private Methods -> */
     private:
         void getTime();
+
         void initLogType();
+
         std::filesystem::path createLogDirectories();
+
         void createLogFile(std::filesystem::path filePath);
 
         /* <- Getters / Setters -> */

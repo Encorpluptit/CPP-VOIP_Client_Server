@@ -37,11 +37,11 @@ namespace BabelNetwork {
         /* <- Class Structure -> */
     public:
         using ResponseHeader = struct __attribute__((packed)) Response {
-            uint16_t code;
-            ResponseType responseType;
-            uint32_t bodySize;
+            uint16_t _code;
+            ResponseType _responseType;
+            size_t _dataInfosSize;
         };
-        static const size_t ResponseHeaderSize = sizeof(ResponseHeader);
+        static const size_t HeaderSize = sizeof(ResponseHeader);
 
 
 
@@ -62,15 +62,15 @@ namespace BabelNetwork {
 
         /* <- Methods -> */
     public:
-        [[nodiscard]] static std::shared_ptr<AResponse> getResponse(const ResponseHeader &response);
+        [[nodiscard]] static std::shared_ptr<AResponse> getResponse(const char *headerBuffer);
 
-        [[nodiscard]] static std::shared_ptr<AResponse> getResponse(char headerBuffer[ResponseHeaderSize]);
-
-        [[nodiscard]] virtual std::shared_ptr<AResponse> getResponse() const = 0;
+        [[nodiscard]] virtual std::shared_ptr<AResponse> get_shared_from_this() const = 0;
 
         [[nodiscard]] virtual bool encode() noexcept = 0;
 
         [[nodiscard]] virtual bool decode_header() noexcept = 0;
+
+        [[nodiscard]] virtual bool decode_data_infos() noexcept = 0;
 
         [[nodiscard]] virtual bool decode_data() noexcept = 0;
 
@@ -80,27 +80,34 @@ namespace BabelNetwork {
 
         virtual void setOk() noexcept = 0;
 
+        [[nodiscard]] virtual std::string serialize_data_infos() const noexcept = 0;
+
+        [[nodiscard]] virtual std::string serialize_data() const noexcept = 0;
+
         /* <- Getters / Setters -> */
     public:
 
         [[nodiscard]] uint16_t getCode() const noexcept;
 
-        [[nodiscard]] uint32_t getBodySize() const noexcept;
+        [[nodiscard]] size_t getDataInfosSize() const noexcept;
 
-        [[nodiscard]] constexpr virtual uint32_t getResponseSize() const noexcept = 0;
+        [[nodiscard]] virtual size_t getDataSize() const noexcept = 0;
 
-        [[nodiscard]] constexpr static size_t getHeaderSize() { return ResponseHeaderSize; };
+        [[nodiscard]] virtual size_t getResponseSize() const noexcept = 0;
+
+        [[nodiscard]] constexpr virtual size_t getMaxResponseSize() const noexcept = 0;
+
+        [[nodiscard]] constexpr static size_t getHeaderSize() { return HeaderSize; };
 
         [[nodiscard]] ResponseType getResponseType() const;
 
-        [[nodiscard]] virtual const std::string &getDescription() const noexcept = 0;
+        [[nodiscard]] virtual char *getDataByteDataInfos() const noexcept = 0;
 
-        [[nodiscard]] virtual char *getBody() const noexcept = 0;
+        [[nodiscard]] virtual char *getDataByteBody() const noexcept = 0;
 
         [[nodiscard]] virtual char *getDataByte() noexcept = 0;
 
-        [[nodiscard]] virtual std::string serialize_data() const = 0;
-
+        [[nodiscard]] virtual const std::string &getDescription() const noexcept = 0;
 
         /* <- Attributes -> */
     protected:

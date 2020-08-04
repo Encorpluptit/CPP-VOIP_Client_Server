@@ -52,7 +52,7 @@ namespace BabelNetwork {
         BabelUtils::Logger &_logger;
         bool _ready = false;
         //TODO: Aclient Socket with this attributes ?
-        char _headerBuffer[AResponse::ResponseHeaderSize] = {0};
+        char _headerBuffer[AResponse::HeaderSize] = {0};
         std::shared_ptr<AResponse> _read_msg = nullptr;
         std::queue<std::shared_ptr<AResponse>> _read_queue;
         std::queue<std::shared_ptr<AResponse>> _write_queue;

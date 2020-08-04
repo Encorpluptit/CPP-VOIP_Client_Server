@@ -5,6 +5,7 @@
 ** [AResponse.cpp]: Source file for AResponse feature.
 */
 
+#include "StringFormat.tpp"
 #include "AResponse.hpp"
 #include "ConnectionResponse.hpp"
 
@@ -19,24 +20,13 @@ AResponse::AResponse(const AResponse &other) : AResponse(other._header)
 {
 }
 
-std::shared_ptr<AResponse> AResponse::getResponse(const ResponseHeader &response)
-{
-//    //Todo Switch case for returning good ptr
-    switch (response.responseType) {
-        case Connection:
-            return std::shared_ptr<AResponse>(new ConnectionResponse(response));
-        default:
-            return nullptr;
-    }
-}
-
-std::shared_ptr<AResponse> AResponse::getResponse(char headerBuffer[ResponseHeaderSize])
+std::shared_ptr<AResponse> AResponse::getResponse(const char *headerBuffer)
 {
     ResponseHeader response{};
 
-    memcpy(&response, headerBuffer, ResponseHeaderSize);
+    memcpy(&response, headerBuffer, HeaderSize);
 //    //Todo Switch case for returning good ptr
-    switch (response.responseType) {
+    switch (response._responseType) {
         case Connection:
             return std::shared_ptr<AResponse>(new ConnectionResponse(response));
         default:
@@ -46,13 +36,13 @@ std::shared_ptr<AResponse> AResponse::getResponse(char headerBuffer[ResponseHead
 
 std::string AResponse::serialize() const noexcept
 {
-    std::string response =                                  \
-    R"({"Code": )" + std::to_string(getCode())          \
- + R"(", Body Size": )" + std::to_string(getBodySize()) \
- + R"(, "Desc": ")" + getDescription() + "\"}\n"            \
- + R"({"Data": ")" + serialize_data()                      \
- + "\"}";
-    return response;
+    std::string serialised = BabelUtils::format(
+        R"({"Code": "%d", "Data Infos Size": "%zu", "Desc": "%s"})"
+        "\n\t" R"({"Data Infos": ")" + serialize_data_infos() + "\"}" +
+            "\n\t" R"({"Data": ")" + serialize_data() + "\"}",
+        getCode(), getDataInfosSize(), getDescription().c_str()
+    );
+    return serialised;
 }
 
 std::ostream &BabelNetwork::operator<<(std::ostream &os, const BabelNetwork::AResponse &response)
@@ -63,15 +53,15 @@ std::ostream &BabelNetwork::operator<<(std::ostream &os, const BabelNetwork::ARe
 
 uint16_t AResponse::getCode() const noexcept
 {
-    return _header.code;
+    return _header._code;
 }
 
-[[nodiscard]] uint32_t AResponse::getBodySize() const noexcept
+[[nodiscard]] size_t AResponse::getDataInfosSize() const noexcept
 {
-    return _header.bodySize;
+    return _header._dataInfosSize;
 }
 
 AResponse::ResponseType AResponse::getResponseType() const
 {
-    return _header.responseType;
+    return _header._responseType;
 }

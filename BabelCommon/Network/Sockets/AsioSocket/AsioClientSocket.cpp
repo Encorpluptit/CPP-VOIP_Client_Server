@@ -39,7 +39,7 @@ void AsioClientSocket::start()
 {
     std::cout << "START SESSION" << std::endl;
     _logger.logThis("START SESSION");
-    handle_read_header();
+    read_header();
 }
 
 bool AsioClientSocket::sendResponse(const BabelNetwork::AResponse &response)
@@ -68,64 +68,87 @@ void AsioClientSocket::handle_connect(const boost::system::error_code &error)
 {
     if (!error) {
         setReady();
-        handle_read_header();
+        read_header();
     } else {
         _logger.logThis("Socket Cannot connect");
         std::cerr << "Socket Cannot connect" << std::endl;
     }
 }
 
-void AsioClientSocket::handle_read_header()
+void AsioClientSocket::read_header()
 {
     using namespace BabelNetwork;
 
-    memset(_headerBuffer, 0, AResponse::ResponseHeaderSize);
+    memset(_headerBuffer, 0, AResponse::HeaderSize);
     boost::asio::async_read(
         _socket,
-        boost::asio::buffer(_headerBuffer, AResponse::ResponseHeaderSize),
-        boost::bind(&AsioClientSocket::handle_read_body, shared_from_this(), boost::asio::placeholders::error)
+        boost::asio::buffer(_headerBuffer, AResponse::HeaderSize),
+        boost::bind(&AsioClientSocket::read_data_infos, shared_from_this(), boost::asio::placeholders::error)
     );
 }
 
-void AsioClientSocket::handle_read_body(const boost::system::error_code &error)
+void AsioClientSocket::read_data_infos(const boost::system::error_code &error)
 {
     _read_msg = BabelNetwork::AResponse::getResponse(_headerBuffer);
 
     if (!error) {
         if (!_read_msg) {
             AResponse::ResponseHeader _hdr{};
-            memcpy(&_hdr, _headerBuffer, AResponse::ResponseHeaderSize);
+            memcpy(&_hdr, _headerBuffer, AResponse::HeaderSize);
             _logger.logThis(
                 "Read msg null \ncode : %d, type %d, sz: %u",
-                _hdr.code, _hdr.responseType, _hdr.bodySize
+                _hdr._code, _hdr._responseType, _hdr._dataInfosSize
             );
             return;
         }
         boost::asio::async_read(
             _socket,
-            boost::asio::buffer(_read_msg->getBody(), _read_msg->getBodySize()),
-            boost::bind(&AsioClientSocket::finish_read_body, shared_from_this(), boost::asio::placeholders::error)
+            boost::asio::buffer(_read_msg->getDataByteDataInfos(), _read_msg->getDataInfosSize()),
+            boost::bind(&AsioClientSocket::read_data, shared_from_this(), boost::asio::placeholders::error)
         );
     } else {
-        std::cerr << "ERROR IN HANDLE READ BODY : " + error.message() << std::endl;
+        std::cerr << "ERROR IN HANDLE READ DATA INFOS : " + error.message() << std::endl;
         if (getHandler() == SocketHandler::Client) {
-            _logger.logThis("Client Stopped" + error.message());
+            _logger.logThis("ERROR IN HANDLE READ DATA INFOS (Client Stopped)" + error.message());
             stop();
         } else {
-            _logger.logThis("ERROR IN HANDLE READ BODY BY SERVER - Client disconnected : " + error.message());
+            _logger.logThis("ERROR IN HANDLE READ DATA INFOS BY SERVER - Client disconnected : " + error.message());
             std::cerr << "Throw Exception ?" << std::endl;
         }
     }
 }
 
-void AsioClientSocket::finish_read_body(const boost::system::error_code &error)
+void AsioClientSocket::read_data(const boost::system::error_code &error)
+{
+    if (!error) {
+        if (!_read_msg->decode_data_infos()) {
+            _logger.logThis("ERROR IN HANDLE READ DAT INFOS : Decode failed");
+            return;
+        }
+        boost::asio::async_read(
+            _socket,
+            boost::asio::buffer(_read_msg->getDataByteBody(), _read_msg->getDataSize()),
+            boost::bind(&AsioClientSocket::queue_read_response, shared_from_this(), boost::asio::placeholders::error)
+        );
+    } else {
+        std::cerr << "ERROR IN HANDLE READ DATA : " + error.message() << std::endl;
+        if (getHandler() == SocketHandler::Client) {
+            _logger.logThis("ERROR IN HANDLE READ DATA (Client Stopped)" + error.message());
+            stop();
+        } else {
+            _logger.logThis("ERROR IN HANDLE READ DATA BY SERVER - Client disconnected : " + error.message());
+            std::cerr << "Throw Exception ?" << std::endl;
+        }
+    }
+}
+
+void AsioClientSocket::queue_read_response(const boost::system::error_code &error)
 {
     if (!error && _read_msg->decode_data()) {
-        std::cout << "BODY READ -- DATA = " << _read_msg->getResponseSize() << std::endl;
         std::cout << "BODY READ -- DATA = " << _read_msg->serialize_data() << std::endl;
         _read_queue.push(_read_msg);
         _logger.logThis(*_read_msg);
-        handle_read_header();
+        read_header();
     } else {
         _logger.logThis("ERROR IN FINISH READ BODY" + error.message());
         std::cerr << "ERROR IN FINISH READ BODY" << std::endl;
@@ -142,7 +165,7 @@ void AsioClientSocket::do_write(const BabelNetwork::AResponse &response)
     bool write_in_progress = !_write_queue.empty();
 //    std::cout << "do write" << std::endl;
 
-    _write_queue.push(response.getResponse());
+    _write_queue.push(response.get_shared_from_this());
     if (!write_in_progress && _write_queue.front()->encode()) {
         _logger.logThis(response, "Sending Response = ");
         boost::asio::async_write(

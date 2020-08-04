@@ -6,57 +6,66 @@
 */
 
 #include "ConnectionResponse.hpp"
+#include "StringFormat.tpp"
 
 using namespace BabelNetwork;
 
 ConnectionResponse::ConnectionResponse(const ResponseHeader &headerResponse)
     : AResponse(headerResponse)
 {
-    _header.responseType = Connection;
-    _header.bodySize = headerResponse.bodySize;
+//    _header._dataInfosSize = headerResponse._dataInfosSize;
 }
 
 bool BabelNetwork::ConnectionResponse::isOk() noexcept
 {
-    return _header.code == AResponse::ResponseCode::ConnectionOk;
+    return _header._code == AResponse::ResponseCode::ConnectionOk;
 }
 
 void BabelNetwork::ConnectionResponse::setOk() noexcept
 {
-    _header.code = AResponse::ResponseCode::ConnectionOk;
+    _header._code = AResponse::ResponseCode::ConnectionOk;
 }
 
-const std::string &ConnectionResponse::getDescription() const noexcept
-{
-    return _description;
-}
-
-std::shared_ptr<AResponse> ConnectionResponse::getResponse() const noexcept
+std::shared_ptr<AResponse> ConnectionResponse::get_shared_from_this() const noexcept
 {
     return std::make_shared<ConnectionResponse>(*this);
 }
 
-char *ConnectionResponse::getBody() const noexcept
+char *ConnectionResponse::getDataByteDataInfos() const noexcept
 {
-    return const_cast<char *>(_data_byte + ResponseHeaderSize);
+    return const_cast<char *>(_data_byte + HeaderSize);
+}
+
+char *ConnectionResponse::getDataByteBody() const noexcept
+{
+    return const_cast<char *>(_data_byte + HeaderSize + DataInfosSize);
 }
 
 bool ConnectionResponse::encode() noexcept
 {
-    memcpy(_data_byte, &_header, ResponseHeaderSize);
-    memcpy(_data_byte + ResponseHeaderSize, &_data, ResponseDataSize);
+    memcpy(_data_byte, &_header, HeaderSize);
+    memcpy(getDataByteDataInfos(), &_dataInfos, DataInfosSize);
+    memcpy(getDataByteBody(), _data.login, _dataInfos._loginSize);
+    memcpy(getDataByteBody() + _dataInfos._loginSize, _data.password, _dataInfos._passwordSize);
     return true;
 }
 
 bool ConnectionResponse::decode_header() noexcept
 {
-    memcpy(&_header, _data_byte, ResponseHeaderSize);
+    memcpy(&_header, _data_byte, HeaderSize);
+    return true;
+}
+
+bool ConnectionResponse::decode_data_infos() noexcept
+{
+    memcpy(&_dataInfos, _data_byte + HeaderSize, DataInfosSize);
     return true;
 }
 
 bool ConnectionResponse::decode_data() noexcept
 {
-    memcpy(&_data, _data_byte + ResponseHeaderSize, ResponseDataSize);
+    memcpy(_data.login, getDataByteBody(), _dataInfos._loginSize);
+    memcpy(_data.password, getDataByteBody() + _dataInfos._loginSize, _dataInfos._passwordSize);
     return true;
 }
 
@@ -65,17 +74,39 @@ char *ConnectionResponse::getDataByte() noexcept
     return _data_byte;
 }
 
-uint32_t ConnectionResponse::getResponseSize() const noexcept
+size_t ConnectionResponse::getResponseSize() const noexcept
 {
-    return ResponseHeaderSize + ResponseDataSize;
+    return HeaderSize + DataInfosSize + getDataSize();
+}
+
+size_t ConnectionResponse::getMaxResponseSize() const noexcept
+{
+    return MaxResponseSize;
+}
+
+size_t ConnectionResponse::getDataSize() const noexcept
+{
+    return _dataInfos._loginSize + _dataInfos._passwordSize;
+}
+
+std::string ConnectionResponse::serialize_data_infos() const noexcept
+{
+    return BabelUtils::format(
+        "Login Size: %zu | Password Size: %zu",
+        _dataInfos._loginSize, _dataInfos._passwordSize
+    );
 }
 
 std::string ConnectionResponse::serialize_data() const noexcept
 {
-    std::string rt;
-
-    rt +=  _data.login;
-    rt += "|";
-    rt += _data.password;
-    return rt;
+    return BabelUtils::format(
+        "Login: %s | Password: %s",
+        _data.login, _data.password
+    );
 }
+
+const std::string &ConnectionResponse::getDescription() const noexcept
+{
+    return _description;
+}
+

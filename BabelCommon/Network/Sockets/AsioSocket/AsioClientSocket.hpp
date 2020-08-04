@@ -48,11 +48,13 @@ namespace BabelNetwork {
 
         void handle_connect(const boost::system::error_code &error);
 
-        void handle_read_header();
+        void read_header();
 
-        void handle_read_body(const boost::system::error_code &error);
+        void read_data_infos(const boost::system::error_code &error);
 
-        void finish_read_body(const boost::system::error_code &error);
+        void read_data(const boost::system::error_code &error);
+
+        void queue_read_response(const boost::system::error_code &error);
 
         void do_write(const BabelNetwork::AResponse &response);
 
