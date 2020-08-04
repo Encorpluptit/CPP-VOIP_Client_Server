@@ -31,7 +31,7 @@ const std::string &ConnectionResponse::getDescription() const noexcept
     return _description;
 }
 
-std::shared_ptr<AResponse> ConnectionResponse::getResponse() const
+std::shared_ptr<AResponse> ConnectionResponse::getResponse() const noexcept
 {
     return std::make_shared<ConnectionResponse>(*this);
 }
@@ -70,7 +70,7 @@ uint32_t ConnectionResponse::getResponseSize() const noexcept
     return ResponseHeaderSize + ResponseDataSize;
 }
 
-std::string ConnectionResponse::serialize_data() const
+std::string ConnectionResponse::serialize_data() const noexcept
 {
     std::string rt;
 

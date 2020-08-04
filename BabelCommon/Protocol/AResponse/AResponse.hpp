@@ -74,7 +74,7 @@ namespace BabelNetwork {
 
         [[nodiscard]] virtual bool decode_data() noexcept = 0;
 
-        [[nodiscard]] std::string serialize() const;
+        [[nodiscard]] std::string serialize() const noexcept ;
 
         [[nodiscard]] virtual bool isOk() noexcept = 0;
 
@@ -87,7 +87,7 @@ namespace BabelNetwork {
 
         [[nodiscard]] uint32_t getBodySize() const noexcept;
 
-        [[nodiscard]] virtual uint32_t getResponseSize() const noexcept = 0;
+        [[nodiscard]] constexpr virtual uint32_t getResponseSize() const noexcept = 0;
 
         [[nodiscard]] constexpr static size_t getHeaderSize() { return ResponseHeaderSize; };
 

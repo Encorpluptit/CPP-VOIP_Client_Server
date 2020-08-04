@@ -43,9 +43,7 @@ namespace BabelUtils {
 
         void logThis(const std::string &msg);
 
-        void logThis(const std::string &msg, const BabelNetwork::AResponse &response);
-
-        void logThis(const BabelNetwork::AResponse &response);
+        void logThis(const BabelNetwork::AResponse &response, const std::string &msg = "");
 
         /* <- Private Methods -> */
     private:

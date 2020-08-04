@@ -44,7 +44,7 @@ void AsioClientSocket::start()
 
 bool AsioClientSocket::sendResponse(const BabelNetwork::AResponse &response)
 {
-    _logger.logThis("Starting to deliver response :", response);
+    _logger.logThis(response, "Starting to deliver response :");
     boost::asio::post(
         _context,
         boost::bind(&AsioClientSocket::do_write, shared_from_this(), boost::ref(response))
@@ -121,6 +121,7 @@ void AsioClientSocket::handle_read_body(const boost::system::error_code &error)
 void AsioClientSocket::finish_read_body(const boost::system::error_code &error)
 {
     if (!error && _read_msg->decode_data()) {
+        std::cout << "BODY READ -- DATA = " << _read_msg->getResponseSize() << std::endl;
         std::cout << "BODY READ -- DATA = " << _read_msg->serialize_data() << std::endl;
         _read_queue.push(_read_msg);
         _logger.logThis(*_read_msg);
@@ -143,7 +144,7 @@ void AsioClientSocket::do_write(const BabelNetwork::AResponse &response)
 
     _write_queue.push(response.getResponse());
     if (!write_in_progress && _write_queue.front()->encode()) {
-        _logger.logThis("Sending Response = ", response);
+        _logger.logThis(response, "Sending Response = ");
         boost::asio::async_write(
             _socket,
             boost::asio::buffer(_write_queue.front()->getDataByte(), _write_queue.front()->getResponseSize()),
@@ -159,7 +160,7 @@ void AsioClientSocket::handle_write(const boost::system::error_code &error)
 //        std::cout << "handle write OK" << std::endl;
         _write_queue.pop();
         if (!_write_queue.empty() && _write_queue.front()->encode()) {
-            _logger.logThis("2 or more messages to send  - Sending Response = ", *_write_queue.front());
+            _logger.logThis(*_write_queue.front(), "2 or more messages to send  - Sending Response = ");
             boost::asio::async_write(
                 _socket,
                 boost::asio::buffer(_write_queue.front()->getDataByte(), _write_queue.front()->getResponseSize()),

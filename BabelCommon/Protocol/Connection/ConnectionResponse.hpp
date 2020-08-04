@@ -57,13 +57,13 @@ namespace BabelNetwork {
 
         [[nodiscard]] char *getBody() const noexcept final;
 
-        [[nodiscard]] std::shared_ptr<AResponse> getResponse() const final;
+        [[nodiscard]] std::shared_ptr<AResponse> getResponse() const noexcept final;
 
         [[nodiscard]] char *getDataByte() noexcept final;
 
         [[nodiscard]] uint32_t getResponseSize() const noexcept final;
 
-        [[nodiscard]] std::string serialize_data() const final;
+        [[nodiscard]] std::string serialize_data() const noexcept final;
 
         /* <- Getters / Setters -> */
     public:

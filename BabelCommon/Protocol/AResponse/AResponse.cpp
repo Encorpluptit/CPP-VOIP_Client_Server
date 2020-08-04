@@ -44,7 +44,7 @@ std::shared_ptr<AResponse> AResponse::getResponse(char headerBuffer[ResponseHead
     }
 }
 
-std::string AResponse::serialize() const
+std::string AResponse::serialize() const noexcept
 {
     std::string response =                                  \
     R"({"Code": )" + std::to_string(getCode())          \
