@@ -8,20 +8,18 @@
 #ifndef CPP_BABEL_2020_ATHREAD_HPP
 #define CPP_BABEL_2020_ATHREAD_HPP
 
-
 #include <functional>
 
 namespace BabelUtils {
 
-    template<typename T>
     class AThread {
 
         /* <- Constructor - Destructor -> */
     public:
         AThread() = default;
-
-        template<typename ... Args>
-        explicit AThread(Args ... args) : _thread(args ...) {};
+//
+//        template<typename ... Args>
+//        AThread(Args ... args) = 0;
 
         virtual ~AThread() = default;
 
@@ -33,18 +31,6 @@ namespace BabelUtils {
         virtual void stop() = 0;
 
         virtual void waitExecution() = 0;
-
-
-        /* <- Getters / Setters -> */
-    public:
-        T getThread() const
-        {
-            return _thread;
-        }
-
-        /* <- Attributes -> */
-    protected:
-        T _thread;
     };
 
 }

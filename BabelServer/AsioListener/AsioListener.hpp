@@ -44,34 +44,16 @@ namespace BabelServer {
         /* <- Getters / Setters -> */
     public:
         [[nodiscard]] const ip::tcp::endpoint &getEndpoint() const;
-//        [[nodiscard]] const ip::tcp::endpoint &getEndpoint() const
-//        {
-//            return _endpoint;
-//        }
 
         [[nodiscard]] const ip::tcp::acceptor &getAcceptor() const;
-//        [[nodiscard]] const ip::tcp::acceptor &getAcceptor() const
-//        {
-//            return _acceptor;
-//        }
 
         [[nodiscard]] const signal_set &getSignals() const;
-//        [[nodiscard]] const signal_set &getSignals() const
-//        {
-//            return _signals;
-//        }
 
         [[nodiscard]] io_context &getContext() const;
-//        [[nodiscard]] io_context &getContext() const { return const_cast<io_context &>(_context); }
 
         void startContext();
-//        void startContext() {
-//            std::cout << "THREAD LAUNCHED on " << _networkInfos << std::endl;
-//            _context.run();
-//            std::cout << "THREAD FINISHED on " << _networkInfos << std::endl;
-//        }
 
-        void stopContext() { _context.stop(); }
+        void stopContext();
 
         /* <- Attributes -> */
     private:

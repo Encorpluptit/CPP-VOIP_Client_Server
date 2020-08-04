@@ -14,14 +14,18 @@
 namespace BabelUtils {
 
 //    template<typename T>
-    class BoostThread final : virtual public AThread<boost::thread> {
+    class BoostThread final : virtual public AThread {
 
         /* <- Constructor - Destructor -> */
     public:
-        BoostThread() : AThread<boost::thread>() {};
+//        BoostThread() : AThread<boost::thread>() {};
+
 
         template<typename ... Args>
-        explicit BoostThread(Args ... args) : AThread<boost::thread>(args ...) {};
+        explicit BoostThread(Args ... args) : _thread(args ...) {};
+
+//        template<typename ... Args>
+//        explicit BoostThread(Args ... args) : AThread<boost::thread>(args ...) {};
 
         ~BoostThread() final {
             stop();
@@ -36,6 +40,9 @@ namespace BabelUtils {
 
         void stop() final {waitExecution();};
 
+        /* <- Attributes -> */
+    private:
+        boost::thread _thread;
     };
 }
 

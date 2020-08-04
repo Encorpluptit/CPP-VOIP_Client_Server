@@ -35,12 +35,12 @@ const NetworkInfos &ASocket::getNetworkInfos() const
     return _networkInfos;
 }
 
-[[nodiscard]] const boost::shared_ptr<BabelUtils::BoostThread> &ASocket::getThread() const
+[[nodiscard]] const boost::shared_ptr<BabelUtils::AThread> &ASocket::getThread() const
 {
     return _thread;
 }
 
-void ASocket::setThread(const boost::shared_ptr<BabelUtils::BoostThread> &thread)
+void ASocket::setThread(const boost::shared_ptr<BabelUtils::AThread> &thread)
 {
     _thread = thread;
 }

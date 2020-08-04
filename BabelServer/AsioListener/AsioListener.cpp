@@ -70,7 +70,7 @@ void AsioListener::stop()
     std::cout << "LISTENER STOPPED" << std::endl;
     if (!_context.stopped())
         _context.stop();
-    getThread()->stop();
+    _thread->stop();
 }
 
 [[nodiscard]] bool AsioListener::sendResponse(const BabelNetwork::AResponse &response)
@@ -106,6 +106,12 @@ void AsioListener::startContext() {
     std::cout << "CONTEXT FINISHED on " << _networkInfos << std::endl;
 }
 
+void AsioListener::stopContext()
+{
+    if (!_context.stopped())
+        _context.stop();
+}
+
 [[nodiscard]] const signal_set &AsioListener::getSignals() const
 {
     return _signals;
@@ -124,4 +130,3 @@ void AsioListener::startContext() {
 [[nodiscard]] io_context &AsioListener::getContext() const {
     return const_cast<io_context &>(_context);
 }
-

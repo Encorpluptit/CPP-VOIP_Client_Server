@@ -36,9 +36,9 @@ namespace BabelNetwork {
 
         [[nodiscard]] const NetworkInfos &getNetworkInfos() const;
 
-        [[nodiscard]] const boost::shared_ptr<BabelUtils::BoostThread> &getThread() const;
+        [[nodiscard]] const boost::shared_ptr<BabelUtils::AThread> &getThread() const;
 
-        void setThread(const boost::shared_ptr<BabelUtils::BoostThread> &thread);
+        void setThread(const boost::shared_ptr<BabelUtils::AThread> &thread);
 
         /* <- Operators -> */
     public:
@@ -56,7 +56,7 @@ namespace BabelNetwork {
         std::shared_ptr<AResponse> _read_msg = nullptr;
         std::queue<std::shared_ptr<AResponse>> _read_queue;
         std::queue<std::shared_ptr<AResponse>> _write_queue;
-        boost::shared_ptr<BabelUtils::BoostThread> _thread;
+        boost::shared_ptr<BabelUtils::AThread> _thread;
     };
 
 }
