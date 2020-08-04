@@ -107,5 +107,8 @@ void Logger::logThis(const BabelNetwork::AResponse &response, const std::string 
     if (!isOk())
         return;
     getTime();
-    _logFile << "[ " << _description << " ] - " << _timeBuffer << " ==> " << msg + "\n" << response << "\n";
+    if (msg.empty())
+        _logFile << "[ " << _description << " ] - " << _timeBuffer << " ==> " << "Response :\n" << response << "\n";
+    else
+        _logFile << "[ " << _description << " ] - " << _timeBuffer << " ==> " << msg + "\n" << response << "\n";
 }

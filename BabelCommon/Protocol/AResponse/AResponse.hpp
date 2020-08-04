@@ -43,8 +43,6 @@ namespace BabelNetwork {
         };
         static const size_t HeaderSize = sizeof(ResponseHeader);
 
-
-
         /* <- Constructor - Destructor -> */
     public:
         AResponse() = default;
@@ -111,11 +109,12 @@ namespace BabelNetwork {
 
         /* <- Attributes -> */
     protected:
-        ResponseHeader _header = {
-            AResponse::ResponseCode::UnknownError,
-            UnknownType,
-            0
-        };
+        ResponseHeader _header{};
+//        ResponseHeader _header = {
+//            AResponse::ResponseCode::UnknownError,
+//            UnknownType,
+//            0
+//        };
     };
 
     /* <- Operators -> */
