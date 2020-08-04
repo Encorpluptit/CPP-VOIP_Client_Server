@@ -69,11 +69,6 @@ void AsioClientSocket::handle_connect(const boost::system::error_code &error)
     if (!error) {
         setReady();
         handle_read_header();
-//        boost::asio::async_read(
-//            _socket,
-//            boost::asio::buffer(&_hdr, AResponse::getHeaderSize()),
-//            boost::bind(&AsioClientSocket::handle_read_body, shared_from_this(), boost::asio::placeholders::error)
-//        );
     } else {
         _logger.logThis("Socket Cannot connect");
         std::cerr << "Socket Cannot connect" << std::endl;
@@ -84,12 +79,6 @@ void AsioClientSocket::handle_read_header()
 {
     using namespace BabelNetwork;
 
-//    memset(&_hdr, 0, AResponse::ResponseHeaderSize);
-//    boost::asio::async_read(
-//        _socket,
-//        boost::asio::buffer(&_hdr, AResponse::ResponseHeaderSize),
-//        boost::bind(&AsioClientSocket::handle_read_body, shared_from_this(), boost::asio::placeholders::error)
-//    );
     memset(_headerBuffer, 0, AResponse::ResponseHeaderSize);
     boost::asio::async_read(
         _socket,
@@ -100,13 +89,12 @@ void AsioClientSocket::handle_read_header()
 
 void AsioClientSocket::handle_read_body(const boost::system::error_code &error)
 {
-//    _read_msg = BabelNetwork::AResponse::getResponse(_hdr);
     _read_msg = BabelNetwork::AResponse::getResponse(_headerBuffer);
 
     if (!error) {
         if (!_read_msg) {
-            AResponse::ResponseHeader response{};
-            memcpy(&response, _headerBuffer, AResponse::ResponseHeaderSize);
+            AResponse::ResponseHeader _hdr{};
+            memcpy(&_hdr, _headerBuffer, AResponse::ResponseHeaderSize);
             _logger.logThis(
                 "Read msg null \ncode : %d, type %d, sz: %u",
                 _hdr.code, _hdr.responseType, _hdr.bodySize
