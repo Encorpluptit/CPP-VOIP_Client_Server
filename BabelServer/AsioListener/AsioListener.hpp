@@ -32,6 +32,8 @@ namespace BabelServer {
         /* <- Private Methods -> */
     private:
 
+        void accept();
+
         void handle_accept(
             const boost::shared_ptr<BabelNetwork::AsioClientSocket> &session,
             const boost::system::error_code &error
@@ -69,7 +71,7 @@ namespace BabelServer {
 //            std::cout << "THREAD FINISHED on " << _networkInfos << std::endl;
 //        }
 
-        void stopContext() { _context.stop();}
+        void stopContext() { _context.stop(); }
 
         /* <- Attributes -> */
     private:

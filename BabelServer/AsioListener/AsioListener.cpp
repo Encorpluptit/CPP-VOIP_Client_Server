@@ -39,6 +39,15 @@ void AsioListener::start()
 {
     std::cout << "START / RESTART" << std::endl;
 
+    accept();
+    startContext();
+}
+
+
+void AsioListener::accept()
+{
+    std::cout << "ACCEPT" << std::endl;
+
     _asioClients.emplace_back(
         boost::make_shared<BabelNetwork::AsioClientSocket>(
         _networkInfos.getIp(),
@@ -54,8 +63,6 @@ void AsioListener::start()
         new_session->getSocket(),
         boost::bind(&AsioListener::handle_accept, this, new_session, boost::asio::placeholders::error)
     );
-    startContext();
-//    _context.run();
 }
 
 void AsioListener::stop()
@@ -83,7 +90,7 @@ void AsioListener::handle_accept(const boost::shared_ptr<BabelNetwork::AsioClien
             std::cout << "In Session Execution\n" << e.what() << std::endl;
         }
     }
-    start();
+    accept();
 }
 
 void AsioListener::setSignalsHandeled()
