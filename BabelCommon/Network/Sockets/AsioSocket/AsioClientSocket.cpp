@@ -113,7 +113,7 @@ void AsioClientSocket::handle_read_body(const boost::system::error_code &error)
             stop();
         } else {
             _logger.logThis("ERROR IN HANDLE READ BODY BY SERVER - Client disconnected : " + error.message());
-            std::cerr << "Throw Exeption ?" << std::endl;
+            std::cerr << "Throw Exception ?" << std::endl;
         }
     }
 }
@@ -131,7 +131,7 @@ void AsioClientSocket::finish_read_body(const boost::system::error_code &error)
         if (getHandler() == SocketHandler::Client) {
             stop();
         } else {
-            std::cerr << "Throw Exeption ?" << std::endl;
+            std::cerr << "Throw Exception ?" << std::endl;
         }
     }
 }
