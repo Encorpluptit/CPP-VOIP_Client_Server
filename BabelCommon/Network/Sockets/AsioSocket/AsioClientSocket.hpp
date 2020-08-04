@@ -42,7 +42,7 @@ namespace BabelNetwork {
 
         void start() final;
 
-        void stop() final { _context.stop(); };
+        void stop() final { _context.stop(); _thread->stop();};
 
         bool sendResponse(const BabelNetwork::AResponse &response) final;
 
@@ -66,25 +66,14 @@ namespace BabelNetwork {
 
         void handle_write(const boost::system::error_code &error);
 
-//        void write_body(const boost::system::error_code &error);
-
 
         /* <- Getters / Setters -> */
     public:
-        [[nodiscard]] ip::tcp::socket &getSocket()
-        {
-            return _socket;
-        }
+        [[nodiscard]] ip::tcp::socket &getSocket() { return _socket; }
 
-        [[nodiscard]] SocketHandler getHandler() const
-        {
-            return _handler;
-        }
+        [[nodiscard]] SocketHandler getHandler() const { return _handler; }
 
-        [[nodiscard]] io_context &getContext() const
-        {
-            return _context;
-        }
+        [[nodiscard]] io_context &getContext() const { return _context; }
 
 
         /* <- Attributes -> */

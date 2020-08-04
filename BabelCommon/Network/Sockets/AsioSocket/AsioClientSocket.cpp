@@ -57,6 +57,7 @@ void AsioClientSocket::connect()
         _endpoints,
         boost::bind(&AsioClientSocket::handle_connect, shared_from_this(), boost::asio::placeholders::error)
     );
+    _context.run();
 }
 
 void AsioClientSocket::handle_connect(const boost::system::error_code &error)

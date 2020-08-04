@@ -74,6 +74,7 @@ set(
         ${COMMON_DIR}/Utils/Thread
         ${COMMON_DIR}/Utils/Runnable
 
+        ${COMMON_DIR}/Errors
 
         ${COMMON_DIR}/Network/NetworkInfos
 

@@ -16,7 +16,6 @@ AsioListener::AsioListener(const std::string &address, const std::string &port, 
       _acceptor(_context, _endpoint),
       _signals(_context)
 {
-    setReady();
     setSignalsHandeled();
     setThread(
         boost::make_shared<BabelUtils::BoostThread>(
@@ -39,10 +38,10 @@ void AsioListener::start()
 {
     std::cout << "START / RESTART" << std::endl;
 
+    setReady();
     accept();
     startContext();
 }
-
 
 void AsioListener::accept()
 {
