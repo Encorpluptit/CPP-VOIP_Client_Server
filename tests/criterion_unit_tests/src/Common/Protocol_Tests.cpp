@@ -25,7 +25,7 @@ Test(Common, ConnectionResponse_2)
 Test(Common, ConnectionResponse_3)
 {
     static const BabelNetwork::AResponse::ResponseHeader hdr = {
-        .returnCode = 84, .dataLength = 0
+        .code = 84, .bodySize = 0
     };
     BabelNetwork::ConnectionResponse test(&hdr);
 
@@ -35,7 +35,7 @@ Test(Common, ConnectionResponse_3)
 Test(Common, ConnectionResponse_4)
 {
     static const BabelNetwork::AResponse::ResponseHeader hdr = {
-        .returnCode = 84, .dataLength = 0
+        .code = 84, .bodySize = 0
     };
     BabelNetwork::ConnectionResponse test(&hdr);
 
@@ -45,37 +45,37 @@ Test(Common, ConnectionResponse_4)
 Test(Common, ConnectionResponse_5)
 {
     static const BabelNetwork::AResponse::ResponseHeader hdr = {
-        .returnCode = 0, .dataLength = 5
+        .code = 0, .bodySize = 5
     };
     BabelNetwork::ConnectionResponse test(&hdr);
 
-    ASSERT_UINT(test.getBodySize(), hdr.dataLength);
+    ASSERT_UINT(test.getBodySize(), hdr.bodySize);
 }
 
 Test(Common, ConnectionResponse_6)
 {
     static const BabelNetwork::AResponse::ResponseHeader hdr = {
-        .returnCode = 0, .dataLength = 0
+        .code = 0, .bodySize = 0
     };
     BabelNetwork::ConnectionResponse test(&hdr);
 
     ASSERT_BOOL(test.encode_header(), true);
     ASSERT_BOOL(test.decode_header(), true);
 
-    ASSERT_UINT(test.getBodySize(), hdr.dataLength);
+    ASSERT_UINT(test.getBodySize(), hdr.bodySize);
 }
 
 Test(Common, ConnectionResponse_7)
 {
     static const BabelNetwork::AResponse::ResponseHeader hdr = {
-        .returnCode = 40, .dataLength = 50
+        .code = 40, .bodySize = 50
     };
     BabelNetwork::ConnectionResponse test(&hdr);
 
     ASSERT_BOOL(test.encode_header(), true);
     ASSERT_BOOL(test.decode_header(), true);
 
-    ASSERT_UINT(test.getCode(), hdr.returnCode);
-    ASSERT_UINT(test.getBodySize(), hdr.dataLength);
+    ASSERT_UINT(test.getCode(), hdr.code);
+    ASSERT_UINT(test.getBodySize(), hdr.bodySize);
 }
 

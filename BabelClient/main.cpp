@@ -14,7 +14,15 @@ static void socket_testing(char **av)
 {
     BabelNetwork::NetworkInfos nwi(av[1], av[2]);
     boost::asio::io_context context;
-    boost::shared_ptr<BabelNetwork::AsioClientSocket> client(new BabelNetwork::AsioClientSocket(av[1], av[2], context, BabelNetwork::AsioClientSocket::SocketHandler::Client));
+    BabelUtils::Logger logger(BabelUtils::Logger::LogType::ClientLog);
+    boost::shared_ptr<BabelNetwork::AsioClientSocket> client(
+        new BabelNetwork::AsioClientSocket(
+            av[1],
+            av[2],
+            context,
+            BabelNetwork::AsioClientSocket::SocketHandler::Client, logger
+        )
+    );
     client->connect();
     client->setThread(boost::make_shared<BabelUtils::BoostThread>(
         [&client] {

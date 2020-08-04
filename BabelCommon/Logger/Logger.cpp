@@ -29,7 +29,7 @@ Logger::Logger(Logger::LogType type)
 
 Logger::~Logger()
 {
-    std::cerr << "Finished Logging" << std::endl;
+    logThis("Finished Logging");
     _logFile.close();
 }
 
@@ -96,14 +96,21 @@ void Logger::getTime()
         return;
 }
 
-void Logger::logThis(const std::string &msg, const std::shared_ptr<BabelNetwork::AResponse> &response) {
+void Logger::logThis(const std::string &msg) {
     if (!isOk())
         return;
     getTime();
-    _logFile << "[ " << _description << " ] - " << _timeBuffer << " ==> " << msg + "\n" << *response << "\n";
+    _logFile << "[ " << _description << " ] - " << _timeBuffer << " ==> " << msg << "\n";
 }
 
-void Logger::logThis(const std::shared_ptr<BabelNetwork::AResponse> &response) {
+void Logger::logThis(const std::string &msg, const BabelNetwork::AResponse &response) {
+    if (!isOk())
+        return;
+    getTime();
+    _logFile << "[ " << _description << " ] - " << _timeBuffer << " ==> " << msg + "\n" << response << "\n";
+}
+
+void Logger::logThis(const BabelNetwork::AResponse &response) {
     if (!isOk())
         return;
     getTime();

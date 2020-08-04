@@ -34,16 +34,18 @@ namespace BabelUtils {
         /* <- Public Methods -> */
     public:
         template<typename ... Args>
-        void logThis(const std::string &format, Args ... args) {
+        void logThis(const std::string &fmt, Args ... args) {
             if (!isOk())
                 return;
             getTime();
-            _logFile << "[ " << _description << " ]  - " << _timeBuffer << " ==> " << format(format, args...) + "\n";
+            _logFile << "[ " << _description << " ]  - " << _timeBuffer << " ==> " << format(fmt, args...) + "\n";
         }
 
-        void logThis(const std::string &msg, const std::shared_ptr<BabelNetwork::AResponse> &response);
+        void logThis(const std::string &msg);
 
-        void logThis(const std::shared_ptr<BabelNetwork::AResponse> &response);
+        void logThis(const std::string &msg, const BabelNetwork::AResponse &response);
+
+        void logThis(const BabelNetwork::AResponse &response);
 
         /* <- Private Methods -> */
     private:

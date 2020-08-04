@@ -9,6 +9,7 @@
 #define CPP_BABEL_2020_ASOCKET_HPP
 
 #include <queue>
+#include "Logger.hpp"
 #include "ISocket.hpp"
 #include "AResponse.hpp"
 #include "BoostThread.hpp"
@@ -19,7 +20,8 @@ namespace BabelNetwork {
 
         /* <- Constructor - Destructor -> */
     public:
-        explicit ASocket(const std::string &address, const std::string &port);
+        explicit ASocket(const std::string &address, const std::string &port,
+            BabelUtils::Logger &logger);
 
         ~ASocket() override = default;
 
@@ -47,6 +49,7 @@ namespace BabelNetwork {
         /* <- Attributes -> */
     protected:
         NetworkInfos _networkInfos;
+        BabelUtils::Logger &_logger;
         bool _ready = false;
         BabelNetwork::AResponse::ResponseHeader _hdr{};
         std::shared_ptr<AResponse> _read_msg = nullptr;

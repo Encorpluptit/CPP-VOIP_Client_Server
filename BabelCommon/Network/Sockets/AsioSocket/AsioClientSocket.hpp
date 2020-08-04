@@ -8,14 +8,15 @@
 #ifndef CPP_BABEL_2020_ASIOCLIENTSOCKET_HPP
 #define CPP_BABEL_2020_ASIOCLIENTSOCKET_HPP
 
-#include "AsioSocket.hpp"
+#include <boost/asio.hpp>
+#include "ASocket.hpp"
 
 namespace BabelNetwork {
     using namespace boost::asio;
 
     class AsioClientSocket final
         : public boost::enable_shared_from_this<AsioClientSocket>,
-          public AsioSocket {
+          public ASocket {
         /* <- Class Enum -> */
     public:
         enum SocketHandler {
@@ -25,12 +26,8 @@ namespace BabelNetwork {
 
         /* <- Constructor - Destructor -> */
     public:
-        explicit AsioClientSocket(
-            const std::string &address,
-            const std::string &port,
-            io_context &context,
-            SocketHandler handlerType
-        );
+        explicit AsioClientSocket(const std::string &address, const std::string &port, io_context &context,
+            SocketHandler handlerType, BabelUtils::Logger &logger);
 
         ~AsioClientSocket() final;
 
@@ -39,7 +36,7 @@ namespace BabelNetwork {
 
         void start() final;
 
-        void stop() final {_context.stop();};
+        void stop() final { _context.stop(); };
 
         bool sendResponse(const BabelNetwork::AResponse &response) final;
 
@@ -76,7 +73,10 @@ namespace BabelNetwork {
             return _handler;
         }
 
-        [[nodiscard]] io_context &getContext() const { return _context; }
+        [[nodiscard]] io_context &getContext() const
+        {
+            return _context;
+        }
 
 
         /* <- Attributes -> */

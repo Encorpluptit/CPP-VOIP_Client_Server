@@ -15,6 +15,11 @@ AResponse::AResponse(const ResponseHeader &headerResponse)
     _header = Response(headerResponse);
 }
 
+AResponse::AResponse(const AResponse &other) : AResponse(other._header)
+{
+}
+
+
 std::shared_ptr<AResponse> AResponse::getResponse(const ResponseHeader &response)
 {
 //    //Todo Switch case for returning good ptr
@@ -28,10 +33,11 @@ std::shared_ptr<AResponse> AResponse::getResponse(const ResponseHeader &response
 
 std::string AResponse::serialize() const
 {
-    std::string response =                              \
-    R"({"Code": )" + std::to_string(getCode())      \
- + R"(, "Desc": ")" + getDescription() + "\""           \
- + R"(, "Data": ")" + serialize_data()                  \
+    std::string response =                                  \
+    R"({"Code": )" + std::to_string(getCode())          \
+ + R"(", Body Size": )" + std::to_string(getBodySize()) \
+ + R"(, "Desc": ")" + getDescription() + "\"}\n"            \
+ + R"({"Data": ")" + serialize_data()                      \
  + "\"}";
     return response;
 }
@@ -44,20 +50,15 @@ std::ostream &BabelNetwork::operator<<(std::ostream &os, const BabelNetwork::ARe
 
 uint16_t AResponse::getCode() const noexcept
 {
-    return _header.returnCode;
+    return _header.code;
 }
 
 [[nodiscard]] uint32_t AResponse::getBodySize() const noexcept
 {
-    return _header.dataLength;
+    return _header.bodySize;
 }
 
 AResponse::ResponseType AResponse::getResponseType() const
 {
     return _header.responseType;
-}
-
-char *AResponse::getHeaderData()
-{
-    return reinterpret_cast<char *>(&_header);
 }

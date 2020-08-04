@@ -9,8 +9,13 @@
 
 using namespace BabelNetwork;
 
-BabelNetwork::ASocket::ASocket(const std::string &address, const std::string &port)
-    : _networkInfos(address, port)
+BabelNetwork::ASocket::ASocket(
+    const std::string &address,
+    const std::string &port,
+    BabelUtils::Logger &logger
+)
+    : _networkInfos(address, port),
+      _logger(logger)
 {
 
 }

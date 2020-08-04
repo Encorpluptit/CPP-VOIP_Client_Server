@@ -5,12 +5,13 @@
 ** [AsioListener.cpp]: Source file for AsioListener feature.
 */
 
+#include <iostream>
 #include "AsioListener.hpp"
 
 using namespace BabelServer;
 
-AsioListener::AsioListener(const std::string &address, const std::string &port)
-    : BabelNetwork::AsioSocket(address, port),
+AsioListener::AsioListener(const std::string &address, const std::string &port, BabelUtils::Logger &logger)
+    : BabelNetwork::ASocket(address, port, logger),
       _endpoint(ip::address::from_string(_networkInfos.getIp()), _networkInfos.getPort()),
       _acceptor(_context, _endpoint),
       _signals(_context)
@@ -43,7 +44,8 @@ void AsioListener::start()
         _networkInfos.getIp(),
             _networkInfos.getPortStr(),
             _context,
-            BabelNetwork::AsioClientSocket::SocketHandler::Server
+            BabelNetwork::AsioClientSocket::SocketHandler::Server,
+            _logger
         )
     );
     auto new_session = _asioClients.back();
@@ -52,7 +54,8 @@ void AsioListener::start()
         new_session->getSocket(),
         boost::bind(&AsioListener::handle_accept, this, new_session, boost::asio::placeholders::error)
     );
-    _context.run();
+    startContext();
+//    _context.run();
 }
 
 void AsioListener::stop()
@@ -90,4 +93,28 @@ void AsioListener::setSignalsHandeled()
     _signals.async_wait(boost::bind(&AsioListener::stop, this));
 }
 
+void AsioListener::startContext() {
+    std::cout << "CONTEXT LAUNCHED on " << _networkInfos << std::endl;
+    _context.run();
+    std::cout << "CONTEXT FINISHED on " << _networkInfos << std::endl;
+}
+
+[[nodiscard]] const signal_set &AsioListener::getSignals() const
+{
+    return _signals;
+}
+
+[[nodiscard]] const ip::tcp::endpoint &AsioListener::getEndpoint() const
+{
+    return _endpoint;
+}
+
+[[nodiscard]] const ip::tcp::acceptor &AsioListener::getAcceptor() const
+{
+    return _acceptor;
+}
+
+[[nodiscard]] io_context &AsioListener::getContext() const {
+    return const_cast<io_context &>(_context);
+}
 

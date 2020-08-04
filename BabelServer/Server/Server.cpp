@@ -5,6 +5,7 @@
 ** [Server.cpp]: Source file for Server feature.
 */
 
+#include <iostream>
 #include "Server.hpp"
 
 using namespace BabelServer;
@@ -43,7 +44,7 @@ void Server::initServers(int ac, char **av)
 //    _servers.emplace_back(new AsioListener(av[0], av[1]));
 
     for (int i = 1; i < ac; i++)
-        _servers.emplace_back(new AsioListener(av[0], av[i]));
+        _servers.emplace_back(new AsioListener(av[0], av[i], _logger));
 
 //    setThread(boost::make_shared<BabelUtils::BoostThread>(
 //        boost::bind(&BabelNetwork::AsioSocket::startContext2, _servers.front())));

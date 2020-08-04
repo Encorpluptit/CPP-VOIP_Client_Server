@@ -37,9 +37,9 @@ namespace BabelNetwork {
         /* <- Class Structure -> */
     public:
         using ResponseHeader = struct __attribute__((packed)) Response {
-            uint16_t returnCode;
+            uint16_t code;
             ResponseType responseType;
-            uint32_t dataLength;
+            uint32_t bodySize;
         };
         static const size_t ResponseHeaderSize = sizeof(ResponseHeader);
 
@@ -51,11 +51,12 @@ namespace BabelNetwork {
 
         explicit AResponse(const ResponseHeader &headerResponse);
 
-        AResponse(const AResponse &other) : AResponse(other._header)
-        {
-//            _header = other._header;
-//            memcpy(_headerData, other._headerData, sizeof(_headerData));
-        }
+        AResponse(const AResponse &other);
+//        AResponse(const AResponse &other) : AResponse(other._header)
+//        {
+////            _header = other._header;
+////            memcpy(_headerData, other._headerData, sizeof(_headerData));
+//        }
 
         ~AResponse() = default;
 
@@ -98,8 +99,6 @@ namespace BabelNetwork {
         [[nodiscard]] ResponseType getResponseType() const;
 
         [[nodiscard]] virtual const std::string &getDescription() const noexcept = 0;
-
-        [[nodiscard]] char *getHeaderData();
 
         [[nodiscard]] virtual char *getBody() const noexcept = 0;
 

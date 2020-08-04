@@ -32,7 +32,7 @@ namespace BabelNetwork {
         ConnectionResponse()
         {
             _header.responseType = Connection;
-            _header.dataLength = sizeof(ConnectionData);
+            _header.bodySize = sizeof(ConnectionData);
 
             //TODO: remove
             strcat(_data.login, "lol");

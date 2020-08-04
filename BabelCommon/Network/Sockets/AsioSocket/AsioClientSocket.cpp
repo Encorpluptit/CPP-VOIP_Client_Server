@@ -5,13 +5,18 @@
 ** [AsioClientSocket.cpp]: Source file for AsioClientSocket feature.
 */
 
+#include <iostream>
 #include "AsioClientSocket.hpp"
 
 using namespace BabelNetwork;
 
-AsioClientSocket::AsioClientSocket(const std::string &address, const std::string &port, io_context &context,
-    SocketHandler handlerType)
-    : BabelNetwork::AsioSocket(address, port),
+AsioClientSocket::AsioClientSocket(
+    const std::string &address,
+    const std::string &port, io_context &context,
+    SocketHandler handlerType,
+    BabelUtils::Logger &logger
+)
+    : BabelNetwork::ASocket(address, port, logger),
       _context(context),
       _socket(_context),
       _handler(handlerType)
@@ -29,16 +34,17 @@ AsioClientSocket::~AsioClientSocket()
 //        _write_queue.pop();
 //    _socket.close();
 }
+
 void AsioClientSocket::start()
 {
     std::cout << "START SESSION" << std::endl;
+    _logger.logThis("START SESSION");
     handle_read_header();
 }
 
 bool AsioClientSocket::sendResponse(const BabelNetwork::AResponse &response)
 {
-    std::cout << "START DELIVER" << std::endl;
-
+    _logger.logThis("Starting to deliver response :", response);
     boost::asio::post(
         _context,
         boost::bind(&AsioClientSocket::do_write, shared_from_this(), boost::ref(response))
@@ -48,6 +54,7 @@ bool AsioClientSocket::sendResponse(const BabelNetwork::AResponse &response)
 
 void AsioClientSocket::connect()
 {
+    _logger.logThis("Trying to connect");
     ip::tcp::resolver resolver(_context);
     _endpoints = resolver.resolve(_networkInfos.getIp(), _networkInfos.getPortStr());
     boost::asio::async_connect(
@@ -60,7 +67,6 @@ void AsioClientSocket::connect()
 void AsioClientSocket::handle_connect(const boost::system::error_code &error)
 {
     if (!error) {
-        std::cout << "HANDLE CONNECT (DO FCT TO LAUNCH SOCKET)" << std::endl;
         setReady();
         boost::asio::async_read(
             _socket,
@@ -68,7 +74,8 @@ void AsioClientSocket::handle_connect(const boost::system::error_code &error)
             boost::bind(&AsioClientSocket::handle_read_body, shared_from_this(), boost::asio::placeholders::error)
         );
     } else {
-        std::cout << "Socket Cannot connect" << std::endl;
+        _logger.logThis("Socket Cannot connect");
+        std::cerr << "Socket Cannot connect" << std::endl;
     }
 }
 
@@ -88,28 +95,25 @@ void AsioClientSocket::handle_read_body(const boost::system::error_code &error)
 
     if (!error) {
         if (!_read_msg) {
-            std::cout << "Read msg null" << std::endl;
-            std::cout << _hdr.dataLength << std::endl;
-            std::cout << _hdr.responseType << std::endl;
-            std::cout << _hdr.returnCode << std::endl;
+            _logger.logThis(
+                "Read msg null \ncode : %d, type %d, sz: %u",
+                _hdr.code, _hdr.responseType, _hdr.bodySize
+            );
             return;
-        } else {
-            std::cout << *_read_msg << std::endl;
         }
-        std::cout << "HEADER READ with data length" << _hdr.dataLength << std::endl;
-        std::cout << "HEADER READ with data length" << _read_msg->getBodySize() << std::endl;
         boost::asio::async_read(
             _socket,
-            boost::asio::buffer(_read_msg->getBody(), _hdr.dataLength),
+            boost::asio::buffer(_read_msg->getBody(), _hdr.bodySize),
             boost::bind(&AsioClientSocket::finish_read_body, shared_from_this(), boost::asio::placeholders::error)
         );
     } else {
-        std::cerr << "ERROR IN HANDLE READ BODY" << std::endl;
+        std::cerr << "ERROR IN HANDLE READ BODY : " + error.message() << std::endl;
         if (getHandler() == SocketHandler::Client) {
+            _logger.logThis("Client Stopped" + error.message());
             stop();
         } else {
+            _logger.logThis("ERROR IN HANDLE READ BODY BY SERVER - Client disconnected : " + error.message());
             std::cerr << "Throw Exeption ?" << std::endl;
-            throw std::runtime_error("CLIENT DISCONNECT");
         }
     }
 }
@@ -119,8 +123,10 @@ void AsioClientSocket::finish_read_body(const boost::system::error_code &error)
     if (!error && _read_msg->decode_data()) {
         std::cout << "BODY READ -- DATA = " << _read_msg->serialize_data() << std::endl;
         _read_queue.push(_read_msg);
+        _logger.logThis(*_read_msg);
         handle_read_header();
     } else {
+        _logger.logThis("ERROR IN FINISH READ BODY" + error.message());
         std::cerr << "ERROR IN FINISH READ BODY" << std::endl;
         if (getHandler() == SocketHandler::Client) {
             stop();
@@ -133,11 +139,11 @@ void AsioClientSocket::finish_read_body(const boost::system::error_code &error)
 void AsioClientSocket::do_write(const BabelNetwork::AResponse &response)
 {
     bool write_in_progress = !_write_queue.empty();
-    std::cout << "do write" << std::endl;
+//    std::cout << "do write" << std::endl;
 
     _write_queue.push(response.getResponse());
     if (!write_in_progress && _write_queue.front()->encode()) {
-        std::cout << "Sending Response = " << response << std::endl;
+        _logger.logThis("Sending Response = ", response);
         boost::asio::async_write(
             _socket,
             boost::asio::buffer(_write_queue.front()->getDataByte(), _write_queue.front()->getResponseSize()),
@@ -148,12 +154,12 @@ void AsioClientSocket::do_write(const BabelNetwork::AResponse &response)
 
 void AsioClientSocket::handle_write(const boost::system::error_code &error)
 {
-    std::cout << "handle write" << std::endl;
+//    std::cout << "handle write" << std::endl;
     if (!error) {
-        std::cout << "handle write OK" << std::endl;
+//        std::cout << "handle write OK" << std::endl;
         _write_queue.pop();
         if (!_write_queue.empty() && _write_queue.front()->encode()) {
-            std::cout << "2 or messages to send" << std::endl;
+            _logger.logThis("2 or more messages to send  - Sending Response = ", *_write_queue.front());
             boost::asio::async_write(
                 _socket,
                 boost::asio::buffer(_write_queue.front()->getDataByte(), _write_queue.front()->getResponseSize()),
@@ -161,6 +167,7 @@ void AsioClientSocket::handle_write(const boost::system::error_code &error)
             );
         }
     } else {
-        std::cout << "handle write NOT OK" << std::endl;
+        _logger.logThis("Error in handle write : " + error.message());
+//        std::cerr << "handle write NOT OK" << std::endl;
     }
 }

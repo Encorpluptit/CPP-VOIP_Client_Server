@@ -13,17 +13,17 @@ ConnectionResponse::ConnectionResponse(const ResponseHeader &headerResponse)
     : AResponse(headerResponse)
 {
     _header.responseType = Connection;
-    _header.dataLength = headerResponse.dataLength;
+    _header.bodySize = headerResponse.bodySize;
 }
 
 bool BabelNetwork::ConnectionResponse::isOk() noexcept
 {
-    return _header.returnCode == AResponse::ResponseCode::ConnectionOk;
+    return _header.code == AResponse::ResponseCode::ConnectionOk;
 }
 
 void BabelNetwork::ConnectionResponse::setOk() noexcept
 {
-    _header.returnCode = AResponse::ResponseCode::ConnectionOk;
+    _header.code = AResponse::ResponseCode::ConnectionOk;
 }
 
 const std::string &ConnectionResponse::getDescription() const noexcept

@@ -16,7 +16,8 @@ static void tests(char **av)
 {
     std::cout << "TEST LAUNCHED" << std::endl;
 //    boost::asio::io_context context;
-    BabelServer::AsioListener listener(av[1], av[2]);
+    BabelUtils::Logger logger(BabelUtils::Logger::LogType::ServerLog);
+    BabelServer::AsioListener listener(av[1], av[2], logger);
 //    auto lol = boost::make_shared<BabelUtils::BoostThread>(
 //        [listener = &listener] {listener->start();}
 //        );

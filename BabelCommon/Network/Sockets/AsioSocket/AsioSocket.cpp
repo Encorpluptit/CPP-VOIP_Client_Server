@@ -10,7 +10,7 @@
 using namespace BabelNetwork;
 
 AsioSocket::AsioSocket(const std::string &address, const std::string &port)
-    : ASocket(address, port)
+    : ASocket(address, port, <#initializer#>)
 {
 
 }
