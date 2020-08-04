@@ -25,9 +25,9 @@ Test(Common, ConnectionResponse_2)
 Test(Common, ConnectionResponse_3)
 {
     static const BabelNetwork::AResponse::ResponseHeader hdr = {
-        .code = 84, .bodySize = 0
+        ._code = 84, ._dataInfosSize = 0
     };
-    BabelNetwork::ConnectionResponse test(&hdr);
+    BabelNetwork::ConnectionResponse test(hdr);
 
     ASSERT_BOOL(test.isOk(), false);
 }
@@ -35,9 +35,9 @@ Test(Common, ConnectionResponse_3)
 Test(Common, ConnectionResponse_4)
 {
     static const BabelNetwork::AResponse::ResponseHeader hdr = {
-        .code = 84, .bodySize = 0
+        ._code = 84, ._dataInfosSize = 0
     };
-    BabelNetwork::ConnectionResponse test(&hdr);
+    BabelNetwork::ConnectionResponse test(hdr);
 
     ASSERT_BOOL(test.isOk(), false);
 }
@@ -45,37 +45,37 @@ Test(Common, ConnectionResponse_4)
 Test(Common, ConnectionResponse_5)
 {
     static const BabelNetwork::AResponse::ResponseHeader hdr = {
-        .code = 0, .bodySize = 5
+        ._code = 0, ._dataInfosSize = 5
     };
-    BabelNetwork::ConnectionResponse test(&hdr);
+    BabelNetwork::ConnectionResponse test(hdr);
 
-    ASSERT_UINT(test.getBodySize(), hdr.bodySize);
+    ASSERT_SIZET(test.getDataInfosSize(), hdr._dataInfosSize);
 }
 
 Test(Common, ConnectionResponse_6)
 {
     static const BabelNetwork::AResponse::ResponseHeader hdr = {
-        .code = 0, .bodySize = 0
+        ._code = 0, ._dataInfosSize = 0
     };
-    BabelNetwork::ConnectionResponse test(&hdr);
+    BabelNetwork::ConnectionResponse test(hdr);
 
-    ASSERT_BOOL(test.encode_header(), true);
+    ASSERT_BOOL(test.encode(), true);
     ASSERT_BOOL(test.decode_header(), true);
 
-    ASSERT_UINT(test.getBodySize(), hdr.bodySize);
+    ASSERT_SIZET(test.getDataInfosSize(), hdr._dataInfosSize);
 }
 
 Test(Common, ConnectionResponse_7)
 {
     static const BabelNetwork::AResponse::ResponseHeader hdr = {
-        .code = 40, .bodySize = 50
+        ._code = 40, ._dataInfosSize = 50
     };
-    BabelNetwork::ConnectionResponse test(&hdr);
+    BabelNetwork::ConnectionResponse test(hdr);
 
-    ASSERT_BOOL(test.encode_header(), true);
+    ASSERT_BOOL(test.encode(), true);
     ASSERT_BOOL(test.decode_header(), true);
 
-    ASSERT_UINT(test.getCode(), hdr.code);
-    ASSERT_UINT(test.getBodySize(), hdr.bodySize);
+    ASSERT_INT(test.getCode(), hdr._code);
+    ASSERT_SIZET(test.getDataInfosSize(), hdr._dataInfosSize);
 }
 
