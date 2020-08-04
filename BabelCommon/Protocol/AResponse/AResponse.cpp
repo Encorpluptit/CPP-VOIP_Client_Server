@@ -19,9 +19,22 @@ AResponse::AResponse(const AResponse &other) : AResponse(other._header)
 {
 }
 
-
 std::shared_ptr<AResponse> AResponse::getResponse(const ResponseHeader &response)
 {
+//    //Todo Switch case for returning good ptr
+    switch (response.responseType) {
+        case Connection:
+            return std::shared_ptr<AResponse>(new ConnectionResponse(response));
+        default:
+            return nullptr;
+    }
+}
+
+std::shared_ptr<AResponse> AResponse::getResponse(char headerBuffer[ResponseHeaderSize])
+{
+    ResponseHeader response{};
+
+    memcpy(&response, headerBuffer, ResponseHeaderSize);
 //    //Todo Switch case for returning good ptr
     switch (response.responseType) {
         case Connection:

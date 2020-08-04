@@ -52,10 +52,11 @@ namespace BabelNetwork {
         BabelUtils::Logger &_logger;
         bool _ready = false;
         //TODO: Aclient Socket with this attributes ?
-        BabelNetwork::AResponse::ResponseHeader _hdr{};
+        AResponse::ResponseHeader _hdr{};
+        char _headerBuffer[AResponse::ResponseHeaderSize] = {0};
         std::shared_ptr<AResponse> _read_msg = nullptr;
-        std::queue<std::shared_ptr<BabelNetwork::AResponse>> _read_queue;
-        std::queue<std::shared_ptr<BabelNetwork::AResponse>> _write_queue;
+        std::queue<std::shared_ptr<AResponse>> _read_queue;
+        std::queue<std::shared_ptr<AResponse>> _write_queue;
         boost::shared_ptr<BabelUtils::BoostThread> _thread;
     };
 

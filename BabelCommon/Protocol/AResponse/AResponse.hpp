@@ -64,6 +64,8 @@ namespace BabelNetwork {
     public:
         [[nodiscard]] static std::shared_ptr<AResponse> getResponse(const ResponseHeader &response);
 
+        [[nodiscard]] static std::shared_ptr<AResponse> getResponse(char headerBuffer[ResponseHeaderSize]);
+
         [[nodiscard]] virtual std::shared_ptr<AResponse> getResponse() const = 0;
 
         [[nodiscard]] virtual bool encode() noexcept = 0;
