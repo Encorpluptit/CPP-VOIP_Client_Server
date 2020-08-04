@@ -93,7 +93,7 @@ namespace BabelNetwork {
 
         [[nodiscard]] virtual size_t getResponseSize() const noexcept = 0;
 
-        [[nodiscard]] constexpr virtual size_t getMaxResponseSize() const noexcept = 0;
+        [[nodiscard]] virtual size_t getMaxResponseSize() const noexcept = 0;
 
         [[nodiscard]] constexpr static size_t getHeaderSize() { return HeaderSize; };
 
