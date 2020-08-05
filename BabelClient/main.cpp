@@ -15,38 +15,45 @@ static void socket_testing(char **av)
     BabelNetwork::NetworkInfos nwi(av[1], av[2]);
     boost::asio::io_context context;
     BabelUtils::Logger logger(BabelUtils::Logger::LogType::ClientLog);
-    boost::shared_ptr<BabelNetwork::AsioClientSocket> client(
-        new BabelNetwork::AsioClientSocket(
+
+    auto client = boost::make_shared<BabelNetwork::AsioClientSocket>(
             av[1],
             av[2], logger,
             context,
-            BabelNetwork::AsioClientSocket::SocketHandler::Client)
+            BabelNetwork::AsioClientSocket::SocketHandler::Client
     );
-//    client->connect();
+
+    client->connect();
     client->setThread(boost::make_shared<BabelUtils::BoostThread>(
         [&client] {
             std::cout << "CLIENT THREAD LAUNCHED" << std::endl;
-            client->connect();
-//            client->getContext().run();
+            client->getContext().run();
             std::cout << "CLIENT THREAD FINISHED" << std::endl;
-        }
-        )
+        })
     );
+
     sleep(1);
     if (!client->isReady()) {
         client->stop();
         throw BabelErrors::NetworkError("Socket not ready, please check your adresse and ports");
     }
 
-    char data[10] = {0};
-    while (std::cin.getline(data, 10 + 1)) {
-        BabelNetwork::ConnectionResponse test;
+    std::string data;
+    while (std::getline(std::cin, data)) {
+        std::cout << data << std::endl;
+        if (data == "exit") {
+            std::cout << "exit loop" << std::endl;
+            break;
+        }
+        BabelNetwork::ConnectionResponse test("damien", "abcd1234");
         test.setOk();
+        std::cout << "sending response" << test << std::endl;
+        client->sendResponse(test);
         for (int i = 0; i < 100; ++i)
             client->sendResponse(test);
-        std::cout << "loop" << std::endl;
     }
     client->stop();
+
 }
 
 int main(int ac, char **av)

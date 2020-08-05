@@ -5,8 +5,10 @@
 ** [ConnectionResponse.cpp]: Source file for ConnectionResponse feature.
 */
 
+//#include <boost/shared_ptr.hpp>
 #include "ConnectionResponse.hpp"
 #include "StringFormat.tpp"
+#include "NetworkError.hpp"
 
 using namespace BabelNetwork;
 
@@ -108,5 +110,18 @@ std::string ConnectionResponse::serialize_data() const noexcept
 const std::string &ConnectionResponse::getDescription() const noexcept
 {
     return _description;
+}
+
+ConnectionResponse::ConnectionResponse(const std::string &login, const std::string &password)
+    : AResponse()
+{
+    _header._responseType = Connection;
+    _header._dataInfosSize = DataInfosSize;
+    if (login.size() > MaxDataSize::Login || password.size() > MaxDataSize::Password)
+        throw BabelErrors::NetworkError("login or password too long");
+    strcat(_data.login, login.c_str());
+    strcat(_data.password, password.c_str());
+    _dataInfos._loginSize = login.size();
+    _dataInfos._passwordSize = password.size();
 }
 

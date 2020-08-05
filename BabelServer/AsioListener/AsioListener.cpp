@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include "AsioListener.hpp"
+#include "Debug.hpp"
 
 using namespace BabelServer;
 
@@ -17,15 +18,12 @@ AsioListener::AsioListener(const std::string &address, const std::string &port, 
       _signals(_context)
 {
     setSignalsHandeled();
-    setThread(
-        boost::make_shared<BabelUtils::BoostThread>(
-        [this] {this->start();}
-        )
-    );
 }
 
 AsioListener::~AsioListener()
 {
+    if (_thread)
+        _thread->stop();
     _asioClients.clear();
 }
 
@@ -33,9 +31,28 @@ void AsioListener::start()
 {
     std::cout << "START / RESTART" << std::endl;
 
-    std::cout << _acceptor.local_endpoint().address().to_string();
-    std::cout << _acceptor.local_endpoint().port() << std::endl;
+    auto s = BabelUtils::format("Local connexion from %s with port %u",
+        _acceptor.local_endpoint().address().to_string().c_str(),
+        _acceptor.local_endpoint().port()
+    );
+    _logger.logThis(s);
+    std::cout << s << std::endl;
     setReady();
+    setThread(
+        boost::make_shared<BabelUtils::BoostThread>(
+            [this] { this->launch_listener(); }
+        )
+    );
+//    setThread(
+//        boost::shared_ptr<BabelUtils::BoostThread>(new BabelUtils::BoostThread(
+//            [this] { this->launch_listener(); }
+//            )
+//        )
+//    );
+}
+
+void AsioListener::launch_listener()
+{
     accept();
     startContext();
 }
@@ -46,7 +63,7 @@ void AsioListener::accept()
 
     _asioClients.emplace_back(
         boost::make_shared<BabelNetwork::AsioClientSocket>(
-        _networkInfos.getIp(),
+            _networkInfos.getIp(),
             _networkInfos.getPortStr(),
             _logger,
             _context,
@@ -67,14 +84,21 @@ void AsioListener::stop()
     stopContext();
     _acceptor.close();
     _signals.clear();
-//    _thread->stop();
 }
 
-void AsioListener::handle_accept(const boost::shared_ptr<BabelNetwork::AsioClientSocket> &session,
-    const boost::system::error_code &error)
+void AsioListener::handle_accept(
+    const boost::shared_ptr<BabelNetwork::AsioClientSocket> &session,
+    const boost::system::error_code &error
+)
 {
     if (!error) {
-        std::cout << "ACCEPT OK" << std::endl;
+        auto s = BabelUtils::format("Incoming connexion from %s with port %u",
+            session->getSocket().remote_endpoint().address().to_string().c_str(),
+            session->getSocket().remote_endpoint().port()
+        );
+        _logger.logThis(s);
+        dbg("%s", s.c_str())
+        std::cout << s << std::endl;
         try {
             session->start();
         } catch (const std::runtime_error &e) {
@@ -88,10 +112,12 @@ void AsioListener::setSignalsHandeled()
 {
     _signals.add(SIGINT);
     _signals.add(SIGTERM);
-    _signals.async_wait(boost::bind(&AsioListener::stop, this));
+//    _signals.async_wait(boost::bind(&AsioListener::stop, this));
+    _signals.async_wait(boost::bind(&AsioListener::stopContext, this));
 }
 
-void AsioListener::startContext() {
+void AsioListener::startContext()
+{
     std::cout << "CONTEXT LAUNCHED on " << _networkInfos << std::endl;
     _context.run();
     std::cout << "CONTEXT FINISHED on " << _networkInfos << std::endl;
@@ -101,6 +127,7 @@ void AsioListener::stopContext()
 {
     if (!_context.stopped())
         _context.stop();
+    setNotReady();
 }
 
 [[nodiscard]] const signal_set &AsioListener::getSignals() const
@@ -118,6 +145,7 @@ void AsioListener::stopContext()
     return _acceptor;
 }
 
-[[nodiscard]] io_context &AsioListener::getContext() const {
+[[nodiscard]] io_context &AsioListener::getContext() const
+{
     return const_cast<io_context &>(_context);
 }

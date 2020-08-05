@@ -23,6 +23,8 @@ namespace BabelUtils {
 
         void setReady() override { _ready = true; };
 
+        void setNotReady() override { _ready = false; };
+
         /* <- Attributes -> */
     private:
         bool _ready = false;

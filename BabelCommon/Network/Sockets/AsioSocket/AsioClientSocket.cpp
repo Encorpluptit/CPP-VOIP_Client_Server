@@ -7,6 +7,8 @@
 
 #include <iostream>
 #include "AsioClientSocket.hpp"
+#include "NetworkError.hpp"
+#include "Debug.hpp"
 
 using namespace BabelNetwork;
 
@@ -28,24 +30,26 @@ AsioClientSocket::AsioClientSocket(
 AsioClientSocket::~AsioClientSocket()
 {
     _socket.close();
+    if (_thread)
+        _thread->stop();
 }
 
 void AsioClientSocket::start()
 {
     std::cout << "START SESSION" << std::endl;
-    std::string s = _socket.remote_endpoint().address().to_string();
-    auto s2 = _socket.remote_endpoint().port();
-    std::cout << s << "|" << s2 << std::endl;
     _logger.logThis("START SESSION");
     read_header();
 }
 
 bool AsioClientSocket::sendResponse(const BabelNetwork::AResponse &response)
 {
+    bool write_in_progress = !_write_queue.empty();
+
     _logger.logThis(response, "Starting to deliver response :");
+    _write_queue.push(response.get_shared_from_this());
     boost::asio::post(
         _context,
-        boost::bind(&AsioClientSocket::do_write, shared_from_this(), boost::ref(response))
+        boost::bind(&AsioClientSocket::do_write, shared_from_this(), write_in_progress)
     );
     return true;
 }
@@ -55,18 +59,28 @@ void AsioClientSocket::connect()
     _logger.logThis("Trying to connect");
     ip::tcp::resolver resolver(_context);
     _endpoints = resolver.resolve(_networkInfos.getIp(), _networkInfos.getPortStr());
+
     boost::asio::async_connect(
         _socket,
         _endpoints,
         boost::bind(&AsioClientSocket::handle_connect, shared_from_this(), boost::asio::placeholders::error)
     );
-    _context.run();
+//    _context.run();
 }
 
 void AsioClientSocket::handle_connect(const boost::system::error_code &error)
 {
     if (!error) {
         setReady();
+        auto s = BabelUtils::format(
+            "Local connexion from %s with port %u to %s with port %u",
+            _socket.local_endpoint().address().to_string().c_str(),
+            _socket.local_endpoint().port(),
+            _socket.remote_endpoint().address().to_string().c_str(),
+            _socket.remote_endpoint().port()
+        );
+        _logger.logThis(s);
+        dbg("%s", s.c_str())
         read_header();
     } else {
         _logger.logThis("Socket Cannot connect");
@@ -106,16 +120,19 @@ void AsioClientSocket::read_data_infos(const boost::system::error_code &error)
             boost::bind(&AsioClientSocket::read_data, shared_from_this(), boost::asio::placeholders::error)
         );
     } else {
-        std::cerr << "ERROR IN HANDLE READ DATA INFOS : " + error.message() << std::endl;
-        if (getHandler() == SocketHandler::Client) {
-            _logger.logThis("ERROR IN HANDLE READ DATA INFOS (Client Stopped)" + error.message());
-            if (error == boost::asio::error::eof)
-                std::cerr << "Connection reset" << std::endl;
-            stop();
+//        if (getHandler() == SocketHandler::Client) {
+        if (error == boost::asio::error::eof) {
+            _logger.logThis("Connection closed by server (" + error.message() + ")");
+            _context.stop();
+            throw BabelErrors::NetworkError(error.message());
         } else {
-            _logger.logThis("ERROR IN HANDLE READ DATA INFOS BY SERVER - Client disconnected : " + error.message());
-            std::cerr << "Throw Exception ?" << std::endl;
+            _logger.logThis("ERROR IN HANDLE READ DATA INFOS (Client Stopped)" + error.message());
+            throw BabelErrors::NetworkError(error.message());
         }
+//        } else {
+//            _logger.logThis("ERROR IN HANDLE READ DATA INFOS BY SERVER - Client disconnected : " + error.message());
+//            std::cerr << "Throw Exception ?" << std::endl;
+//        }
     }
 }
 
@@ -135,7 +152,8 @@ void AsioClientSocket::read_data(const boost::system::error_code &error)
         std::cerr << "ERROR IN HANDLE READ DATA : " + error.message() << std::endl;
         if (getHandler() == SocketHandler::Client) {
             _logger.logThis("ERROR IN HANDLE READ DATA (Client Stopped)" + error.message());
-            stop();
+            _context.stop();
+//            stop();
         } else {
             _logger.logThis("ERROR IN HANDLE READ DATA BY SERVER - Client disconnected : " + error.message());
             std::cerr << "Throw Exception ?" << std::endl;
@@ -154,21 +172,18 @@ void AsioClientSocket::queue_read_response(const boost::system::error_code &erro
         _logger.logThis("ERROR IN FINISH READ BODY" + error.message());
         std::cerr << "ERROR IN FINISH READ BODY" << std::endl;
         if (getHandler() == SocketHandler::Client) {
-            stop();
+            _context.stop();
+//            stop();
         } else {
             std::cerr << "Throw Exception ?" << std::endl;
         }
     }
 }
 
-void AsioClientSocket::do_write(const BabelNetwork::AResponse &response)
+void AsioClientSocket::do_write(bool write_in_progress)
 {
-    bool write_in_progress = !_write_queue.empty();
-//    std::cout << "do write" << std::endl;
-
-    _write_queue.push(response.get_shared_from_this());
     if (!write_in_progress && _write_queue.front()->encode()) {
-        _logger.logThis(response, "Sending Response = ");
+        _logger.logThis(*_write_queue.front(), "Sending Response = ");
         boost::asio::async_write(
             _socket,
             boost::asio::buffer(_write_queue.front()->getDataByte(), _write_queue.front()->getResponseSize()),
@@ -184,7 +199,7 @@ void AsioClientSocket::handle_write(const boost::system::error_code &error)
 //        std::cout << "handle write OK" << std::endl;
         _write_queue.pop();
         if (!_write_queue.empty() && _write_queue.front()->encode()) {
-            _logger.logThis(*_write_queue.front(), "2 or more messages to send  - Sending Response = ");
+//            _logger.logThis(*_write_queue.front(), "2 or more messages to send  - Sending Response = ");
             boost::asio::async_write(
                 _socket,
                 boost::asio::buffer(_write_queue.front()->getDataByte(), _write_queue.front()->getResponseSize()),

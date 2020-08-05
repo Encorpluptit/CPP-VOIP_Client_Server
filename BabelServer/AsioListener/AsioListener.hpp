@@ -30,6 +30,8 @@ namespace BabelServer {
         /* <- Private Methods -> */
     private:
 
+        void launch_listener();
+
         void accept();
 
         void handle_accept(

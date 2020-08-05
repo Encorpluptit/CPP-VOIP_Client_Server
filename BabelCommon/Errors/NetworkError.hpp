@@ -11,7 +11,7 @@
 #include "BabelError.hpp"
 
 namespace BabelErrors {
-    class NetworkError : virtual public BabelError {
+    class NetworkError : public BabelError {
         /* <- Constructor - Destructor -> */
     public:
         explicit NetworkError(std::string const &msg) : BabelError(msg) {}

@@ -62,7 +62,7 @@ namespace BabelNetwork {
 
         void queue_read_response(const boost::system::error_code &error);
 
-        void do_write(const BabelNetwork::AResponse &response);
+        void do_write(bool write_in_progress);
 
         void handle_write(const boost::system::error_code &error);
 
@@ -75,7 +75,6 @@ namespace BabelNetwork {
 
         [[nodiscard]] io_context &getContext() const { return _context; }
 
-
         /* <- Attributes -> */
     private:
         io_context &_context;
@@ -83,7 +82,6 @@ namespace BabelNetwork {
         ip::tcp::resolver::results_type _endpoints;
         SocketHandler _handler;
     };
-
 }
 
 #endif /* CPP_BABEL_2020_ASIOCLIENTSOCKET_HPP */

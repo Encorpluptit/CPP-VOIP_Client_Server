@@ -25,6 +25,9 @@ Server::~Server()
 
 void Server::run()
 {
+    for (const auto &server : _servers)
+        server->start();
+
     std::string data;
     while (std::getline(std::cin, data)) {
         std::cout << data << std::endl;

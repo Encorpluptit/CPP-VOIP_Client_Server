@@ -57,6 +57,8 @@ namespace BabelNetwork {
 
         explicit ConnectionResponse(const ResponseHeader &headerResponse);
 
+        ConnectionResponse(const std::string &login, const std::string &password);
+
         ~ConnectionResponse() = default;
 
         /* <- Methods -> */

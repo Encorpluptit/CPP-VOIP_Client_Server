@@ -27,6 +27,8 @@ namespace BabelUtils {
         [[nodiscard]] virtual bool isReady() const = 0;
 
         virtual void setReady() = 0;
+
+        virtual void setNotReady() = 0;
     };
 
 }
