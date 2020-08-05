@@ -27,17 +27,14 @@ AsioListener::AsioListener(const std::string &address, const std::string &port, 
 AsioListener::~AsioListener()
 {
     _asioClients.clear();
-//    _read_msg.reset();
-//    while (!_read_queue.empty())
-//        _read_queue.pop();
-//    while (!_write_queue.empty())
-//        _write_queue.pop();
 }
 
 void AsioListener::start()
 {
     std::cout << "START / RESTART" << std::endl;
 
+    std::cout << _acceptor.local_endpoint().address().to_string();
+    std::cout << _acceptor.local_endpoint().port() << std::endl;
     setReady();
     accept();
     startContext();
@@ -70,7 +67,7 @@ void AsioListener::stop()
     stopContext();
     _acceptor.close();
     _signals.clear();
-    _thread->stop();
+//    _thread->stop();
 }
 
 void AsioListener::handle_accept(const boost::shared_ptr<BabelNetwork::AsioClientSocket> &session,

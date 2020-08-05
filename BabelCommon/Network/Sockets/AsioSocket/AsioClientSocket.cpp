@@ -33,6 +33,9 @@ AsioClientSocket::~AsioClientSocket()
 void AsioClientSocket::start()
 {
     std::cout << "START SESSION" << std::endl;
+    std::string s = _socket.remote_endpoint().address().to_string();
+    auto s2 = _socket.remote_endpoint().port();
+    std::cout << s << "|" << s2 << std::endl;
     _logger.logThis("START SESSION");
     read_header();
 }

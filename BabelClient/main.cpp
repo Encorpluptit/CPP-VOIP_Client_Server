@@ -42,11 +42,11 @@ static void socket_testing(char **av)
     while (std::cin.getline(data, 10 + 1)) {
         BabelNetwork::ConnectionResponse test;
         test.setOk();
-//        client->sendResponse(test);
         for (int i = 0; i < 100; ++i)
             client->sendResponse(test);
         std::cout << "loop" << std::endl;
     }
+    client->stop();
 }
 
 int main(int ac, char **av)
