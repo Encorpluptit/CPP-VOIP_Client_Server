@@ -18,13 +18,10 @@ Server::Server(int ac, char **av)
 
 Server::~Server()
 {
-    for (const auto& server : _servers)
-        server->stop();
-    if (_thread)
-        _thread->stop();
+    stop();
 }
 
-void Server::run()
+void Server::start()
 {
     for (const auto &server : _servers)
         server->start();
@@ -37,6 +34,14 @@ void Server::run()
             break;
         }
     }
+}
+
+void Server::stop()
+{
+    for (const auto& server : _servers)
+        server->stop();
+    if (_thread)
+        _thread->stop();
 }
 
 void Server::initServers(int ac, char **av)

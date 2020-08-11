@@ -56,7 +56,6 @@ class ASocket : virtual public BabelUtils::ARunnable {
     protected:
         NetworkInfos _networkInfos;
         BabelUtils::Logger &_logger;
-        bool _ready = false;
         boost::shared_ptr<BabelUtils::AThread> _thread;
     };
 

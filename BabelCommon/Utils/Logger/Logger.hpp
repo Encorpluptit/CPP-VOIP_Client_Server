@@ -58,7 +58,7 @@ namespace BabelUtils {
         void createLogFile(std::filesystem::path filePath);
 
         /* <- Getters / Setters -> */
-    public:
+    private:
         bool isOk() const;
 
         /* <- Attributes -> */

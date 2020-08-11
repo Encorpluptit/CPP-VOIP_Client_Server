@@ -20,17 +20,19 @@
 #include "Logger.hpp"
 
 namespace BabelServer {
-    class Server {
+    class Server final : BabelUtils::ARunnable {
 
         /* <- Constructor - Destructor -> */
     public:
         explicit Server(int ac, char **av);
 
-        ~Server();
+        ~Server() final;
 
         /* <- Public Methods -> */
     public:
-        void run();
+        void start() final;
+
+        void stop() final;
 
         /* <- Private Methods -> */
     private:

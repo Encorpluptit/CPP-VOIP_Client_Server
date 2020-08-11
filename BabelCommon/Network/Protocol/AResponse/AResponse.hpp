@@ -73,7 +73,7 @@ namespace BabelNetwork {
 
         [[nodiscard]] virtual bool decode_data() noexcept = 0;
 
-        [[nodiscard]] std::string serialize() const noexcept ;
+        [[nodiscard]] std::string serialize() const noexcept;
 
         [[nodiscard]] virtual bool isOk() noexcept = 0;
 

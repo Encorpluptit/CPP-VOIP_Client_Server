@@ -9,17 +9,19 @@
 #define CPP_BABEL_2020_BABELERROR_HPP
 
 #include <string>
+#include <utility>
+
 
 namespace BabelErrors {
 
     class BabelError : public std::exception {
         /* <- Constructor - Destructor -> */
     public:
-        explicit BabelError(std::string const &msg) : _msg(msg) {};
+        explicit BabelError(std::string msg) : _msg(std::move(msg)) {};
 
         /* <- Public Methods -> */
     public:
-        char const *what() const noexcept override { return _msg.c_str(); };
+        [[nodiscard]] char const *what() const noexcept override { return _msg.c_str(); };
 
     private:
         std::string _msg;
