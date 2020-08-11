@@ -16,67 +16,134 @@ Full documentation of server/client protocol.
 ## Events
 
 
-### Connexion (1** Codes )
+### User (2** Codes)
+* Summary
+    * 200: User Logged In.
+    * 201: Request logging.
+    * 202: User Logged Out.
+    * 203: Request Logged out.
+    * 210: Account Created.
+    * 211: Request Create Account.
+    * 212: Account Deleted.
+    * 213: Request Delete Account.
+    
+    * 270: Unknown login Error.
+    * 271: Wrong Login.
+    * 272: Wrong Password.
+    * 273: Account Deleted.
+    * 274: User Already Logged In.
+    * 280: Unknown Account Creation Error.
+    * 281: Account Already Taken.
+    * 282: User Already Logged In.
+    
 
-* Connection
-    * 100: Connexion Ok.
-    * 199: Connexion Not ok.
-
-
-### User (\*2** Codes)
-
-* Login (20* Codes)
-    * Request / Success Codes.
-        * 200: Logged In.
+* Login
+    * [Server -> Client]
+        * Success Codes.
+            * 200: User Logged In.
+                ```json
+                {
+                  "login":      "damien.bernard@epitech.eu"
+                } 
+                ```
+            * 202: User Logged Out.
+                ```json
+                {
+                  "login":      "damien.bernard@epitech.eu"
+                } 
+                ```
+        * Error Codes    
+            * 270: Unknown login Error.
+                ```json
+                {
+                  "login":      "damien.bernard@epitech.eu"
+                } 
+                ```
+            * 271: Wrong Login.
+                ```json
+                {
+                  "login":      "damien.bernard@epitech.eu"
+                } 
+                ```
+            * 272: Wrong Password.
+            * 273: Account Deleted.
+                ```json
+                {
+                  "login":      "damien.bernard@epitech.eu"
+                } 
+                ```
+            * 274: User Already Logged In. (???)
+                ```json
+                {
+                  "login":      "damien.bernard@epitech.eu"
+                } 
+                ```
+    * [Client -> Server]
         * 201: Request logging.
             ```json
             {
               "login":      "damien.bernard@epitech.eu",
               "password" :  "abcd1234"
-            } 
+            }
             ```
-        * 202: User Logged In.
-        * 203: Request Logged out
+        * 203: Request Logged out.
             ```json
             {
               "login":      "damien.bernard@epitech.eu"
             } 
             ```
-        * 204: User Logged Out.
-    * Error Codes    
-        * 1200: Unknown login Error.
-        * 1201: Wrong Login.
-        * 1202: Wrong Password.
-        * 1203: Account Deleted.
-        * 1204: User Already Logged In.
-        * 1205: ??
+        * 275: ??
 
-* Account Creation (\*21* Codes)
-    * Request / Success Codes.
-        * 210: Request Create Account
-            ```json
-            {
-              "login":      "damien.bernard@epitech.eu",
-              "password" :  "abcd1234"
-            } 
-            ```
-        * 211: Account Created.
-    * Error Codes
-        * 1210: Unknown Account Creation Error.
-        * 1211: Account Already Taken.
-        * 1212: User Already Logged In.
-        * 218: Password too weak (??).
-
-
-* Account Deletion  (22* Codes)
-    * Request / Success Codes.
-        * 220: Request Delete Account.
-        ```json
-        {
-          "login":      "damien.bernard@epitech.eu"
-        } 
-        ```
-        * 211: Account Deleted.
+* Account (21* Codes)
+    * [Server -> Client]
+        * Success Codes.
+            * 210: Account Created.
+                ```json
+                {
+                  "login":      "damien.bernard@epitech.eu"
+                } 
+                ```
+            * 212: Account Deleted.
+                ```json
+                {
+                  "login":      "damien.bernard@epitech.eu"
+                } 
+                ```
+        * Error Codes
+            * 280: Unknown Account Creation Error.
+                ```json
+                {
+                  "login":      "damien.bernard@epitech.eu"
+                } 
+                ```
+            * 281: Account Already Taken.
+                ```json
+                {
+                  "login":      "damien.bernard@epitech.eu"
+                } 
+                ```
+            * 282: User Already Logged In.
+                ```json
+                {
+                  "login":      "damien.bernard@epitech.eu"
+                } 
+                ```
+            * 218: Password too weak. (??)
+    * [Client -> Server]
+        * Success Codes.
+            * 211: Request Create Account.
+                ```json
+                {
+                  "login":      "damien.bernard@epitech.eu",
+                  "password" :  "abcd1234"
+                } 
+                ```
+            * 213: Request Delete Account.
+                ```json
+                {
+                  "login":      "damien.bernard@epitech.eu"
+                } 
+                ```
         
 
 ```
@@ -94,7 +161,7 @@ Full documentation of server/client protocol.
 * Start a call (31* Code).
     * Calling someone.
     * Success code: 310
-    * Data: (None)
+    * Data:  [ USERNAME ]
     * Errors:
         * 1310: Unknown Call starting error.
         * 1311: Call Refused.

@@ -41,7 +41,7 @@ namespace BabelNetwork {
 
         /* <- Constructor - Destructor -> */
     public:
-        ConnectionResponse()
+        ConnectionResponse() : AResponse()
         {
             _header._responseType = Connection;
             _header._dataInfosSize = DataInfosSize;
@@ -92,6 +92,7 @@ namespace BabelNetwork {
         [[nodiscard]] std::string serialize_data() const noexcept final;
 
         [[nodiscard]] std::string serialize_data_infos() const noexcept final;
+
         /* <- Getters / Setters -> */
     public:
         [[nodiscard]] const std::string &getDescription() const noexcept final;
