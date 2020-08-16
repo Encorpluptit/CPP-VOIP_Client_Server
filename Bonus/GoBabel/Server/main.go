@@ -1,36 +1,26 @@
 package main
 
 import (
+	"BabelGo/Common/BabelUtils"
 	"BabelGo/Server/Server"
 	"fmt"
-	"math/rand"
-	"net"
+	"log"
 	"os"
-	"time"
 )
 
 func main() {
 	arguments := os.Args
-	if len(arguments) == 1 {
-		fmt.Println("Please provide a port number!")
+
+	if len(arguments) != 3 {
+		fmt.Println("Please provide an address and a port number!")
 		return
 	}
-
-	PORT := ":" + arguments[1]
-	l, err := net.Listen("tcp4", PORT)
-	if err != nil {
-		fmt.Println(err)
-		return
+	if logger, err := BabelUtils.NewLogger(); err == nil {
+		log.SetOutput(logger)
 	}
-	defer l.Close()
-	rand.Seed(time.Now().Unix())
-
-	for {
-		c, err := l.Accept()
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-		go Server.HandleConnection(c)
+	serv, closure := Server.NewServer(arguments[1], arguments[2])
+	defer closure()
+	if err := serv.Start(); err != nil {
+		log.Fatal("Error in main() from Server.Core.Start()", err)
 	}
 }
