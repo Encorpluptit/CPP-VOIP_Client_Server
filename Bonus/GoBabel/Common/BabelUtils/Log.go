@@ -6,11 +6,19 @@ import (
 	"log"
 	"os"
 	"strings"
+	"time"
 )
 
 const (
-	EqualLine = "====="
-	DashLine  = "-----"
+	Ldate         = 1 << iota // the date in the local time zone: 2009/01/23
+	Ltime                     // the time in the local time zone: 01:23:23
+	Lmicroseconds             // microsecond resolution: 01:23:23.123123.  assumes Ltime.
+)
+
+const (
+	EqualLine    = "====="
+	DashLine     = "-----"
+	LogDirectory = "GoLogs"
 )
 
 type Logger struct {
@@ -18,17 +26,32 @@ type Logger struct {
 	Vanilla io.Writer
 }
 
-func NewLogger() (Logger, error) {
+func getTimeStamp() string {
+	t := time.Now()
+	year, month, day := t.Date()
+	hour, min, sec := t.Clock()
+	return fmt.Sprintf("%d-%d-%d_%d-%d-%d", year, int(month), day, hour, min, sec)
+}
+
+func createDirectories() error {
+	return os.Mkdir(LogDirectory, 0700)
+}
+
+func NewLogger() (*Logger, error, func()) {
+	if err := createDirectories(); err != nil {
+		return nil, err, nil
+	}
 	logOutput := log.Writer()
-	file, err := os.Create("LOGLOL.log")
+	file, err := os.Create(LogDirectory + "/" + getTimeStamp())
 	if err != nil {
 		log.Println("New Logger failed from os.Open", err)
-		return Logger{}, err
+		return nil, err, nil
 	}
-	return Logger{
+	logger := &Logger{
 		File:    file,
 		Vanilla: logOutput,
-	}, nil
+	}
+	return logger, nil, logger.Close
 }
 
 func (l Logger) Write(data []byte) (int, error) {
@@ -41,6 +64,12 @@ func (l Logger) Write(data []byte) (int, error) {
 		return 0, err2
 	}
 	return n1 + n2, nil
+}
+
+func (l Logger) Close() {
+	if err := l.File.Close(); err != nil {
+		fmt.Println("Error in Logger.Close() from os.File.Close()", err)
+	}
 }
 
 func makeArrow(nb int, line string) string {

@@ -15,8 +15,9 @@ func main() {
 		fmt.Println("Please provide an address and a port number!")
 		return
 	}
-	if logger, err := BabelUtils.NewLogger(); err == nil {
+	if logger, err, loggerClosure := BabelUtils.NewLogger(); err == nil {
 		log.SetOutput(logger)
+		defer loggerClosure()
 	}
 	serv, closure := Server.NewServer(arguments[1], arguments[2])
 	defer closure()
