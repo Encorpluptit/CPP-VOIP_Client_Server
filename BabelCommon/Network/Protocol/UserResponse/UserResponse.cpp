@@ -5,7 +5,6 @@
 ** [UserResponse.cpp]: Source file for UserResponse feature.
 */
 
-//#include <boost/shared_ptr.hpp>
 #include "UserResponse.hpp"
 #include "StringFormat.tpp"
 #include "NetworkError.hpp"
