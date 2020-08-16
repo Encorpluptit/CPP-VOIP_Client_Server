@@ -8,7 +8,7 @@
 #include <iostream>
 #include "NetworkError.hpp"
 #include "AsioClientSocket.hpp"
-#include "ConnectionResponse.hpp"
+#include "UserResponse.hpp"
 
 static void socket_testing(char **av)
 {
@@ -45,7 +45,7 @@ static void socket_testing(char **av)
             std::cout << "exit loop" << std::endl;
             break;
         }
-        BabelNetwork::ConnectionResponse test("damien", "abcd1234");
+        BabelNetwork::UserResponse test("damien", "abcd1234");
         test.setOk();
         std::cout << "sending response" << test << std::endl;
         client->sendResponse(test);

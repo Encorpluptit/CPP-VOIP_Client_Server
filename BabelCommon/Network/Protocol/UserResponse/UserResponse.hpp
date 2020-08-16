@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2020
 ** CPP_babel_2020 (Copyright (c) ENCORPLUPTIT on 7/7/20).
 ** File description:
-** [ConnectionResponse.hpp]: Header file for ConnectionResponse feature.
+** [UserResponse.hpp]: Header file for UserResponse feature.
 */
 
 #ifndef CPP_BABEL_2020_CONNECTIONRESPONSE_HPP
@@ -11,8 +11,17 @@
 #include "AResponse.hpp"
 
 namespace BabelNetwork {
-    class ConnectionResponse final : virtual public AResponse {
+    class UserResponse final : virtual public AResponse {
         /* <- Class Enum -> */
+    public:
+        enum ResponseCode {
+            ConnectionOk = 100,
+            LoginOk = 210,
+            RequestLogin = 211,
+            AccountCreated = 220,
+            AccountDeleted = 230,
+
+        };
     private:
         enum MaxDataSize {
             Login = 128,
@@ -41,7 +50,7 @@ namespace BabelNetwork {
 
         /* <- Constructor - Destructor -> */
     public:
-        ConnectionResponse() : AResponse()
+        UserResponse() : AResponse()
         {
             _header._responseType = Connection;
             _header._dataInfosSize = DataInfosSize;
@@ -55,11 +64,11 @@ namespace BabelNetwork {
             _dataInfos._passwordSize = sizeof(xd);
         };
 
-        explicit ConnectionResponse(const ResponseHeader &headerResponse);
+        explicit UserResponse(const ResponseHeader &headerResponse);
 
-        ConnectionResponse(const std::string &login, const std::string &password);
+        UserResponse(const std::string &login, const std::string &password);
 
-        ~ConnectionResponse() = default;
+        ~UserResponse() = default;
 
         /* <- Methods -> */
     public:

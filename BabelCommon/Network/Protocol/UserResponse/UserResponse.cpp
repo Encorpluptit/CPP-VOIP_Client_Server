@@ -2,48 +2,48 @@
 ** EPITECH PROJECT, 2020
 ** CPP_babel_2020 (Copyright (c) ENCORPLUPTIT on 7/7/20).
 ** File description:
-** [ConnectionResponse.cpp]: Source file for ConnectionResponse feature.
+** [UserResponse.cpp]: Source file for UserResponse feature.
 */
 
 //#include <boost/shared_ptr.hpp>
-#include "ConnectionResponse.hpp"
+#include "UserResponse.hpp"
 #include "StringFormat.tpp"
 #include "NetworkError.hpp"
 
 using namespace BabelNetwork;
 
-ConnectionResponse::ConnectionResponse(const ResponseHeader &headerResponse)
+UserResponse::UserResponse(const ResponseHeader &headerResponse)
     : AResponse(headerResponse)
 {
 //    _header._dataInfosSize = headerResponse._dataInfosSize;
 }
 
-bool BabelNetwork::ConnectionResponse::isOk() noexcept
+bool BabelNetwork::UserResponse::isOk() noexcept
 {
-    return _header._code == AResponse::ResponseCode::ConnectionOk;
+    return _header._code == UserResponse::ResponseCode::ConnectionOk;
 }
 
-void BabelNetwork::ConnectionResponse::setOk() noexcept
+void BabelNetwork::UserResponse::setOk() noexcept
 {
-    _header._code = AResponse::ResponseCode::ConnectionOk;
+    _header._code = UserResponse::ResponseCode::ConnectionOk;
 }
 
-std::shared_ptr<AResponse> ConnectionResponse::get_shared_from_this() const noexcept
+std::shared_ptr<AResponse> UserResponse::get_shared_from_this() const noexcept
 {
-    return std::make_shared<ConnectionResponse>(*this);
+    return std::make_shared<UserResponse>(*this);
 }
 
-char *ConnectionResponse::getDataByteDataInfos() const noexcept
+char *UserResponse::getDataByteDataInfos() const noexcept
 {
     return const_cast<char *>(_data_byte + HeaderSize);
 }
 
-char *ConnectionResponse::getDataByteBody() const noexcept
+char *UserResponse::getDataByteBody() const noexcept
 {
     return const_cast<char *>(_data_byte + HeaderSize + DataInfosSize);
 }
 
-bool ConnectionResponse::encode() noexcept
+bool UserResponse::encode() noexcept
 {
     memcpy(_data_byte, &_header, HeaderSize);
     memcpy(getDataByteDataInfos(), &_dataInfos, DataInfosSize);
@@ -52,46 +52,46 @@ bool ConnectionResponse::encode() noexcept
     return true;
 }
 
-bool ConnectionResponse::decode_header() noexcept
+bool UserResponse::decode_header() noexcept
 {
     memcpy(&_header, _data_byte, HeaderSize);
     return true;
 }
 
-bool ConnectionResponse::decode_data_infos() noexcept
+bool UserResponse::decode_data_infos() noexcept
 {
     memcpy(&_dataInfos, _data_byte + HeaderSize, DataInfosSize);
     return true;
 }
 
-bool ConnectionResponse::decode_data() noexcept
+bool UserResponse::decode_data() noexcept
 {
     memcpy(_data.login, getDataByteBody(), _dataInfos._loginSize);
     memcpy(_data.password, getDataByteBody() + _dataInfos._loginSize, _dataInfos._passwordSize);
     return true;
 }
 
-char *ConnectionResponse::getDataByte() noexcept
+char *UserResponse::getDataByte() noexcept
 {
     return _data_byte;
 }
 
-size_t ConnectionResponse::getResponseSize() const noexcept
+size_t UserResponse::getResponseSize() const noexcept
 {
     return HeaderSize + DataInfosSize + getDataSize();
 }
 
-size_t ConnectionResponse::getMaxResponseSize() const noexcept
+size_t UserResponse::getMaxResponseSize() const noexcept
 {
     return MaxResponseSize;
 }
 
-size_t ConnectionResponse::getDataSize() const noexcept
+size_t UserResponse::getDataSize() const noexcept
 {
     return _dataInfos._loginSize + _dataInfos._passwordSize;
 }
 
-std::string ConnectionResponse::serialize_data_infos() const noexcept
+std::string UserResponse::serialize_data_infos() const noexcept
 {
     return BabelUtils::format(
         "Login Size: %zu | Password Size: %zu",
@@ -99,7 +99,7 @@ std::string ConnectionResponse::serialize_data_infos() const noexcept
     );
 }
 
-std::string ConnectionResponse::serialize_data() const noexcept
+std::string UserResponse::serialize_data() const noexcept
 {
     return BabelUtils::format(
         "Login: %s | Password: %s",
@@ -107,12 +107,12 @@ std::string ConnectionResponse::serialize_data() const noexcept
     );
 }
 
-const std::string &ConnectionResponse::getDescription() const noexcept
+const std::string &UserResponse::getDescription() const noexcept
 {
     return _description;
 }
 
-ConnectionResponse::ConnectionResponse(const std::string &login, const std::string &password)
+UserResponse::UserResponse(const std::string &login, const std::string &password)
     : AResponse()
 {
     _header._responseType = Connection;

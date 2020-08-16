@@ -83,7 +83,7 @@ set(
         ${COMMON_DIR}/Network/Sockets/AsioSocket
 
         ${COMMON_DIR}/Network/Protocol/AResponse
-        ${COMMON_DIR}/Network/Protocol/Connection
+        ${COMMON_DIR}/Network/Protocol/UserResponse
 )
 
 set(
@@ -97,7 +97,7 @@ set(
         ${COMMON_DIR}/Network/Sockets/AsioSocket/AsioClientSocket.cpp
 
         ${COMMON_DIR}/Network/Protocol/AResponse/AResponse.cpp
-        ${COMMON_DIR}/Network/Protocol/Connection/ConnectionResponse.cpp
+        ${COMMON_DIR}/Network/Protocol/UserResponse/UserResponse.cpp
 
 )
 

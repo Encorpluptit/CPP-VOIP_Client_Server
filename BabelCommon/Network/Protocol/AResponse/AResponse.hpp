@@ -19,11 +19,6 @@ namespace BabelNetwork {
         /* <- Class Enum -> */
     public:
         enum ResponseCode {
-            ConnectionOk = 100,
-            LoginOk = 210,
-            RequestLogin = 211,
-            AccountCreated = 220,
-            AccountDeleted = 230,
             UnknownError = 1000
         };
 
@@ -32,7 +27,6 @@ namespace BabelNetwork {
         enum ResponseType {
             UnknownType,
             Connection,
-
         };
 
         /* <- Class Structure -> */
@@ -111,11 +105,6 @@ namespace BabelNetwork {
         /* <- Attributes -> */
     protected:
         ResponseHeader _header{};
-//        ResponseHeader _header = {
-//            AResponse::ResponseCode::UnknownError,
-//            UnknownType,
-//            0
-//        };
     };
 
     /* <- Operators -> */

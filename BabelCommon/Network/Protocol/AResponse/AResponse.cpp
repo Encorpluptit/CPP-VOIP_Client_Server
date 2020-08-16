@@ -7,7 +7,7 @@
 
 #include "StringFormat.tpp"
 #include "AResponse.hpp"
-#include "ConnectionResponse.hpp"
+#include "UserResponse.hpp"
 
 using namespace BabelNetwork;
 
@@ -29,7 +29,7 @@ std::shared_ptr<AResponse> AResponse::getResponse(const char *headerBuffer)
 //    //Todo Switch case for returning good ptr
     switch (response._responseType) {
         case Connection:
-            return std::shared_ptr<AResponse>(new ConnectionResponse(response));
+            return std::shared_ptr<AResponse>(new UserResponse(response));
         default:
             return nullptr;
     }
