@@ -15,12 +15,12 @@ func main() {
 		fmt.Println("Please provide an address and a port number!")
 		return
 	}
-	if logger, err, loggerClosure := BabelUtils.NewLogger(); err == nil {
+	serv, serverCloser := Server.NewServer(arguments[1], arguments[2])
+	if logger, err, loggerCloser := BabelUtils.NewLogger(BabelUtils.ServerLog); err == nil {
 		log.SetOutput(logger)
-		defer loggerClosure()
+		defer loggerCloser()
 	}
-	serv, closure := Server.NewServer(arguments[1], arguments[2])
-	defer closure()
+	defer serverCloser()
 	if err := serv.Start(); err != nil {
 		log.Fatal("Error in main() from Server.Core.Start()", err)
 	}

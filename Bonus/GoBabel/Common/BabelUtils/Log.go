@@ -19,6 +19,8 @@ const (
 	EqualLine    = "====="
 	DashLine     = "-----"
 	LogDirectory = "GoLogs"
+	ClientLog    = "ClientLog"
+	ServerLog    = "ServerLog"
 )
 
 type Logger struct {
@@ -37,12 +39,13 @@ func createDirectories() error {
 	return os.Mkdir(LogDirectory, 0700)
 }
 
-func NewLogger() (*Logger, error, func()) {
+func NewLogger(LogType string) (*Logger, error, func()) {
 	if err := createDirectories(); err != nil {
 		return nil, err, nil
 	}
 	logOutput := log.Writer()
-	file, err := os.Create(LogDirectory + "/" + getTimeStamp())
+	fileName := fmt.Sprintf("%s/%s-%s", LogDirectory, getTimeStamp(), LogType)
+	file, err := os.Create(fileName)
 	if err != nil {
 		log.Println("New Logger failed from os.Open", err)
 		return nil, err, nil

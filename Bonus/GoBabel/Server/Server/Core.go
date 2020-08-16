@@ -85,7 +85,6 @@ func (c *Core) handleClient(client *BabelNetwork.Client) {
 		if temp == "STOP" {
 			break
 		}
-
 		result := strconv.Itoa(5) + "\n"
 		_, err = client.Conn.Write([]byte(result))
 		if err != nil {
@@ -94,4 +93,5 @@ func (c *Core) handleClient(client *BabelNetwork.Client) {
 		}
 	}
 	client.Close()
+	// TODO: Remove Client from List
 }
