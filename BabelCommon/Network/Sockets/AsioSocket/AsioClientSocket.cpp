@@ -29,7 +29,7 @@ AsioClientSocket::AsioClientSocket(
 
 AsioClientSocket::~AsioClientSocket()
 {
-//    _socket.close();
+    stop();
     if (_thread)
         _thread->stop();
 }
