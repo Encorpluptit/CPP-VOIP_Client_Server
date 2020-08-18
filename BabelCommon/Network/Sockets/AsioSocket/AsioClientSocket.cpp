@@ -7,7 +7,7 @@
 
 #include <iostream>
 #include "AsioClientSocket.hpp"
-#include "NetworkError.hpp"
+#include "ClientError.hpp"
 #include "Debug.hpp"
 
 using namespace BabelNetwork;
@@ -29,14 +29,14 @@ AsioClientSocket::AsioClientSocket(
 
 AsioClientSocket::~AsioClientSocket()
 {
-    _socket.close();
+//    _socket.close();
     if (_thread)
         _thread->stop();
 }
 
 void AsioClientSocket::start()
 {
-    std::cout << "START SESSION" << std::endl;
+    dbg("%s", "START SESSION")
     _logger.logThis("START SESSION");
     read_header();
 }
@@ -45,7 +45,7 @@ bool AsioClientSocket::sendResponse(const BabelNetwork::AResponse &response)
 {
     bool write_in_progress = !_write_queue.empty();
 
-    _logger.logThis(response, "Starting to deliver response :");
+    _logger.logThis(response, "Queue response :");
     _write_queue.push(response.get_shared_from_this());
     boost::asio::post(
         _context,
@@ -56,7 +56,7 @@ bool AsioClientSocket::sendResponse(const BabelNetwork::AResponse &response)
 
 void AsioClientSocket::connect()
 {
-    _logger.logThis("Trying to connect");
+    _logger.logThis(_networkInfos, "Trying to connect");
     ip::tcp::resolver resolver(_context);
     _endpoints = resolver.resolve(_networkInfos.getIp(), _networkInfos.getPortStr());
 
@@ -65,22 +65,13 @@ void AsioClientSocket::connect()
         _endpoints,
         boost::bind(&AsioClientSocket::handle_connect, shared_from_this(), boost::asio::placeholders::error)
     );
-//    _context.run();
 }
 
 void AsioClientSocket::handle_connect(const boost::system::error_code &error)
 {
     if (!error) {
         setReady();
-        auto s = BabelUtils::format(
-            "Local connexion from %s with port %u to %s with port %u",
-            _socket.local_endpoint().address().to_string().c_str(),
-            _socket.local_endpoint().port(),
-            _socket.remote_endpoint().address().to_string().c_str(),
-            _socket.remote_endpoint().port()
-        );
-        _logger.logThis(s);
-        dbg("%s", s.c_str())
+        _logger.logThis(describe());
         read_header();
     } else {
         _logger.logThis("Socket Cannot connect");
@@ -120,19 +111,20 @@ void AsioClientSocket::read_data_infos(const boost::system::error_code &error)
             boost::bind(&AsioClientSocket::read_data, shared_from_this(), boost::asio::placeholders::error)
         );
     } else {
-//        if (getHandler() == SocketHandler::Client) {
-        if (error == boost::asio::error::eof) {
-            _logger.logThis("Connection closed by server (" + error.message() + ")");
+        if (getHandler() == SocketHandler::Client) {
+            if (error == boost::asio::error::eof) {
+                _logger.logThis("Connection closed by server (" + error.message() + ")");
+            }
+            stop();
             _context.stop();
-            throw BabelErrors::NetworkError(error.message());
+            setNotReady();
+            throw BabelErrors::ClientError(error.message(), *this);
         } else {
-            _logger.logThis("ERROR IN HANDLE READ DATA INFOS (Client Stopped)" + error.message());
-            throw BabelErrors::NetworkError(error.message());
+            // TODO: Destroy properly client in Listener
+            auto msg = "ERROR IN HANDLE READ DATA INFOS (Client Stopped) :" + error.message() + + "\n" + describe();
+            _logger.logThis(msg);
+            throw BabelErrors::ClientError(msg, *this);
         }
-//        } else {
-//            _logger.logThis("ERROR IN HANDLE READ DATA INFOS BY SERVER - Client disconnected : " + error.message());
-//            std::cerr << "Throw Exception ?" << std::endl;
-//        }
     }
 }
 
@@ -210,4 +202,14 @@ void AsioClientSocket::handle_write(const boost::system::error_code &error)
         _logger.logThis("Error in handle write : " + error.message());
 //        std::cerr << "handle write NOT OK" << std::endl;
     }
+}
+
+std::string AsioClientSocket::describe() {
+        return BabelUtils::format(
+"Local connexion from %s with port %u to %s with port %u",
+_socket.local_endpoint().address().to_string().c_str(),
+    _socket.local_endpoint().port(),
+    _socket.remote_endpoint().address().to_string().c_str(),
+    _socket.remote_endpoint().port()
+);
 }

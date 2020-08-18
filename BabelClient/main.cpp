@@ -22,13 +22,16 @@ static void socket_testing(char **av)
             context,
             BabelNetwork::AsioClientSocket::SocketHandler::Client
     );
-
     client->connect();
     client->setThread(boost::make_shared<BabelUtils::BoostThread>(
         [&client] {
-            std::cout << "CLIENT THREAD LAUNCHED" << std::endl;
-            client->getContext().run();
-            std::cout << "CLIENT THREAD FINISHED" << std::endl;
+            try {
+                std::cout << "CLIENT THREAD LAUNCHED" << std::endl;
+                client->getContext().run();
+                std::cout << "CLIENT THREAD FINISHED" << std::endl;
+            } catch (const std::exception &e) {
+                std::cerr << e.what() << std::endl;
+            }
         })
     );
 
@@ -40,8 +43,7 @@ static void socket_testing(char **av)
 
     std::string data;
     while (std::getline(std::cin, data)) {
-        std::cout << data << std::endl;
-        if (data == "exit") {
+        if (data == "exit" || !client->isReady()) {
             std::cout << "exit loop" << std::endl;
             break;
         }
@@ -63,7 +65,7 @@ int main(int ac, char **av)
     try {
         socket_testing(av);
     } catch (const BabelErrors::BabelError &e) {
-        std::cerr << e.what() << std::endl;
+        std::cerr << "IN CLIENT MAIN" << e.what() << std::endl;
     }
     return 0;
 }

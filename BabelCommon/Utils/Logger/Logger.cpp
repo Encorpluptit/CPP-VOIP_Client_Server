@@ -112,3 +112,10 @@ void Logger::logThis(const BabelNetwork::AResponse &response, const std::string 
     else
         _logFile << "[ " << _description << " ] - " << _timeBuffer << " ==> " << msg + "\n" << response << "\n";
 }
+
+void Logger::logThis(const BabelNetwork::NetworkInfos &infos, const std::string &msg) {
+    if (!isOk())
+        return;
+    getTime();
+    _logFile << "[ " << _description << " ] - " << _timeBuffer << " ==> " << msg + "\n" << infos << "\n";
+}

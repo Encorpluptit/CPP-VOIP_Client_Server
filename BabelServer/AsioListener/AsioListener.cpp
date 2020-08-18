@@ -8,6 +8,7 @@
 #include <iostream>
 #include "AsioListener.hpp"
 #include "Debug.hpp"
+#include "ClientError.hpp"
 
 using namespace BabelServer;
 
@@ -53,8 +54,15 @@ void AsioListener::start()
 
 void AsioListener::launch_listener()
 {
-    accept();
-    startContext();
+    while (isReady()) {
+        try {
+            accept();
+            startContext();
+        } catch (const BabelErrors::ClientError &e) {
+            std::cerr << "ERROR IN HANDLE READ DATA INFOS (Client Stopped) " << e.what() << std::endl;
+            e.getClient().stop();
+        }
+    }
 }
 
 void AsioListener::accept()

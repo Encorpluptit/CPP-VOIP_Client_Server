@@ -11,6 +11,7 @@
 #include <fstream>
 #include <filesystem>
 #include "LoggerError.hpp"
+#include "NetworkInfos.hpp"
 #include "StringFormat.tpp"
 #include "AResponse.hpp"
 
@@ -46,6 +47,8 @@ namespace BabelUtils {
         void logThis(const std::string &msg);
 
         void logThis(const BabelNetwork::AResponse &response, const std::string &msg = "");
+
+        void logThis(const BabelNetwork::NetworkInfos &infos, const std::string &msg = "");
 
         /* <- Private Methods -> */
     private:

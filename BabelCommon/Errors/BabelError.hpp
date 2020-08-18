@@ -23,7 +23,7 @@ namespace BabelErrors {
     public:
         [[nodiscard]] char const *what() const noexcept override { return _msg.c_str(); };
 
-    private:
+    protected:
         std::string _msg;
     };
 }

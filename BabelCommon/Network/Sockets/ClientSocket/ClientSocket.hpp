@@ -24,9 +24,15 @@ namespace BabelNetwork {
 
         ~ClientSocket() override = default;
 
+        /* <- Operators -> */
+    public:
+//        friend std::ostream &operator<<(std::ostream &os, const ClientSocket &client) = 0;
+
         /* <- Public Methods -> */
     public:
         [[nodiscard]] virtual bool sendResponse(const AResponse &response) = 0;
+
+        [[nodiscard]] virtual std::string describe() = 0;
 
         /* <- Attributes -> */
     protected:
@@ -35,6 +41,8 @@ namespace BabelNetwork {
         std::queue<std::shared_ptr<AResponse>> _read_queue;
         std::queue<std::shared_ptr<AResponse>> _write_queue;
     };
+    /* <- Operators -> */
+//    std::ostream &operator<<(std::ostream &os, const AResponse &response);
 
 }
 

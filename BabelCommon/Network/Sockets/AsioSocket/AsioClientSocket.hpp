@@ -42,12 +42,19 @@ namespace BabelNetwork {
 
         void start() final;
 
-        void stop() final { _context.stop(); _thread->stop();};
+        void stop() final {
+            if (getHandler() == SocketHandler::Client) {
+                _context.stop();
+            }
+            _socket.close();
+            setNotReady();
+        };
 
         bool sendResponse(const BabelNetwork::AResponse &response) final;
 
         void connect();
 
+        [[nodiscard]] std::string describe() final;
 
         /* <- Private Methods -> */
     private:
@@ -82,6 +89,7 @@ namespace BabelNetwork {
         ip::tcp::resolver::results_type _endpoints;
         SocketHandler _handler;
     };
+
 }
 
 #endif /* CPP_BABEL_2020_ASIOCLIENTSOCKET_HPP */

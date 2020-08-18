@@ -15,7 +15,7 @@ namespace BabelErrors {
         explicit ClientError(std::string const &msg, BabelNetwork::ClientSocket &client) : NetworkError(msg), _client(client) {}
         /* <- Method -> */
     public:
-        BabelNetwork::ClientSocket &getClient() const noexcept;
+        [[nodiscard]] BabelNetwork::ClientSocket &getClient() const noexcept {return _client;};
     protected:
         BabelNetwork::ClientSocket &_client;
     };
