@@ -111,20 +111,7 @@ void AsioClientSocket::read_data_infos(const boost::system::error_code &error)
             boost::bind(&AsioClientSocket::read_data, shared_from_this(), boost::asio::placeholders::error)
         );
     } else {
-        if (getHandler() == SocketHandler::Client) {
-            if (error == boost::asio::error::eof) {
-                _logger.logThis("Connection closed by server (" + error.message() + ")");
-            }
-            stop();
-            _context.stop();
-            setNotReady();
-            throw BabelErrors::ClientError(error.message(), *this);
-        } else {
-            // TODO: Destroy properly client in Listener
-            auto msg = "ERROR IN HANDLE READ DATA INFOS (Client Stopped) :" + error.message() + + "\n" + describe();
-            _logger.logThis(msg);
-            throw BabelErrors::ClientError(msg, *this);
-        }
+        handle_error("{ read_data_infos } : ", error);
     }
 }
 
@@ -141,15 +128,7 @@ void AsioClientSocket::read_data(const boost::system::error_code &error)
             boost::bind(&AsioClientSocket::queue_read_response, shared_from_this(), boost::asio::placeholders::error)
         );
     } else {
-        std::cerr << "ERROR IN HANDLE READ DATA : " + error.message() << std::endl;
-        if (getHandler() == SocketHandler::Client) {
-            _logger.logThis("ERROR IN HANDLE READ DATA (Client Stopped)" + error.message());
-            _context.stop();
-//            stop();
-        } else {
-            _logger.logThis("ERROR IN HANDLE READ DATA BY SERVER - Client disconnected : " + error.message());
-            std::cerr << "Throw Exception ?" << std::endl;
-        }
+        handle_error("{ queue_read_response } : ", error);
     }
 }
 
@@ -161,14 +140,7 @@ void AsioClientSocket::queue_read_response(const boost::system::error_code &erro
         _logger.logThis(*_read_msg);
         read_header();
     } else {
-        _logger.logThis("ERROR IN FINISH READ BODY" + error.message());
-        std::cerr << "ERROR IN FINISH READ BODY" << std::endl;
-        if (getHandler() == SocketHandler::Client) {
-            _context.stop();
-//            stop();
-        } else {
-            std::cerr << "Throw Exception ?" << std::endl;
-        }
+        handle_error("{ read_data } : ", error);
     }
 }
 
@@ -186,12 +158,9 @@ void AsioClientSocket::do_write(bool write_in_progress)
 
 void AsioClientSocket::handle_write(const boost::system::error_code &error)
 {
-//    std::cout << "handle write" << std::endl;
     if (!error) {
-//        std::cout << "handle write OK" << std::endl;
         _write_queue.pop();
         if (!_write_queue.empty() && _write_queue.front()->encode()) {
-//            _logger.logThis(*_write_queue.front(), "2 or more messages to send  - Sending Response = ");
             boost::asio::async_write(
                 _socket,
                 boost::asio::buffer(_write_queue.front()->getDataByte(), _write_queue.front()->getResponseSize()),
@@ -199,17 +168,37 @@ void AsioClientSocket::handle_write(const boost::system::error_code &error)
             );
         }
     } else {
+        handle_error("{ handle write } : ", error);
         _logger.logThis("Error in handle write : " + error.message());
-//        std::cerr << "handle write NOT OK" << std::endl;
     }
 }
 
-std::string AsioClientSocket::describe() {
-        return BabelUtils::format(
-"Local connexion from %s with port %u to %s with port %u",
-_socket.local_endpoint().address().to_string().c_str(),
-    _socket.local_endpoint().port(),
-    _socket.remote_endpoint().address().to_string().c_str(),
-    _socket.remote_endpoint().port()
-);
+std::string AsioClientSocket::describe()
+{
+    return BabelUtils::format(
+        "Local connexion from %s with port %u to %s with port %u",
+        _socket.local_endpoint().address().to_string().c_str(),
+        _socket.local_endpoint().port(),
+        _socket.remote_endpoint().address().to_string().c_str(),
+        _socket.remote_endpoint().port()
+    );
+}
+
+void AsioClientSocket::handle_error(const std::string &msg, const boost::system::error_code &error)
+{
+    if (getHandler() == SocketHandler::Client) {
+        auto errorMsg = msg + error.message();
+        if (error == boost::asio::error::eof) {
+            _logger.logThis(errorMsg + " ==> Connection closed by server.");
+        } else {
+            _logger.logThis("Error : " + errorMsg);
+        }
+        stop();
+        throw BabelErrors::ClientError(errorMsg, *this);
+    } else {
+        // TODO: Destroy properly client in Listener and remove from queue
+        auto errorMsg = msg + " (Client Connection Stopped) : " + error.message() + +"\n" + describe();
+        _logger.logThis(errorMsg);
+        throw BabelErrors::ClientError(errorMsg, *this);
+    }
 }

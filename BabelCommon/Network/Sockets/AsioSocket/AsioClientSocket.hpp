@@ -73,6 +73,8 @@ namespace BabelNetwork {
 
         void handle_write(const boost::system::error_code &error);
 
+        void handle_error(const std::string &msg, const boost::system::error_code &error);
+
 
         /* <- Getters / Setters -> */
     public:
