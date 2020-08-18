@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"os"
 	"strings"
 )
 
@@ -40,18 +41,21 @@ func (c *Core) Close() {
 		log.Println("Error in Core.Close() from net.conn.Close()", err)
 	}
 	close(c.Input)
+	os.Exit(0)
 }
 
 func (c *Core) Start() {
 	c.Run = true
 	fmt.Printf("Serving %s\n", c.Conn.RemoteAddr().String())
+}
+
+func (c *Core) Serve() {
 	for c.Run {
 		input := <-c.Input
 		log.Println("User Input:", input)
 		_, err := c.Conn.Write([]byte(input))
 		if err != nil {
 			log.Println("Error in writing to Connection", err)
-			break
 		}
 		netData, err := bufio.NewReader(c.Conn).ReadString('\n')
 		if !c.Run {
@@ -69,4 +73,5 @@ func (c *Core) Start() {
 		}
 		log.Println("Message Received", temp)
 	}
+	c.Close()
 }

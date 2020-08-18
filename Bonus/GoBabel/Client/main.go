@@ -12,12 +12,15 @@ import (
 func main() {
 	arguments := os.Args
 	client, clientCloser := Client.NewClient(arguments[1], arguments[2])
+	client.Start()
+	defer clientCloser()
+
 	if logger, err, loggerCloser := BabelUtils.NewLogger(BabelUtils.ServerLog); err == nil {
 		log.SetOutput(logger)
 		defer loggerCloser()
 	}
-	defer clientCloser()
-	go client.Start()
+
+	go client.Serve()
 
 	reader := bufio.NewReader(os.Stdin)
 	for client.Run {
