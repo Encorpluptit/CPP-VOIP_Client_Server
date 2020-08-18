@@ -2,12 +2,10 @@ package Client
 
 import (
 	BabelNetwork "BabelGo/Common/Network"
-	"bufio"
 	"fmt"
 	"log"
 	"net"
 	"os"
-	"strings"
 )
 
 type Core struct {
@@ -22,9 +20,9 @@ func NewClient(addr, port string) (*Core, func()) {
 		log.Fatal(err)
 	}
 	client := &Core{
-		BabelNetwork.NewClient(conn),
-		true,
-		make(chan string),
+		Client: BabelNetwork.NewClient(conn),
+		Run:    true,
+		Input:  make(chan string),
 	}
 	return client, client.Close
 }
@@ -50,28 +48,56 @@ func (c *Core) Start() {
 }
 
 func (c *Core) Serve() {
+	defer c.Close()
 	for c.Run {
 		input := <-c.Input
 		log.Println("User Input:", input)
-		_, err := c.Conn.Write([]byte(input))
-		if err != nil {
-			log.Println("Error in writing to Connection", err)
+		rq := BabelNetwork.NewRequest(c.Conn)
+		rq.Header = BabelNetwork.RequestHeader{
+			RqType:        BabelNetwork.User,
+			DataInfosSize: 10,
+			Code:          BabelNetwork.RqLogin,
 		}
-		netData, err := bufio.NewReader(c.Conn).ReadString('\n')
-		if !c.Run {
-			log.Println("lol")
-			break
+
+		for i := 0; i < 1000000; i++ {
+			if rq.Header.Code == BabelNetwork.RqLogin {
+				rq.Header.Code = BabelNetwork.RqLogout
+			} else {
+				rq.Header.Code = BabelNetwork.RqLogin
+			}
+			log.Println("Sending Header :", rq.Header)
+			if err := rq.Send(); err != nil {
+				log.Println(err)
+				return
+			}
 		}
-		if err != nil {
-			log.Println("Error in Handle Connection From read", err)
-			break
-		}
-		temp := strings.TrimSpace(netData)
-		if temp == "STOP" {
-			log.Println("lol")
-			break
-		}
-		log.Println("Message Received", temp)
+		//if err := rq.Receive(); err != nil {
+		//	break
+		//}
+		//log.Println("Header Received:", rq.Header)
+
+		//if err := rq.Receive(); err != nil {
+		//	break
+		//}
+		//_, err := c.Conn.Write([]byte(input))
+		//if err != nil {
+		//	log.Println("Error in writing to Connection", err)
+		//}
+		//netData, err := bufio.NewReader(c.Conn).ReadString('\n')
+		////netData, err := bufio.NewReader(c.Conn).ReadString('\n')
+		//if !c.Run {
+		//	log.Println("lol")
+		//	break
+		//}
+		//if err != nil {
+		//	log.Println("Error in Handle Connection From read", err)
+		//	break
+		//}
+		//temp := strings.TrimSpace(netData)
+		//if temp == "STOP" {
+		//	log.Println("lol")
+		//	break
+		//}
+		//log.Println("Message Received", temp)
 	}
-	c.Close()
 }

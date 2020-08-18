@@ -2,13 +2,12 @@ package Server
 
 import (
 	"BabelGo/Common/Network"
-	"bufio"
+	"errors"
 	"fmt"
 	"log"
 	"os"
 	"os/signal"
-	"strconv"
-	"strings"
+	"sync"
 	"syscall"
 )
 
@@ -16,6 +15,7 @@ type Core struct {
 	Signals      chan os.Signal
 	Run          bool
 	ListenerCore *Listener
+	Mutex        *sync.Mutex
 }
 
 var BabelServer *Core = nil
@@ -24,6 +24,7 @@ func NewServer(address, port string) (*Core, func()) {
 	BabelServer = &Core{
 		Run:          false,
 		ListenerCore: NewListener(address, port),
+		Mutex:        &sync.Mutex{},
 	}
 	return BabelServer, BabelServer.Close
 }
@@ -55,7 +56,7 @@ func (c *Core) Start() error {
 	c.initSignalChan()
 	c.Run = true
 	for c.Run {
-		conn, err := c.ListenerCore.NetListener.Accept()
+		conn, err := c.ListenerCore.StartAccept()
 		if !c.Run {
 			break
 		}
@@ -71,27 +72,37 @@ func (c *Core) Start() error {
 
 func (c *Core) handleClient(client *BabelNetwork.Client) {
 	fmt.Printf("Serving %s\n", client.Conn.RemoteAddr().String())
+	nb := 0
+	rq := BabelNetwork.NewRequest(client.Conn)
 	for c.Run {
-		netData, err := bufio.NewReader(client.Conn).ReadString('\n')
-		if !c.Run {
+		if err := rq.Receive(); err != nil {
 			break
 		}
-		if err != nil {
-			log.Println("Error in Handle Connection From read", err)
-			break
+		log.Println("Header Received:", rq.Header)
+		if err := c.handleRequest(client, rq); err != nil {
+			log.Println(err)
 		}
-
-		temp := strings.TrimSpace(netData)
-		if temp == "STOP" {
-			break
-		}
-		result := strconv.Itoa(5) + "\n"
-		_, err = client.Conn.Write([]byte(result))
-		if err != nil {
-			log.Println("Error in writing to Connection", err)
-			break
-		}
+		nb += 1
+		log.Println("Request received:", nb)
 	}
 	client.Close()
+	c.ListenerCore.RemoveClient(client)
 	// TODO: Remove Client from List
+}
+
+var RqTypeManager = map[uint16]func(*Core, *BabelNetwork.Client, *BabelNetwork.Request) error{
+	BabelNetwork.User: ManageUser,
+}
+
+func (c *Core) handleRequest(client *BabelNetwork.Client, request *BabelNetwork.Request) error {
+	//c.Mutex.Lock()
+	fn, ok := RqTypeManager[request.GetType()]
+	//c.Mutex.Unlock()
+	if !ok {
+		return errors.New("function for type not found")
+	}
+	if err := fn(c, client, request); err != nil {
+		return err
+	}
+	return nil
 }

@@ -26,6 +26,10 @@ func NewListener(address, port string) *Listener {
 	}
 }
 
+func (l *Listener) StartAccept() (net.Conn, error) {
+	return l.NetListener.Accept()
+}
+
 func (l *Listener) AcceptClient(conn net.Conn) *BabelNetwork.Client {
 	newClient := BabelNetwork.NewClient(conn)
 	l.Clients = append(l.Clients, newClient)
@@ -33,10 +37,22 @@ func (l *Listener) AcceptClient(conn net.Conn) *BabelNetwork.Client {
 }
 
 func (l *Listener) Close() {
-	for _, c := range l.Clients {
-		c.Close()
-	}
+	//for _, c := range l.Clients {
+	//	c.Close()
+	//}
 	if err := l.NetListener.Close(); err != nil {
 		log.Println("Error in Listener.Close() from net.NetListener Close():", err)
+	}
+}
+
+func (l *Listener) RemoveClient(target *BabelNetwork.Client) {
+	for idx, client := range l.Clients {
+		if client == target {
+			lgth := len(l.Clients)
+			l.Clients[idx] = l.Clients[lgth-1]
+			l.Clients = l.Clients[:lgth-1]
+			log.Println("Removing Client", *client)
+			return
+		}
 	}
 }

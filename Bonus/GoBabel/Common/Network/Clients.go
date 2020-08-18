@@ -29,8 +29,8 @@ func (c Client) isLogged() bool {
 	return c.User.IsLogged()
 }
 
-func (c Client) Login() {
-	c.User.Logout()
+func (c Client) Login(request Request) {
+	//c.User.Login()
 }
 
 func (c Client) Logout() {
