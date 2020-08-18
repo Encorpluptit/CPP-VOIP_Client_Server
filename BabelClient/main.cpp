@@ -46,7 +46,6 @@ static void socket_testing(char **av)
             break;
         }
         BabelNetwork::UserResponse test("damien", "abcd1234");
-        test.setOk();
         std::cout << "sending response" << test << std::endl;
         client->sendResponse(test);
         for (int i = 0; i < 100; ++i)

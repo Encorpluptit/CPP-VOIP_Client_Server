@@ -26,7 +26,7 @@ namespace BabelNetwork {
     public:
         enum ResponseType {
             UnknownType,
-            Connection,
+            User,
         };
 
         /* <- Class Structure -> */
@@ -53,12 +53,12 @@ namespace BabelNetwork {
     public:
         friend std::ostream &operator<<(std::ostream &os, const AResponse &response);
 
-        /* <- Methods -> */
+        /* <- Static Methods -> */
     public:
         [[nodiscard]] static std::shared_ptr<AResponse> getResponse(const char *headerBuffer);
 
-        [[nodiscard]] virtual std::shared_ptr<AResponse> get_shared_from_this() const = 0;
-
+        /* <- Encode / Decode Methods -> */
+    public:
         [[nodiscard]] virtual bool encode() noexcept = 0;
 
         [[nodiscard]] virtual bool decode_header() noexcept = 0;
@@ -67,30 +67,30 @@ namespace BabelNetwork {
 
         [[nodiscard]] virtual bool decode_data() noexcept = 0;
 
-        [[nodiscard]] std::string serialize() const noexcept;
 
+        /* <- Request related Methods -> */
+    public:
         [[nodiscard]] virtual bool isOk() noexcept = 0;
 
-        virtual void setOk() noexcept = 0;
+        [[nodiscard]] std::string serialize() const noexcept;
 
         [[nodiscard]] virtual std::string serialize_data_infos() const noexcept = 0;
 
         [[nodiscard]] virtual std::string serialize_data() const noexcept = 0;
 
-        /* <- Getters / Setters -> */
+        /* <- Get Sizes Methods -> */
     public:
-
-        [[nodiscard]] uint16_t getCode() const noexcept;
-
-        [[nodiscard]] size_t getDataInfosSize() const noexcept;
+        [[nodiscard]] virtual size_t getResponseSize() const noexcept = 0;
 
         [[nodiscard]] virtual size_t getDataSize() const noexcept = 0;
 
-        [[nodiscard]] virtual size_t getResponseSize() const noexcept = 0;
+        /* <- Getters / Setters -> */
+    public:
+        [[nodiscard]] uint16_t getCode() const noexcept;
 
-        [[nodiscard]] virtual size_t getMaxResponseSize() const noexcept = 0;
+        [[nodiscard]] virtual std::shared_ptr<AResponse> get_shared_from_this() const = 0;
 
-        [[nodiscard]] constexpr static size_t getHeaderSize() { return HeaderSize; };
+        [[nodiscard]] size_t getDataInfosSize() const noexcept;
 
         [[nodiscard]] ResponseType getResponseType() const;
 
@@ -101,6 +101,12 @@ namespace BabelNetwork {
         [[nodiscard]] virtual char *getDataByte() noexcept = 0;
 
         [[nodiscard]] virtual const std::string &getDescription() const noexcept = 0;
+
+//        [[nodiscard]] virtual size_t getMaxResponseSize() const noexcept = 0;
+//
+//        [[nodiscard]] constexpr static size_t getHeaderSize() { return HeaderSize; };
+
+
 
         /* <- Attributes -> */
     protected:

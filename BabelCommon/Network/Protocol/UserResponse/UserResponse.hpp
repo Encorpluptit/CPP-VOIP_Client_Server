@@ -52,16 +52,8 @@ namespace BabelNetwork {
     public:
         UserResponse() : AResponse()
         {
-            _header._responseType = Connection;
+            _header._responseType = User;
             _header._dataInfosSize = DataInfosSize;
-
-            //TODO: remove
-            char lol[] = "lol";
-            char xd[] = "xd";
-            strcat(_data.login, lol);
-            strcat(_data.password, xd);
-            _dataInfos._loginSize = sizeof(lol);
-            _dataInfos._passwordSize = sizeof(xd);
         };
 
         explicit UserResponse(const ResponseHeader &headerResponse);
@@ -70,12 +62,8 @@ namespace BabelNetwork {
 
         ~UserResponse() = default;
 
-        /* <- Methods -> */
+        /* <- Encode / Decode Methods -> */
     public:
-        [[nodiscard]] bool isOk() noexcept final;
-
-        void setOk() noexcept final;
-
         [[nodiscard]] bool encode() noexcept final;
 
         [[nodiscard]] bool decode_header() noexcept final;
@@ -84,19 +72,19 @@ namespace BabelNetwork {
 
         [[nodiscard]] bool decode_data() noexcept final;
 
-        [[nodiscard]] char *getDataByteDataInfos() const noexcept final;
-
-        [[nodiscard]] char *getDataByteBody() const noexcept final;
-
-        [[nodiscard]] std::shared_ptr<AResponse> get_shared_from_this() const noexcept final;
-
-        [[nodiscard]] char *getDataByte() noexcept final;
-
+        /* <- Get Sizes Methods -> */
+    public:
         [[nodiscard]] size_t getResponseSize() const noexcept final;
 
-        [[nodiscard]] size_t getMaxResponseSize() const noexcept final;
-
         [[nodiscard]] size_t getDataSize() const noexcept final;
+
+//        [[nodiscard]] size_t getMaxResponseSize() const noexcept final {
+//            return MaxResponseSize;
+//        };
+
+        /* <- Request related Methods -> */
+    public:
+        [[nodiscard]] bool isOk() noexcept final;
 
         [[nodiscard]] std::string serialize_data() const noexcept final;
 
@@ -104,14 +92,28 @@ namespace BabelNetwork {
 
         /* <- Getters / Setters -> */
     public:
-        [[nodiscard]] const std::string &getDescription() const noexcept final;
+        [[nodiscard]] std::shared_ptr<AResponse> get_shared_from_this() const noexcept final;
+
+        [[nodiscard]] char *getDataByte() noexcept final;
+
+        [[nodiscard]] char *getDataByteDataInfos() const noexcept final;
+
+        [[nodiscard]] char *getDataByteBody() const noexcept final;
+
+        [[nodiscard]] const std::string &getDescription() const noexcept final {
+            return _description;
+        };
+
+        [[nodiscard]] bool setLogin(const std::string &login) noexcept;
+
+        [[nodiscard]] bool setPassword(const std::string &password) noexcept;
 
         [[nodiscard]] const char *getLogin() const noexcept { return _data.login; };
 
         [[nodiscard]] const char *getPassword() const noexcept { return _data.password; };
 
     private:
-        const std::string _description = "Connection between server and client";
+        const std::string _description = "User Related Request";
         char _data_byte[MaxResponseSize] = {0};
         DataInfos _dataInfos{};
         Data _data{};

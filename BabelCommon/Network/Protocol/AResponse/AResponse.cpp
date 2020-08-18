@@ -13,22 +13,19 @@ using namespace BabelNetwork;
 
 AResponse::AResponse(const ResponseHeader &headerResponse)
     : _header(headerResponse)
-{
-}
+{}
 
 AResponse::AResponse(const AResponse &other) : AResponse(other._header)
-{
-}
+{}
 
 std::shared_ptr<AResponse> AResponse::getResponse(const char *headerBuffer)
 {
-//    ResponseHeader response(headerBuffer);
-
     ResponseHeader response{};
     memcpy(&response, headerBuffer, HeaderSize);
-//    //Todo Switch case for returning good ptr
+
+    //Todo Switch case for returning good ptr
     switch (response._responseType) {
-        case Connection:
+        case User:
             return std::shared_ptr<AResponse>(new UserResponse(response));
         default:
             return nullptr;

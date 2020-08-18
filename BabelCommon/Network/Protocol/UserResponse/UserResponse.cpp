@@ -12,34 +12,35 @@
 using namespace BabelNetwork;
 
 UserResponse::UserResponse(const ResponseHeader &headerResponse)
-    : AResponse(headerResponse)
+    : AResponse(headerResponse) {}
+
+UserResponse::UserResponse(const std::string &login, const std::string &password)
+    : AResponse()
 {
-//    _header._dataInfosSize = headerResponse._dataInfosSize;
+    _header._responseType = User;
+    _header._dataInfosSize = DataInfosSize;
+
+    // TODO: Throw different error
+    if (!setLogin(login) || !setPassword(password))
+        throw BabelErrors::NetworkError("login or password too long");
 }
 
-bool BabelNetwork::UserResponse::isOk() noexcept
+bool UserResponse::setLogin(const std::string &login) noexcept
 {
-    return _header._code == UserResponse::ResponseCode::ConnectionOk;
+    if (login.size() > MaxDataSize::Login)
+        return false;
+    strcat(_data.login, login.c_str());
+    _dataInfos._loginSize = login.size();
+    return true;
 }
 
-void BabelNetwork::UserResponse::setOk() noexcept
+bool UserResponse::setPassword(const std::string &password) noexcept
 {
-    _header._code = UserResponse::ResponseCode::ConnectionOk;
-}
-
-std::shared_ptr<AResponse> UserResponse::get_shared_from_this() const noexcept
-{
-    return std::make_shared<UserResponse>(*this);
-}
-
-char *UserResponse::getDataByteDataInfos() const noexcept
-{
-    return const_cast<char *>(_data_byte + HeaderSize);
-}
-
-char *UserResponse::getDataByteBody() const noexcept
-{
-    return const_cast<char *>(_data_byte + HeaderSize + DataInfosSize);
+    if (password.size() > MaxDataSize::Password)
+        return false;
+    strcat(_data.password, password.c_str());
+    _dataInfos._passwordSize = password.size();
+    return true;
 }
 
 bool UserResponse::encode() noexcept
@@ -70,19 +71,37 @@ bool UserResponse::decode_data() noexcept
     return true;
 }
 
+bool BabelNetwork::UserResponse::isOk() noexcept
+{
+    return _header._code == UserResponse::ResponseCode::ConnectionOk
+        || _header._code == UserResponse::ResponseCode::LoginOk
+        || _header._code == UserResponse::ResponseCode::AccountCreated
+        || _header._code == UserResponse::ResponseCode::AccountDeleted;
+}
+
+std::shared_ptr<AResponse> UserResponse::get_shared_from_this() const noexcept
+{
+    return std::make_shared<UserResponse>(*this);
+}
+
 char *UserResponse::getDataByte() noexcept
 {
     return _data_byte;
 }
 
+char *UserResponse::getDataByteDataInfos() const noexcept
+{
+    return const_cast<char *>(_data_byte + HeaderSize);
+}
+
+char *UserResponse::getDataByteBody() const noexcept
+{
+    return const_cast<char *>(_data_byte + HeaderSize + DataInfosSize);
+}
+
 size_t UserResponse::getResponseSize() const noexcept
 {
     return HeaderSize + DataInfosSize + getDataSize();
-}
-
-size_t UserResponse::getMaxResponseSize() const noexcept
-{
-    return MaxResponseSize;
 }
 
 size_t UserResponse::getDataSize() const noexcept
@@ -105,22 +124,3 @@ std::string UserResponse::serialize_data() const noexcept
         _data.login, _data.password
     );
 }
-
-const std::string &UserResponse::getDescription() const noexcept
-{
-    return _description;
-}
-
-UserResponse::UserResponse(const std::string &login, const std::string &password)
-    : AResponse()
-{
-    _header._responseType = Connection;
-    _header._dataInfosSize = DataInfosSize;
-    if (login.size() > MaxDataSize::Login || password.size() > MaxDataSize::Password)
-        throw BabelErrors::NetworkError("login or password too long");
-    strcat(_data.login, login.c_str());
-    strcat(_data.password, password.c_str());
-    _dataInfos._loginSize = login.size();
-    _dataInfos._passwordSize = password.size();
-}
-
