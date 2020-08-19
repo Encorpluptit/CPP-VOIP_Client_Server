@@ -8,7 +8,6 @@
 #include <iostream>
 #include <ctime>
 #include "Logger.hpp"
-#include "LoggerError.hpp"
 
 using namespace BabelUtils;
 
@@ -20,8 +19,6 @@ Logger::Logger(Logger::LogType type)
         std::filesystem::path tmpPath = createLogDirectories();
         createLogFile(tmpPath);
         _ok = true;
-    } catch (const LoggerError &e) {
-        std::cerr << e.what() << std::endl;
     } catch (const std::exception &e) {
         std::cerr << e.what() << std::endl;
     }

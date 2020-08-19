@@ -10,7 +10,6 @@
 
 #include <fstream>
 #include <filesystem>
-#include "LoggerError.hpp"
 #include "NetworkInfos.hpp"
 #include "StringFormat.tpp"
 #include "AResponse.hpp"

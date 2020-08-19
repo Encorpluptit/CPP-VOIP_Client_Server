@@ -89,7 +89,6 @@ set(
 set(
         COMMON_SOURCES
         ${COMMON_DIR}/Utils/Logger/Logger.cpp
-        ${COMMON_DIR}/Utils/Logger/LoggerError.cpp
 
         ${COMMON_DIR}/Network/NetworkInfos/NetworkInfos.cpp
 
