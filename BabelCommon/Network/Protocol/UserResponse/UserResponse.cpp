@@ -7,7 +7,7 @@
 
 #include "UserResponse.hpp"
 #include "StringFormat.tpp"
-#include "NetworkError.hpp"
+#include "ResponseError.hpp"
 
 using namespace BabelNetwork;
 
@@ -20,9 +20,8 @@ UserResponse::UserResponse(const std::string &login, const std::string &password
     _header._responseType = User;
     _header._dataInfosSize = DataInfosSize;
 
-    // TODO: Throw different error
     if (!setLogin(login) || !setPassword(password))
-        throw BabelErrors::NetworkError("login or password too long");
+        throw BabelErrors::UserResponse("login or password too long");
 }
 
 bool UserResponse::setLogin(const std::string &login) noexcept

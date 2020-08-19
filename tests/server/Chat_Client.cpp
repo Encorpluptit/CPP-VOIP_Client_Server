@@ -81,7 +81,6 @@ private:
     void handle_read_body(const boost::system::error_code &error)
     {
         if (!error) {
-            // TODO: Put parser here
             // Execute action here
             std::cout.write(read_msg_.body(), read_msg_.body_length());
             std::cout << "\n";
@@ -160,7 +159,6 @@ int main(int argc, char *argv[])
             using namespace std; // For strlen and memcpy.
             chat_message msg;
 
-            // TODO: Put parser here
             msg.body_length(strlen(line));
             memcpy(msg.body(), line, msg.body_length());
             msg.encode_header();
