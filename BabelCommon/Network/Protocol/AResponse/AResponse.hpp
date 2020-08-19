@@ -27,6 +27,9 @@ namespace BabelNetwork {
         enum ResponseType {
             UnknownType,
             User,
+            Call,
+            Friend,
+            Message
         };
 
         /* <- Class Structure -> */
