@@ -15,7 +15,7 @@ func main() {
 	client.Start()
 	defer clientCloser()
 
-	if logger, err, loggerCloser := BabelUtils.NewLogger(BabelUtils.ServerLog); err == nil {
+	if logger, err, loggerCloser := BabelUtils.NewLogger(BabelUtils.ClientLog); err == nil {
 		log.SetOutput(logger)
 		defer loggerCloser()
 	}

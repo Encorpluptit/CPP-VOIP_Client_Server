@@ -1,6 +1,7 @@
 package BabelUtils
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"log"
@@ -36,11 +37,23 @@ func getTimeStamp() string {
 }
 
 func createDirectories() error {
+	cur, err := os.Getwd()
+	if err != nil {
+		return err
+	}
+	logDir := cur + "/" + LogDirectory
+	if file, err := os.Stat(logDir); err == nil {
+		if file.IsDir() {
+			return nil
+		}
+		return errors.New(logDir + ": is not a dir")
+	}
 	return os.Mkdir(LogDirectory, 0700)
 }
 
 func NewLogger(LogType string) (*Logger, error, func()) {
 	if err := createDirectories(); err != nil {
+		log.Println("New Logger failed from createDirectories", err)
 		return nil, err, nil
 	}
 	logOutput := log.Writer()
@@ -54,6 +67,7 @@ func NewLogger(LogType string) (*Logger, error, func()) {
 		File:    file,
 		Vanilla: logOutput,
 	}
+	fmt.Println("Logger Ready !")
 	return logger, nil, logger.Close
 }
 

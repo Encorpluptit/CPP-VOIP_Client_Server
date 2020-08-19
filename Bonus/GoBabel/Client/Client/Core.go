@@ -1,7 +1,8 @@
 package Client
 
 import (
-	BabelNetwork "BabelGo/Common/Network"
+	nw "BabelGo/Common/Network"
+	"BabelGo/Common/Requests"
 	"fmt"
 	"log"
 	"net"
@@ -9,7 +10,7 @@ import (
 )
 
 type Core struct {
-	*BabelNetwork.Client
+	*nw.Client
 	Run   bool
 	Input chan string
 }
@@ -20,7 +21,7 @@ func NewClient(addr, port string) (*Core, func()) {
 		log.Fatal(err)
 	}
 	client := &Core{
-		Client: BabelNetwork.NewClient(conn),
+		Client: nw.NewClient(conn),
 		Run:    true,
 		Input:  make(chan string),
 	}
@@ -52,31 +53,36 @@ func (c *Core) Serve() {
 	for c.Run {
 		input := <-c.Input
 		log.Println("User Input:", input)
-		rq := BabelNetwork.NewRequest(c.Conn)
-		rq.Header = BabelNetwork.RequestHeader{
-			RqType:        BabelNetwork.User,
-			DataInfosSize: 10,
-			Code:          BabelNetwork.RqLogin,
+		rq, err := Requests.NewUserRequest(c.Conn, Requests.RqUserLogin, "lol", "mdr xd")
+		if err != nil {
+			log.Println(err)
+			return
 		}
 
-		for i := 0; i < 1000000; i++ {
-			if rq.Header.Code == BabelNetwork.RqLogin {
-				rq.Header.Code = BabelNetwork.RqLogout
-			} else {
-				rq.Header.Code = BabelNetwork.RqLogin
-			}
-			log.Println("Sending Header :", rq.Header)
-			if err := rq.Send(); err != nil {
-				log.Println(err)
-				return
-			}
+		log.Println("Sending Header :", rq.Header)
+		if err := rq.Send(); err != nil {
+			log.Println(err)
+			return
 		}
-		//if err := rq.Receive(); err != nil {
+		//for i := 0; i < 10; i++ {
+		//	if rq.Header.Code == Requests.RqUserLogin {
+		//		rq.Header.Code = Requests.RqUserLogout
+		//	} else {
+		//		rq.Header.Code = Requests.RqUserLogin
+		//	}
+		//	log.Println("Sending Header :", rq.Header)
+		//	if err := rq.Send(); err != nil {
+		//		log.Println(err)
+		//		return
+		//	}
+		//}
+
+		//if err := rq.ReceiveDatas(); err != nil {
 		//	break
 		//}
 		//log.Println("Header Received:", rq.Header)
 
-		//if err := rq.Receive(); err != nil {
+		//if err := rq.ReceiveDatas(); err != nil {
 		//	break
 		//}
 		//_, err := c.Conn.Write([]byte(input))

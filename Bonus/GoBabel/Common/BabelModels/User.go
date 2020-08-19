@@ -13,6 +13,7 @@ type User struct {
 func NewUser() User {
 	return User{
 		Pseudo:   "",
+		Mail:     "Unknown",
 		Password: "",
 		Logged:   false,
 	}
@@ -30,29 +31,21 @@ func (u *User) SetPassword(password string) {
 	u.Password = password
 }
 
-func (u *User) Login(login, password string) bool {
-	if u.IsLogged() {
-		return false
-	}
+func (u *User) Login(login, password string) {
 	u.SetLogin(login)
 	u.SetPassword(password)
 	u.Logged = true
-	return u.Logged
 }
 
-func (u *User) Logout() bool {
-	if !u.IsLogged() {
-		return false
-	}
+func (u *User) Logout() {
 	u.Pseudo = ""
 	u.Password = ""
-	log.Println("Logout User:\n", u)
-	return true
+	log.Println("Logout User:", u)
 }
 
 func (u User) String() string {
 	if !u.IsLogged() {
 		return fmt.Sprint("Empty User")
 	}
-	return fmt.Sprintf("User named {{ %s }} with password {{ %s }}", u.Pseudo, u.Password)
+	return fmt.Sprintf("User named {{ %s }} with Email {{ %s }} password {{ %s }}", u.Pseudo, u.Mail, u.Password)
 }

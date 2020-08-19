@@ -2,7 +2,7 @@ package Server
 
 import (
 	"BabelGo/Common/Network"
-	"errors"
+	"BabelGo/Common/Requests"
 	"fmt"
 	"log"
 	"os"
@@ -72,37 +72,38 @@ func (c *Core) Start() error {
 
 func (c *Core) handleClient(client *BabelNetwork.Client) {
 	fmt.Printf("Serving %s\n", client.Conn.RemoteAddr().String())
+	defer func() {
+		client.Close()
+		c.ListenerCore.RemoveClient(client)
+	}()
+
 	nb := 0
-	rq := BabelNetwork.NewRequest(client.Conn)
 	for c.Run {
-		if err := rq.Receive(); err != nil {
+		rq := Requests.NewRequest(client.Conn)
+		if err := rq.ReceiveHeader(); err != nil {
+			log.Println(err)
 			break
 		}
 		log.Println("Header Received:", rq.Header)
-		if err := c.handleRequest(client, rq); err != nil {
+		rqManager, err := getRequestManager(rq)
+		if err != nil {
 			log.Println(err)
+			break
 		}
+		rq.Datas = rqManager.NewRq()
+		if err := rq.ReceiveDatas(); err != nil {
+			log.Println(err)
+			break
+		}
+		if err := rqManager.Func(c, client, rq); err != nil {
+			log.Println(err)
+			break
+		}
+
+		//if err := c.handleRequestType(client, rq); err != nil {
+		//	log.Println(err)
+		//}
 		nb += 1
 		log.Println("Request received:", nb)
 	}
-	client.Close()
-	c.ListenerCore.RemoveClient(client)
-	// TODO: Remove Client from List
-}
-
-var RqTypeManager = map[uint16]func(*Core, *BabelNetwork.Client, *BabelNetwork.Request) error{
-	BabelNetwork.User: ManageUser,
-}
-
-func (c *Core) handleRequest(client *BabelNetwork.Client, request *BabelNetwork.Request) error {
-	//c.Mutex.Lock()
-	fn, ok := RqTypeManager[request.GetType()]
-	//c.Mutex.Unlock()
-	if !ok {
-		return errors.New("function for type not found")
-	}
-	if err := fn(c, client, request); err != nil {
-		return err
-	}
-	return nil
 }
