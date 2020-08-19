@@ -2,29 +2,29 @@
 ** EPITECH PROJECT, 2020
 ** CPP_babel_2020 (Copyright (c) ENCORPLUPTIT on 7/7/20).
 ** File description:
-** [UserResponse.cpp]: Source file for UserResponse feature.
+** [MessageResponse.cpp]: Source file for MessageResponse feature.
 */
 
-#include "UserResponse.hpp"
+#include "MessageResponse.hpp"
 #include "StringFormat.tpp"
 #include "ResponseError.hpp"
 
 using namespace BabelNetwork;
 
-UserResponse::UserResponse(const ResponseHeader &headerResponse)
+MessageResponse::MessageResponse(const ResponseHeader &headerResponse)
     : AResponse(headerResponse) {}
 
-UserResponse::UserResponse(const std::string &login, const std::string &password)
+MessageResponse::MessageResponse(const std::string &login, const std::string &password)
     : AResponse()
 {
-    _header._responseType = User;
+    _header._responseType = Message;
     _header._dataInfosSize = DataInfosSize;
 
     if (!setLogin(login) || !setPassword(password))
-        throw BabelErrors::UserResponse("login or password too long");
+        throw BabelErrors::MessageResponse("login or password too long");
 }
 
-bool UserResponse::setLogin(const std::string &login) noexcept
+bool MessageResponse::setLogin(const std::string &login) noexcept
 {
     if (login.size() > MaxDataSize::Login)
         return false;
@@ -33,7 +33,7 @@ bool UserResponse::setLogin(const std::string &login) noexcept
     return true;
 }
 
-bool UserResponse::setPassword(const std::string &password) noexcept
+bool MessageResponse::setPassword(const std::string &password) noexcept
 {
     if (password.size() > MaxDataSize::Password)
         return false;
@@ -42,7 +42,7 @@ bool UserResponse::setPassword(const std::string &password) noexcept
     return true;
 }
 
-bool UserResponse::encode() noexcept
+bool MessageResponse::encode() noexcept
 {
     memcpy(_data_byte, &_header, HeaderSize);
     memcpy(getDataByteDataInfos(), &_dataInfos, DataInfosSize);
@@ -51,63 +51,63 @@ bool UserResponse::encode() noexcept
     return true;
 }
 
-bool UserResponse::decode_header() noexcept
+bool MessageResponse::decode_header() noexcept
 {
     memcpy(&_header, _data_byte, HeaderSize);
     return true;
 }
 
-bool UserResponse::decode_data_infos() noexcept
+bool MessageResponse::decode_data_infos() noexcept
 {
     memcpy(&_dataInfos, _data_byte + HeaderSize, DataInfosSize);
     return true;
 }
 
-bool UserResponse::decode_data() noexcept
+bool MessageResponse::decode_data() noexcept
 {
     memcpy(_data.login, getDataByteBody(), _dataInfos._loginSize);
     memcpy(_data.password, getDataByteBody() + _dataInfos._loginSize, _dataInfos._passwordSize);
     return true;
 }
 
-bool BabelNetwork::UserResponse::isOk() noexcept
+bool BabelNetwork::MessageResponse::isOk() noexcept
 {
-    return _header._code == UserResponse::ResponseCode::LoginOk
-        || _header._code == UserResponse::ResponseCode::AccountCreated
-        || _header._code == UserResponse::ResponseCode::AccountDeleted;
+    return _header._code == MessageResponse::ResponseCode::LoginOk
+        || _header._code == MessageResponse::ResponseCode::AccountCreated
+        || _header._code == MessageResponse::ResponseCode::AccountDeleted;
 }
 
-std::shared_ptr<AResponse> UserResponse::get_shared_from_this() const noexcept
+std::shared_ptr<AResponse> MessageResponse::get_shared_from_this() const noexcept
 {
-    return std::make_shared<UserResponse>(*this);
+    return std::make_shared<MessageResponse>(*this);
 }
 
-char *UserResponse::getDataByte() noexcept
+char *MessageResponse::getDataByte() noexcept
 {
     return _data_byte;
 }
 
-char *UserResponse::getDataByteDataInfos() const noexcept
+char *MessageResponse::getDataByteDataInfos() const noexcept
 {
     return const_cast<char *>(_data_byte + HeaderSize);
 }
 
-char *UserResponse::getDataByteBody() const noexcept
+char *MessageResponse::getDataByteBody() const noexcept
 {
     return const_cast<char *>(_data_byte + HeaderSize + DataInfosSize);
 }
 
-size_t UserResponse::getResponseSize() const noexcept
+size_t MessageResponse::getResponseSize() const noexcept
 {
     return HeaderSize + DataInfosSize + getDataSize();
 }
 
-size_t UserResponse::getDataSize() const noexcept
+size_t MessageResponse::getDataSize() const noexcept
 {
     return _dataInfos._loginSize + _dataInfos._passwordSize;
 }
 
-std::string UserResponse::serialize_data_infos() const noexcept
+std::string MessageResponse::serialize_data_infos() const noexcept
 {
     return BabelUtils::format(
         "Login Size: %zu | Password Size: %zu",
@@ -115,7 +115,7 @@ std::string UserResponse::serialize_data_infos() const noexcept
     );
 }
 
-std::string UserResponse::serialize_data() const noexcept
+std::string MessageResponse::serialize_data() const noexcept
 {
     return BabelUtils::format(
         "Login: %s | Password: %s",

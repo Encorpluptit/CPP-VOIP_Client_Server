@@ -102,11 +102,6 @@ namespace BabelNetwork {
 
         [[nodiscard]] virtual const std::string &getDescription() const noexcept = 0;
 
-//        [[nodiscard]] virtual size_t getMaxResponseSize() const noexcept = 0;
-//
-//        [[nodiscard]] constexpr static size_t getHeaderSize() { return HeaderSize; };
-
-
 
         /* <- Attributes -> */
     protected:

@@ -21,6 +21,21 @@ namespace BabelErrors {
     public:
         explicit UserResponse(std::string const &msg) : ResponseError(msg) {}
     };
+    class CallResponse : public ResponseError {
+        /* <- Constructor - Destructor -> */
+    public:
+        explicit CallResponse(std::string const &msg) : ResponseError(msg) {}
+    };
+    class FriendResponse : public ResponseError {
+        /* <- Constructor - Destructor -> */
+    public:
+        explicit FriendResponse(std::string const &msg) : ResponseError(msg) {}
+    };
+    class MessageResponse : public ResponseError {
+        /* <- Constructor - Destructor -> */
+    public:
+        explicit MessageResponse(std::string const &msg) : ResponseError(msg) {}
+    };
 }
 
 

@@ -2,16 +2,16 @@
 ** EPITECH PROJECT, 2020
 ** CPP_babel_2020 (Copyright (c) ENCORPLUPTIT on 7/7/20).
 ** File description:
-** [UserResponse.hpp]: Header file for UserResponse feature.
+** [FriendResponse.hpp]: Header file for FriendResponse feature.
 */
 
-#ifndef CPP_BABEL_2020_CONNECTIONRESPONSE_HPP
-#define CPP_BABEL_2020_CONNECTIONRESPONSE_HPP
+#ifndef CPP_BABEL_2020_FRIEND_RESPONSE_HPP
+#define CPP_BABEL_2020_FRIEND_RESPONSE_HPP
 
 #include "AResponse.hpp"
 
 namespace BabelNetwork {
-    class UserResponse final : virtual public AResponse {
+    class FriendResponse final : virtual public AResponse {
         /* <- Class Enum -> */
     public:
         enum ResponseCode {
@@ -49,17 +49,17 @@ namespace BabelNetwork {
 
         /* <- Constructor - Destructor -> */
     public:
-        UserResponse() : AResponse()
+        FriendResponse() : AResponse()
         {
-            _header._responseType = User;
+            _header._responseType = Friend;
             _header._dataInfosSize = DataInfosSize;
         };
 
-        explicit UserResponse(const ResponseHeader &headerResponse);
+        explicit FriendResponse(const ResponseHeader &headerResponse);
 
-        UserResponse(const std::string &login, const std::string &password);
+        FriendResponse(const std::string &login, const std::string &password);
 
-        ~UserResponse() = default;
+        ~FriendResponse() = default;
 
         /* <- Encode / Decode Methods -> */
     public:
@@ -112,11 +112,11 @@ namespace BabelNetwork {
         [[nodiscard]] const char *getPassword() const noexcept { return _data.password; };
 
     private:
-        const std::string _description = "User Related Request";
+        const std::string _description = "Friend Related Request";
         char _data_byte[MaxResponseSize] = {0};
         DataInfos _dataInfos{};
         Data _data{};
     };
 }
 
-#endif /* CPP_BABEL_2020_CONNECTIONRESPONSE_HPP */
+#endif /* CPP_BABEL_2020_FRIEND_RESPONSE_HPP */
