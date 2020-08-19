@@ -11,7 +11,7 @@ import (
 type Core struct {
 	*nw.Client
 	Run   bool
-	Input chan string
+	Input chan *nw.Request
 }
 
 func NewClient(addr, port string) (*Core, func()) {
@@ -22,16 +22,21 @@ func NewClient(addr, port string) (*Core, func()) {
 	client := &Core{
 		Client: nw.NewClient(conn),
 		Run:    true,
-		Input:  make(chan string),
+		Input:  make(chan *nw.Request),
 	}
 	return client, client.Close
 }
 
-func (c *Core) SendInput(input string) {
+func (c *Core) SendInput(_ string) {
 	if !c.Run {
 		return
 	}
-	c.Input <- input
+	rq, err := nw.NewUserRequest(c.Conn, nw.RqUserLogin, "lol", "mdr xd")
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	c.Input <- rq
 }
 
 func (c *Core) Close() {
@@ -51,23 +56,16 @@ func (c *Core) Serve() {
 	defer c.Close()
 	for c.Run {
 		input := <-c.Input
-		log.Println("User Input:", input)
-		rq, err := nw.NewUserRequest(c.Conn, nw.RqUserLogin, "lol", "mdr xd")
-		if err != nil {
-			log.Println(err)
-			return
-		}
-
-		for i := 0; i < 10; i++ {
-			log.Println("Sending Header :", rq.Header)
-			if err := rq.Send(); err != nil {
+		for i := 0; i < 100000; i++ {
+			log.Println("Sending Header :", input.Header)
+			if err := input.Send(); err != nil {
 				log.Println(err)
 				return
 			}
-			if rq.Header.Code == nw.RqUserLogout {
-				rq.Header.Code = nw.RqUserLogin
+			if input.Header.Code == nw.RqUserLogout {
+				input.Header.Code = nw.RqUserLogin
 			} else {
-				rq.Header.Code = nw.RqUserLogout
+				input.Header.Code = nw.RqUserLogout
 			}
 		}
 	}
