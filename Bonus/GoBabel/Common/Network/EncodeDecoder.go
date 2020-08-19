@@ -1,4 +1,4 @@
-package Requests
+package BabelNetwork
 
 import (
 	"errors"
@@ -20,7 +20,7 @@ type EncodeDecoder interface {
 	Decoder
 }
 
-func ReceiveAndDecodeDatas(infosSz uint16, decoder Decoder, reader io.Reader) error {
+func ReceiveDecodeDatas(infosSz uint16, decoder Decoder, reader io.Reader) error {
 	if infosSz == 0 {
 		return errors.New("size of data info is null")
 	}

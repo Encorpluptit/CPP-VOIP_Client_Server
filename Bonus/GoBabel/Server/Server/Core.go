@@ -2,7 +2,6 @@ package Server
 
 import (
 	"BabelGo/Common/Network"
-	"BabelGo/Common/Requests"
 	"fmt"
 	"log"
 	"os"
@@ -76,32 +75,38 @@ func (c *Core) handleClient(client *BabelNetwork.Client) {
 		client.Close()
 		c.ListenerCore.RemoveClient(client)
 	}()
+	RequestManagerGetter := func(request *BabelNetwork.Request) (*BabelNetwork.RequestManager, error) {
+		c.Mutex.Lock()
+		rqManager, err := getRequestManager(request)
+		c.Mutex.Unlock()
+		return rqManager, err
+	}
 
 	nb := 0
 	for c.Run {
-		rq := Requests.NewRequest(client.Conn)
-		if err := rq.ReceiveHeader(); err != nil {
-			log.Println(err)
+		if err := client.WaitRequest(RequestManagerGetter); err != nil {
 			break
 		}
-		log.Println("Header Received:", rq.Header)
-		rqManager, err := getRequestManager(rq)
-		if err != nil {
-			log.Println(err)
-			break
-		}
-		rq.Datas = rqManager.NewRq()
-		if err := rq.ReceiveDatas(); err != nil {
-			log.Println(err)
-			break
-		}
-		if err := rqManager.Func(c, client, rq); err != nil {
-			log.Println(err)
-			break
-		}
-
-		//if err := c.handleRequestType(client, rq); err != nil {
+		//rq := BabelNetwork.NewRequest(client.Conn)
+		//if err := rq.ReceiveHeader(); err != nil {
 		//	log.Println(err)
+		//	break
+		//}
+		//log.Println("Header Received:", rq.Header)
+		//rqManager, err := RequestManagerGetter(rq)
+		////rqManager, err := getRequestManager(rq)
+		//if err != nil {
+		//	log.Println(err)
+		//	break
+		//}
+		//rq.Datas = rqManager.EmptyDatas()
+		//if err := rq.ReceiveDatas(); err != nil {
+		//	log.Println(err)
+		//	break
+		//}
+		//if err := rqManager.ManagerFunc(client, rq); err != nil {
+		//	log.Println(err)
+		//	break
 		//}
 		nb += 1
 		log.Println("Request received:", nb)

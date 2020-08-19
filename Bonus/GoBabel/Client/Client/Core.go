@@ -2,7 +2,6 @@ package Client
 
 import (
 	nw "BabelGo/Common/Network"
-	"BabelGo/Common/Requests"
 	"fmt"
 	"log"
 	"net"
@@ -53,57 +52,23 @@ func (c *Core) Serve() {
 	for c.Run {
 		input := <-c.Input
 		log.Println("User Input:", input)
-		rq, err := Requests.NewUserRequest(c.Conn, Requests.RqUserLogin, "lol", "mdr xd")
+		rq, err := nw.NewUserRequest(c.Conn, nw.RqUserLogin, "lol", "mdr xd")
 		if err != nil {
 			log.Println(err)
 			return
 		}
 
-		log.Println("Sending Header :", rq.Header)
-		if err := rq.Send(); err != nil {
-			log.Println(err)
-			return
+		for i := 0; i < 10; i++ {
+			log.Println("Sending Header :", rq.Header)
+			if err := rq.Send(); err != nil {
+				log.Println(err)
+				return
+			}
+			if rq.Header.Code == nw.RqUserLogout {
+				rq.Header.Code = nw.RqUserLogin
+			} else {
+				rq.Header.Code = nw.RqUserLogout
+			}
 		}
-		//for i := 0; i < 10; i++ {
-		//	if rq.Header.Code == Requests.RqUserLogin {
-		//		rq.Header.Code = Requests.RqUserLogout
-		//	} else {
-		//		rq.Header.Code = Requests.RqUserLogin
-		//	}
-		//	log.Println("Sending Header :", rq.Header)
-		//	if err := rq.Send(); err != nil {
-		//		log.Println(err)
-		//		return
-		//	}
-		//}
-
-		//if err := rq.ReceiveDatas(); err != nil {
-		//	break
-		//}
-		//log.Println("Header Received:", rq.Header)
-
-		//if err := rq.ReceiveDatas(); err != nil {
-		//	break
-		//}
-		//_, err := c.Conn.Write([]byte(input))
-		//if err != nil {
-		//	log.Println("Error in writing to Connection", err)
-		//}
-		//netData, err := bufio.NewReader(c.Conn).ReadString('\n')
-		////netData, err := bufio.NewReader(c.Conn).ReadString('\n')
-		//if !c.Run {
-		//	log.Println("lol")
-		//	break
-		//}
-		//if err != nil {
-		//	log.Println("Error in Handle Connection From read", err)
-		//	break
-		//}
-		//temp := strings.TrimSpace(netData)
-		//if temp == "STOP" {
-		//	log.Println("lol")
-		//	break
-		//}
-		//log.Println("Message Received", temp)
 	}
 }

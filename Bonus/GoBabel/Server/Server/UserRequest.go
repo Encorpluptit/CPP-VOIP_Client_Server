@@ -2,31 +2,30 @@ package Server
 
 import (
 	BabelNetwork "BabelGo/Common/Network"
-	"BabelGo/Common/Requests"
 	"errors"
 	"log"
 )
 
 var WrongUserDatas = errors.New("wrong userDatas")
 
-var userManager = map[uint16]func(*Core, *BabelNetwork.Client, *Requests.UserDatas) error{
-	Requests.RqUserLogin:  LoginUser,
-	Requests.RqUserLogout: LogoutUser,
+var userManager = map[uint16]func(*BabelNetwork.Client, *BabelNetwork.UserDatas) error{
+	BabelNetwork.RqUserLogin:  LoginUser,
+	BabelNetwork.RqUserLogout: LogoutUser,
 }
 
-func ManageUser(core *Core, client *BabelNetwork.Client, request *Requests.Request) error {
+func UserManager(client *BabelNetwork.Client, request *BabelNetwork.Request) error {
 	fn, ok := userManager[request.Header.Code]
 	if !ok {
-		return errors.New("in ManageUser(): Code not found")
+		return errors.New("in UserManager(): Code not found")
 	}
-	userDatas, ok := request.Datas.(*Requests.UserDatas)
+	userDatas, ok := request.Datas.(*BabelNetwork.UserDatas)
 	if !ok {
 		return WrongUserDatas
 	}
-	return fn(core, client, userDatas)
+	return fn(client, userDatas)
 }
 
-func LoginUser(core *Core, client *BabelNetwork.Client, datas *Requests.UserDatas) error {
+func LoginUser(client *BabelNetwork.Client, datas *BabelNetwork.UserDatas) error {
 	log.Println("Login user")
 	if err := client.Login(datas); err != nil {
 		return err
@@ -34,7 +33,7 @@ func LoginUser(core *Core, client *BabelNetwork.Client, datas *Requests.UserData
 	return nil
 }
 
-func LogoutUser(core *Core, client *BabelNetwork.Client, datas *Requests.UserDatas) error {
+func LogoutUser(client *BabelNetwork.Client, datas *BabelNetwork.UserDatas) error {
 	log.Println("Logout user")
 	if err := client.Logout(); err != nil {
 		return err

@@ -12,8 +12,8 @@ type User struct {
 
 func NewUser() User {
 	return User{
-		Pseudo:   "",
-		Mail:     "Unknown",
+		Pseudo:   "Unknown",
+		Mail:     "",
 		Password: "",
 		Logged:   false,
 	}
@@ -40,6 +40,7 @@ func (u *User) Login(login, password string) {
 func (u *User) Logout() {
 	u.Pseudo = ""
 	u.Password = ""
+	u.Logged = false
 	log.Println("Logout User:", u)
 }
 

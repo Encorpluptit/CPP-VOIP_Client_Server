@@ -1,4 +1,4 @@
-package Requests
+package BabelNetwork
 
 import (
 	"encoding/binary"

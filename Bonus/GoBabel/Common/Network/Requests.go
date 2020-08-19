@@ -1,4 +1,4 @@
-package Requests
+package BabelNetwork
 
 import (
 	"encoding/binary"
@@ -21,6 +21,17 @@ type RequestHeader struct {
 	Code          uint16
 }
 
+type Request struct {
+	Conn   io.ReadWriter
+	Header RequestHeader
+	Datas  EncodeDecoder
+}
+
+type RequestManager struct {
+	ManagerFunc func(*Client, *Request) error
+	EmptyDatas  func() EncodeDecoder
+}
+
 func (rh RequestHeader) Encode() []byte {
 	b := make([]byte, HeaderSize)
 	binary.LittleEndian.PutUint16(b[0:], rh.RqType)
@@ -33,12 +44,6 @@ func (rh *RequestHeader) Decode(b []byte) {
 	rh.RqType = binary.LittleEndian.Uint16(b[0:])
 	rh.DataInfosSize = binary.LittleEndian.Uint16(b[2:])
 	rh.Code = binary.LittleEndian.Uint16(b[4:])
-}
-
-type Request struct {
-	Conn   io.ReadWriter
-	Header RequestHeader
-	Datas  EncodeDecoder
 }
 
 func NewRequest(conn io.ReadWriter) *Request {
@@ -60,10 +65,7 @@ func (r *Request) ReceiveHeader() error {
 }
 
 func (r *Request) ReceiveDatas() error {
-	if err := ReceiveAndDecodeDatas(r.Header.DataInfosSize, r.Datas, r.Conn); err != nil {
-		return err
-	}
-	return nil
+	return ReceiveDecodeDatas(r.Header.DataInfosSize, r.Datas, r.Conn)
 }
 
 func (r Request) Send() error {

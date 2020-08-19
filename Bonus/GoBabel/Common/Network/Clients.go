@@ -2,7 +2,6 @@ package BabelNetwork
 
 import (
 	"BabelGo/Common/BabelModels"
-	"BabelGo/Common/Requests"
 	"errors"
 	"fmt"
 	"log"
@@ -26,6 +25,29 @@ func NewClient(conn net.Conn) *Client {
 	}
 }
 
+func (c *Client) WaitRequest(RequestManagerGetter func(request *Request) (*RequestManager, error)) error {
+	rq := NewRequest(c.Conn)
+	if err := rq.ReceiveHeader(); err != nil {
+		log.Println(err)
+		return err
+	}
+	rqManager, err := RequestManagerGetter(rq)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	rq.Datas = rqManager.EmptyDatas()
+	if err := rq.ReceiveDatas(); err != nil {
+		log.Println(err)
+		return err
+	}
+	if err := rqManager.ManagerFunc(c, rq); err != nil {
+		log.Println(err)
+		return err
+	}
+	return nil
+}
+
 func (c Client) String() string {
 	user := c.User.String()
 	conn := fmt.Sprintf("With connexion %s", c.Conn.RemoteAddr().String())
@@ -36,7 +58,7 @@ func (c Client) isLogged() bool {
 	return c.User.IsLogged()
 }
 
-func (c *Client) Login(datas *Requests.UserDatas) error {
+func (c *Client) Login(datas *UserDatas) error {
 	if c.isLogged() {
 		return ClientAlreadyLogged
 	}
@@ -46,7 +68,7 @@ func (c *Client) Login(datas *Requests.UserDatas) error {
 }
 
 func (c *Client) Logout() error {
-	if c.isLogged() {
+	if !c.isLogged() {
 		return ClientNotLogged
 	}
 	log.Println("Disconnecting Client")
@@ -54,7 +76,7 @@ func (c *Client) Logout() error {
 	return nil
 }
 
-func (c Client) Close() {
+func (c *Client) Close() {
 	if err := c.Logout(); err != nil {
 		log.Println("Error on Client Logout():", err)
 	}
