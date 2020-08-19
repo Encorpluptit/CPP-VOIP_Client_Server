@@ -14,13 +14,14 @@ var (
 )
 
 type Client struct {
-	User   BabelModels.User
+	User   *BabelModels.User
 	Conn   net.Conn
 	Logged bool
 }
 
 func NewClient(conn net.Conn) *Client {
 	return &Client{
+		// TODO: Remove call and set to nil
 		User:   BabelModels.NewUser(),
 		Conn:   conn,
 		Logged: false,
@@ -64,6 +65,7 @@ func (c *Client) Login(datas *UserDatas) error {
 	if c.IsLogged() {
 		return ClientAlreadyLogged
 	}
+	// TODO: fetch in Db
 	c.User.Login(datas.Login, datas.Password)
 	log.Println("Client Logged", c)
 	c.Logged = true
@@ -74,6 +76,7 @@ func (c *Client) Logout() error {
 	if !c.IsLogged() {
 		return ClientNotLogged
 	}
+	// TODO: set User to nil
 	log.Println("Logout user :", c.User)
 	c.User.Logout()
 	c.Logged = false

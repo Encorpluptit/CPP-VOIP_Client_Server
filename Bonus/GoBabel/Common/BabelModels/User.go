@@ -8,8 +8,8 @@ type User struct {
 	Pseudo, Mail, Password string
 }
 
-func NewUser() User {
-	return User{
+func NewUser() *User {
+	return &User{
 		Pseudo:   "Unknown",
 		Mail:     "",
 		Password: "",
