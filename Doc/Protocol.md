@@ -150,8 +150,11 @@ Full documentation of server/client protocol.
 * Summary
     * 300: Requested Call started.
     * 301: Request Start Call.
+    * 302: Call Ended.
+    * 303: Request End Call.
     
     * 370: Requested Call Refused.
+    * 371: Target is Disconnected.
     
 
 * Login
@@ -160,51 +163,58 @@ Full documentation of server/client protocol.
             * 300: Requested Call started.
                 ```json
                 {
-                  "login":              "damien.bernard@epitech.eu",
+                  "sender":             "damien.bernard@epitech.eu",
+                  "receiver":           "ugo.levi-cescutti@epitech.eu",
                   "timestamp":          "(unix time)",
                   "ConferenceId":       "1"
                 }
                 ```
-            * 202: User Logged Out.
+            * 302: Call Ended.
                 ```json
                 {
-                  "login":      "damien.bernard@epitech.eu"
-                } 
+                  "sender":             "damien.bernard@epitech.eu",
+                  "receiver":           "ugo.levi-cescutti@epitech.eu",
+                  "timestamp":          "(unix time)",
+                  "ConferenceId":       "1"
+                }
                 ```
-        * Error Codes    
-            * 270: Unknown login Error.
+        * Error Codes
+            * 370: Requested Call Refused.
                 ```json
                 {
-                  "login":      "damien.bernard@epitech.eu"
-                } 
+                  "sender":             "damien.bernard@epitech.eu",
+                  "receiver":           "ugo.levi-cescutti@epitech.eu",
+                  "timestamp":          "(unix time)",
+                  "ConferenceId":       ""
+                }
                 ```
-            * 271: Wrong Login.
+            * 371: 371: Target is Disconnected.
                 ```json
                 {
-                  "login":      "damien.bernard@epitech.eu"
-                } 
-                ```
-            * 272: Wrong Password.
-            * 273: Account Deleted.
-                ```json
-                {
-                  "login":      "damien.bernard@epitech.eu"
-                } 
-                ```
-            * 274: User Already Logged In. (???)
-                ```json
-                {
-                  "login":      "damien.bernard@epitech.eu"
-                } 
+                  "sender":             "damien.bernard@epitech.eu",
+                  "receiver":           "ugo.levi-cescutti@epitech.eu",
+                  "timestamp":          "(unix time)",
+                  "ConferenceId":       ""
+                }
                 ```
     * [Client -> Server]
-        * 201: Request logging.
+        * Success Codes.
+            * 303: Call Ended.
+                ```json
+                {
+                  "sender":             "damien.bernard@epitech.eu",
+                  "receiver":           "ugo.levi-cescutti@epitech.eu",
+                  "timestamp":          "(unix time)",
+                  "ConferenceId":       "1"
+                }
+                ```
             ```json
             {
               "login":      "damien.bernard@epitech.eu",
               "password" :  "abcd1234"
             }
             ```
+        * Error Codes
         * 203: Request Logged out.
             ```json
             {
