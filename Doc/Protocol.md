@@ -4,7 +4,7 @@ Full documentation of server/client protocol.
 
    ![alt text][logo]
 
-   [logo]: ./BabelCommon-Classes.png "UML diagram image in Doc Folder"
+   [logo]: ./BabelClasses.png "UML diagram image in Doc Folder"
 
 
 ---
