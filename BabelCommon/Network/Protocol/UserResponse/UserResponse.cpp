@@ -59,7 +59,7 @@ bool UserResponse::decode_header() noexcept
 
 bool UserResponse::decode_data_infos() noexcept
 {
-    memcpy(&_dataInfos, _data_byte + HeaderSize, DataInfosSize);
+    memcpy(&_dataInfos, getDataByteDataInfos(), DataInfosSize);
     return true;
 }
 

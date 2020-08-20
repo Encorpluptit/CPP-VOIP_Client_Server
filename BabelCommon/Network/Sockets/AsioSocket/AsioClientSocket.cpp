@@ -23,9 +23,7 @@ AsioClientSocket::AsioClientSocket(
       _context(context),
       _socket(_context),
       _handler(handlerType)
-{
-
-}
+{}
 
 AsioClientSocket::~AsioClientSocket()
 {

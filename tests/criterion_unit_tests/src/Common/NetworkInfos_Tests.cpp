@@ -7,6 +7,7 @@
 
 #include "tests_run.hpp"
 #include "NetworkInfos.hpp"
+#include "NetworkError.hpp"
 
 Test(Common, NetworkInfosClass_1)
 {
@@ -26,6 +27,7 @@ Test(Common, NetworkInfosClass_2)
     int portExp = atoi(port);
 
     cr_assert_str_eq(test.getIp().c_str(), ip);
+    cr_assert_str_eq(test.getPortStr().c_str(), port);
     ASSERT_INT(test.getPort(), portExp);
 }
 
@@ -37,5 +39,17 @@ Test(Common, NetworkInfosClass_3)
     int portExp = atoi(port);
 
     cr_assert_str_eq(test.getIp().c_str(), ip);
+    cr_assert_str_eq(test.getPortStr().c_str(), port);
     ASSERT_INT(test.getPort(), portExp);
+}
+
+Test(Common, NetworkInfosClass_4)
+{
+    char const *ip = "192.0.0.1";
+    char const *port = "aaaa";
+
+    cr_assert_throw(
+        BabelNetwork::NetworkInfos test(ip, port);,
+        BabelErrors::NetworkError
+    )
 }

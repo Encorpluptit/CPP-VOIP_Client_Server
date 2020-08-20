@@ -54,6 +54,11 @@ uint16_t AResponse::getCode() const noexcept
     return _header._code;
 }
 
+void AResponse::setCode(uint16_t code) noexcept
+{
+    _header._code = code;
+}
+
 [[nodiscard]] size_t AResponse::getDataInfosSize() const noexcept
 {
     return _header._dataInfosSize;

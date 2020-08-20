@@ -91,6 +91,8 @@ namespace BabelNetwork {
     public:
         [[nodiscard]] uint16_t getCode() const noexcept;
 
+        void setCode(uint16_t code) noexcept;
+
         [[nodiscard]] virtual std::shared_ptr<AResponse> get_shared_from_this() const = 0;
 
         [[nodiscard]] size_t getDataInfosSize() const noexcept;

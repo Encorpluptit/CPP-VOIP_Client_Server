@@ -37,7 +37,6 @@ add_compile_options(-Wall -Wextra)
 #        -Wuseless-cast
 #        -Wdouble-promotion
 #)
-add_definitions("-fPIC")
 
 if (USE_LOG)
     set(USE_DEBUG ON)
@@ -84,6 +83,10 @@ set(
 
         ${COMMON_DIR}/Network/Protocol/AResponse
         ${COMMON_DIR}/Network/Protocol/UserResponse
+
+        ${COMMON_DIR}/Network/Protocol/CallResponse
+        ${COMMON_DIR}/Network/Protocol/FriendResponse
+        ${COMMON_DIR}/Network/Protocol/MessageResponse
 )
 
 set(
@@ -97,6 +100,10 @@ set(
 
         ${COMMON_DIR}/Network/Protocol/AResponse/AResponse.cpp
         ${COMMON_DIR}/Network/Protocol/UserResponse/UserResponse.cpp
+
+        ${COMMON_DIR}/Network/Protocol/CallResponse/CallResponse.cpp
+        ${COMMON_DIR}/Network/Protocol/FriendResponse/FriendResponse.cpp
+        ${COMMON_DIR}/Network/Protocol/MessageResponse/MessageResponse.cpp
 
 )
 

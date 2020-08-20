@@ -16,12 +16,13 @@ namespace BabelNetwork {
     public:
         enum ResponseCode {
             LoginOk = 210,
+            LoginNOk = 270,
             RequestLogin = 211,
             AccountCreated = 220,
             AccountDeleted = 230,
 
         };
-    private:
+    public:
         enum MaxDataSize {
             Login = 128,
             Password = 128
