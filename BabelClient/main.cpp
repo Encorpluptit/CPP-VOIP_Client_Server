@@ -47,14 +47,12 @@ static void socket_testing(char **av)
             std::cout << "exit loop" << std::endl;
             break;
         }
-        auto test = std::make_shared<BabelNetwork::UserResponse>("damien", "abcd1234");
+        auto test = BabelNetwork::UserResponse::NewLoginRequest("damien", "abcdabcd");
         std::cout << "sending response" << test << std::endl;
-        client->sendResponse(test);
-        for (int i = 0; i < 100; ++i)
+        for (int i = 0; i < 10; ++i)
             client->sendResponse(test);
     }
     client->stop();
-
 }
 
 int main(int ac, char **av)

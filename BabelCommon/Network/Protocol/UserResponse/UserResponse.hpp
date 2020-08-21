@@ -128,6 +128,9 @@ namespace BabelNetwork {
         char _data_byte[MaxResponseSize] = {0};
         DataInfos _dataInfos{};
         Data _data{};
+
+    public:
+        [[nodiscard]] static std::shared_ptr<AResponse> NewLoginRequest(const std::string &login, const std::string &password);
     };
 }
 

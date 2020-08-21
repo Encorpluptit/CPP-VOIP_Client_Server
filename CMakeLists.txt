@@ -100,6 +100,7 @@ set(
 
         ${COMMON_DIR}/Network/Protocol/AResponse/AResponse.cpp
         ${COMMON_DIR}/Network/Protocol/UserResponse/UserResponse.cpp
+        ${COMMON_DIR}/Network/Protocol/UserResponse/FormattedUserResponse.cpp
 
         ${COMMON_DIR}/Network/Protocol/CallResponse/CallResponse.cpp
         ${COMMON_DIR}/Network/Protocol/FriendResponse/FriendResponse.cpp

@@ -146,7 +146,8 @@ void AsioClientSocket::read_data(const boost::system::error_code &error)
 void AsioClientSocket::queue_read_response(const boost::system::error_code &error)
 {
     if (!error && _read_msg->decode_data()) {
-        std::cout << "BODY READ -- DATA = " << _read_msg->serialize_data() << std::endl;
+//        std::cout << "BODY READ -- DATA = " << _read_msg->serialize_data() << std::endl;
+        std::cout << _read_msg << std::endl;
         _read_queue.push(_read_msg);
         _logger.logThis(_read_msg);
         read_header();
