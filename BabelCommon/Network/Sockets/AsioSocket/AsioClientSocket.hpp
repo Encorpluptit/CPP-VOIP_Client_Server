@@ -16,7 +16,7 @@ namespace BabelNetwork {
 
     class AsioClientSocket final
         : virtual public ClientSocket,
-        public boost::enable_shared_from_this<AsioClientSocket> {
+          public boost::enable_shared_from_this<AsioClientSocket> {
 
         /* <- Class Enum -> */
     public:
@@ -42,7 +42,8 @@ namespace BabelNetwork {
 
         void start() final;
 
-        void stop() final {
+        void stop() final
+        {
             if (getHandler() == SocketHandler::Client) {
                 _context.stop();
             }
@@ -51,6 +52,8 @@ namespace BabelNetwork {
         };
 
         bool sendResponse(const BabelNetwork::AResponse &response) final;
+
+        bool sendResponse(const std::shared_ptr<AResponse> &response) final;
 
         void connect();
 
