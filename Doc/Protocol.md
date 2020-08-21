@@ -24,11 +24,10 @@ Full documentation of server/client protocol.
     * 270: Unknown login Error.
     * 271: Wrong Login.
     * 272: Wrong Password.
-    * 273: Account Deleted.
+    * 273: Requested Account Deleted.
     * 274: User Already Logged In.
-    * 280: Unknown Account Creation Error.
-    * 281: Account Already Taken.
-    * 282: User Already Logged In.
+    * 280: Login Already Taken.
+    * 281: User Already Logged In.
 
 
 ### Login (20*|27* Codes)
@@ -84,6 +83,12 @@ Full documentation of server/client protocol.
             } 
             ```
         * 272: Wrong Password.
+            ```json
+            {
+              "login":      "damien.bernard@epitech.eu",
+              "password" :  ""
+            } 
+            ```
         * 273: Account Deleted.
             ```json
             {
@@ -136,28 +141,21 @@ Full documentation of server/client protocol.
             } 
             ```
     * Error Codes
-        * 280: Unknown Account Creation Error.
+        * 280: Login Already Taken.
             ```json
             {
               "login":      "damien.bernard@epitech.eu",
               "password" :  ""
             } 
             ```
-        * 281: Account Already Taken.
+        * 281: User Already Logged In (??).
             ```json
             {
               "login":      "damien.bernard@epitech.eu",
               "password" :  ""
             } 
             ```
-        * 282: User Already Logged In (??).
-            ```json
-            {
-              "login":      "damien.bernard@epitech.eu",
-              "password" :  ""
-            } 
-            ```
-        * 218: Password too weak. (??)
+        * 282: Password too weak. (??)
         
 ---
 
@@ -280,19 +278,69 @@ Full documentation of server/client protocol.
 
 ### Friend (4** Code)
 * Summary
-    * 400: .
+    * 400: Request Friendship.
+    * 401: Accept Requested Friendship.
+    * 402: Accept Requested Friendship.
+    * 403: New Friendship.
+    * 404: Friendship.
     
-    * 470: Requested Call Refused.
+    * 470: Target is not a Friend.
+    * 471: Requested Friendship Refused.
 
 * Friend Management
+    * [Client -> Server]
+        * Success Codes.
+            * 400: Request Friendship.
+                ```json
+                {
+                  "sender":             "damien.bernard@epitech.eu",
+                  "receiver":           "ugo.levi-cescutti@epitech.eu"
+                }
+                ```
+            * 403: New Friendship.
+                ```json
+                {
+                  "sender":             "damien.bernard@epitech.eu",
+                  "receiver":           "ugo.levi-cescutti@epitech.eu"
+                }
+                ```
+            * 410: Refuse Requested Friendship.
+                ```json
+                {
+                  "sender":             "damien.bernard@epitech.eu",
+                  "receiver":           "ugo.levi-cescutti@epitech.eu"
+                }
+                ```
+            * 406: Delete Friend Request.
+                ```json
+                {
+                  "sender":             "damien.bernard@epitech.eu",
+                  "receiver":           "ugo.levi-cescutti@epitech.eu"
+                }
+                ```
+        * Error Codes
+    * [Server -> Client]
+        * Success Codes.
+            * 406: Request Friendship.
+                ```json
+                {
+                  "sender":             "damien.bernard@epitech.eu",
+                  "receiver":           "ugo.levi-cescutti@epitech.eu"
+                }
+                ```
+        * Error Codes
+            * 471: Requested Friendship refused.
+                ```json
+                {
+                  "sender":             "damien.bernard@epitech.eu",
+                  "receiver":           "ugo.levi-cescutti@epitech.eu"
+                }
+                ```
+
+* Friend Status
     * [Server -> Client]
         * Success Codes.
         * Error Codes
-    * [Client -> Server]
-        * Success Codes.
-        * Error Codes
-
-* Friend Status
 
 
 ### Messages (5** Codes )

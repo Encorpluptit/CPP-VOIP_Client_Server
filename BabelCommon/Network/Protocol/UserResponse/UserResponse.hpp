@@ -5,8 +5,8 @@
 ** [UserResponse.hpp]: Header file for UserResponse feature.
 */
 
-#ifndef CPP_BABEL_2020_CONNECTIONRESPONSE_HPP
-#define CPP_BABEL_2020_CONNECTIONRESPONSE_HPP
+#ifndef CPP_BABEL_2020_USER_RESPONSE_HPP
+#define CPP_BABEL_2020_USER_RESPONSE_HPP
 
 #include "AResponse.hpp"
 
@@ -15,12 +15,22 @@ namespace BabelNetwork {
         /* <- Class Enum -> */
     public:
         enum ResponseCode {
-            LoginOk = 210,
-            LoginNOk = 270,
-            RequestLogin = 211,
-            AccountCreated = 220,
-            AccountDeleted = 230,
+            LoggedIn = 200,
+            RequestLogin = 201,
+            LoggedOut = 202,
+            RequestLogout = 203,
 
+            AccountCreated = 210,
+            RequestAccountCreation = 211,
+            AccountDeleted = 212,
+            RequestAccountDeletion = 213,
+
+            UnknownUserError = 270,
+            WrongLogin = 271,
+            WrongPassword = 272,
+            RequestedAccountDeleted = 273,
+            LoginAlreadyTaken = 273,
+            AlreadyLoggedIn = 274,
         };
     public:
         enum MaxDataSize {
@@ -100,7 +110,8 @@ namespace BabelNetwork {
 
         [[nodiscard]] char *getDataByteBody() const noexcept final;
 
-        [[nodiscard]] const std::string &getDescription() const noexcept final {
+        [[nodiscard]] const std::string &getDescription() const noexcept final
+        {
             return _description;
         };
 
@@ -120,4 +131,4 @@ namespace BabelNetwork {
     };
 }
 
-#endif /* CPP_BABEL_2020_CONNECTIONRESPONSE_HPP */
+#endif /* CPP_BABEL_2020_USER_RESPONSE_HPP */

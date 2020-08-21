@@ -72,7 +72,7 @@ bool UserResponse::decode_data() noexcept
 
 bool BabelNetwork::UserResponse::isOk() noexcept
 {
-    return _header._code == UserResponse::ResponseCode::LoginOk
+    return _header._code == UserResponse::ResponseCode::LoggedIn
         || _header._code == UserResponse::ResponseCode::AccountCreated
         || _header._code == UserResponse::ResponseCode::AccountDeleted;
 }

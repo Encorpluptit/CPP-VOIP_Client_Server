@@ -43,7 +43,7 @@ Test(Common, UserResponse_03)
 Test(Common, UserResponse_04)
 {
     static const AResponse::ResponseHeader hdr = {
-        ._code = UserResponse::ResponseCode::LoginOk,
+        ._code = UserResponse::ResponseCode::LoggedIn,
         ._responseType = AResponse::ResponseType::User,
         ._dataInfosSize = 0,
     };
@@ -274,7 +274,7 @@ Test(Common, UserResponse_20)
     static const std::string pass("tata");
 
     UserResponse test(login, pass);
-    test.setCode(UserResponse::ResponseCode::LoginOk);
+    test.setCode(UserResponse::ResponseCode::LoggedIn);
     auto ptr = test.get_shared_from_this();
 
     ASSERT_BOOL(test.encode(), true);
@@ -292,7 +292,7 @@ Test(Common, UserResponse_21)
     static const std::string pass("tata");
 
     UserResponse test(login, pass);
-    test.setCode(UserResponse::ResponseCode::LoginOk);
+    test.setCode(UserResponse::ResponseCode::LoggedIn);
     ASSERT_BOOL(test.encode(), true);
     char *dataByte = test.getDataByte();
     auto ptr = AResponse::getResponse(dataByte);

@@ -200,3 +200,4 @@ void AsioClientSocket::handle_error(const std::string &msg, const boost::system:
         throw BabelErrors::ClientError(errorMsg, *this);
     }
 }
+
