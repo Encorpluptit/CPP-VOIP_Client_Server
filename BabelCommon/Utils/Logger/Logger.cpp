@@ -8,7 +8,6 @@
 #include <iostream>
 #include <ctime>
 #include "Logger.hpp"
-
 using namespace BabelUtils;
 
 Logger::Logger(Logger::LogType type)

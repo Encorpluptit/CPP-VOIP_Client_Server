@@ -9,6 +9,7 @@
 #include "NetworkError.hpp"
 #include "AsioClientSocket.hpp"
 #include "UserResponse.hpp"
+#include "CallResponse.hpp"
 
 static void socket_testing(char **av)
 {
@@ -47,10 +48,15 @@ static void socket_testing(char **av)
             std::cout << "exit loop" << std::endl;
             break;
         }
-        auto test = BabelNetwork::UserResponse::NewLoginRequest("damien", "abcdabcd");
-        std::cout << "sending response" << test << std::endl;
-        for (int i = 0; i < 10; ++i)
-            client->sendResponse(test);
+        auto Calltest = BabelNetwork::CallResponse::NewCallStarted("damien", "ugo", 156);
+        if (!Calltest)
+            std::cerr << "Call test Null" << std::endl;
+        else
+            client->sendResponse(Calltest);
+//        auto test = BabelNetwork::UserResponse::NewLoginRequest("damien", "abcdabcd");
+//        std::cout << "sending response" << test << std::endl;
+//        for (int i = 0; i < 10; ++i)
+//            client->sendResponse(test);
     }
     client->stop();
 }

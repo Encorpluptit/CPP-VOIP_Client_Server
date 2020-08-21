@@ -99,10 +99,13 @@ set(
         ${COMMON_DIR}/Network/Sockets/AsioSocket/AsioClientSocket.cpp
 
         ${COMMON_DIR}/Network/Protocol/AResponse/AResponse.cpp
+
         ${COMMON_DIR}/Network/Protocol/UserResponse/UserResponse.cpp
         ${COMMON_DIR}/Network/Protocol/UserResponse/FormattedUserResponse.cpp
 
         ${COMMON_DIR}/Network/Protocol/CallResponse/CallResponse.cpp
+        ${COMMON_DIR}/Network/Protocol/CallResponse/FormattedCallResponse.cpp
+
         ${COMMON_DIR}/Network/Protocol/FriendResponse/FriendResponse.cpp
         ${COMMON_DIR}/Network/Protocol/MessageResponse/MessageResponse.cpp
 

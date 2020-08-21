@@ -161,8 +161,8 @@ Full documentation of server/client protocol.
 
 ### Call (3** Codes)
 * Summary
-    * 300: Requested Call started.
-    * 301: Request Start Call.
+    * 300: Call started.
+    * 301: Request Call.
     * 302: Call Left Successfully.
     * 303: Request End Call.
     * 304: Incoming Call.

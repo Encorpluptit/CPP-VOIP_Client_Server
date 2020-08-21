@@ -8,6 +8,9 @@
 #include "StringFormat.tpp"
 #include "AResponse.hpp"
 #include "UserResponse.hpp"
+#include "CallResponse.hpp"
+#include "FriendResponse.hpp"
+#include "MessageResponse.hpp"
 
 using namespace BabelNetwork;
 
@@ -27,6 +30,12 @@ std::shared_ptr<AResponse> AResponse::getResponse(const char *headerBuffer)
     switch (response._responseType) {
         case User:
             return std::shared_ptr<AResponse>(new UserResponse(response));
+        case Call:
+            return std::shared_ptr<AResponse>(new CallResponse(response));
+        case Friend:
+            return std::shared_ptr<AResponse>(new FriendResponse(response));
+        case Message:
+            return std::shared_ptr<AResponse>(new MessageResponse(response));
         default:
             return nullptr;
     }

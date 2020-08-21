@@ -110,11 +110,6 @@ namespace BabelNetwork {
 
         [[nodiscard]] char *getDataByteBody() const noexcept final;
 
-        [[nodiscard]] const std::string &getDescription() const noexcept final
-        {
-            return _description;
-        };
-
         [[nodiscard]] bool setLogin(const std::string &login) noexcept;
 
         [[nodiscard]] bool setPassword(const std::string &password) noexcept;
@@ -122,6 +117,11 @@ namespace BabelNetwork {
         [[nodiscard]] const char *getLogin() const noexcept { return _data.login; };
 
         [[nodiscard]] const char *getPassword() const noexcept { return _data.password; };
+
+        [[nodiscard]] const std::string &getDescription() const noexcept final
+        {
+            return _description;
+        };
 
     private:
         const std::string _description = "User Related Request";

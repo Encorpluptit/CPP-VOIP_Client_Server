@@ -15,31 +15,40 @@ namespace BabelNetwork {
         /* <- Class Enum -> */
     public:
         enum ResponseCode {
-            LoginOk = 210,
-            RequestLogin = 211,
-            AccountCreated = 220,
-            AccountDeleted = 230,
+            CallStarted = 300,
+            RequestCall = 301,
+            CallLeft = 302,
+            RequestEndCall = 303,
+            IncomingCall = 304,
+            CallAccepted = 305,
 
+            CallRefused = 370,
+            UserDisconnected = 371,
         };
+
     private:
         enum MaxDataSize {
-            Login = 128,
-            Password = 128
+            Sender = 128,
+            Receiver = 128
         };
 
         /* <- Class Structure -> */
     public:
         using Data = struct __attribute__((packed)) DataStruct {
-            char login[MaxDataSize::Login];
-            char password[MaxDataSize::Password];
+            char sender[MaxDataSize::Sender];
+            char receiver[MaxDataSize::Receiver];
+            time_t timestamp;
+            uint16_t callId;
         };
         static const size_t DataSize = sizeof(Data);
 
         /* <- Class Structure -> */
     public:
         using DataInfos = struct __attribute__((packed)) DataInfosStruct {
-            uint16_t _loginSize;
-            uint16_t _passwordSize;
+            uint16_t _senderSize;
+            uint16_t _receiverSize;
+            uint8_t _timestampSize;
+            uint8_t _callIdSize;
         };
         static const size_t DataInfosSize = sizeof(DataInfos);
 
@@ -49,15 +58,9 @@ namespace BabelNetwork {
 
         /* <- Constructor - Destructor -> */
     public:
-        CallResponse() : AResponse()
-        {
-            _header._responseType = Call;
-            _header._dataInfosSize = DataInfosSize;
-        };
-
         explicit CallResponse(const ResponseHeader &headerResponse);
 
-        CallResponse(const std::string &login, const std::string &password);
+        CallResponse(const std::string &sender, const std::string &receiver);
 
         ~CallResponse() = default;
 
@@ -103,19 +106,32 @@ namespace BabelNetwork {
             return _description;
         };
 
-        [[nodiscard]] bool setLogin(const std::string &login) noexcept;
+        [[nodiscard]] bool setSender(const std::string &sender) noexcept;
 
-        [[nodiscard]] bool setPassword(const std::string &password) noexcept;
+        [[nodiscard]] bool setReceiver(const std::string &receiver) noexcept;
 
-        [[nodiscard]] const char *getLogin() const noexcept { return _data.login; };
+        [[nodiscard]] bool setTimestamp() noexcept;
 
-        [[nodiscard]] const char *getPassword() const noexcept { return _data.password; };
+        [[nodiscard]] bool setCallId(uint16_t call_id) noexcept;
+
+        [[nodiscard]] const char *getSender() const noexcept { return _data.sender; };
+
+        [[nodiscard]] const char *getReceiver() const noexcept { return _data.receiver; };
+
+        [[nodiscard]] uint16_t getCallId() const noexcept { return _data.callId; };
+
+        [[nodiscard]] time_t getTimestamp() const noexcept { return _data.timestamp; };
 
     private:
         const std::string _description = "Call Related Request";
         char _data_byte[MaxResponseSize] = {0};
         DataInfos _dataInfos{};
+//        DataInfos _dataInfos{0,0, sizeof(time_t), sizeof(uint16_t)};
         Data _data{};
+
+    public:
+        [[nodiscard]] static std::shared_ptr<AResponse>
+        NewCallStarted(const std::string &sender, const std::string &receiver, uint16_t call_id);
     };
 }
 
