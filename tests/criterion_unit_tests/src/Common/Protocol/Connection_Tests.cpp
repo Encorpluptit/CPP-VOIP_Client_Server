@@ -29,7 +29,7 @@ Test(Common, UserResponse_02)
 Test(Common, UserResponse_03)
 {
     static const AResponse::ResponseHeader hdr = {
-        ._code = UserResponse::ResponseCode::LoginNOk,
+        ._code = UserResponse::ResponseCode::UnknownUserError,
         ._responseType = AResponse::ResponseType::User,
         ._dataInfosSize = 0
     };
