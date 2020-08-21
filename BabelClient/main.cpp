@@ -48,7 +48,7 @@ static void socket_testing(char **av)
             break;
         }
         auto test = std::make_shared<BabelNetwork::UserResponse>("damien", "abcd1234");
-        std::cout << "sending response" << *test << std::endl;
+        std::cout << "sending response" << test << std::endl;
         client->sendResponse(test);
         for (int i = 0; i < 100; ++i)
             client->sendResponse(test);

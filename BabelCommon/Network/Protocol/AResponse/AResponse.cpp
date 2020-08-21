@@ -49,6 +49,12 @@ std::ostream &BabelNetwork::operator<<(std::ostream &os, const BabelNetwork::ARe
     return os;
 }
 
+std::ostream &BabelNetwork::operator<<(std::ostream &os, const std::shared_ptr<AResponse> &response)
+{
+    os << response->serialize();
+    return os;
+}
+
 uint16_t AResponse::getCode() const noexcept
 {
     return _header._code;

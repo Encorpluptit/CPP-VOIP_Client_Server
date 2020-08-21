@@ -47,6 +47,8 @@ namespace BabelUtils {
 
         void logThis(const BabelNetwork::AResponse &response, const std::string &msg = "");
 
+        void logThis(const std::shared_ptr<BabelNetwork::AResponse> &response, const std::string &msg = "");
+
         void logThis(const BabelNetwork::NetworkInfos &infos, const std::string &msg = "");
 
         /* <- Private Methods -> */

@@ -43,7 +43,7 @@ bool AsioClientSocket::sendResponse(const std::shared_ptr<AResponse> &response)
 {
     bool write_in_progress = !_write_queue.empty();
 
-    _logger.logThis(*response, "Queue response :");
+    _logger.logThis(response, "Queue response :");
     _write_queue.push(response);
     boost::asio::post(
         _context,
@@ -148,7 +148,7 @@ void AsioClientSocket::queue_read_response(const boost::system::error_code &erro
     if (!error && _read_msg->decode_data()) {
         std::cout << "BODY READ -- DATA = " << _read_msg->serialize_data() << std::endl;
         _read_queue.push(_read_msg);
-        _logger.logThis(*_read_msg);
+        _logger.logThis(_read_msg);
         read_header();
     } else {
         handle_error("{ read_data } : ", error);
