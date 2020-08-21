@@ -31,7 +31,7 @@ func (c *Core) SendInput(_ string) {
 	if !c.Run {
 		return
 	}
-	rq, err := nw.NewUserRequest(c.Conn, nw.RqUserLogin, "lol", "mdr xd")
+	rq, err := nw.NewTestRequest(c.Conn, nw.RqUserLogin, "lol", "mdr xd")
 	if err != nil {
 		log.Println(err)
 		return
@@ -56,17 +56,21 @@ func (c *Core) Serve() {
 	defer c.Close()
 	for c.Run {
 		input := <-c.Input
-		for i := 0; i < 100000; i++ {
-			log.Println("Sending Header :", input.Header)
-			if err := input.Send(); err != nil {
-				log.Println(err)
-				return
-			}
-			if input.Header.Code == nw.RqUserLogout {
-				input.Header.Code = nw.RqUserLogin
-			} else {
-				input.Header.Code = nw.RqUserLogout
-			}
+		if err := input.Send(); err != nil {
+			log.Println(err)
+			return
 		}
+		//for i := 0; i < 100000; i++ {
+		//	log.Println("Sending Header :", input.Header)
+		//	if err := input.Send(); err != nil {
+		//		log.Println(err)
+		//		return
+		//	}
+		//	if input.Header.Code == nw.RqUserLogout {
+		//		input.Header.Code = nw.RqUserLogin
+		//	} else {
+		//		input.Header.Code = nw.RqUserLogout
+		//	}
+		//}
 	}
 }

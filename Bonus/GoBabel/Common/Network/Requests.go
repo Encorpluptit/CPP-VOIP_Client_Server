@@ -2,7 +2,9 @@ package BabelNetwork
 
 import (
 	"encoding/binary"
+	"encoding/gob"
 	"io"
+	"log"
 	"unsafe"
 )
 
@@ -13,6 +15,7 @@ const (
 	RqUnknown
 	RqUser
 	RqCall
+	RqTest
 	RqFriend
 )
 
@@ -25,7 +28,7 @@ type RequestHeader struct {
 type Request struct {
 	Conn   io.ReadWriter
 	Header RequestHeader
-	Datas  EncodeDecoder
+	Datas  interface{}
 }
 
 type RequestManager struct {
@@ -66,14 +69,25 @@ func (r *Request) ReceiveHeader() error {
 }
 
 func (r *Request) ReceiveDatas() error {
-	return ReceiveDecodeDatas(r.Header.DataInfosSize, r.Datas, r.Conn)
+	dec := gob.NewDecoder(r.Conn) // Will read from network.
+	err := dec.Decode(r.Datas)
+	if err != nil {
+		log.Fatal("decode error:", err)
+	}
+	return nil
+	//return ReceiveDecodeDatas(r.Header.DataInfosSize, r.Datas, r.Conn)
 }
 
 func (r Request) Send() error {
 	b := r.Header.Encode()
-	b = append(b, r.Datas.Encode()...)
+	//b = append(b, r.Datas.Encode()...)
 	if _, err := r.Conn.Write(b); err != nil {
 		return err
+	}
+	enc := gob.NewEncoder(r.Conn)
+	err := enc.Encode(r.Datas)
+	if err != nil {
+		log.Fatal("encode error:", err)
 	}
 	return nil
 }

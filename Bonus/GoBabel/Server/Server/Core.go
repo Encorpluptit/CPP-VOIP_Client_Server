@@ -84,30 +84,29 @@ func (c *Core) handleClient(client *BabelNetwork.Client) {
 
 	nb := 0
 	for c.Run {
-		if err := client.WaitRequest(RequestManagerGetter); err != nil {
+		//if err := client.WaitRequest(RequestManagerGetter); err != nil {
+		//	break
+		//}
+		rq := BabelNetwork.NewRequest(client.Conn)
+		if err := rq.ReceiveHeader(); err != nil {
+			log.Println(err)
 			break
 		}
-		//rq := BabelNetwork.NewRequest(client.Conn)
-		//if err := rq.ReceiveHeader(); err != nil {
-		//	log.Println(err)
-		//	break
-		//}
-		//log.Println("Header Received:", rq.Header)
-		//rqManager, err := RequestManagerGetter(rq)
-		////rqManager, err := getRequestManager(rq)
-		//if err != nil {
-		//	log.Println(err)
-		//	break
-		//}
-		//rq.Datas = rqManager.EmptyDatas()
-		//if err := rq.ReceiveDatas(); err != nil {
-		//	log.Println(err)
-		//	break
-		//}
-		//if err := rqManager.ManagerFunc(client, rq); err != nil {
-		//	log.Println(err)
-		//	break
-		//}
+		log.Println("Header Received:", rq.Header)
+		rqManager, err := RequestManagerGetter(rq)
+		if err != nil {
+			log.Println(err)
+			break
+		}
+		rq.Datas = rqManager.EmptyDatas()
+		if err := rq.ReceiveDatas(); err != nil {
+			log.Println(err)
+			break
+		}
+		if err := rqManager.ManagerFunc(client, rq); err != nil {
+			log.Println(err)
+			break
+		}
 		nb += 1
 		log.Println("Request received:", nb)
 	}
