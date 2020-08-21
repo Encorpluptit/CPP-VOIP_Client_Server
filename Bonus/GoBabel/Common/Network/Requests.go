@@ -12,6 +12,7 @@ const (
 	UnknownCode = iota
 	RqUnknown
 	RqUser
+	RqCall
 	RqFriend
 )
 

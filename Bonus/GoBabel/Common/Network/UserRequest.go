@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"log"
 	"unsafe"
 )
 
@@ -19,7 +18,7 @@ const (
 )
 
 const (
-	UserInfosSIze   = unsafe.Sizeof(UserDatasInfos{})
+	UserInfosSize   = unsafe.Sizeof(UserDatasInfos{})
 	MaxLoginSize    = 256
 	MaxPasswordSize = 256
 )
@@ -47,7 +46,7 @@ func NewUserRequest(conn io.ReadWriter, code uint16, login, password string) (*R
 	rq := NewRequest(conn)
 	rq.Header.RqType = RqUser
 	rq.Header.Code = code
-	rq.Header.DataInfosSize = uint16(UserInfosSIze)
+	rq.Header.DataInfosSize = uint16(UserInfosSize)
 	rq.Datas = &UserDatas{
 		UserDatasInfos: UserDatasInfos{
 			LoginSize:    loginSz,
@@ -64,7 +63,7 @@ func EmptyUserRequest() EncodeDecoder {
 }
 
 func (r UserDatas) Encode() []byte {
-	b := make([]byte, UserInfosSIze)
+	b := make([]byte, UserInfosSize)
 	binary.LittleEndian.PutUint16(b[0:], r.LoginSize)
 	binary.LittleEndian.PutUint16(b[2:], r.PasswordSize)
 	b = append(b, []byte(r.Login)...)
@@ -75,13 +74,11 @@ func (r UserDatas) Encode() []byte {
 func (r *UserDatas) DecodeInfos(b []byte) {
 	r.LoginSize = binary.LittleEndian.Uint16(b[0:])
 	r.PasswordSize = binary.LittleEndian.Uint16(b[2:])
-	log.Println(r.LoginSize, r.PasswordSize)
 }
 
 func (r *UserDatas) DecodeDatas(b []byte) {
 	r.Login = string(b[0:r.LoginSize])
 	r.Password = string(b[r.LoginSize:])
-	log.Println(r.Login, r.Password)
 }
 
 func (r UserDatas) GetSize() uint32 {

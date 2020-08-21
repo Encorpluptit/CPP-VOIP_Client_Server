@@ -5,11 +5,12 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"log"
+	"time"
 	"unsafe"
 )
 
 const (
+
 //RqUserLogin = iota
 //RqUserLogout
 //RqUserLoginOK
@@ -18,55 +19,67 @@ const (
 //RqUserLogoutNOK
 )
 
+var timeLoc = func(t *time.Time) {
+	t.Local()
+}
+
 const (
-	CallInfosSIze   = unsafe.Sizeof(CallDatasInfos{})
+	CallInfosSize   = unsafe.Sizeof(CallDatasInfos{})
+	TimestampSize   = unsafe.Sizeof(time.Time{})
 	MaxSenderSize   = 256
 	MaxReceiverSize = 256
 )
 
 type CallDatasInfos struct {
-	SenderSize, ReceiverSize uint16
+	SenderSize, ReceiverSize, CallIdSize, TimestampSize uint16
 }
 
 type CallDatas struct {
 	CallDatasInfos
 	Sender, Receiver string
+	CallId           uint16
+	Timestamp        time.Time
 }
 
-func NewCallRequest(conn io.ReadWriter, code uint16, login, password string) (*Request, error) {
-	loginSz, passwordSz := uint16(len(login)), uint16(len(password))
+func NewCallRequest(conn io.ReadWriter, code, callId uint16, sender, receiver string) (*Request, error) {
+	senderSz, receiverSz := uint16(len(sender)), uint16(len(receiver))
 
-	if loginSz > MaxSenderSize || passwordSz > MaxReceiverSize {
+	if senderSz > MaxSenderSize || receiverSz > MaxReceiverSize {
 		err := fmt.Sprintf(
-			"login or password too long: %d [%d] <==> %d [%d]",
-			loginSz, MaxSenderSize, passwordSz, MaxReceiverSize,
+			"sender or receiver too long: %d [%d] <==> %d [%d]",
+			senderSz, MaxSenderSize, receiverSz, MaxReceiverSize,
 		)
 		return nil, errors.New(err)
 	}
 
 	rq := NewRequest(conn)
-	rq.Header.RqType = RqUser
+	rq.Header.RqType = RqCall
 	rq.Header.Code = code
-	rq.Header.DataInfosSize = uint16(UserInfosSIze)
+	rq.Header.DataInfosSize = uint16(CallInfosSize)
 	rq.Datas = &CallDatas{
 		CallDatasInfos: CallDatasInfos{
-			SenderSize:   loginSz,
-			ReceiverSize: passwordSz,
+			SenderSize:    senderSz,
+			ReceiverSize:  receiverSz,
+			TimestampSize: uint16(TimestampSize),
 		},
-		Sender:   login,
-		Receiver: password,
+		Sender:    sender,
+		Receiver:  receiver,
+		CallId:    callId,
+		Timestamp: time.Now(),
 	}
 	return rq, nil
 }
 
-func EmptyCall() EncodeDecoder {
-	return &UserDatas{}
+func EmptyCallRequest() EncodeDecoder {
+	return &CallDatas{}
 }
 
 func (r CallDatas) Encode() []byte {
-	b := make([]byte, UserInfosSIze)
+	b := make([]byte, uint16(CallInfosSize)+r.CallIdSize)
 	binary.LittleEndian.PutUint16(b[0:], r.SenderSize)
 	binary.LittleEndian.PutUint16(b[2:], r.ReceiverSize)
+	binary.LittleEndian.PutUint16(b[4:], r.CallIdSize)
+	binary.LittleEndian.PutUint16(b[6:], r.CallId)
 	b = append(b, []byte(r.Sender)...)
 	b = append(b, []byte(r.Receiver)...)
 	return b
@@ -75,13 +88,13 @@ func (r CallDatas) Encode() []byte {
 func (r *CallDatas) DecodeInfos(b []byte) {
 	r.SenderSize = binary.LittleEndian.Uint16(b[0:])
 	r.ReceiverSize = binary.LittleEndian.Uint16(b[2:])
-	log.Println(r.SenderSize, r.ReceiverSize)
+	r.CallIdSize = binary.LittleEndian.Uint16(b[4:])
 }
 
 func (r *CallDatas) DecodeDatas(b []byte) {
+	r.CallId = binary.LittleEndian.Uint16(b[r.SenderSize+r.ReceiverSize : r.SenderSize+r.ReceiverSize+r.CallIdSize])
 	r.Sender = string(b[0:r.SenderSize])
-	r.Receiver = string(b[r.SenderSize:])
-	log.Println(r.Sender, r.Receiver)
+	r.Receiver = string(b[r.SenderSize : r.SenderSize+r.ReceiverSize])
 }
 
 func (r CallDatas) GetSize() uint32 {
