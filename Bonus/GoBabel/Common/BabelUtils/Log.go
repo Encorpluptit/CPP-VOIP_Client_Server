@@ -20,8 +20,8 @@ const (
 	EqualLine    = "====="
 	DashLine     = "-----"
 	LogDirectory = "GoLogs"
-	ClientLog    = "ClientLog"
-	ServerLog    = "ServerLog"
+	ClientLog    = "Client"
+	ServerLog    = "Server"
 )
 
 type Logger struct {
@@ -33,31 +33,41 @@ func getTimeStamp() string {
 	t := time.Now()
 	year, month, day := t.Date()
 	hour, min, sec := t.Clock()
-	return fmt.Sprintf("%d-%d-%d_%d-%d-%d", year, int(month), day, hour, min, sec)
+	return fmt.Sprintf("%d-%02d-%02d_%02d-%02d-%02d", year, int(month), day, hour, min, sec)
 }
 
-func createDirectories() error {
+func createDirectories(LogType string) error {
 	cur, err := os.Getwd()
 	if err != nil {
 		return err
 	}
 	logDir := cur + "/" + LogDirectory
 	if file, err := os.Stat(logDir); err == nil {
+		if !file.IsDir() {
+			return errors.New(logDir + ": is not a dir")
+		}
+	} else {
+		if err := os.Mkdir(LogDirectory, 0700); err != nil {
+			return err
+		}
+	}
+	logSubDir := logDir + "/" + LogType
+	if file, err := os.Stat(logSubDir); err == nil {
 		if file.IsDir() {
 			return nil
 		}
-		return errors.New(logDir + ": is not a dir")
+		return errors.New(logSubDir + ": is not a dir")
 	}
-	return os.Mkdir(LogDirectory, 0700)
+	return os.Mkdir(logSubDir, 0700)
 }
 
 func NewLogger(LogType string) (*Logger, error, func()) {
-	if err := createDirectories(); err != nil {
+	if err := createDirectories(LogType); err != nil {
 		log.Println("New Logger failed from createDirectories", err)
 		return nil, err, nil
 	}
 	logOutput := log.Writer()
-	fileName := fmt.Sprintf("%s/%s-%s", LogDirectory, getTimeStamp(), LogType)
+	fileName := fmt.Sprintf("%s/%s/%s.log", LogDirectory, LogType, getTimeStamp())
 	file, err := os.Create(fileName)
 	if err != nil {
 		log.Println("New Logger failed from os.Open", err)
