@@ -59,7 +59,7 @@ func NewUserRequest(conn io.ReadWriter, code uint16, login, password string) (*R
 	return rq, nil
 }
 
-func EmptyUser() EncodeDecoder {
+func EmptyUserRequest() EncodeDecoder {
 	return &UserDatas{}
 }
 

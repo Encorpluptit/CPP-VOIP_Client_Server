@@ -6,7 +6,7 @@ import (
 )
 
 var RequestManager = map[uint16]BabelNetwork.RequestManager{
-	BabelNetwork.RqUser: {ManagerFunc: UserManager, EmptyDatas: BabelNetwork.EmptyUser},
+	BabelNetwork.RqUser: {ManagerFunc: UserManager, EmptyDatas: BabelNetwork.EmptyUserRequest},
 }
 
 func getRequestManager(request *BabelNetwork.Request) (*BabelNetwork.RequestManager, error) {
