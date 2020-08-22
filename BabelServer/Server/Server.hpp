@@ -40,16 +40,16 @@ namespace BabelServer {
 
         /* <- Getters / Setters -> */
     public:
-        [[nodiscard]] const boost::shared_ptr<BabelUtils::BoostThread> &getThread() const;
+        [[nodiscard]] const BabelUtils::SharedPtr<BabelUtils::BoostThread> &getThread() const;
 
-        void setThread(const boost::shared_ptr<BabelUtils::BoostThread> &thread);
+        void setThread(const BabelUtils::SharedPtr<BabelUtils::BoostThread> &thread);
 
 
         /* <- Attributes -> */
     private:
         BabelUtils::Logger _logger;
-        std::vector<boost::shared_ptr<BabelNetwork::ASocket>> _servers;
-        boost::shared_ptr<BabelUtils::BoostThread> _thread;
+        std::vector<BabelUtils::SharedPtr<BabelNetwork::ASocket>> _servers;
+        BabelUtils::SharedPtr<BabelUtils::BoostThread> _thread;
         // TODO: Include Db
     };
 

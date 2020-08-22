@@ -52,12 +52,12 @@ void Server::initServers(int ac, char **av)
         _servers.emplace_back(new AsioListener(av[0], av[i], _logger));
 }
 
-[[nodiscard]] const boost::shared_ptr<BabelUtils::BoostThread> &Server::getThread() const
+[[nodiscard]] const BabelUtils::SharedPtr<BabelUtils::BoostThread> &Server::getThread() const
 {
     return _thread;
 }
 
-void Server::setThread(const boost::shared_ptr<BabelUtils::BoostThread> &thread)
+void Server::setThread(const BabelUtils::SharedPtr<BabelUtils::BoostThread> &thread)
 {
     _thread = thread;
 }

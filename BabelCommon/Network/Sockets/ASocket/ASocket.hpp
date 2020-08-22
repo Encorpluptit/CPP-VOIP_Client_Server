@@ -43,9 +43,9 @@ class ASocket : virtual public BabelUtils::ARunnable {
 
         [[nodiscard]] const NetworkInfos &getNetworkInfos() const;
 
-        [[nodiscard]] const boost::shared_ptr<BabelUtils::AThread> &getThread() const;
+        [[nodiscard]] const BabelUtils::SharedPtr<BabelUtils::AThread> &getThread() const;
 
-        void setThread(const boost::shared_ptr<BabelUtils::AThread> &thread);
+        void setThread(const BabelUtils::SharedPtr<BabelUtils::AThread> &thread);
 
         /* <- Operators -> */
     public:
@@ -57,7 +57,7 @@ class ASocket : virtual public BabelUtils::ARunnable {
     protected:
         NetworkInfos _networkInfos;
         BabelUtils::Logger &_logger;
-        boost::shared_ptr<BabelUtils::AThread> _thread;
+        BabelUtils::SharedPtr<BabelUtils::AThread> _thread;
     };
 
 }

@@ -38,8 +38,7 @@ namespace BabelClient {
         /* <- Getters / Setters -> */
     public:
         BabelUtils::Logger _logger;
-        SharedPtr<BabelNetwork::ClientSocket> _socket;
-//        boost::shared_ptr<BabelNetwork::ClientSocket> _socket;
+        BabelUtils::SharedPtr<BabelNetwork::ClientSocket> _socket;
     };
 
 }

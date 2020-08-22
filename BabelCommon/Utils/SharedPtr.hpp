@@ -10,7 +10,9 @@
 
 #include "boost/shared_ptr.hpp"
 
-template<typename T>
-using SharedPtr = boost::shared_ptr<T>;
+namespace BabelUtils {
+    template<typename T>
+    using SharedPtr = boost::shared_ptr<T>;
+}
 
 #endif /* CPP_BABEL_2020_SHAREDPTR_HPP */

@@ -35,7 +35,7 @@ namespace BabelServer {
         void accept();
 
         void handle_accept(
-            const boost::shared_ptr<BabelNetwork::AsioClientSocket> &session,
+            const BabelUtils::SharedPtr<BabelNetwork::AsioClientSocket> &session,
             const boost::system::error_code &error
         );
 
@@ -61,7 +61,7 @@ namespace BabelServer {
         ip::tcp::endpoint _endpoint;
         boost::asio::ip::tcp::acceptor _acceptor;
         boost::asio::signal_set _signals;
-        std::vector<boost::shared_ptr<BabelNetwork::AsioClientSocket>> _asioClients;
+        std::vector<BabelUtils::SharedPtr<BabelNetwork::AsioClientSocket>> _asioClients;
     };
 }
 
