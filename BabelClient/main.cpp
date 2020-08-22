@@ -6,6 +6,7 @@
 */
 
 #include <iostream>
+#include "ClientCore.hpp"
 #include "NetworkError.hpp"
 #include "AsioClientSocket.hpp"
 #include "UserResponse.hpp"
@@ -24,17 +25,17 @@ static void socket_testing(char **av)
             BabelNetwork::AsioClientSocket::SocketHandler::Client
     );
     client->connect();
-    client->setThread(boost::make_shared<BabelUtils::BoostThread>(
-        [&client] {
-            try {
-                std::cout << "CLIENT THREAD LAUNCHED" << std::endl;
-                client->getContext().run();
-                std::cout << "CLIENT THREAD FINISHED" << std::endl;
-            } catch (const std::exception &e) {
-                std::cerr << e.what() << std::endl;
-            }
-        })
-    );
+//    client->setThread(boost::make_shared<BabelUtils::BoostThread>(
+//        [&client] {
+//            try {
+//                std::cout << "CLIENT THREAD LAUNCHED" << std::endl;
+//                client->getContext().run();
+//                std::cout << "CLIENT THREAD FINISHED" << std::endl;
+//            } catch (const std::exception &e) {
+//                std::cerr << e.what() << std::endl;
+//            }
+//        })
+//    );
 
     sleep(1);
     if (!client->isReady()) {
@@ -63,10 +64,12 @@ static void socket_testing(char **av)
 
 int main(int ac, char **av)
 {
-    if (ac < 3)
+    if (ac != 3)
         return 84;
     std::cout << "Babel client!" << std::endl;
     try {
+//        BabelClient::ClientCore core(ac, av);
+//        core.start();
         socket_testing(av);
     } catch (const BabelErrors::BabelError &e) {
         std::cerr << "IN CLIENT MAIN" << e.what() << std::endl;

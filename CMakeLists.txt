@@ -164,6 +164,7 @@ set(CLIENT_DIR BabelClient)
 set(
         CLIENT_INCLUDES
         ${CLIENT_DIR}/include
+        ${CLIENT_DIR}/ClientCore
         ${CLIENT_DIR}/src
 )
 
@@ -172,6 +173,7 @@ set(
 # Client Sources
 set(
         CLIENT_SOURCES
+        ${CLIENT_DIR}/ClientCore/ClientCore.cpp
 )
 
 
@@ -188,6 +190,8 @@ target_include_directories(
         babel_client PUBLIC
         ${CLIENT_INCLUDES}
 )
+
+target_compile_definitions(babel_client PRIVATE BABEL_CLIENT)
 
 find_package(Qt5 COMPONENTS Network REQUIRED)
 

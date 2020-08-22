@@ -55,7 +55,7 @@ namespace BabelNetwork {
 
         bool sendResponse(const std::shared_ptr<AResponse> &response) final;
 
-        void connect();
+        void connect() override;
 
         [[nodiscard]] std::string describe() final;
 
