@@ -14,14 +14,14 @@ using namespace BabelNetwork;
 FriendResponse::FriendResponse(const ResponseHeader &headerResponse)
     : AResponse(headerResponse) {}
 
-FriendResponse::FriendResponse(const std::string &login, const std::string &password)
+FriendResponse::FriendResponse(const std::string &login, const std::string &friendLogin)
     : AResponse()
 {
     _header._responseType = Friend;
     _header._dataInfosSize = DataInfosSize;
 
-    if (!setLogin(login) || !setPassword(password))
-        throw BabelErrors::FriendResponse("login or password too long");
+    if (!setLogin(login) || !setFriendLogin(friendLogin))
+        throw BabelErrors::FriendResponse("login or friendLogin too long");
 }
 
 bool FriendResponse::setLogin(const std::string &login) noexcept
@@ -33,12 +33,12 @@ bool FriendResponse::setLogin(const std::string &login) noexcept
     return true;
 }
 
-bool FriendResponse::setPassword(const std::string &password) noexcept
+bool FriendResponse::setFriendLogin(const std::string &friendLogin) noexcept
 {
-    if (password.size() > MaxDataSize::Password)
+    if (friendLogin.size() > MaxDataSize::FriendLogin)
         return false;
-    strcat(_data.password, password.c_str());
-    _dataInfos._passwordSize = password.size();
+    strcat(_data.FriendLogin, friendLogin.c_str());
+    _dataInfos._FriendLoginSize = friendLogin.size();
     return true;
 }
 
@@ -47,7 +47,7 @@ bool FriendResponse::encode() noexcept
     memcpy(_data_byte, &_header, HeaderSize);
     memcpy(getDataByteDataInfos(), &_dataInfos, DataInfosSize);
     memcpy(getDataByteBody(), _data.login, _dataInfos._loginSize);
-    memcpy(getDataByteBody() + _dataInfos._loginSize, _data.password, _dataInfos._passwordSize);
+    memcpy(getDataByteBody() + _dataInfos._loginSize, _data.FriendLogin, _dataInfos._FriendLoginSize);
     return true;
 }
 
@@ -66,15 +66,13 @@ bool FriendResponse::decode_data_infos() noexcept
 bool FriendResponse::decode_data() noexcept
 {
     memcpy(_data.login, getDataByteBody(), _dataInfos._loginSize);
-    memcpy(_data.password, getDataByteBody() + _dataInfos._loginSize, _dataInfos._passwordSize);
+    memcpy(_data.FriendLogin, getDataByteBody() + _dataInfos._loginSize, _dataInfos._FriendLoginSize);
     return true;
 }
 
 bool BabelNetwork::FriendResponse::isOk() noexcept
 {
-    return _header._code == FriendResponse::ResponseCode::LoginOk
-        || _header._code == FriendResponse::ResponseCode::AccountCreated
-        || _header._code == FriendResponse::ResponseCode::AccountDeleted;
+    return _header._code == FriendResponse::ResponseCode::AcceptFriendRequest;
 }
 
 std::shared_ptr<AResponse> FriendResponse::get_shared_from_this() const noexcept
@@ -104,21 +102,21 @@ size_t FriendResponse::getResponseSize() const noexcept
 
 size_t FriendResponse::getDataSize() const noexcept
 {
-    return _dataInfos._loginSize + _dataInfos._passwordSize;
+    return _dataInfos._loginSize + _dataInfos._FriendLoginSize;
 }
 
 std::string FriendResponse::serialize_data_infos() const noexcept
 {
     return BabelUtils::format(
-        "Login Size: %zu | Password Size: %zu",
-        _dataInfos._loginSize, _dataInfos._passwordSize
+        "Login Size: %zu | FriendLogin Size: %zu",
+        _dataInfos._loginSize, _dataInfos._FriendLoginSize
     );
 }
 
 std::string FriendResponse::serialize_data() const noexcept
 {
     return BabelUtils::format(
-        "Login: %s | Password: %s",
-        _data.login, _data.password
+        "Login: %s | FriendLogin: %s",
+        _data.login, _data.FriendLogin
     );
 }

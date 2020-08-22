@@ -15,23 +15,26 @@ namespace BabelNetwork {
         /* <- Class Enum -> */
     public:
         enum ResponseCode {
-            LoginOk = 210,
-            RequestLogin = 211,
-            AccountCreated = 220,
-            AccountDeleted = 230,
+            RequestAddFriend = 300,
+            AddFriend = 301,
+            FriendRequest = 302,
+            AcceptFriendRequest = 303,
+            DeclineFriendRequest = 304,
+            
+            UnknowUser = 350,
 
         };
     private:
         enum MaxDataSize {
             Login = 128,
-            Password = 128
+            FriendLogin = 128
         };
 
         /* <- Class Structure -> */
     public:
         using Data = struct __attribute__((packed)) DataStruct {
             char login[MaxDataSize::Login];
-            char password[MaxDataSize::Password];
+            char FriendLogin[MaxDataSize::FriendLogin];
         };
         static const size_t DataSize = sizeof(Data);
 
@@ -39,7 +42,7 @@ namespace BabelNetwork {
     public:
         using DataInfos = struct __attribute__((packed)) DataInfosStruct {
             uint16_t _loginSize;
-            uint16_t _passwordSize;
+            uint16_t _FriendLoginSize;
         };
         static const size_t DataInfosSize = sizeof(DataInfos);
 
@@ -57,7 +60,7 @@ namespace BabelNetwork {
 
         explicit FriendResponse(const ResponseHeader &headerResponse);
 
-        FriendResponse(const std::string &login, const std::string &password);
+        FriendResponse(const std::string &login, const std::string &FriendLogin);
 
         ~FriendResponse() = default;
 
@@ -105,17 +108,26 @@ namespace BabelNetwork {
 
         [[nodiscard]] bool setLogin(const std::string &login) noexcept;
 
-        [[nodiscard]] bool setPassword(const std::string &password) noexcept;
+        [[nodiscard]] bool setFriendLogin(const std::string &FriendLogin) noexcept;
 
         [[nodiscard]] const char *getLogin() const noexcept { return _data.login; };
 
-        [[nodiscard]] const char *getPassword() const noexcept { return _data.password; };
+        [[nodiscard]] const char *getFriendLogin() const noexcept { return _data.FriendLogin; };
 
     private:
         const std::string _description = "Friend Related Request";
         char _data_byte[MaxResponseSize] = {0};
         DataInfos _dataInfos{};
         Data _data{};
+
+    public:
+        [[nodiscard]] static std::shared_ptr<AResponse> RequestFriend(const std::string &login, const std::string &friendLogin);
+        [[nodiscard]] static std::shared_ptr<AResponse> FriendRequestOk(const std::string &login, const std::string &friendLogin);
+        [[nodiscard]] static std::shared_ptr<AResponse> NewFriendRequest(const std::string &login, const std::string &friendLogin);
+        [[nodiscard]] static std::shared_ptr<AResponse> FriendRequestAccepted(const std::string &login, const std::string &friendLogin);
+        [[nodiscard]] static std::shared_ptr<AResponse> FriendRequestDeclined(const std::string &login, const std::string &friendLogin);
+        [[nodiscard]] static std::shared_ptr<AResponse> RequestFriend(const std::string &login, const std::string &friendLogin);
+        [[nodiscard]] static std::shared_ptr<AResponse> UserNotExist(const std::string &login, const std::string &friendLogin);
     };
 }
 

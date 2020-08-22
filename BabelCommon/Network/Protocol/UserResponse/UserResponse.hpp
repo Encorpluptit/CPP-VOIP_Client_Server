@@ -28,7 +28,7 @@ namespace BabelNetwork {
             UnknownUserError = 270,
             WrongLogin = 271,
             WrongPassword = 272,
-            RequestedAccountDeleted = 273,
+            RequestedAccountDeleted = 273, /* ? */
             LoginAlreadyTaken = 273,
             AlreadyLoggedIn = 274,
         };
@@ -131,6 +131,19 @@ namespace BabelNetwork {
 
     public:
         [[nodiscard]] static std::shared_ptr<AResponse> NewLoginRequest(const std::string &login, const std::string &password);
+        [[nodiscard]] static std::shared_ptr<AResponse> AccountCreationRequest(const std::string &login, const std::string &password);
+        [[nodiscard]] static std::shared_ptr<AResponse> LogoutRequest(const std::string &login);
+        [[nodiscard]] static std::shared_ptr<AResponse> AccountDeletionRequest(const std::string &login);
+        [[nodiscard]] static std::shared_ptr<AResponse> LoggingInOk(const std::string &login);
+        [[nodiscard]] static std::shared_ptr<AResponse> LoggedOutOk(const std::string &login);
+        [[nodiscard]] static std::shared_ptr<AResponse> AccountDeletedOk(const std::string &login);
+        [[nodiscard]] static std::shared_ptr<AResponse> UnknowUser(const std::string &login);
+        [[nodiscard]] static std::shared_ptr<AResponse> BadLogin(const std::string &login);
+        [[nodiscard]] static std::shared_ptr<AResponse> BadPassword(const std::string &login);
+        [[nodiscard]] static std::shared_ptr<AResponse> LoginUse(const std::string &login);
+        [[nodiscard]] static std::shared_ptr<AResponse> AlreadyLog(const std::string &login);
+        [[nodiscard]] static std::shared_ptr<AResponse> AccountCreatedOk(const std::string &login);
+        [[nodiscard]] static std::shared_ptr<AResponse> RequestedDeletedAccount(const std::string &login);
     };
 }
 
