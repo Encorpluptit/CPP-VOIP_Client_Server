@@ -15,22 +15,22 @@ namespace BabelNetwork {
         /* <- Class Enum -> */
     public:
         enum ResponseCode {
-            LoggedIn = 200,
-            RequestLogin = 201,
-            LoggedOut = 202,
-            RequestLogout = 203,
+            LoggedIn = 100,
+            RequestLogin = 101,
+            LoggedOut = 102,
+            RequestLogout = 103,
 
-            AccountCreated = 210,
-            RequestAccountCreation = 211,
-            AccountDeleted = 212,
-            RequestAccountDeletion = 213,
+            AccountCreated = 110,
+            RequestAccountCreation = 111,
+            AccountDeleted = 112,
+            RequestAccountDeletion = 113,
 
-            UnknownUserError = 270,
-            WrongLogin = 271,
-            WrongPassword = 272,
-            RequestedAccountDeleted = 273, /* ? */
-            LoginAlreadyTaken = 273,
-            AlreadyLoggedIn = 274,
+            UnknownUserError = 170,
+            WrongLogin = 171,
+            WrongPassword = 172,
+            RequestedAccountDeleted = 173, /* ? */
+            LoginAlreadyTaken = 173,
+            AlreadyLoggedIn = 174,
         };
     public:
         enum MaxDataSize {

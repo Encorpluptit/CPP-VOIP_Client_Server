@@ -14,31 +14,31 @@ using namespace BabelNetwork;
 MessageResponse::MessageResponse(const ResponseHeader &headerResponse)
     : AResponse(headerResponse) {}
 
-MessageResponse::MessageResponse(const std::string &login, const std::string &password)
+MessageResponse::MessageResponse(const std::string &sender, const std::string &receiver, const std::string &messageData)
     : AResponse()
 {
     _header._responseType = Message;
     _header._dataInfosSize = DataInfosSize;
 
-    if (!setLogin(login) || !setPassword(password))
-        throw BabelErrors::MessageResponse("login or password too long");
+    if (!setSender(sender) || !setReceiver(receiver) || !setMessageData(messageData))
+        throw BabelErrors::MessageResponse("sender or receiver or message too long");
 }
 
-bool MessageResponse::setLogin(const std::string &login) noexcept
+bool MessageResponse::setSender(const std::string &sender) noexcept
 {
-    if (login.size() > MaxDataSize::Login)
+    if (sender.size() > MaxDataSize::Sender)
         return false;
-    strcat(_data.login, login.c_str());
-    _dataInfos._loginSize = login.size();
+    strcat(_data.sender, sender.c_str());
+    _dataInfos._senderSize = sender.size();
     return true;
 }
 
-bool MessageResponse::setPassword(const std::string &password) noexcept
+bool MessageResponse::setReceiver(const std::string &receiver) noexcept
 {
-    if (password.size() > MaxDataSize::Password)
+    if (receiver.size() > MaxDataSize::Receiver)
         return false;
-    strcat(_data.password, password.c_str());
-    _dataInfos._passwordSize = password.size();
+    strcat(_data.receiver, receiver.c_str());
+    _dataInfos._receiverSize = receiver.size();
     return true;
 }
 
@@ -46,8 +46,9 @@ bool MessageResponse::encode() noexcept
 {
     memcpy(_data_byte, &_header, HeaderSize);
     memcpy(getDataByteDataInfos(), &_dataInfos, DataInfosSize);
-    memcpy(getDataByteBody(), _data.login, _dataInfos._loginSize);
-    memcpy(getDataByteBody() + _dataInfos._loginSize, _data.password, _dataInfos._passwordSize);
+    memcpy(getDataByteBody(), _data.sender, _dataInfos._senderSize);
+    memcpy(getDataByteBody() + _dataInfos._senderSize, _data.receiver, _dataInfos._receiverSize);
+    memcpy(getDataByteBody() + _dataInfos._senderSize + _dataInfos._receiverSize, &_data.timestamp, _dataInfos._timestampSize);
     return true;
 }
 
@@ -65,16 +66,15 @@ bool MessageResponse::decode_data_infos() noexcept
 
 bool MessageResponse::decode_data() noexcept
 {
-    memcpy(_data.login, getDataByteBody(), _dataInfos._loginSize);
-    memcpy(_data.password, getDataByteBody() + _dataInfos._loginSize, _dataInfos._passwordSize);
+    memcpy(_data.sender, getDataByteBody(), _dataInfos._senderSize);
+    memcpy(_data.receiver, getDataByteBody() + _dataInfos._senderSize, _dataInfos._receiverSize);
+    memcpy(&_data.timestamp, getDataByteBody() + _dataInfos._senderSize + _dataInfos._receiverSize, _dataInfos._timestampSize);
     return true;
 }
 
 bool BabelNetwork::MessageResponse::isOk() noexcept
 {
-    return _header._code == MessageResponse::ResponseCode::LoginOk
-        || _header._code == MessageResponse::ResponseCode::AccountCreated
-        || _header._code == MessageResponse::ResponseCode::AccountDeleted;
+    return _header._code;
 }
 
 std::shared_ptr<AResponse> MessageResponse::get_shared_from_this() const noexcept
@@ -104,21 +104,31 @@ size_t MessageResponse::getResponseSize() const noexcept
 
 size_t MessageResponse::getDataSize() const noexcept
 {
-    return _dataInfos._loginSize + _dataInfos._passwordSize;
+    return _dataInfos._senderSize + _dataInfos._receiverSize;
 }
 
 std::string MessageResponse::serialize_data_infos() const noexcept
 {
     return BabelUtils::format(
-        "Login Size: %zu | Password Size: %zu",
-        _dataInfos._loginSize, _dataInfos._passwordSize
+        "Sender Size: %zu | Receiver Size: %zu",
+        _dataInfos._senderSize, _dataInfos._receiverSize
     );
 }
 
 std::string MessageResponse::serialize_data() const noexcept
 {
     return BabelUtils::format(
-        "Login: %s | Password: %s",
-        _data.login, _data.password
+        "Sender: %s | Receiver: %s",
+        _data.sender, _data.receiver
     );
+}
+
+bool MessageResponse::setTimestamp() noexcept
+{
+    time_t timer;
+    if (time(&timer) == ((time_t) -1))
+        return false;
+    _data.timestamp = timer;
+    _dataInfos._timestampSize = sizeof(_data.timestamp);
+    return true;
 }
