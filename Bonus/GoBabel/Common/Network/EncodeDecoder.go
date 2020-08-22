@@ -55,6 +55,8 @@ func RegisterInterfaces() {
 	gob.Register(&TestDatas{})
 	gob.Register(&UserDatas{})
 	gob.Register(&CallDatas{})
+	gob.Register(&MessageDatas{})
+	gob.Register(&FriendDatas{})
 }
 
 func NewEncodeDecoder(conn io.ReadWriter) EncodeDecoder {
