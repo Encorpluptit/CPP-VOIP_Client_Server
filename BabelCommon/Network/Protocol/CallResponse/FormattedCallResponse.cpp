@@ -17,6 +17,5 @@ CallResponse::NewCallStarted(const std::string &sender, const std::string &recei
     resp->setCode(CallResponse::ResponseCode::CallStarted);
     if (!resp->setCallId(call_id) || !resp->setTimestamp())
         return nullptr;
-    std::cout << resp->getTimestamp() << std::endl;
     return resp;
 }

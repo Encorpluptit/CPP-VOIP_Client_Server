@@ -9,6 +9,7 @@
 #define CPP_BABEL_2020_CLIENTCORE_HPP
 
 #include "AsioClientSocket.hpp"
+#include "boost/shared_ptr.hpp"
 
 namespace BabelClient {
 
@@ -25,6 +26,8 @@ namespace BabelClient {
 
         void stop() final;
 
+        void run();
+
         /* <- Private Methods -> */
     private:
         void init();
@@ -34,7 +37,7 @@ namespace BabelClient {
         /* <- Getters / Setters -> */
     public:
         BabelUtils::Logger _logger;
-        std::shared_ptr<BabelNetwork::ClientSocket> _socket;
+        boost::shared_ptr<BabelNetwork::ClientSocket> _socket;
     };
 
 }

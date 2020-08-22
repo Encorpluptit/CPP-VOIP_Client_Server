@@ -191,7 +191,7 @@ target_include_directories(
         ${CLIENT_INCLUDES}
 )
 
-target_compile_definitions(babel_client PRIVATE BABEL_CLIENT)
+target_compile_definitions(babel_client PRIVATE BABEL_CLIENT_BIN)
 
 find_package(Qt5 COMPONENTS Network REQUIRED)
 

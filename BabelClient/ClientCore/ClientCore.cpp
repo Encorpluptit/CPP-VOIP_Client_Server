@@ -11,12 +11,10 @@
 #include "UserResponse.hpp"
 #include "CallResponse.hpp"
 
-
 BabelClient::ClientCore::ClientCore(int ac, char **av)
     : _logger(BabelUtils::Logger::ClientLog)
 {
     initSocket(ac, av);
-//    _socket->connect();
 }
 
 BabelClient::ClientCore::~ClientCore()
@@ -26,13 +24,12 @@ BabelClient::ClientCore::~ClientCore()
 
 void BabelClient::ClientCore::start()
 {
-//    _socket->connect();
-    sleep(2);
-    if (!_socket->isReady()) {
-        _socket->stop();
-        throw BabelErrors::NetworkError("Socket not ready, please check your adresse and ports");
-    }
+    while (!_socket->isReady())
+        std::cout << "Waiting Socket to be ready" << std::endl;
+}
 
+void BabelClient::ClientCore::run()
+{
     std::string data;
     while (std::getline(std::cin, data)) {
         if (data == "exit" || !_socket->isReady()) {
@@ -60,10 +57,9 @@ void BabelClient::ClientCore::init()
 void BabelClient::ClientCore::initSocket(int ac, char **av)
 {
     BabelNetwork::NetworkInfos nwi(av[1], av[2]);
-    boost::asio::io_context context;
-    _socket = std::make_shared<BabelNetwork::AsioClientSocket>(
+    _socket = boost::make_shared<BabelNetwork::AsioClientSocket>(
         av[1], av[2],
-        _logger, context,
+        _logger,
         BabelNetwork::AsioClientSocket::SocketHandler::Client);
     _socket->connect();
 }
