@@ -15,31 +15,37 @@ namespace BabelNetwork {
         /* <- Class Enum -> */
     public:
         enum ResponseCode {
-            LoginOk = 210,
-            RequestLogin = 211,
-            AccountCreated = 220,
-            AccountDeleted = 230,
+            RequestSendMessage = 201,
+            SendMessageOk = 202,
+            ReceiveMessage = 203,
+            ReceiveOk = 204,
 
+            UnknowUser = 250
         };
     private:
         enum MaxDataSize {
-            Login = 128,
-            Password = 128
+            Sender = 128,
+            Receiver = 128,
+            MessageData = 256
         };
 
         /* <- Class Structure -> */
     public:
         using Data = struct __attribute__((packed)) DataStruct {
-            char login[MaxDataSize::Login];
-            char password[MaxDataSize::Password];
+            char sender[MaxDataSize::Sender];
+            char receiver[MaxDataSize::Receiver];
+            char messageData[MaxDataSize::MessageData];
+            time_t timestamp;
         };
         static const size_t DataSize = sizeof(Data);
 
         /* <- Class Structure -> */
     public:
         using DataInfos = struct __attribute__((packed)) DataInfosStruct {
-            uint16_t _loginSize;
-            uint16_t _passwordSize;
+            uint16_t _senderSize;
+            uint16_t _receiverSize;
+            uint16_t _messageDataSize;
+            uint8_t _timestampSize;
         };
         static const size_t DataInfosSize = sizeof(DataInfos);
 
@@ -57,7 +63,7 @@ namespace BabelNetwork {
 
         explicit MessageResponse(const ResponseHeader &headerResponse);
 
-        MessageResponse(const std::string &login, const std::string &password);
+        MessageResponse(const std::string &sender, const std::string &receiver, const std::string &messageData);
 
         ~MessageResponse() = default;
 
@@ -103,19 +109,33 @@ namespace BabelNetwork {
             return _description;
         };
 
-        [[nodiscard]] bool setLogin(const std::string &login) noexcept;
+        [[nodiscard]] bool setSender(const std::string &sender) noexcept;
 
-        [[nodiscard]] bool setPassword(const std::string &password) noexcept;
+        [[nodiscard]] bool setTimestamp() noexcept;
 
-        [[nodiscard]] const char *getLogin() const noexcept { return _data.login; };
+        [[nodiscard]] bool setReceiver(const std::string &receiver) noexcept;
 
-        [[nodiscard]] const char *getPassword() const noexcept { return _data.password; };
+        [[nodiscard]] bool setMessageData(const std::string &messageData) noexcept;
+
+        [[nodiscard]] const char *getSender() const noexcept { return _data.sender; };
+
+        [[nodiscard]] const char *getReceiver() const noexcept { return _data.receiver; };
+
+        [[nodiscard]] const char *getMessageData() const noexcept { return _data.messageData; };
+
+        [[nodiscard]] time_t getTimestamp() const noexcept { return _data.timestamp; };
 
     private:
         const std::string _description = "Message Related Request";
         char _data_byte[MaxResponseSize] = {0};
         DataInfos _dataInfos{};
         Data _data{};
+
+    public:
+        [[nodiscard]] static std::shared_ptr<AResponse> RequestMessageSend(const std::string &sender, const std::string &receiver, const std::string &messageData);
+        [[nodiscard]] static std::shared_ptr<AResponse> OkSendMessage(const std::string &sender, const std::string &receiver);
+        [[nodiscard]] static std::shared_ptr<AResponse> MessageReceive(const std::string &sender, const std::string &receiver, const std::string &messageData);
+        [[nodiscard]] static std::shared_ptr<AResponse> ReceiveMessageOk(const std::string &sender, const std::string &receiver);
     };
 }
 

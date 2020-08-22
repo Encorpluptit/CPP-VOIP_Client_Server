@@ -15,15 +15,15 @@ namespace BabelNetwork {
         /* <- Class Enum -> */
     public:
         enum ResponseCode {
-            CallStarted = 300,
-            RequestCall = 301,
-            CallLeft = 302,
-            RequestEndCall = 303,
-            IncomingCall = 304,
-            CallAccepted = 305,
+            CallStarted = 400,
+            RequestCall = 401,
+            CallLeft = 402,
+            RequestEndCall = 403,
+            IncomingCall = 404,
+            CallAccepted = 405,
 
-            CallRefused = 370,
-            UserDisconnected = 371,
+            CallRefused = 470,
+            UserDisconnected = 471,
         };
 
     private:
