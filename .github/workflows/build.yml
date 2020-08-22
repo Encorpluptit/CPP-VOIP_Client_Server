@@ -17,7 +17,7 @@ jobs:
         run: pip install conan --upgrade
 
       - name: Install libfontenc-devel
-        run: dnf install libfontenc-devel
+        run: echo "y" | dnf install libfontenc-devel
 
       - name: Add conan repositories.
         run: |
