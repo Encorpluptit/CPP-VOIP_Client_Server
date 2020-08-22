@@ -10,8 +10,9 @@
 
 #include <queue>
 #include "Logger.hpp"
-#include "Runnable/ARunnable.hpp"
+#include "ARunnable.hpp"
 #include "BoostThread.hpp"
+#include "SharedPtr.hpp"
 
 namespace BabelNetwork {
 

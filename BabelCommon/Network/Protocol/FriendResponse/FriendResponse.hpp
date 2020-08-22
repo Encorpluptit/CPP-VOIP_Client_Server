@@ -42,7 +42,7 @@ namespace BabelNetwork {
     public:
         using DataInfos = struct __attribute__((packed)) DataInfosStruct {
             uint16_t _loginSize;
-            uint16_t _FriendLoginSize;
+            uint16_t _friendLoginSize;
         };
         static const size_t DataInfosSize = sizeof(DataInfos);
 
@@ -126,7 +126,6 @@ namespace BabelNetwork {
         [[nodiscard]] static std::shared_ptr<AResponse> NewFriendRequest(const std::string &login, const std::string &friendLogin);
         [[nodiscard]] static std::shared_ptr<AResponse> FriendRequestAccepted(const std::string &login, const std::string &friendLogin);
         [[nodiscard]] static std::shared_ptr<AResponse> FriendRequestDeclined(const std::string &login, const std::string &friendLogin);
-        [[nodiscard]] static std::shared_ptr<AResponse> RequestFriend(const std::string &login, const std::string &friendLogin);
         [[nodiscard]] static std::shared_ptr<AResponse> UserNotExist(const std::string &login, const std::string &friendLogin);
     };
 }

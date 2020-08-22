@@ -42,6 +42,15 @@ bool MessageResponse::setReceiver(const std::string &receiver) noexcept
     return true;
 }
 
+bool MessageResponse::setMessageData(const std::string &messageData) noexcept
+{
+    if (messageData.size() > MaxDataSize::MessageData)
+        return false;
+    strcat(_data.messageData, messageData.c_str());
+    _dataInfos._messageDataSize = messageData.size();
+    return true;
+}
+
 bool MessageResponse::encode() noexcept
 {
     memcpy(_data_byte, &_header, HeaderSize);

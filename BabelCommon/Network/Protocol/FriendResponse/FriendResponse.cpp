@@ -38,7 +38,7 @@ bool FriendResponse::setFriendLogin(const std::string &friendLogin) noexcept
     if (friendLogin.size() > MaxDataSize::FriendLogin)
         return false;
     strcat(_data.FriendLogin, friendLogin.c_str());
-    _dataInfos._FriendLoginSize = friendLogin.size();
+    _dataInfos._friendLoginSize = friendLogin.size();
     return true;
 }
 
@@ -47,7 +47,7 @@ bool FriendResponse::encode() noexcept
     memcpy(_data_byte, &_header, HeaderSize);
     memcpy(getDataByteDataInfos(), &_dataInfos, DataInfosSize);
     memcpy(getDataByteBody(), _data.login, _dataInfos._loginSize);
-    memcpy(getDataByteBody() + _dataInfos._loginSize, _data.FriendLogin, _dataInfos._FriendLoginSize);
+    memcpy(getDataByteBody() + _dataInfos._loginSize, _data.FriendLogin, _dataInfos._friendLoginSize);
     return true;
 }
 
@@ -66,7 +66,7 @@ bool FriendResponse::decode_data_infos() noexcept
 bool FriendResponse::decode_data() noexcept
 {
     memcpy(_data.login, getDataByteBody(), _dataInfos._loginSize);
-    memcpy(_data.FriendLogin, getDataByteBody() + _dataInfos._loginSize, _dataInfos._FriendLoginSize);
+    memcpy(_data.FriendLogin, getDataByteBody() + _dataInfos._loginSize, _dataInfos._friendLoginSize);
     return true;
 }
 
@@ -102,14 +102,14 @@ size_t FriendResponse::getResponseSize() const noexcept
 
 size_t FriendResponse::getDataSize() const noexcept
 {
-    return _dataInfos._loginSize + _dataInfos._FriendLoginSize;
+    return _dataInfos._loginSize + _dataInfos._friendLoginSize;
 }
 
 std::string FriendResponse::serialize_data_infos() const noexcept
 {
     return BabelUtils::format(
         "Login Size: %zu | FriendLogin Size: %zu",
-        _dataInfos._loginSize, _dataInfos._FriendLoginSize
+        _dataInfos._loginSize, _dataInfos._friendLoginSize
     );
 }
 

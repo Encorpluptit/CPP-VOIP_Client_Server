@@ -108,7 +108,10 @@ set(
         ${COMMON_DIR}/Network/Protocol/CallResponse/FormattedCallResponse.cpp
 
         ${COMMON_DIR}/Network/Protocol/FriendResponse/FriendResponse.cpp
+        ${COMMON_DIR}/Network/Protocol/FriendResponse/FormattedFriendResponse.cpp
+
         ${COMMON_DIR}/Network/Protocol/MessageResponse/MessageResponse.cpp
+        ${COMMON_DIR}/Network/Protocol/MessageResponse/FormattedMessageResponse.cpp
 
 )
 

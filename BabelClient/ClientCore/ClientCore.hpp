@@ -10,6 +10,7 @@
 
 #include "AsioClientSocket.hpp"
 #include "boost/shared_ptr.hpp"
+#include "SharedPtr.hpp"
 
 namespace BabelClient {
 
@@ -37,7 +38,8 @@ namespace BabelClient {
         /* <- Getters / Setters -> */
     public:
         BabelUtils::Logger _logger;
-        boost::shared_ptr<BabelNetwork::ClientSocket> _socket;
+        SharedPtr<BabelNetwork::ClientSocket> _socket;
+//        boost::shared_ptr<BabelNetwork::ClientSocket> _socket;
     };
 
 }
