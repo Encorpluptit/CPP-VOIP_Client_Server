@@ -1,20 +1,19 @@
 package Server
 
 import (
-	"BabelGo/Common/Network"
+	nw "BabelGo/Common/Network"
 	"errors"
 )
 
-var RequestManager = map[uint16]BabelNetwork.RequestManager{
-	BabelNetwork.RqUser: {ManagerFunc: UserManager, EmptyDatas: BabelNetwork.EmptyUserRequest},
-	BabelNetwork.RqTest: {ManagerFunc: TestManager, EmptyDatas: BabelNetwork.EmptyTestRequest},
+var RequestManager = map[uint16]func(*nw.Client, *nw.Request) error{
+	nw.RqUser: UserManager,
 }
 
-func getRequestManager(request *BabelNetwork.Request) (*BabelNetwork.RequestManager, error) {
+func getRequestManager(request *nw.Request) (func(*nw.Client, *nw.Request) error, error) {
 	//return nil, errors.New("RequestType not found")
 	manager, ok := RequestManager[request.Header.RqType]
 	if !ok {
 		return nil, errors.New("RequestType not found")
 	}
-	return &manager, nil
+	return manager, nil
 }

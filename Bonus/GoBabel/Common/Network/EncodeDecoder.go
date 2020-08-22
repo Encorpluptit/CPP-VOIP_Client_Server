@@ -3,17 +3,14 @@ package BabelNetwork
 import (
 	"encoding/gob"
 	"io"
-	"log"
 )
 
 type Encoder interface {
-	Encode() []byte
+	Encode(data interface{}) error
 }
 
 type Decoder interface {
-	DecodeInfos([]byte)
-	DecodeDatas([]byte)
-	GetSize() uint32
+	Decode(data interface{}) error
 }
 
 type EncodeDecoder interface {
@@ -21,30 +18,47 @@ type EncodeDecoder interface {
 	Decoder
 }
 
-func ReceiveDecodeDatas(infosSz uint16, decoder Decoder, reader io.Reader) error {
-	//if infosSz == 0 {
-	//	return errors.New("size of data info is null")
-	//}
-	dec := gob.NewDecoder(reader) // Will read from network.
-	err := dec.Decode(decoder)
-	if err != nil {
-		log.Fatal("decode error:", err)
+type GobEncoder struct {
+	Enc *gob.Encoder
+}
+
+func (e *GobEncoder) Encode(data interface{}) error {
+	return e.Enc.Encode(data)
+}
+
+func NewEncoder(conn io.Writer) Encoder {
+	return &GobEncoder{
+		Enc: gob.NewEncoder(conn),
 	}
-	//b := make([]byte, infosSz)
-	//if _, err := reader.Read(b); err != nil {
-	//	return err
-	//}
-	//decoder.DecodeInfos(b)
-	//
-	//dataSz := decoder.GetSize()
-	//if dataSz == 0 {
-	//	return errors.New("no data to read")
-	//}
-	//
-	//b = make([]byte, dataSz)
-	//if _, err := reader.Read(b); err != nil {
-	//	return err
-	//}
-	//decoder.DecodeDatas(b)
-	return nil
+}
+
+type GobDecoder struct {
+	Dec *gob.Decoder
+}
+
+func (d *GobDecoder) Decode(data interface{}) error {
+	return d.Dec.Decode(data)
+}
+
+func NewDecoder(conn io.Reader) Decoder {
+	return &GobDecoder{
+		Dec: gob.NewDecoder(conn),
+	}
+}
+
+type GobEncodeDecoder struct {
+	Encoder
+	Decoder
+}
+
+func RegisterInterfaces() {
+	gob.Register(&TestDatas{})
+	gob.Register(&UserDatas{})
+}
+
+func NewEncodeDecoder(conn io.ReadWriter) EncodeDecoder {
+	return &GobEncodeDecoder{
+		NewEncoder(conn),
+		NewDecoder(conn),
+	}
 }

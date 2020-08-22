@@ -1,7 +1,7 @@
 package Server
 
 import (
-	"BabelGo/Common/Network"
+	nw "BabelGo/Common/Network"
 	"fmt"
 	"log"
 	"os"
@@ -25,6 +25,7 @@ func NewServer(address, port string) (*Core, func()) {
 		ListenerCore: NewListener(address, port),
 		Mutex:        &sync.Mutex{},
 	}
+	nw.RegisterInterfaces()
 	return BabelServer, BabelServer.Close
 }
 
@@ -69,13 +70,13 @@ func (c *Core) Start() error {
 	return nil
 }
 
-func (c *Core) handleClient(client *BabelNetwork.Client) {
+func (c *Core) handleClient(client *nw.Client) {
 	fmt.Printf("Serving %s\n", client.Conn.RemoteAddr().String())
 	defer func() {
 		client.Close()
 		c.ListenerCore.RemoveClient(client)
 	}()
-	RequestManagerGetter := func(request *BabelNetwork.Request) (*BabelNetwork.RequestManager, error) {
+	RequestManagerGetter := func(request *nw.Request) (func(*nw.Client, *nw.Request) error, error) {
 		c.Mutex.Lock()
 		rqManager, err := getRequestManager(request)
 		c.Mutex.Unlock()
@@ -84,27 +85,17 @@ func (c *Core) handleClient(client *BabelNetwork.Client) {
 
 	nb := 0
 	for c.Run {
-		//if err := client.WaitRequest(RequestManagerGetter); err != nil {
-		//	break
-		//}
-		rq := BabelNetwork.NewRequest(client.Conn)
-		if err := rq.ReceiveHeader(); err != nil {
-			log.Println(err)
-			break
+		rq := &nw.Request{}
+		if err := rq.Receive(client.EncDec); err != nil {
+			log.Fatal("decode error:", err)
 		}
-		log.Println("Header Received:", rq.Header)
 		rqManager, err := RequestManagerGetter(rq)
 		if err != nil {
-			log.Println(err)
+			log.Println("In Request.Receive() -> RequestManagerGetter:", err)
 			break
 		}
-		rq.Datas = rqManager.EmptyDatas()
-		if err := rq.ReceiveDatas(); err != nil {
-			log.Println(err)
-			break
-		}
-		if err := rqManager.ManagerFunc(client, rq); err != nil {
-			log.Println(err)
+		if err := rqManager(client, rq); err != nil {
+			log.Println("In rqManager():", err)
 			break
 		}
 		nb += 1

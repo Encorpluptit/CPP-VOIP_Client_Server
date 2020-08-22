@@ -24,6 +24,7 @@ func NewClient(addr, port string) (*Core, func()) {
 		Run:    true,
 		Input:  make(chan *nw.Request),
 	}
+	nw.RegisterInterfaces()
 	return client, client.Close
 }
 
@@ -31,7 +32,7 @@ func (c *Core) SendInput(_ string) {
 	if !c.Run {
 		return
 	}
-	rq, err := nw.NewTestRequest(c.Conn, nw.RqUserLogin, "lol", "mdr xd")
+	rq, err := nw.NewUserRequest(nw.RqUserLogin, "lol", "mdr xd")
 	if err != nil {
 		log.Println(err)
 		return
@@ -54,23 +55,20 @@ func (c *Core) Start() {
 
 func (c *Core) Serve() {
 	defer c.Close()
+
 	for c.Run {
-		input := <-c.Input
-		if err := input.Send(); err != nil {
-			log.Println(err)
-			return
+		data := <-c.Input
+
+		for i := 0; i < 1000000; i++ {
+			if err := data.Send(c.EncDec); err != nil {
+				log.Println("In gob.Encode(): ", err)
+				break
+			}
+			if data.Header.Code == nw.RqUserLogout {
+				data.Header.Code = nw.RqUserLogin
+			} else {
+				data.Header.Code = nw.RqUserLogout
+			}
 		}
-		//for i := 0; i < 100000; i++ {
-		//	log.Println("Sending Header :", input.Header)
-		//	if err := input.Send(); err != nil {
-		//		log.Println(err)
-		//		return
-		//	}
-		//	if input.Header.Code == nw.RqUserLogout {
-		//		input.Header.Code = nw.RqUserLogin
-		//	} else {
-		//		input.Header.Code = nw.RqUserLogout
-		//	}
-		//}
 	}
 }

@@ -10,12 +10,13 @@ import (
 
 var (
 	ClientAlreadyLogged = errors.New("client already logged")
-	ClientNotLogged     = errors.New("client already logged")
+	ClientNotLogged     = errors.New("client not logged")
 )
 
 type Client struct {
 	User   *BabelModels.User
 	Conn   net.Conn
+	EncDec EncodeDecoder
 	Logged bool
 }
 
@@ -24,31 +25,9 @@ func NewClient(conn net.Conn) *Client {
 		// TODO: Remove call and set to nil
 		User:   BabelModels.NewUser(),
 		Conn:   conn,
+		EncDec: NewEncodeDecoder(conn),
 		Logged: false,
 	}
-}
-
-func (c *Client) WaitRequest(RequestManagerGetter func(request *Request) (*RequestManager, error)) error {
-	rq := NewRequest(c.Conn)
-	if err := rq.ReceiveHeader(); err != nil {
-		log.Println("Error from Request.ReceiveHeader():", err)
-		return err
-	}
-	rqManager, err := RequestManagerGetter(rq)
-	if err != nil {
-		log.Println("Error from RequestManagerGetter():", err)
-		return err
-	}
-	rq.Datas = rqManager.EmptyDatas()
-	if err := rq.ReceiveDatas(); err != nil {
-		log.Println("Error from RequestManager.EmptyDatas():", err)
-		return err
-	}
-	if err := rqManager.ManagerFunc(c, rq); err != nil {
-		log.Println("Error from RequestManager.ManagerFunc():", err)
-		return err
-	}
-	return nil
 }
 
 func (c Client) String() string {
