@@ -54,6 +54,7 @@ type GobEncodeDecoder struct {
 func RegisterInterfaces() {
 	gob.Register(&TestDatas{})
 	gob.Register(&UserDatas{})
+	gob.Register(&CallDatas{})
 }
 
 func NewEncodeDecoder(conn io.ReadWriter) EncodeDecoder {

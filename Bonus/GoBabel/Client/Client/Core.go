@@ -28,13 +28,8 @@ func NewClient(addr, port string) (*Core, func()) {
 	return client, client.Close
 }
 
-func (c *Core) SendInput(_ string) {
+func (c *Core) SendInput(rq *nw.Request) {
 	if !c.Run {
-		return
-	}
-	rq, err := nw.NewUserRequest(nw.RqUserLogin, "lol", "mdr xd")
-	if err != nil {
-		log.Println(err)
 		return
 	}
 	c.Input <- rq
@@ -58,17 +53,23 @@ func (c *Core) Serve() {
 
 	for c.Run {
 		data := <-c.Input
-
-		for i := 0; i < 1000000; i++ {
-			if err := data.Send(c.EncDec); err != nil {
-				log.Println("In gob.Encode(): ", err)
-				break
-			}
-			if data.Header.Code == nw.RqUserLogout {
-				data.Header.Code = nw.RqUserLogin
-			} else {
-				data.Header.Code = nw.RqUserLogout
-			}
+		log.Println(data)
+		if err := data.Send(c.EncDec); err != nil {
+			log.Println("In gob.Encode(): ", err)
+			break
 		}
+		log.Println("HERE")
+
+		//for i := 0; i < 1000000; i++ {
+		//	if err := data.Send(c.EncDec); err != nil {
+		//		log.Println("In gob.Encode(): ", err)
+		//		break
+		//	}
+		//	if data.Header.Code == nw.UserRqLogout {
+		//		data.Header.Code = nw.UserRqLogin
+		//	} else {
+		//		data.Header.Code = nw.UserRqLogout
+		//	}
+		//}
 	}
 }

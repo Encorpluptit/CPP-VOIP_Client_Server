@@ -11,7 +11,7 @@ type TestDatas struct {
 
 func NewTestRequest(code uint16, login, password string) (*Request, error) {
 	rq := NewRequest()
-	rq.Header.RqType = RqTest
+	rq.Header.RqType = RequestTest
 	rq.Header.Code = code
 	rq.Datas = &TestDatas{
 		Lol:       300,

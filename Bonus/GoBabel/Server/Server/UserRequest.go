@@ -9,8 +9,8 @@ import (
 var WrongUserDatas = errors.New("wrong userDatas")
 
 var userManager = map[uint16]func(*BabelNetwork.Client, *BabelNetwork.UserDatas) error{
-	BabelNetwork.RqUserLogin:  LoginUser,
-	BabelNetwork.RqUserLogout: LogoutUser,
+	BabelNetwork.UserRqLogin:  LoginUser,
+	BabelNetwork.UserRqLogout: LogoutUser,
 }
 
 func UserManager(client *BabelNetwork.Client, request *BabelNetwork.Request) error {

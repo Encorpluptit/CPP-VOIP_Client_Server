@@ -4,10 +4,15 @@ import "C"
 import (
 	"BabelGo/Client/Client"
 	"BabelGo/Common/BabelUtils"
+	nw "BabelGo/Common/Network"
 	"bufio"
+	"errors"
 	"log"
 	"os"
+	"strings"
 )
+
+var CommandNotFound = errors.New("command not found")
 
 func main() {
 	arguments := os.Args
@@ -29,6 +34,25 @@ func main() {
 			log.Println("Error in main() from reader.ReadString()", err)
 			break
 		}
-		client.SendInput(text)
+		text = strings.TrimSuffix(text, "\n")
+		if rq, err := getResponseFromCommand(text); err != nil {
+			log.Println(err)
+			continue
+		} else {
+			client.SendInput(rq)
+		}
+	}
+}
+
+func getResponseFromCommand(input string) (*nw.Request, error) {
+	switch input {
+	case "login":
+		return nw.NewUserRequest(nw.UserRqLogin, "damien", "abcd1234")
+	case "logout":
+		return nw.NewUserRequest(nw.UserRqLogout, "damien", "abcd1234")
+	case "test":
+		return nw.CallTest()
+	default:
+		return nil, CommandNotFound
 	}
 }

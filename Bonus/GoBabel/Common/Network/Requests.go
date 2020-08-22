@@ -9,11 +9,12 @@ const HeaderSize = unsafe.Sizeof(RequestHeader{})
 
 const (
 	UnknownCode = iota
-	RqUnknown
-	RqUser
-	RqCall
-	RqTest
-	RqFriend
+	RequestUnknown
+	RequestUser
+	RequestCall
+	RequestFriend
+	RequestMessage
+	RequestTest
 )
 
 type RequestHeader struct {
@@ -28,7 +29,7 @@ type Request struct {
 
 func NewRequest() *Request {
 	return &Request{
-		Header: RequestHeader{Code: UnknownCode, RqType: RqUnknown},
+		Header: RequestHeader{Code: UnknownCode, RqType: RequestUnknown},
 	}
 }
 

@@ -3,16 +3,18 @@ package BabelNetwork
 import (
 	"errors"
 	"fmt"
-	"time"
 )
 
 const (
-	RqUserLogin = iota
-	RqUserLogout
-	RqUserLoginOK
-	RqUserLoginNOK
-	RqUserLogoutOK
-	RqUserLogoutNOK
+	UserRqLogin = iota
+	UserRqLogout
+	UserLoggedIn
+	UserLoggedOut
+
+	UserWrongLogin
+	UserWrongPassword
+	UserAlreadyLoggedIn
+	UserNotLoggedIn
 )
 
 const (
@@ -22,7 +24,6 @@ const (
 
 type UserDatas struct {
 	Login, Password string
-	Timestamp       time.Time
 }
 
 func NewUserRequest(code uint16, login, password string) (*Request, error) {
@@ -37,12 +38,11 @@ func NewUserRequest(code uint16, login, password string) (*Request, error) {
 	}
 
 	rq := NewRequest()
-	rq.Header.RqType = RqUser
+	rq.Header.RqType = RequestUser
 	rq.Header.Code = code
 	rq.Datas = &UserDatas{
-		Login:     login,
-		Password:  password,
-		Timestamp: time.Now(),
+		Login:    login,
+		Password: password,
 	}
 	return rq, nil
 }
