@@ -1,5 +1,7 @@
 package BabelNetwork
 
+import "time"
+
 const (
 	CallRqCall = iota
 	CallAccept
@@ -15,9 +17,10 @@ const (
 )
 
 type CallDatas struct {
-	Sender  string
-	Targets []string
-	CallID  uint32
+	Sender    string
+	Targets   []string
+	CallID    uint32
+	Timestamp time.Time
 }
 
 func NewCallRequest(code uint16, sender string, targets []string, callId uint32) (*Request, error) {
@@ -25,9 +28,10 @@ func NewCallRequest(code uint16, sender string, targets []string, callId uint32)
 	rq.Header.RqType = RequestCall
 	rq.Header.Code = code
 	rq.Datas = &CallDatas{
-		Sender:  sender,
-		Targets: targets,
-		CallID:  callId,
+		Sender:    sender,
+		Targets:   targets,
+		CallID:    callId,
+		Timestamp: time.Now(),
 	}
 	return rq, nil
 }
