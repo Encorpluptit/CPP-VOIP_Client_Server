@@ -1,6 +1,7 @@
 package BabelNetwork
 
 import (
+	"BabelGo/ent"
 	"encoding/gob"
 	"io"
 )
@@ -57,6 +58,7 @@ func RegisterInterfaces() {
 	gob.Register(&CallDatas{})
 	gob.Register(&MessageDatas{})
 	gob.Register(&FriendDatas{})
+	gob.Register(&ent.User{})
 }
 
 func NewEncodeDecoder(conn io.ReadWriter) EncodeDecoder {

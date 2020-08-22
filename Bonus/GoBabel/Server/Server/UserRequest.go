@@ -26,10 +26,10 @@ func UserManager(client *BabelNetwork.Client, request *BabelNetwork.Request) err
 }
 
 func LoginUser(client *BabelNetwork.Client, datas *BabelNetwork.UserDatas) error {
-	log.Println("Login user")
 	if err := client.Login(datas); err != nil {
 		return err
 	}
+	// TODO: manage Login Errors HERE
 	return nil
 }
 

@@ -5,7 +5,6 @@ import (
 	"BabelGo/Server/Database"
 	"BabelGo/Server/Server"
 	"BabelGo/ent"
-	"context"
 	"fmt"
 	"log"
 	"os"
@@ -25,28 +24,30 @@ func main() {
 	}
 	defer serverCloser()
 
-	dbCloser := Database.Init()
+	dbCloser := Database.Init(Database.ProdDBFile)
 	defer dbCloser()
 
-	_, err := CreateUser(context.Background(), Database.ServerDb.Client)
+	err := PopulateDb()
 	if err != nil {
 		log.Fatal(err)
 	}
 	if err := serv.Start(); err != nil {
-		//log.Fatal("Error in main() from Server.Core.Start()", err)
 		log.Println("Error in main() from Server.Core.Start()", err)
 	}
 }
 
-func CreateUser(ctx context.Context, client *ent.Client) (*ent.User, error) {
-	u, err := client.User.
-		Create().
-		SetLogin("damienbernard@epitech.eu").
-		SetPassword("1234AB_cd666").
-		Save(ctx)
-	if err != nil {
-		return nil, fmt.Errorf("failed creating user: %v", err)
+func PopulateDb() error {
+	users := []*ent.User{
+		{Login: "damien.bernard@epitech.eu", Password: "1234AB_cd666"},
+		{Login: "gregoire.brasseur@epitech.eu", Password: "1234AB_cd666"},
+		{Login: "arthur.benard@epitech.eu", Password: "1234AB_cd666"},
+		{Login: "ugo.levi-cescutti@epitech.eu", Password: "1234AB_cd666"},
 	}
-	log.Println("user was created: ", u)
-	return u, nil
+	for _, user := range users {
+		_, err := Database.CreateUser(user)
+		if err != nil {
+			log.Printf("failed creating user: %v\ns", err)
+		}
+	}
+	return nil
 }
