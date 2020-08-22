@@ -22,6 +22,7 @@ option(USE_LOG "Log Execution in a file" OFF)
 ###############################################################################
 # Set Compile Options
 add_compile_options(-Wall -Wextra)
+
 #add_compile_options(
 #        -Wshadow
 #        -Wnon-virtual-dtor
@@ -140,6 +141,7 @@ set(
 
 ##########################
 # Server Executable
+#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/..)
 add_executable(
         babel_server
         ${SERVER_DIR}/main.cpp
@@ -177,6 +179,7 @@ set(
 
 ##########################
 # Client Executable
+#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/..)
 add_executable(
         babel_client
         ${CLIENT_DIR}/main.cpp
@@ -210,6 +213,7 @@ set(
         tests/criterion_unit_tests/src/Common/NetworkInfos_Tests.cpp
 )
 
+#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/..)
 add_executable(
         unit_tests
         ${COMMON_SOURCES}
