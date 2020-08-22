@@ -20,7 +20,7 @@
 #include "Logger.hpp"
 
 namespace BabelServer {
-    class Server final : BabelUtils::ARunnable {
+    class Server final : public BabelUtils::ARunnable {
 
         /* <- Constructor - Destructor -> */
     public:
@@ -48,11 +48,9 @@ namespace BabelServer {
         /* <- Attributes -> */
     private:
         BabelUtils::Logger _logger;
-        std::vector<boost::shared_ptr<BabelServer::AsioListener>> _servers;
-        boost::shared_ptr<BabelServer::AsioListener> _asioServer;
-//        boost::shared_ptr<BabelServer::AsioListener> _asioClients;
+        std::vector<boost::shared_ptr<BabelNetwork::ASocket>> _servers;
         boost::shared_ptr<BabelUtils::BoostThread> _thread;
-        //Db
+        // TODO: Include Db
     };
 
 }

@@ -36,6 +36,8 @@ namespace BabelNetwork {
 
         [[nodiscard]] virtual std::string describe() = 0;
 
+        virtual void connect() = 0;
+
         /* <- Attributes -> */
     protected:
         char _headerBuffer[AResponse::HeaderSize] = {0};

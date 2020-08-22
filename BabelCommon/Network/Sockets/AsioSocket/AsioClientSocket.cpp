@@ -12,6 +12,18 @@
 
 using namespace BabelNetwork;
 
+#ifdef BABEL_CLIENT_BIN
+AsioClientSocket::AsioClientSocket(
+    const std::string &address,
+    const std::string &port,
+    BabelUtils::Logger &logger,
+    SocketHandler handlerType
+)
+    : ClientSocket(address, port, logger),
+      _socket(_context),
+      _handler(handlerType)
+{}
+#else
 AsioClientSocket::AsioClientSocket(
     const std::string &address,
     const std::string &port,
@@ -24,6 +36,8 @@ AsioClientSocket::AsioClientSocket(
       _socket(_context),
       _handler(handlerType)
 {}
+#endif
+
 
 AsioClientSocket::~AsioClientSocket()
 {
@@ -75,6 +89,18 @@ void AsioClientSocket::connect()
         _socket,
         _endpoints,
         boost::bind(&AsioClientSocket::handle_connect, shared_from_this(), boost::asio::placeholders::error)
+    );
+
+    setThread(boost::make_shared<BabelUtils::BoostThread>(
+        [this] {
+            try {
+                std::cout << "CLIENT THREAD LAUNCHED" << std::endl;
+                this->getContext().run();
+                std::cout << "CLIENT THREAD FINISHED" << std::endl;
+            } catch (const std::exception &e) {
+                std::cerr << e.what() << std::endl;
+            }
+        })
     );
 }
 
@@ -146,7 +172,6 @@ void AsioClientSocket::read_data(const boost::system::error_code &error)
 void AsioClientSocket::queue_read_response(const boost::system::error_code &error)
 {
     if (!error && _read_msg->decode_data()) {
-//        std::cout << "BODY READ -- DATA = " << _read_msg->serialize_data() << std::endl;
         std::cout << _read_msg << std::endl;
         _read_queue.push(_read_msg);
         _logger.logThis(_read_msg);
