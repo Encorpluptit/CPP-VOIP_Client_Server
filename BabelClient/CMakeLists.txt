@@ -13,7 +13,7 @@ set(CMAKE_CXX_STANDARD 17)
 # Set includes directories
 set(
         CLIENT_INCLUDES
-        include
+        SaveQT
 )
 
 include_directories(${CLIENT_INCLUDES} ${BABEL_COMMON_INCLUDE})
@@ -57,9 +57,7 @@ set(CLIENT_SRC_DIR src)
 set(
         CLIENT_SOURCE_FILES
 
-        test.cpp
-        feature1/feature1.cpp
-        feature2/feature2.cpp
+        SaveQT/test.cpp
 )
 
 
@@ -87,8 +85,7 @@ endforeach (src)
 
 add_executable(
         babel_client
-        test.cpp
-        ${CLIENT_SOURCES}
+        SaveQT/test.cpp
 )
 
 target_link_libraries(babel_client ${CONAN_LIBS} Qt5::Widgets)
