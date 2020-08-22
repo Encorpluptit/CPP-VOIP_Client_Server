@@ -51,6 +51,16 @@ bool MessageResponse::setMessageData(const std::string &messageData) noexcept
     return true;
 }
 
+bool MessageResponse::setTimestamp() noexcept
+{
+    time_t timer;
+    if (time(&timer) == ((time_t) -1))
+        return false;
+    _data.timestamp = timer;
+    _dataInfos._timestampSize = sizeof(_data.timestamp);
+    return true;
+}
+
 bool MessageResponse::encode() noexcept
 {
     memcpy(_data_byte, &_header, HeaderSize);
@@ -130,14 +140,4 @@ std::string MessageResponse::serialize_data() const noexcept
         "Sender: %s | Receiver: %s",
         _data.sender, _data.receiver
     );
-}
-
-bool MessageResponse::setTimestamp() noexcept
-{
-    time_t timer;
-    if (time(&timer) == ((time_t) -1))
-        return false;
-    _data.timestamp = timer;
-    _dataInfos._timestampSize = sizeof(_data.timestamp);
-    return true;
 }
