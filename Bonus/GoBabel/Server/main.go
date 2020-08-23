@@ -4,7 +4,7 @@ import (
 	"BabelGo/Common/BabelUtils"
 	"BabelGo/Server/Database"
 	"BabelGo/Server/Server"
-	"BabelGo/ent"
+	"BabelGo/tests/DataBase"
 	"fmt"
 	"log"
 	"os"
@@ -27,27 +27,8 @@ func main() {
 	dbCloser := Database.Init(Database.ProdDBFile)
 	defer dbCloser()
 
-	err := PopulateDb()
-	if err != nil {
-		log.Fatal(err)
-	}
+	DataBaseTest.PopulateDb()
 	if err := serv.Start(); err != nil {
 		log.Println("Error in main() from Server.Core.Start()", err)
 	}
-}
-
-func PopulateDb() error {
-	users := []*ent.User{
-		{Login: "damien.bernard@epitech.eu", Password: "1234AB_cd666"},
-		{Login: "gregoire.brasseur@epitech.eu", Password: "1234AB_cd666"},
-		{Login: "arthur.benard@epitech.eu", Password: "1234AB_cd666"},
-		{Login: "ugo.levi-cescutti@epitech.eu", Password: "1234AB_cd666"},
-	}
-	for _, user := range users {
-		_, err := Database.CreateUser(user)
-		if err != nil {
-			log.Printf("failed creating user: %v\ns", err)
-		}
-	}
-	return nil
 }
