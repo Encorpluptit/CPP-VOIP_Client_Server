@@ -25,6 +25,7 @@ func NewClient(addr, port string) (*Core, func()) {
 		Input:  make(chan *nw.Request),
 	}
 	nw.RegisterInterfaces()
+	client.Start()
 	return client, client.Close
 }
 

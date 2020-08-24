@@ -14,10 +14,23 @@ import (
 
 var CommandNotFound = errors.New("command not found")
 
+//func LauchGui() *GUI.BabelGui {
+//	gui := GUI.InitGui(AppID, WindowName)
+//
+//	appMenu := Menus.CreateAppMenu()
+//	gui.Win.SetMainMenu(appMenu)
+//	return gui
+//}
+//
+//func main() {
+//	gui := LauchGui()
+//	tabs := Menus.SetMenuSidebar(gui.BabelApp, gui.ClientContext)
+//	gui.Win.SetContent(tabs)
+//	gui.Win.ShowAndRun()
+//}
+
 func main() {
-	arguments := os.Args
-	client, clientCloser := Client.NewClient(arguments[1], arguments[2])
-	client.Start()
+	client, clientCloser := Client.NewClient(os.Args[1], os.Args[2])
 	defer clientCloser()
 
 	if logger, err, loggerCloser := BabelUtils.NewLogger(BabelUtils.ClientLog); err == nil {
