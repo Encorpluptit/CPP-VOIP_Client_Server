@@ -13,6 +13,21 @@ const (
 	preferenceCurrentTab = "currentTab"
 )
 
+type BabelGui struct {
+	*Core.BabelApp
+	*Core.ClientContext
+}
+
+func (gui *BabelGui) Show() {
+	tabs := Menus.SetMenuSidebar(gui.BabelApp, gui.ClientContext)
+	tabs.SelectTabIndex(gui.App.Preferences().Int(preferenceCurrentTab))
+	gui.Win.SetContent(tabs)
+}
+
+func (gui *BabelGui) Run() {
+	gui.App.Run()
+}
+
 // TODO: Parse config with toml (cbm)
 func InitGui(appID, windowName string) *BabelGui {
 	gui := &BabelGui{&Core.BabelApp{}, &Core.ClientContext{}}
@@ -27,19 +42,4 @@ func InitGui(appID, windowName string) *BabelGui {
 	gui.Win.SetMaster()
 	gui.Input = make(chan uintptr)
 	return gui
-}
-
-type BabelGui struct {
-	*Core.BabelApp
-	*Core.ClientContext
-}
-
-func (gui *BabelGui) Show() {
-	tabs := Menus.SetMenuSidebar(gui.BabelApp, gui.ClientContext)
-	tabs.SelectTabIndex(gui.App.Preferences().Int(preferenceCurrentTab))
-	gui.Win.SetContent(tabs)
-}
-
-func (gui *BabelGui) Run() {
-	gui.App.Run()
 }
