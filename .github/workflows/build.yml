@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: docker://epitechcontent/epitest-docker-devel
+    container: docker://epitechcontent/epitest-docker:devel
 
     steps:
       - uses: actions/checkout@v2
