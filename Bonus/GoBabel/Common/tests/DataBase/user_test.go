@@ -1,8 +1,8 @@
 package DataBaseTest
 
 import (
+	"BabelGo/Common/ent"
 	"BabelGo/Server/Database"
-	"BabelGo/ent"
 	"testing"
 )
 
@@ -15,11 +15,7 @@ func TestUsers(t *testing.T) {
 		{ID: 3, Login: "arthur.benard@epitech.eu", Password: "1234AB_cd666"},
 		{ID: 4, Login: "ugo.levi-cescutti@epitech.eu", Password: "1234AB_cd666"},
 	}
-	for _, user := range users{
-		//requestUser := &ent.User{
-		//	Login:    user.Login,
-		//	Password: user.Password,
-		//}
+	for _, user := range users {
 		u, err := Database.CreateUser(user)
 		if err != nil {
 			t.Error(err)

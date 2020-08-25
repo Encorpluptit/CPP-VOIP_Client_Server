@@ -2,9 +2,9 @@ package main
 
 import (
 	"BabelGo/Common/BabelUtils"
+	"BabelGo/Common/tests/DataBase"
 	"BabelGo/Server/Database"
 	"BabelGo/Server/Server"
-	"BabelGo/tests/DataBase"
 	"fmt"
 	"log"
 	"os"

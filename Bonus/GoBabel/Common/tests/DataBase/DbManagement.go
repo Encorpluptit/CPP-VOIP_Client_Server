@@ -1,8 +1,8 @@
 package DataBaseTest
 
 import (
+	"BabelGo/Common/ent"
 	"BabelGo/Server/Database"
-	"BabelGo/ent"
 	"log"
 	"os"
 )
@@ -38,5 +38,3 @@ func InitDb() func() {
 func setup() {
 	PopulateDb()
 }
-
-
