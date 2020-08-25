@@ -11,7 +11,7 @@ import (
 
 func SetMenuSidebar(app *Core.BabelApp, client *Core.ClientContext) *widget.TabContainer {
 	var tabs *widget.TabContainer
-	if client.Client == nil {
+	if client.Client.User == nil {
 		tabs = setLoggedOutSidebar(app, client)
 	} else {
 		tabs = setLoggedSidebar(app, client)

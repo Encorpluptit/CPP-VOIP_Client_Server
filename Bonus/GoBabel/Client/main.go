@@ -1,15 +1,18 @@
 package main
 
-import "C"
 import (
-	"BabelGo/Client/Client"
+	"BabelGo/Client/ClientCore"
+	"BabelGo/Client/GUI"
 	"BabelGo/Common/BabelUtils"
 	nw "BabelGo/Common/Network"
-	"bufio"
 	"errors"
 	"log"
 	"os"
-	"strings"
+)
+
+const (
+	AppID      = "GoBabel"
+	WindowName = "BabelGUI"
 )
 
 var CommandNotFound = errors.New("command not found")
@@ -21,6 +24,7 @@ var CommandNotFound = errors.New("command not found")
 //	gui.Win.SetMainMenu(appMenu)
 //	return gui
 //}
+
 //
 //func main() {
 //	gui := LauchGui()
@@ -30,32 +34,42 @@ var CommandNotFound = errors.New("command not found")
 //}
 
 func main() {
-	client, clientCloser := Client.NewClient(os.Args[1], os.Args[2])
-	defer clientCloser()
+	core, coreCloser := ClientCore.NewClient(os.Args[1], os.Args[2])
+	defer coreCloser()
+
+	gui := GUI.InitGui(AppID, WindowName)
+	gui.Client = core.Client
+	gui.GuiCom = core.GuiCom
 
 	if logger, err, loggerCloser := BabelUtils.NewLogger(BabelUtils.ClientLog); err == nil {
 		log.SetOutput(logger)
 		defer loggerCloser()
 	}
 
-	go client.Serve()
+	go core.Serve()
+	go gui.Show()
+	gui.Run()
 
-	reader := bufio.NewReader(os.Stdin)
-	for client.Run {
-		text, err := reader.ReadString('\n')
-		if err != nil {
-			log.Println("Error in main() from reader.ReadString()", err)
-			break
-		}
-		text = strings.TrimSuffix(text, "\n")
-		input := strings.Split(text, " ")
-		if rq, err := getResponseFromCommand(input); err != nil {
-			log.Println(err)
-			continue
-		} else {
-			client.SendInput(rq)
-		}
-	}
+	//tabs := Menus.SetMenuSidebar(gui.BabelApp, gui.ClientContext)
+	//gui.Win.SetContent(tabs)
+	//gui.Win.ShowAndRun()
+
+	//reader := bufio.NewReader(os.Stdin)
+	//for core.Run {
+	//	text, err := reader.ReadString('\n')
+	//	if err != nil {
+	//		log.Println("Error in main() from reader.ReadString()", err)
+	//		break
+	//	}
+	//	text = strings.TrimSuffix(text, "\n")
+	//	input := strings.Split(text, " ")
+	//	if rq, err := getResponseFromCommand(input); err != nil {
+	//		log.Println(err)
+	//		continue
+	//	} else {
+	//		core.SendInput(rq)
+	//	}
+	//}
 }
 
 func getResponseFromCommand(input []string) (*nw.Request, error) {
@@ -64,9 +78,9 @@ func getResponseFromCommand(input []string) (*nw.Request, error) {
 		if len(input) != 2 {
 			return nil, errors.New("LOL METS MOI UN LOGIN STP")
 		}
-		return nw.NewUserRequest(nw.UserRqLogin, input[1], "abcd1234")
+		return nw.NewUserLoginRequest(input[1], "abcd1234")
 	case "logout":
-		return nw.NewUserRequest(nw.UserRqLogout, "damien", "abcd1234")
+		return nw.NewUserDatas(nw.UserRqLogout, "damien", "abcd1234")
 	case "test":
 		return nw.NewTestRequest(nw.RequestTest, "lol", "mdr")
 	case "call":

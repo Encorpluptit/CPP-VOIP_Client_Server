@@ -11,10 +11,11 @@ type TextEntry struct {
 	Submit func()
 }
 
-func newTextEntry(fn func()) *TextEntry {
+func newTextEntry(submitFunc func(), placeholder string) *TextEntry {
 	entry := &TextEntry{}
 	entry.ExtendBaseWidget(entry)
-	entry.Submit = fn
+	entry.Submit = submitFunc
+	entry.SetPlaceHolder(placeholder)
 	return entry
 }
 
@@ -35,22 +36,30 @@ func (e *PasswordEntry) KeyDown(key *fyne.KeyEvent) {
 	switch key.Name {
 	case fyne.KeyReturn:
 		e.Submit()
+		e.Reset()
 	default:
 	}
 }
 
-func newPasswordEntry(fn func()) *PasswordEntry {
+func (e *PasswordEntry) Reset() {
+	e.Text = ""
+	e.Refresh()
+}
+
+func newPasswordEntry(submitFunc func(), placeholder string) *PasswordEntry {
 	entry := &PasswordEntry{}
 	entry.Password = true
 	entry.ExtendBaseWidget(entry)
-	entry.Submit = fn
+	entry.Submit = submitFunc
+	entry.SetPlaceHolder(placeholder)
 	return entry
 }
 
 type LoginForm struct {
 	*widget.Form
-	Login    *TextEntry
-	Password *PasswordEntry
+	Login      *TextEntry
+	Password   *PasswordEntry
+	SubmitFunc func(string, string)
 }
 
 func (e *LoginForm) Tapped(pe *fyne.PointEvent) {
@@ -59,48 +68,55 @@ func (e *LoginForm) Tapped(pe *fyne.PointEvent) {
 
 func (e *LoginForm) Submit() {
 	log.Printf("Log In:\nLogin: %s\nPassword: %s\n", e.Login.Text, e.Password.Text)
+	e.SubmitFunc(e.Login.Text, e.Password.Text)
 }
 
-type AccountForm LoginForm
+type AccountForm struct {
+	LoginForm
+	Pseudo *TextEntry
+}
 
 func (e *AccountForm) Submit() {
-	log.Printf("Account create:\nLogin: %s\nPassword: %s\n", e.Login.Text, e.Password.Text)
+	log.Printf("Account create:\nPseudo: %s\nLogin: %s\nPassword: %s\n", e.Pseudo.Text, e.Login.Text, e.Password.Text)
+	e.SubmitFunc(e.Login.Text, e.Password.Text)
 }
 
-func CreateLoginForm() *LoginForm {
-	newLoginForm := &LoginForm{nil, nil, nil}
-	newLoginForm.Login = newTextEntry(newLoginForm.Submit)
-	newLoginForm.Password = newPasswordEntry(newLoginForm.Submit)
-	newLoginForm.Form = &widget.Form{
-		Items: []*widget.FormItem{ // we can specify items in the constructor
-			{"Login", newLoginForm.Login},
-			{"Password", newLoginForm.Password},
+func CreateLoginForm(logFunc func(string, string)) *LoginForm {
+	newForm := &LoginForm{nil, nil, nil, logFunc}
+
+	newForm.Login = newTextEntry(newForm.Submit, "Login")
+	newForm.Password = newPasswordEntry(newForm.Submit, "Password")
+
+	newForm.Form = &widget.Form{
+		Items: []*widget.FormItem{
+			{"Login", newForm.Login},
+			{"Password", newForm.Password},
 		},
-		OnSubmit: newLoginForm.Submit,
-		OnCancel: func() {
-			log.Println("CANCEL")
-		},
+		OnSubmit:   newForm.Submit,
+		OnCancel:   newForm.Password.Reset,
 		SubmitText: "Login",
 		CancelText: "Cancel",
 	}
-	return newLoginForm
+	return newForm
 }
 
-func CreateAccountForm() *AccountForm {
-	newAcccountForm := &AccountForm{nil, nil, nil}
-	newAcccountForm.Login = newTextEntry(newAcccountForm.Submit)
-	newAcccountForm.Password = newPasswordEntry(newAcccountForm.Submit)
-	newAcccountForm.Form = &widget.Form{
-		Items: []*widget.FormItem{ // we can specify items in the constructor
-			{"Login", newAcccountForm.Login},
-			{"Password", newAcccountForm.Password},
+func CreateAccountForm(regFunc func(string, string)) *AccountForm {
+	newForm := &AccountForm{LoginForm{nil, nil, nil, regFunc}, nil}
+
+	newForm.Pseudo = newTextEntry(newForm.Submit, "Pseudo")
+	newForm.Login = newTextEntry(newForm.Submit, "Login")
+	newForm.Password = newPasswordEntry(newForm.Submit, "Password")
+
+	newForm.Form = &widget.Form{
+		Items: []*widget.FormItem{
+			{"Pseudo", newForm.Pseudo},
+			{"Login", newForm.Login},
+			{"Password", newForm.Password},
 		},
-		OnSubmit: newAcccountForm.Submit,
-		OnCancel: func() {
-			log.Println("CANCEL")
-		},
-		SubmitText: "Create account",
+		OnSubmit:   newForm.Submit,
+		OnCancel:   newForm.Password.Reset,
+		SubmitText: "Create",
 		CancelText: "Cancel",
 	}
-	return newAcccountForm
+	return newForm
 }

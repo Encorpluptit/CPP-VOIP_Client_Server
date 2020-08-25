@@ -24,6 +24,7 @@ func main() {
 	}
 	defer serverCloser()
 
+	// TODO: load Env to prod or test db
 	dbCloser := Database.Init(Database.ProdDBFile)
 	defer dbCloser()
 

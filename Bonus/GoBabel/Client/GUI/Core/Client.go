@@ -1,9 +1,12 @@
 package Core
 
-import "fyne.io/fyne"
+import (
+	"BabelGo/Client/Bridge"
+	nw "BabelGo/Common/Network"
+)
 
 type ClientContext struct {
-	Client   fyne.App
+	Client   *nw.Client
 	IsMobile bool
-	Input    chan uintptr
+	GuiCom   *Bridge.GuiCom
 }

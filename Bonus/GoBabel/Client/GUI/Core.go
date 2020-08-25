@@ -5,6 +5,7 @@ import (
 	"BabelGo/Client/GUI/Menus"
 	"fyne.io/fyne"
 	"fyne.io/fyne/app"
+	"log"
 )
 
 const (
@@ -22,6 +23,16 @@ func (gui *BabelGui) Show() {
 	tabs := Menus.SetMenuSidebar(gui.BabelApp, gui.ClientContext)
 	tabs.SelectTabIndex(gui.App.Preferences().Int(preferenceCurrentTab))
 	gui.Win.SetContent(tabs)
+	gui.Win.Show()
+	for {
+		rq := <-gui.GuiCom.ToGui
+		log.Println(rq)
+		//gui.Win.Show()
+		//log.Println("Foor loop")
+		//tabs := Menus.SetMenuSidebar(gui.BabelApp, gui.ClientContext)
+		//gui.Win.SetContent(tabs)
+		//gui.Win.Show()
+	}
 }
 
 func (gui *BabelGui) Run() {
@@ -40,6 +51,7 @@ func InitGui(appID, windowName string) *BabelGui {
 	}
 	gui.Win.CenterOnScreen()
 	gui.Win.SetMaster()
-	gui.Input = make(chan uintptr)
+	appMenu := Menus.CreateAppMenu()
+	gui.Win.SetMainMenu(appMenu)
 	return gui
 }

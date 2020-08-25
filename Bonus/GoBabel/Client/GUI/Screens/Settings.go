@@ -10,7 +10,7 @@ import (
 )
 
 func Settings(app *Core.BabelApp, client *Core.ClientContext) fyne.CanvasObject {
-	loginForm := Widgets.CreateAccountForm()
+	loginForm := Widgets.CreateAccountForm(nil)
 
 	return widget.NewVBox(
 		layout.NewSpacer(),

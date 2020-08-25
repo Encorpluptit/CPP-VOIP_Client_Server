@@ -1,6 +1,8 @@
-package Client
+package ClientCore
 
 import (
+	"BabelGo/Client/Bridge"
+	"BabelGo/Client/GUI"
 	nw "BabelGo/Common/Network"
 	"fmt"
 	"log"
@@ -9,9 +11,10 @@ import (
 )
 
 type Core struct {
-	*nw.Client
-	Run   bool
-	Input chan *nw.Request
+	Client *nw.Client
+	Run    bool
+	GuiCom *Bridge.GuiCom
+	Gui    *GUI.BabelGui
 }
 
 func NewClient(addr, port string) (*Core, func()) {
@@ -22,7 +25,10 @@ func NewClient(addr, port string) (*Core, func()) {
 	client := &Core{
 		Client: nw.NewClient(conn),
 		Run:    true,
-		Input:  make(chan *nw.Request),
+		GuiCom: &Bridge.GuiCom{
+			ToNetwork: make(chan *nw.Request),
+			ToGui:     make(chan *nw.Request),
+		},
 	}
 	nw.RegisterInterfaces()
 	client.Start()
@@ -33,29 +39,29 @@ func (c *Core) SendInput(rq *nw.Request) {
 	if !c.Run {
 		return
 	}
-	c.Input <- rq
+	c.GuiCom.SendToNetwork(rq)
 }
 
 func (c *Core) Close() {
-	if err := c.Conn.Close(); err != nil {
-		log.Println("Error in Core.Close() from net.conn.Close()", err)
+	if err := c.Client.Conn.Close(); err != nil {
+		log.Println("Error in ClientCore.Close() from net.conn.Close()", err)
 	}
-	close(c.Input)
+	c.GuiCom.Close()
 	os.Exit(0)
 }
 
 func (c *Core) Start() {
 	c.Run = true
-	fmt.Printf("Serving %s\n", c.Conn.RemoteAddr().String())
+	fmt.Printf("Serving %s\n", c.Client.Conn.RemoteAddr().String())
 }
 
 func (c *Core) Serve() {
 	defer c.Close()
 
 	for c.Run {
-		data := <-c.Input
+		data := c.GuiCom.GetFromGui()
 		log.Println(data)
-		if err := data.Send(c.EncDec); err != nil {
+		if err := data.Send(c.Client.EncDec); err != nil {
 			log.Println("In gob.Encode(): ", err)
 			break
 		}
