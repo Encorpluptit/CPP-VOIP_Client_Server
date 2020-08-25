@@ -25,8 +25,11 @@ jobs:
         run: |
           echo $HOME
           echo $GITHUB_WORKSPACE
-          pwd
+          echo $(pwd)
+          echo "list .conan dir"
           ls $HOME/.conan
+          cat $HOME/.conan/remotes.json
+          echo "list .conan/profiles dir"
           ls $HOME/.conan/profiles
           cat $HOME/.conan/profiles/default
 
