@@ -47,6 +47,10 @@ if (USE_LOG)
     add_compile_definitions(_BABEL_LOG_)
 endif (USE_LOG)
 
+if (COVERAGE)
+    add_compile_options(--coverage -fprofile-arcs -ftest-coverage)
+endif (COVERAGE)
+
 if (USE_DEBUG)
     add_compile_options(-g3)
     add_compile_definitions(_DEBUG_)
