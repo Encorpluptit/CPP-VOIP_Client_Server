@@ -1,6 +1,7 @@
 package BabelNetwork
 
 import (
+	"BabelGo/ent"
 	"errors"
 	"fmt"
 )
@@ -23,7 +24,7 @@ const (
 )
 
 type UserDatas struct {
-	Login, Password string
+	*ent.User
 }
 
 func NewUserRequest(code uint16, login, password string) (*Request, error) {
@@ -41,8 +42,10 @@ func NewUserRequest(code uint16, login, password string) (*Request, error) {
 	rq.Header.RqType = RequestUser
 	rq.Header.Code = code
 	rq.Datas = &UserDatas{
-		Login:    login,
-		Password: password,
+		&ent.User{
+			Login:    login,
+			Password: password,
+		},
 	}
 	return rq, nil
 }

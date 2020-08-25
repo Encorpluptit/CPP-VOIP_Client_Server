@@ -48,7 +48,8 @@ func main() {
 			break
 		}
 		text = strings.TrimSuffix(text, "\n")
-		if rq, err := getResponseFromCommand(text); err != nil {
+		input := strings.Split(text, " ")
+		if rq, err := getResponseFromCommand(input); err != nil {
 			log.Println(err)
 			continue
 		} else {
@@ -57,13 +58,18 @@ func main() {
 	}
 }
 
-func getResponseFromCommand(input string) (*nw.Request, error) {
-	switch input {
+func getResponseFromCommand(input []string) (*nw.Request, error) {
+	switch input[0] {
 	case "login":
-		return nw.NewUserRequest(nw.UserRqLogin, "damien", "abcd1234")
+		if len(input) != 2 {
+			return nil, errors.New("LOL METS MOI UN LOGIN STP")
+		}
+		return nw.NewUserRequest(nw.UserRqLogin, input[1], "abcd1234")
 	case "logout":
 		return nw.NewUserRequest(nw.UserRqLogout, "damien", "abcd1234")
 	case "test":
+		return nw.NewTestRequest(nw.RequestTest, "lol", "mdr")
+	case "call":
 		return nw.CallTest()
 	default:
 		return nil, CommandNotFound

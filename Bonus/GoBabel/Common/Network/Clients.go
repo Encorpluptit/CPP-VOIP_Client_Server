@@ -1,7 +1,8 @@
 package BabelNetwork
 
 import (
-	"BabelGo/Common/BabelModels"
+	"BabelGo/Server/Database"
+	"BabelGo/ent"
 	"errors"
 	"fmt"
 	"log"
@@ -13,8 +14,12 @@ var (
 	ClientNotLogged     = errors.New("client not logged")
 )
 
+const (
+	EmptyUser = "{{ Empty User }}"
+)
+
 type Client struct {
-	User   *BabelModels.User
+	User   *ent.User
 	Conn   net.Conn
 	EncDec EncodeDecoder
 	Logged bool
@@ -22,8 +27,7 @@ type Client struct {
 
 func NewClient(conn net.Conn) *Client {
 	return &Client{
-		// TODO: Remove call and set to nil
-		User:   BabelModels.NewUser(),
+		User:   nil,
 		Conn:   conn,
 		EncDec: NewEncodeDecoder(conn),
 		Logged: false,
@@ -31,21 +35,27 @@ func NewClient(conn net.Conn) *Client {
 }
 
 func (c Client) String() string {
-	user := c.User.String()
+	user := EmptyUser
+	if c.User != nil {
+		user = c.User.String()
+	}
 	conn := fmt.Sprintf("With connexion %s", c.Conn.RemoteAddr().String())
 	return user + "\n" + conn
+	//return fmt.Sprintf("%s %s %s", user, BabelUtils.MakeDashArrow(1), conn)
 }
 
 func (c Client) IsLogged() bool {
 	return c.Logged
 }
 
-func (c *Client) Login(datas *UserDatas) error {
+func (c *Client) Login(datas *UserDatas) (err error) {
+	log.Println("Login user")
 	if c.IsLogged() {
 		return ClientAlreadyLogged
 	}
-	// TODO: fetch in Db
-	c.User.Login(datas.Login, datas.Password)
+	if c.User, err = Database.QueryUser(datas.User); err != nil {
+		return err
+	}
 	log.Println("Client Logged", c)
 	c.Logged = true
 	return nil
@@ -55,9 +65,8 @@ func (c *Client) Logout() error {
 	if !c.IsLogged() {
 		return ClientNotLogged
 	}
-	// TODO: set User to nil
 	log.Println("Logout user :", c.User)
-	c.User.Logout()
+	c.User = nil
 	c.Logged = false
 	return nil
 }

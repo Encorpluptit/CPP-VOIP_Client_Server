@@ -30,10 +30,12 @@ func NewServer(address, port string) (*Core, func()) {
 }
 
 func (c *Core) Close() {
+	log.Println("Closing Server ...")
 	if c.Run {
 		c.Run = false
 		c.ListenerCore.Close()
 	}
+	log.Println("Server Closed !")
 }
 
 func (c *Core) initSignalChan() {
@@ -73,8 +75,10 @@ func (c *Core) Start() error {
 func (c *Core) handleClient(client *nw.Client) {
 	fmt.Printf("Serving %s\n", client.Conn.RemoteAddr().String())
 	defer func() {
+		log.Println("Closing Client ...")
 		client.Close()
 		c.ListenerCore.RemoveClient(client)
+		log.Println("Client Closed !")
 	}()
 	RequestManagerGetter := func(request *nw.Request) (func(*nw.Client, *nw.Request) error, error) {
 		c.Mutex.Lock()
@@ -87,7 +91,8 @@ func (c *Core) handleClient(client *nw.Client) {
 	for c.Run {
 		rq := &nw.Request{}
 		if err := rq.Receive(client.EncDec); err != nil {
-			log.Fatal("decode error:", err)
+			log.Println("decode error:", err)
+			break
 		}
 		rqManager, err := RequestManagerGetter(rq)
 		if err != nil {

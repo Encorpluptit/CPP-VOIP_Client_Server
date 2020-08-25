@@ -37,9 +37,11 @@ func (l *Listener) AcceptClient(conn net.Conn) *BabelNetwork.Client {
 }
 
 func (l *Listener) Close() {
+	log.Println("Closing Listener ...")
 	if err := l.NetListener.Close(); err != nil {
 		log.Println("Error in Listener.Close() from net.NetListener Close():", err)
 	}
+	log.Println("Listener Closed !")
 }
 
 func (l *Listener) RemoveClient(target *BabelNetwork.Client) {
