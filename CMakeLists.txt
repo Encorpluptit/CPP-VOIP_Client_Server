@@ -2,6 +2,8 @@
 # Project Configuration
 cmake_minimum_required(VERSION 3.14)
 project(CPP_babel_2020)
+set(CMAKE_C_COMPILER_VERSION 10.1)
+set(CMAKE_CXX_COMPILER_VERSION 10.1)
 
 
 set(CMAKE_AUTOMOC ON)
@@ -11,6 +13,7 @@ set(CMAKE_AUTOUIC ON)
 ###############################################################################
 # Language Configuration
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_C_COMPILER gcc-10.1)
 
 
 ###############################################################################
