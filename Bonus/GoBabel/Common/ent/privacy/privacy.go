@@ -3,7 +3,7 @@
 package privacy
 
 import (
-	"BabelGo/ent"
+	"BabelGo/Common/ent"
 	"context"
 	"errors"
 	"fmt"

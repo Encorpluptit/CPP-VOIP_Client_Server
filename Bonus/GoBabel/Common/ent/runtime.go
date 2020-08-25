@@ -3,7 +3,7 @@
 package ent
 
 import (
-	"BabelGo/ent/schema"
+	"BabelGo/Common/ent/schema"
 	"BabelGo/ent/user"
 )
 

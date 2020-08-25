@@ -3,7 +3,7 @@
 package user
 
 import (
-	"BabelGo/ent/predicate"
+	"BabelGo/Common/ent/predicate"
 
 	"github.com/facebook/ent/dialect/sql"
 )

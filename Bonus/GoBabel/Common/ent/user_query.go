@@ -3,7 +3,7 @@
 package ent
 
 import (
-	"BabelGo/ent/predicate"
+	"BabelGo/Common/ent/predicate"
 	"BabelGo/ent/user"
 	"context"
 	"errors"

@@ -3,7 +3,7 @@
 package ent
 
 import (
-	"BabelGo/ent/user"
+	"BabelGo/Common/ent/user"
 	"fmt"
 	"strings"
 

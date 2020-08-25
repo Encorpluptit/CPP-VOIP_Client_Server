@@ -3,7 +3,7 @@
 package enttest
 
 import (
-	"BabelGo/ent"
+	"BabelGo/Common/ent"
 	"context"
 	// required by schema hooks.
 	_ "BabelGo/ent/runtime"
