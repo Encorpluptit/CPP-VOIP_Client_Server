@@ -1,8 +1,7 @@
-package Menus
+package Screens
 
 import (
 	"GoBabel/Client/GUI/App"
-	"GoBabel/Client/GUI/Screens"
 	"fyne.io/fyne"
 	"fyne.io/fyne/cmd/fyne_demo/screens"
 	"fyne.io/fyne/theme"
@@ -21,9 +20,9 @@ func SetMenuSidebar(app *App.BabelApp, client *App.ClientContext) *widget.TabCon
 
 func setLoggedOutSidebar(app *App.BabelApp, client *App.ClientContext) *widget.TabContainer {
 	tabs := widget.NewTabContainer(
-		widget.NewTabItemWithIcon("Welcome", theme.HomeIcon(), Screens.Welcome(app, client)),
-		widget.NewTabItemWithIcon("Log in", theme.CheckButtonCheckedIcon(), Screens.LoginRegister(app, client)),
-		widget.NewTabItemWithIcon("Settings", theme.ContentAddIcon(), Screens.Settings(app, client)),
+		widget.NewTabItemWithIcon("Welcome", theme.HomeIcon(), Welcome(app, client)),
+		widget.NewTabItemWithIcon("Log in", theme.CheckButtonCheckedIcon(), LoginRegister(app, client)),
+		widget.NewTabItemWithIcon("Settings", theme.ContentAddIcon(), Settings(app, client)),
 	)
 
 	tabs.SetTabLocation(widget.TabLocationTop)
@@ -36,7 +35,7 @@ func setLoggedSidebar(app *App.BabelApp, client *App.ClientContext) *widget.TabC
 		widget.NewTabItemWithIcon("Widgets", theme.CheckButtonCheckedIcon(), screens.WidgetScreen()),
 		widget.NewTabItemWithIcon("Containers", theme.ViewRestoreIcon(), screens.ContainerScreen()),
 		widget.NewTabItemWithIcon("Windows", theme.ViewFullScreenIcon(), screens.DialogScreen(app.Win)),
-		widget.NewTabItemWithIcon("Settings", theme.ContentAddIcon(), Screens.Settings(app, client)),
+		widget.NewTabItemWithIcon("Settings", theme.ContentAddIcon(), Settings(app, client)),
 	)
 
 	if !fyne.CurrentDevice().IsMobile() {

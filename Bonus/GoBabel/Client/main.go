@@ -2,7 +2,8 @@ package main
 
 import (
 	"GoBabel/Client/Core"
-	"GoBabel/Client/GUI"
+	"GoBabel/Client/GUI/App"
+	"GoBabel/Client/GUI/Screens"
 	"GoBabel/Common/BabelUtils"
 	nw "GoBabel/Common/Network"
 	"errors"
@@ -17,42 +18,20 @@ const (
 
 var CommandNotFound = errors.New("command not found")
 
-//func LauchGui() *GUI.BabelGui {
-//	gui := GUI.InitGui(AppID, WindowName)
-//
-//	appMenu := Menus.CreateAppMenu()
-//	gui.Win.SetMainMenu(appMenu)
-//	return gui
-//}
-
-//
-//func main() {
-//	gui := LauchGui()
-//	tabs := Menus.SetMenuSidebar(gui.BabelApp, gui.ClientContext)
-//	gui.Win.SetContent(tabs)
-//	gui.Win.ShowAndRun()
-//}
-
 func main() {
 	core, coreCloser := Core.NewClient(os.Args[1], os.Args[2])
 	defer coreCloser()
 
-	gui := GUI.InitGui(AppID, WindowName)
-	gui.Client = core.Client
-	gui.GuiCom = core.GuiCom
+	gui := App.InitGui(AppID, WindowName, core.Client, core.GuiCom)
 
 	if logger, err, loggerCloser := BabelUtils.NewLogger(BabelUtils.ClientLog); err == nil {
 		log.SetOutput(logger)
 		defer loggerCloser()
 	}
 
-	go gui.Show()
+	go Screens.Show(gui)
 	core.Serve()
 	gui.Run()
-
-	//tabs := Menus.SetMenuSidebar(gui.BabelApp, gui.ClientContext)
-	//gui.Win.SetContent(tabs)
-	//gui.Win.ShowAndRun()
 
 	//reader := bufio.NewReader(os.Stdin)
 	//for core.Run {

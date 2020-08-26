@@ -1,4 +1,4 @@
-package Menus
+package App
 
 import (
 	"fmt"

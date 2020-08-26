@@ -2,7 +2,7 @@ package Core
 
 import (
 	"GoBabel/Client/Bridge"
-	"GoBabel/Client/GUI"
+	"GoBabel/Client/GUI/App"
 	nw "GoBabel/Common/Network"
 	"fmt"
 	"log"
@@ -13,7 +13,7 @@ import (
 type Core struct {
 	Client *nw.Client
 	GuiCom *Bridge.GuiCom
-	Gui    *GUI.BabelGui
+	Gui    *App.BabelGui
 	Run    bool
 }
 
