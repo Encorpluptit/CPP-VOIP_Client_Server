@@ -1,8 +1,8 @@
 package DataBaseTest
 
 import (
-	"BabelGo/Common/ent"
-	"BabelGo/Server/Database"
+	"GoBabel/Common/ent"
+	"GoBabel/Server/Database"
 	"log"
 	"os"
 )

@@ -3,7 +3,7 @@
 package ent
 
 import (
-	"BabelGo/Common/ent/user"
+	"GoBabel/Common/ent/user"
 	"context"
 	"fmt"
 	"sync"

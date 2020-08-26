@@ -1,8 +1,8 @@
 package Core
 
 import (
-	"BabelGo/Client/Bridge"
-	nw "BabelGo/Common/Network"
+	"GoBabel/Client/Bridge"
+	nw "GoBabel/Common/Network"
 )
 
 type ClientContext struct {

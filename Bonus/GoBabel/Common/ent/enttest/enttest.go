@@ -3,10 +3,10 @@
 package enttest
 
 import (
-	"BabelGo/Common/ent"
+	"GoBabel/Common/ent"
 	"context"
 	// required by schema hooks.
-	_ "BabelGo/ent/runtime"
+	_ "GoBabel/Common/ent/runtime"
 
 	"github.com/facebook/ent/dialect/sql/schema"
 )

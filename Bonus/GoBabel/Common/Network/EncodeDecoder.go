@@ -1,7 +1,7 @@
 package BabelNetwork
 
 import (
-	"BabelGo/ent"
+	"GoBabel/Common/ent"
 	"encoding/gob"
 	"io"
 )

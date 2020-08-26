@@ -1,8 +1,8 @@
 package GUI
 
 import (
-	"BabelGo/Client/GUI/Core"
-	"BabelGo/Client/GUI/Menus"
+	"GoBabel/Client/GUI/Core"
+	"GoBabel/Client/GUI/Menus"
 	"fyne.io/fyne"
 	"fyne.io/fyne/app"
 	"log"

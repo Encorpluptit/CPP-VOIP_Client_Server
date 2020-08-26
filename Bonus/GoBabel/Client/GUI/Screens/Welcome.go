@@ -1,13 +1,13 @@
 package Screens
 
 import (
-	"BabelGo/Client/GUI/Core"
+	"GoBabel/Client/GUI/Core"
+	"GoBabel/Client/Ressources"
 	"fyne.io/fyne"
 	"fyne.io/fyne/canvas"
 	"fyne.io/fyne/layout"
 	"fyne.io/fyne/widget"
 	"image/color"
-	"log"
 	"net/url"
 	"strings"
 )
@@ -34,27 +34,11 @@ func parseURL(urlStr string) *url.URL {
 }
 
 func getGithubLogo() fyne.CanvasObject {
-	ghIcon, err := fyne.LoadResourceFromURLString(GithubIconPath)
-	if err != nil {
-		log.Println("Cannot load GithubLogo:", err)
-		return layout.NewSpacer()
-	}
-	return widget.NewIcon(ghIcon)
+	return widget.NewIcon(Ressources.GithubIconPng)
 }
 
 func getGoImg(client *Core.ClientContext) fyne.CanvasObject {
-	goIcon, err := fyne.LoadResourceFromURLString(GoImagePath)
-	if err != nil {
-		log.Println("Cannot load Go Image:", err)
-		rect := canvas.NewRectangle(color.Black)
-		if client.IsMobile {
-			rect.SetMinSize(fyne.NewSize(171, 125))
-		} else {
-			rect.SetMinSize(fyne.NewSize(228, 167))
-		}
-		return rect
-	}
-	goImg := canvas.NewImageFromResource(goIcon)
+	goImg := canvas.NewImageFromResource(Ressources.GoIconPng)
 	if client.IsMobile {
 		goImg.SetMinSize(fyne.NewSize(171, 125))
 	} else {

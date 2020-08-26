@@ -1,6 +1,6 @@
 package Bridge
 
-import nw "BabelGo/Common/Network"
+import nw "GoBabel/Common/Network"
 
 type GuiCom struct {
 	ToNetwork chan *nw.Request

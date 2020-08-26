@@ -1,8 +1,7 @@
 package BabelNetwork
 
 import (
-	"BabelGo/Server/Database"
-	"BabelGo/ent"
+	"GoBabel/Common/ent"
 	"errors"
 	"fmt"
 	"log"
@@ -48,17 +47,10 @@ func (c Client) IsLogged() bool {
 	return c.Logged
 }
 
-func (c *Client) Login(datas *UserDatas) (err error) {
-	log.Println("Login user")
-	if c.IsLogged() {
-		return ClientAlreadyLogged
-	}
-	if c.User, err = Database.QueryUser(datas.User); err != nil {
-		return err
-	}
+func (c *Client) Login(user *ent.User) {
 	log.Println("Client Logged", c)
 	c.Logged = true
-	return nil
+	c.User = user
 }
 
 func (c *Client) Logout() error {

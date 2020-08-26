@@ -1,7 +1,7 @@
 package Database
 
 import (
-	"BabelGo/ent"
+	"GoBabel/Common/ent"
 	"context"
 	_ "github.com/mattn/go-sqlite3"
 	"log"

@@ -3,8 +3,8 @@
 package ent
 
 import (
-	"BabelGo/Common/ent/schema"
-	"BabelGo/ent/user"
+	"GoBabel/Common/ent/schema"
+	"GoBabel/Common/ent/user"
 )
 
 // The init function reads all schema descriptors with runtime

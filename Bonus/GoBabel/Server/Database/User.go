@@ -1,8 +1,8 @@
 package Database
 
 import (
-	"BabelGo/ent"
-	"BabelGo/ent/user"
+	"GoBabel/Common/ent"
+	"GoBabel/Common/ent/user"
 	"fmt"
 	"log"
 )

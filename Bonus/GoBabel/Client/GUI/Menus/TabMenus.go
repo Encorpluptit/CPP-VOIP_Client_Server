@@ -1,8 +1,8 @@
 package Menus
 
 import (
-	"BabelGo/Client/GUI/Core"
-	"BabelGo/Client/GUI/Screens"
+	"GoBabel/Client/GUI/Core"
+	"GoBabel/Client/GUI/Screens"
 	"fyne.io/fyne"
 	"fyne.io/fyne/cmd/fyne_demo/screens"
 	"fyne.io/fyne/theme"

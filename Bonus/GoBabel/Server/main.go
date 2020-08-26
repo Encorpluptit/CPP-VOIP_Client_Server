@@ -1,10 +1,10 @@
 package main
 
 import (
-	"BabelGo/Common/BabelUtils"
-	"BabelGo/Common/tests/DataBase"
-	"BabelGo/Server/Database"
-	"BabelGo/Server/Server"
+	"GoBabel/Common/BabelUtils"
+	"GoBabel/Common/tests/DataBase"
+	"GoBabel/Server/Database"
+	"GoBabel/Server/Server"
 	"fmt"
 	"log"
 	"os"

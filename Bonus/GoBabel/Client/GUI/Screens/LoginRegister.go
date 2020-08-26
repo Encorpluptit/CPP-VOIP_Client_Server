@@ -1,10 +1,10 @@
 package Screens
 
 import (
-	"BabelGo/Client/Bridge"
-	"BabelGo/Client/GUI/Core"
-	"BabelGo/Client/GUI/Widgets"
-	BabelNetwork "BabelGo/Common/Network"
+	"GoBabel/Client/Bridge"
+	"GoBabel/Client/GUI/Core"
+	"GoBabel/Client/GUI/Widgets"
+	nw "GoBabel/Common/Network"
 	"fyne.io/fyne"
 	"fyne.io/fyne/dialog"
 	"fyne.io/fyne/layout"
@@ -13,7 +13,7 @@ import (
 
 func getLoginRegisterFuncs(Win fyne.Window, com *Bridge.GuiCom) (func(login, password string), func(login, password string)) {
 	loginFunc := func(login, password string) {
-		rq, err := BabelNetwork.NewUserLoginRequest(login, password)
+		rq, err := nw.NewUserLoginRequest(login, password)
 		if err != nil {
 			dialog.ShowError(err, Win)
 			return
@@ -21,7 +21,7 @@ func getLoginRegisterFuncs(Win fyne.Window, com *Bridge.GuiCom) (func(login, pas
 		com.SendToNetwork(rq)
 	}
 	registerFunc := func(login, password string) {
-		rq, err := BabelNetwork.NewUserRegisterRequest(login, password)
+		rq, err := nw.NewUserRegisterRequest(login, password)
 		if err != nil {
 			dialog.ShowError(err, Win)
 			return

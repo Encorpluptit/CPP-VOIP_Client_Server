@@ -1,10 +1,10 @@
 package main
 
 import (
-	"BabelGo/Client/ClientCore"
-	"BabelGo/Client/GUI"
-	"BabelGo/Common/BabelUtils"
-	nw "BabelGo/Common/Network"
+	"GoBabel/Client/ClientCore"
+	"GoBabel/Client/GUI"
+	"GoBabel/Common/BabelUtils"
+	nw "GoBabel/Common/Network"
 	"errors"
 	"log"
 	"os"
@@ -46,8 +46,8 @@ func main() {
 		defer loggerCloser()
 	}
 
-	go core.Serve()
 	go gui.Show()
+	core.Serve()
 	gui.Run()
 
 	//tabs := Menus.SetMenuSidebar(gui.BabelApp, gui.ClientContext)

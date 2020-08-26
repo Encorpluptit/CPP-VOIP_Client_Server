@@ -1,7 +1,7 @@
 package Server
 
 import (
-	BabelNetwork "BabelGo/Common/Network"
+	BabelNetwork "GoBabel/Common/Network"
 	"errors"
 	"log"
 )

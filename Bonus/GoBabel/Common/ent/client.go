@@ -7,9 +7,9 @@ import (
 	"fmt"
 	"log"
 
-	"BabelGo/ent/migrate"
+	"GoBabel/Common/ent/migrate"
 
-	"BabelGo/ent/user"
+	"GoBabel/Common/ent/user"
 
 	"github.com/facebook/ent/dialect"
 	"github.com/facebook/ent/dialect/sql"

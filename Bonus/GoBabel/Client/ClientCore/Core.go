@@ -1,9 +1,9 @@
 package ClientCore
 
 import (
-	"BabelGo/Client/Bridge"
-	"BabelGo/Client/GUI"
-	nw "BabelGo/Common/Network"
+	"GoBabel/Client/Bridge"
+	"GoBabel/Client/GUI"
+	nw "GoBabel/Common/Network"
 	"fmt"
 	"log"
 	"net"
@@ -56,27 +56,70 @@ func (c *Core) Start() {
 }
 
 func (c *Core) Serve() {
+	go c.WaitGuiRequest()
+	go c.WaitServerRequest()
+}
+
+//func (c *Core) Serve() {
+//	defer c.Close()
+//
+//	for c.Run {
+//		data := c.GuiCom.GetFromGui()
+//		log.Println(data)
+//		if err := data.Send(c.Client.EncDec); err != nil {
+//			log.Println("In gob.Encode(): ", err)
+//			break
+//		}
+//		log.Println("HERE")
+//
+//		//for i := 0; i < 1000000; i++ {
+//		//	if err := data.Send(c.EncDec); err != nil {
+//		//		log.Println("In gob.Encode(): ", err)
+//		//		break
+//		//	}
+//		//	if data.Header.Code == nw.UserRqLogout {
+//		//		data.Header.Code = nw.UserRqLogin
+//		//	} else {
+//		//		data.Header.Code = nw.UserRqLogout
+//		//	}
+//		//}
+//	}
+//}
+
+func (c *Core) WaitGuiRequest() {
 	defer c.Close()
 
 	for c.Run {
 		data := c.GuiCom.GetFromGui()
-		log.Println(data)
+		log.Println("Request Received From GUI:", data)
 		if err := data.Send(c.Client.EncDec); err != nil {
 			log.Println("In gob.Encode(): ", err)
 			break
 		}
-		log.Println("HERE")
+		log.Println("Request Send To SERVER")
+	}
+}
 
-		//for i := 0; i < 1000000; i++ {
-		//	if err := data.Send(c.EncDec); err != nil {
-		//		log.Println("In gob.Encode(): ", err)
-		//		break
-		//	}
-		//	if data.Header.Code == nw.UserRqLogout {
-		//		data.Header.Code = nw.UserRqLogin
-		//	} else {
-		//		data.Header.Code = nw.UserRqLogout
-		//	}
+func (c *Core) WaitServerRequest() {
+	defer c.Close()
+
+	for c.Run {
+		rq := &nw.Request{}
+		if err := rq.Receive(c.Client.EncDec); err != nil {
+			log.Println("decode error:", err)
+			break
+		}
+		log.Println(rq)
+		//rqManager, err := RequestManagerGetter(rq)
+		//if err != nil {
+		//	log.Println("In Request.Receive() -> RequestManagerGetter:", err)
+		//	break
 		//}
+		//if err := rqManager(client, rq); err != nil {
+		//	log.Println("In rqManager():", err)
+		//	break
+		//}
+		//nb += 1
+		//log.Println("Request received:", nb)
 	}
 }

@@ -3,7 +3,7 @@
 package hook
 
 import (
-	"BabelGo/Common/ent"
+	"GoBabel/Common/ent"
 	"context"
 	"fmt"
 )

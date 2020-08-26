@@ -1,8 +1,8 @@
 package Screens
 
 import (
-	"BabelGo/Client/GUI/Core"
-	"BabelGo/Client/GUI/Widgets"
+	"GoBabel/Client/GUI/Core"
+	"GoBabel/Client/GUI/Widgets"
 	"fyne.io/fyne"
 	"fyne.io/fyne/layout"
 	"fyne.io/fyne/theme"
