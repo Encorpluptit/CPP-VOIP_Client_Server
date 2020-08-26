@@ -2,8 +2,8 @@ package main
 
 import (
 	"GoBabel/Client/Core"
+	"GoBabel/Client/GUI"
 	"GoBabel/Client/GUI/App"
-	"GoBabel/Client/GUI/Screens"
 	"GoBabel/Common/BabelUtils"
 	nw "GoBabel/Common/Network"
 	"errors"
@@ -29,7 +29,7 @@ func main() {
 		defer loggerCloser()
 	}
 
-	go Screens.Show(gui)
+	go GUI.Show(gui)
 	core.Serve()
 	gui.Run()
 

@@ -30,7 +30,7 @@ run-client: client
 	@./$(CLIENT_BIN)
 
 tests_run:
-	@go test -coverpkg=./... ./tests/DataBase
+	@go test -coverpkg=./... ./Common
 
 clean:
 

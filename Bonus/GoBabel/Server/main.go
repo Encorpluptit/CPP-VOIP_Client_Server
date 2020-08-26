@@ -2,9 +2,9 @@ package main
 
 import (
 	"GoBabel/Common/BabelUtils"
-	"GoBabel/Common/tests/DataBase"
 	"GoBabel/Server/Database"
 	"GoBabel/Server/Server"
+	"GoBabel/tests"
 	"fmt"
 	"log"
 	"os"
@@ -28,7 +28,7 @@ func main() {
 	dbCloser := Database.Init(Database.ProdDBFile)
 	defer dbCloser()
 
-	DataBaseTest.PopulateDb()
+	tests.PopulateDb()
 	if err := serv.Start(); err != nil {
 		log.Println("Error in main() from Server.Core.Start()", err)
 	}

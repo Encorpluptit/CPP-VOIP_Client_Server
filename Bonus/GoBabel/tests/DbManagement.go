@@ -1,4 +1,4 @@
-package DataBaseTest
+package tests
 
 import (
 	"GoBabel/Common/ent"
