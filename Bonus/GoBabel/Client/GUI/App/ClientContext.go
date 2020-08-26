@@ -1,12 +1,12 @@
-package Core
+package App
 
 import (
-	"GoBabel/Client/Bridge"
+	"GoBabel/Client/Manager"
 	nw "GoBabel/Common/Network"
 )
 
 type ClientContext struct {
 	Client   *nw.Client
 	IsMobile bool
-	GuiCom   *Bridge.GuiCom
+	GuiCom   *Manager.GuiCom
 }

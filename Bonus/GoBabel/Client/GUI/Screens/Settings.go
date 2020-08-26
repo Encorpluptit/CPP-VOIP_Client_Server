@@ -1,7 +1,7 @@
 package Screens
 
 import (
-	"GoBabel/Client/GUI/Core"
+	"GoBabel/Client/GUI/App"
 	"GoBabel/Client/GUI/Widgets"
 	"fyne.io/fyne"
 	"fyne.io/fyne/layout"
@@ -9,7 +9,7 @@ import (
 	"fyne.io/fyne/widget"
 )
 
-func Settings(app *Core.BabelApp, client *Core.ClientContext) fyne.CanvasObject {
+func Settings(app *App.BabelApp, client *App.ClientContext) fyne.CanvasObject {
 	loginForm := Widgets.CreateAccountForm(nil)
 
 	return widget.NewVBox(

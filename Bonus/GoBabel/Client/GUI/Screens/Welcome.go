@@ -1,8 +1,8 @@
 package Screens
 
 import (
-	"GoBabel/Client/GUI/Core"
-	"GoBabel/Client/Ressources"
+	"GoBabel/Client/GUI/App"
+	"GoBabel/Client/GUI/Ressources"
 	"fyne.io/fyne"
 	"fyne.io/fyne/canvas"
 	"fyne.io/fyne/layout"
@@ -37,7 +37,7 @@ func getGithubLogo() fyne.CanvasObject {
 	return widget.NewIcon(Ressources.GithubIconPng)
 }
 
-func getGoImg(client *Core.ClientContext) fyne.CanvasObject {
+func getGoImg(client *App.ClientContext) fyne.CanvasObject {
 	goImg := canvas.NewImageFromResource(Ressources.GoIconPng)
 	if client.IsMobile {
 		goImg.SetMinSize(fyne.NewSize(171, 125))
@@ -47,7 +47,7 @@ func getGoImg(client *Core.ClientContext) fyne.CanvasObject {
 	return goImg
 }
 
-func Welcome(app *Core.BabelApp, client *Core.ClientContext) fyne.CanvasObject {
+func Welcome(app *App.BabelApp, client *App.ClientContext) fyne.CanvasObject {
 	goImg := getGoImg(client)
 	ghLogo := getGithubLogo()
 

@@ -1,7 +1,7 @@
 package Menus
 
 import (
-	"GoBabel/Client/GUI/Core"
+	"GoBabel/Client/GUI/App"
 	"GoBabel/Client/GUI/Screens"
 	"fyne.io/fyne"
 	"fyne.io/fyne/cmd/fyne_demo/screens"
@@ -9,7 +9,7 @@ import (
 	"fyne.io/fyne/widget"
 )
 
-func SetMenuSidebar(app *Core.BabelApp, client *Core.ClientContext) *widget.TabContainer {
+func SetMenuSidebar(app *App.BabelApp, client *App.ClientContext) *widget.TabContainer {
 	var tabs *widget.TabContainer
 	if client.Client.User == nil {
 		tabs = setLoggedOutSidebar(app, client)
@@ -19,7 +19,7 @@ func SetMenuSidebar(app *Core.BabelApp, client *Core.ClientContext) *widget.TabC
 	return tabs
 }
 
-func setLoggedOutSidebar(app *Core.BabelApp, client *Core.ClientContext) *widget.TabContainer {
+func setLoggedOutSidebar(app *App.BabelApp, client *App.ClientContext) *widget.TabContainer {
 	tabs := widget.NewTabContainer(
 		widget.NewTabItemWithIcon("Welcome", theme.HomeIcon(), Screens.Welcome(app, client)),
 		widget.NewTabItemWithIcon("Log in", theme.CheckButtonCheckedIcon(), Screens.LoginRegister(app, client)),
@@ -30,7 +30,7 @@ func setLoggedOutSidebar(app *Core.BabelApp, client *Core.ClientContext) *widget
 	return tabs
 }
 
-func setLoggedSidebar(app *Core.BabelApp, client *Core.ClientContext) *widget.TabContainer {
+func setLoggedSidebar(app *App.BabelApp, client *App.ClientContext) *widget.TabContainer {
 	tabs := widget.NewTabContainer(
 		widget.NewTabItemWithIcon("Graphics", theme.DocumentCreateIcon(), screens.GraphicsScreen()),
 		widget.NewTabItemWithIcon("Widgets", theme.CheckButtonCheckedIcon(), screens.WidgetScreen()),

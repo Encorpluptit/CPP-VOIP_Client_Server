@@ -1,9 +1,9 @@
 package Screens
 
 import (
-	"GoBabel/Client/Bridge"
-	"GoBabel/Client/GUI/Core"
+	"GoBabel/Client/GUI/App"
 	"GoBabel/Client/GUI/Widgets"
+	"GoBabel/Client/Manager"
 	nw "GoBabel/Common/Network"
 	"fyne.io/fyne"
 	"fyne.io/fyne/dialog"
@@ -11,7 +11,7 @@ import (
 	"fyne.io/fyne/widget"
 )
 
-func getLoginRegisterFuncs(Win fyne.Window, com *Bridge.GuiCom) (func(login, password string), func(login, password string)) {
+func getLoginRegisterFuncs(Win fyne.Window, com *Manager.GuiCom) (func(login, password string), func(login, password string)) {
 	loginFunc := func(login, password string) {
 		rq, err := nw.NewUserLoginRequest(login, password)
 		if err != nil {
@@ -31,7 +31,7 @@ func getLoginRegisterFuncs(Win fyne.Window, com *Bridge.GuiCom) (func(login, pas
 	return loginFunc, registerFunc
 }
 
-func LoginRegister(app *Core.BabelApp, client *Core.ClientContext) fyne.CanvasObject {
+func LoginRegister(app *App.BabelApp, client *App.ClientContext) fyne.CanvasObject {
 	loginFunc, registerFunc := getLoginRegisterFuncs(app.Win, client.GuiCom)
 	accountForm := Widgets.CreateAccountForm(registerFunc)
 	loginForm := Widgets.CreateLoginForm(loginFunc)

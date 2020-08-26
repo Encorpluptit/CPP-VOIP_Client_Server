@@ -1,8 +1,8 @@
-package ClientCore
+package main
 
 import (
-	"GoBabel/Client/Bridge"
 	"GoBabel/Client/GUI"
+	"GoBabel/Client/Manager"
 	nw "GoBabel/Common/Network"
 	"fmt"
 	"log"
@@ -12,9 +12,9 @@ import (
 
 type Core struct {
 	Client *nw.Client
-	Run    bool
-	GuiCom *Bridge.GuiCom
+	GuiCom *Manager.GuiCom
 	Gui    *GUI.BabelGui
+	Run    bool
 }
 
 func NewClient(addr, port string) (*Core, func()) {
@@ -25,7 +25,7 @@ func NewClient(addr, port string) (*Core, func()) {
 	client := &Core{
 		Client: nw.NewClient(conn),
 		Run:    true,
-		GuiCom: &Bridge.GuiCom{
+		GuiCom: &Manager.GuiCom{
 			ToNetwork: make(chan *nw.Request),
 			ToGui:     make(chan *nw.Request),
 		},
@@ -43,10 +43,16 @@ func (c *Core) SendInput(rq *nw.Request) {
 }
 
 func (c *Core) Close() {
-	if err := c.Client.Conn.Close(); err != nil {
-		log.Println("Error in ClientCore.Close() from net.conn.Close()", err)
-	}
+	log.Println("Closing ClientCore ...")
+	//if c.Run {
+	c.Client.Close()
+	//if err := c.Client.Conn.Close(); err != nil {
+	//	log.Println("Error in ClientCore.Close() from net.conn.Close()", err)
+	//}
 	c.GuiCom.Close()
+	c.Run = false
+	//}
+	log.Println("Client Core Closed !")
 	os.Exit(0)
 }
 
@@ -59,32 +65,6 @@ func (c *Core) Serve() {
 	go c.WaitGuiRequest()
 	go c.WaitServerRequest()
 }
-
-//func (c *Core) Serve() {
-//	defer c.Close()
-//
-//	for c.Run {
-//		data := c.GuiCom.GetFromGui()
-//		log.Println(data)
-//		if err := data.Send(c.Client.EncDec); err != nil {
-//			log.Println("In gob.Encode(): ", err)
-//			break
-//		}
-//		log.Println("HERE")
-//
-//		//for i := 0; i < 1000000; i++ {
-//		//	if err := data.Send(c.EncDec); err != nil {
-//		//		log.Println("In gob.Encode(): ", err)
-//		//		break
-//		//	}
-//		//	if data.Header.Code == nw.UserRqLogout {
-//		//		data.Header.Code = nw.UserRqLogin
-//		//	} else {
-//		//		data.Header.Code = nw.UserRqLogout
-//		//	}
-//		//}
-//	}
-//}
 
 func (c *Core) WaitGuiRequest() {
 	defer c.Close()

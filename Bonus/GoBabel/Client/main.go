@@ -1,7 +1,6 @@
 package main
 
 import (
-	"GoBabel/Client/ClientCore"
 	"GoBabel/Client/GUI"
 	"GoBabel/Common/BabelUtils"
 	nw "GoBabel/Common/Network"
@@ -34,7 +33,7 @@ var CommandNotFound = errors.New("command not found")
 //}
 
 func main() {
-	core, coreCloser := ClientCore.NewClient(os.Args[1], os.Args[2])
+	core, coreCloser := NewClient(os.Args[1], os.Args[2])
 	defer coreCloser()
 
 	gui := GUI.InitGui(AppID, WindowName)

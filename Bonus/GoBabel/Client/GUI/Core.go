@@ -1,7 +1,7 @@
 package GUI
 
 import (
-	"GoBabel/Client/GUI/Core"
+	"GoBabel/Client/GUI/App"
 	"GoBabel/Client/GUI/Menus"
 	"fyne.io/fyne"
 	"fyne.io/fyne/app"
@@ -15,8 +15,8 @@ const (
 )
 
 type BabelGui struct {
-	*Core.BabelApp
-	*Core.ClientContext
+	*App.BabelApp
+	*App.ClientContext
 }
 
 func (gui *BabelGui) Show() {
@@ -41,7 +41,7 @@ func (gui *BabelGui) Run() {
 
 // TODO: Parse config with toml (cbm)
 func InitGui(appID, windowName string) *BabelGui {
-	gui := &BabelGui{&Core.BabelApp{}, &Core.ClientContext{}}
+	gui := &BabelGui{&App.BabelApp{}, &App.ClientContext{}}
 	gui.App = app.NewWithID(appID)
 	gui.Win = gui.App.NewWindow(windowName)
 	if fyne.CurrentDevice().IsMobile() {

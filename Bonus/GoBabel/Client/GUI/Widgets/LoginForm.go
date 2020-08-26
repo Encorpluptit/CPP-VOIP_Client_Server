@@ -69,6 +69,7 @@ func (e *LoginForm) Tapped(pe *fyne.PointEvent) {
 func (e *LoginForm) Submit() {
 	log.Printf("Log In:\nLogin: %s\nPassword: %s\n", e.Login.Text, e.Password.Text)
 	e.SubmitFunc(e.Login.Text, e.Password.Text)
+	e.Password.Reset()
 }
 
 type AccountForm struct {
@@ -79,6 +80,7 @@ type AccountForm struct {
 func (e *AccountForm) Submit() {
 	log.Printf("Account create:\nPseudo: %s\nLogin: %s\nPassword: %s\n", e.Pseudo.Text, e.Login.Text, e.Password.Text)
 	e.SubmitFunc(e.Login.Text, e.Password.Text)
+	e.Password.Reset()
 }
 
 func CreateLoginForm(logFunc func(string, string)) *LoginForm {
