@@ -70,11 +70,6 @@ func Welcome(app *Core.BabelApp, client *Core.ClientContext) fyne.CanvasObject {
 	separator := canvas.NewLine(color.Black)
 	separator.StrokeWidth = 5
 	spaces := strings.Repeat("     ", 5)
-	//contributors := widget.NewGroup(
-	//	spaces + "Contributors:" + spaces,
-	//	//"Contributors:",
-	//	widget.NewLabelWithStyle("Damien Bernard", fyne.TextAlignCenter, fyne.TextStyle{Monospace: true}),
-	//)
 
 	return widget.NewVBox(
 		layout.NewSpacer(),
@@ -95,7 +90,6 @@ func Welcome(app *Core.BabelApp, client *Core.ClientContext) fyne.CanvasObject {
 			layout.NewSpacer(),
 			widget.NewVBox(
 				separator,
-				//contributors,
 				widget.NewLabelWithStyle(spaces+"Contributors:"+spaces, fyne.TextAlignCenter, fyne.TextStyle{Bold: true, Monospace: true}),
 				widget.NewHBox(
 					layout.NewSpacer(),
@@ -107,16 +101,5 @@ func Welcome(app *Core.BabelApp, client *Core.ClientContext) fyne.CanvasObject {
 			layout.NewSpacer(),
 		),
 		layout.NewSpacer(),
-
-		//widget.NewGroup("Theme",
-		//	fyne.NewContainerWithLayout(layout.NewGridLayout(2),
-		//		widget.NewButton("Dark", func() {
-		//			app.App.Settings().SetTheme(theme.DarkTheme())
-		//		}),
-		//		widget.NewButton("Light", func() {
-		//			app.App.Settings().SetTheme(theme.LightTheme())
-		//		}),
-		//	),
-		//),
 	)
 }
