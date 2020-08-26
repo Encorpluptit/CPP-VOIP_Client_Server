@@ -18,7 +18,10 @@ const (
 	UserNotLoggedIn
 	UserWrongLogin
 	UserWrongPassword
+	UserLoginNotValid
+	UserPasswordNotValid
 	UserAlreadyLoggedIn
+	UserUnknownError
 )
 
 const (
@@ -30,6 +33,7 @@ const (
 	UserWrongLoginFmt      = "Wrong login: %s !"
 	UserWrongPasswordFmt   = "Wrong password !"
 	UserAlreadyLoggedInFmt = "Already Logged in as %s."
+	UserNotLoggedInFmt     = "Already Not Logged in."
 )
 
 type UserDatas struct {
@@ -39,9 +43,9 @@ type UserDatas struct {
 
 func (u UserDatas) String() string {
 	if u.User == nil {
-		return "{{ Empty User }} : " + u.Err
+		return EmptyUser + " : " + u.Err
 	}
-	return u.User.String() + u.Err
+	return u.User.String() + " : " + u.Err
 }
 
 func checkUserDatasSizes(login, password string) error {
@@ -111,8 +115,20 @@ func NewUserAccountDeletionRequest(login string) (*Request, error) {
 	return NewUserDatas(UserRqLogin, login, "")
 }
 
-func NewUserLoggedIn(user *ent.User) *Request {
+func NewUserLoggedInResponse(user *ent.User) *Request {
 	rq := newUserRequest(UserLoggedIn)
+	rq.Datas = &UserDatas{
+		User: user,
+		Err:  "",
+	}
+	return rq
+}
+func NewUserLoggedOutResponse() *Request {
+	return newUserRequest(UserLoggedOut)
+}
+
+func NewUserRegisteredResponse(user *ent.User) *Request {
+	rq := newUserRequest(UserRegistered)
 	rq.Datas = &UserDatas{
 		User: user,
 		Err:  "",
@@ -128,6 +144,17 @@ func NewUserWrongPasswordResponse() *Request {
 	return NewUserErrorResponse(UserWrongPassword, UserWrongPasswordFmt)
 }
 
+func NewUserLoginNotValid(err error) *Request {
+	return NewUserErrorResponse(UserLoginNotValid, err.Error())
+}
+
+func NewUserPasswordNotValid(err error) *Request {
+	return NewUserErrorResponse(UserWrongPassword, err.Error())
+}
+
 func NewUserAlreadyLoggedInResponse(login string) *Request {
 	return NewUserErrorResponse(UserAlreadyLoggedIn, fmt.Sprintf(UserAlreadyLoggedInFmt, login))
+}
+func NewUserNotLoggedInResponse() *Request {
+	return NewUserErrorResponse(UserNotLoggedIn, UserNotLoggedInFmt)
 }

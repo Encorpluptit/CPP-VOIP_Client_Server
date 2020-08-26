@@ -8,6 +8,9 @@ import (
 	"unicode"
 )
 
+var UserPasswordNotValid = errors.New("password not strong enough")
+var UserLoginNotValid = errors.New("email (%s) not valid")
+
 // User holds the schema definition for the User entity.
 type User struct {
 	ent.Schema
@@ -16,7 +19,7 @@ type User struct {
 // Fields of the User.
 func (User) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("login").Unique().Match(regexp.MustCompile(emailRegex)).MinLen(3).MaxLen(254).Comment("Mail / Login of user"),
+		field.String("login").Unique().Validate(isEmailValid).MinLen(3).MaxLen(254).Comment("Mail / Login of user"),
 		field.String("password").Validate(isValidPassword).MinLen(3).MaxLen(40).Comment("Password for user"),
 	}
 }
@@ -26,17 +29,19 @@ func (User) Edges() []ent.Edge {
 	return nil
 }
 
-//var emailRegex = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
-const emailRegex = "^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
+var emailRegex = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
+
+//const emailRegex = "^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
 
 // isEmailValid checks if the email provided passes the required structure and length.
-//func isEmailValid(e string) error {
-//	if !emailRegex.MatchString(e) {
-//		return errors.New("email (login) not valid")
-//	}
-//	return nil
-//}
+func isEmailValid(e string) error {
+	if !emailRegex.MatchString(e) {
+		return UserLoginNotValid
+	}
+	return nil
+}
 
+// isValidPassword checks if Password is Strong Enough
 func isValidPassword(pass string) error {
 	var (
 		upp, low, num, sym bool
@@ -58,12 +63,12 @@ func isValidPassword(pass string) error {
 			sym = true
 			tot++
 		default:
-			return errors.New("one of password character is not recognised")
+			return UserPasswordNotValid
 		}
 	}
 
 	if !upp || !low || !num || !sym || tot < 8 {
-		return errors.New("password not strong enough")
+		return UserPasswordNotValid
 	}
 	return nil
 }

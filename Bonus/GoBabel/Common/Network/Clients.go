@@ -47,6 +47,13 @@ func (c Client) IsLogged() bool {
 	return c.Logged
 }
 
+func (c *Client) SendResponse(rq *Request) error {
+	if err := rq.Send(c.EncDec); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (c *Client) Login(user *ent.User) {
 	c.Logged = true
 	c.User = user

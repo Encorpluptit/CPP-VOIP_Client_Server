@@ -2,6 +2,7 @@ package Server
 
 import (
 	nw "GoBabel/Common/Network"
+	"GoBabel/Common/ent/schema"
 	"GoBabel/Server/Database"
 	"errors"
 	"log"
@@ -10,8 +11,9 @@ import (
 var WrongUserDatas = errors.New("wrong userDatas")
 
 var userManager = map[uint16]func(*nw.Client, *nw.UserDatas) error{
-	nw.UserRqLogin:  LoginUser,
-	nw.UserRqLogout: LogoutUser,
+	nw.UserRqLogin:    LoginUser,
+	nw.UserRqLogout:   LogoutUser,
+	nw.UserRqRegister: RegisterUser,
 }
 
 func UserManager(client *nw.Client, request *nw.Request) error {
@@ -28,39 +30,47 @@ func UserManager(client *nw.Client, request *nw.Request) error {
 
 func LoginUser(client *nw.Client, datas *nw.UserDatas) error {
 	if client.IsLogged() {
-		rq := nw.NewUserAlreadyLoggedInResponse(datas.Login)
-		if err := rq.Send(client.EncDec); err != nil {
-			return err
-		}
-		return nil
+		return client.SendResponse(nw.NewUserAlreadyLoggedInResponse(datas.Login))
 	}
 	userFound, err := Database.QueryUser(datas.User)
 	if err != nil {
-		rq := nw.NewUserWrongLoginResponse(datas.Login)
-		if err := rq.Send(client.EncDec); err != nil {
-			return err
-		}
-		return nil
+		return client.SendResponse(nw.NewUserWrongLoginResponse(datas.Login))
 	}
 	if datas.Password != userFound.Password {
-		rq := nw.NewUserWrongPasswordResponse()
-		if err := rq.Send(client.EncDec); err != nil {
-			return err
-		}
-		return nil
+		return client.SendResponse(nw.NewUserWrongPasswordResponse())
 	}
 	client.Login(userFound)
-	rq := nw.NewUserLoggedIn(userFound)
-	if err := rq.Send(client.EncDec); err != nil {
-		return err
+	return client.SendResponse(nw.NewUserLoggedInResponse(userFound))
+}
+
+func RegisterUser(client *nw.Client, datas *nw.UserDatas) error {
+	if client.IsLogged() {
+		return client.SendResponse(nw.NewUserAlreadyLoggedInResponse(datas.Login))
 	}
-	return nil
+
+	// TODO: Add query Database for existing user
+	newUser, err := Database.CreateUser(datas.User)
+	if err == nil {
+		client.Login(newUser)
+		return client.SendResponse(nw.NewUserRegisteredResponse(newUser))
+	}
+
+	if err == schema.UserLoginNotValid {
+		return client.SendResponse(nw.NewUserLoginNotValid(err))
+	}
+	if err == schema.UserPasswordNotValid {
+		return client.SendResponse(nw.NewUserPasswordNotValid(err))
+	}
+	return client.SendResponse(nw.NewUserErrorResponse(nw.UserUnknownError, err.Error()))
 }
 
 func LogoutUser(client *nw.Client, datas *nw.UserDatas) error {
+	if !client.IsLogged() {
+		return client.SendResponse(nw.NewUserNotLoggedInResponse())
+	}
 	log.Println("Logout user")
 	if err := client.Logout(); err != nil {
 		return err
 	}
-	return nil
+	return client.SendResponse(nw.NewUserLoggedOutResponse())
 }
