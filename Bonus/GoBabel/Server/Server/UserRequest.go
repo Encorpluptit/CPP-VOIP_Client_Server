@@ -50,7 +50,10 @@ func LoginUser(client *nw.Client, datas *nw.UserDatas) error {
 		return nil
 	}
 	client.Login(userFound)
-	// TODO: manage Login Errors HERE
+	rq := nw.NewUserLoggedIn(userFound)
+	if err := rq.Send(client.EncDec); err != nil {
+		return err
+	}
 	return nil
 }
 

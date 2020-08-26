@@ -109,7 +109,8 @@ func (c *Core) WaitServerRequest() {
 			log.Println("decode error:", err)
 			break
 		}
-		log.Println(rq)
+		log.Println("Network got", rq)
+		c.GuiCom.SendToGui(rq)
 		//rqManager, err := RequestManagerGetter(rq)
 		//if err != nil {
 		//	log.Println("In Request.Receive() -> RequestManagerGetter:", err)

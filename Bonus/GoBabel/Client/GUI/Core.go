@@ -26,7 +26,7 @@ func (gui *BabelGui) Show() {
 	gui.Win.Show()
 	for {
 		rq := <-gui.GuiCom.ToGui
-		log.Println(rq)
+		log.Println("GUI got From Network", rq)
 		//gui.Win.Show()
 		//log.Println("Foor loop")
 		//tabs := Menus.SetMenuSidebar(gui.BabelApp, gui.ClientContext)

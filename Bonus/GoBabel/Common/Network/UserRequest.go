@@ -37,6 +37,13 @@ type UserDatas struct {
 	Err string
 }
 
+func (u UserDatas) String() string {
+	if u.User == nil {
+		return "{{ Empty User }} : " + u.Err
+	}
+	return u.User.String() + u.Err
+}
+
 func checkUserDatasSizes(login, password string) error {
 	loginSz, passwordSz := uint16(len(login)), uint16(len(password))
 
@@ -102,6 +109,15 @@ func NewUserAccountDeletionRequest(login string) (*Request, error) {
 		return nil, err
 	}
 	return NewUserDatas(UserRqLogin, login, "")
+}
+
+func NewUserLoggedIn(user *ent.User) *Request {
+	rq := newUserRequest(UserLoggedIn)
+	rq.Datas = &UserDatas{
+		User: user,
+		Err:  "",
+	}
+	return rq
 }
 
 func NewUserWrongLoginResponse(login string) *Request {

@@ -48,9 +48,9 @@ func (c Client) IsLogged() bool {
 }
 
 func (c *Client) Login(user *ent.User) {
-	log.Println("Client Logged", c)
 	c.Logged = true
 	c.User = user
+	log.Println("Client Logged", c)
 }
 
 func (c *Client) Logout() error {
