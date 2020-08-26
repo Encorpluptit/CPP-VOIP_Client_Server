@@ -21,17 +21,17 @@ jobs:
           conan remote add tech-repo https://api.bintray.com/conan/epitech/public-conan
           conan remote add public-repo https://api.bintray.com/conan/bincrafters/public-conan
           conan remote list
-      - name: tests
-        run: |
-          echo $HOME
-          echo $GITHUB_WORKSPACE
-          echo $(pwd)
-          echo "list .conan dir"
-          ls $HOME/.conan
-          cat $HOME/.conan/remotes.json
-          echo "list .conan/profiles dir"
-          ls $HOME/.conan/profiles
-          cat $HOME/.conan/profiles/default
+#      - name: tests
+#        run: |
+#          echo $HOME
+#          echo $GITHUB_WORKSPACE
+#          echo $(pwd)
+#          echo "list .conan dir"
+#          ls $HOME/.conan
+#          cat $HOME/.conan/remotes.json
+#          echo "list .conan/profiles dir"
+#          ls $HOME/.conan/profiles
+#          cat $HOME/.conan/profiles/default
 
 
 #jobs:
