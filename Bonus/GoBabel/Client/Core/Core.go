@@ -1,8 +1,8 @@
-package main
+package Core
 
 import (
+	"GoBabel/Client/Bridge"
 	"GoBabel/Client/GUI"
-	"GoBabel/Client/Manager"
 	nw "GoBabel/Common/Network"
 	"fmt"
 	"log"
@@ -12,7 +12,7 @@ import (
 
 type Core struct {
 	Client *nw.Client
-	GuiCom *Manager.GuiCom
+	GuiCom *Bridge.GuiCom
 	Gui    *GUI.BabelGui
 	Run    bool
 }
@@ -25,7 +25,7 @@ func NewClient(addr, port string) (*Core, func()) {
 	client := &Core{
 		Client: nw.NewClient(conn),
 		Run:    true,
-		GuiCom: &Manager.GuiCom{
+		GuiCom: &Bridge.GuiCom{
 			ToNetwork: make(chan *nw.Request),
 			ToGui:     make(chan *nw.Request),
 		},

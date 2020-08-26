@@ -1,4 +1,4 @@
-package Manager
+package Bridge
 
 import nw "GoBabel/Common/Network"
 
