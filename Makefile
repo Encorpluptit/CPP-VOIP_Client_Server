@@ -48,7 +48,8 @@ debug: $(NAME)
 # SERVER RULES
 server: setup-build-tree
 	@$(MAKE) -j `nproc` --no-print-directory -C $(BUILD_DIR) $(SERVER_BIN)
-	@cp $(BUILD_DIR)/bin/$(SERVER_BIN) .
+#-@cp $(BUILD_DIR)/bin/$(SERVER_BIN) .
+	-@cp $(BUILD_DIR)/$(SERVER_BIN) .
 
 server_fclean:
 	@$(RM) -r $(SERVER_BIN)
@@ -59,7 +60,8 @@ server_fclean:
 # CLIENTS RULES
 client: setup-build-tree
 	@$(MAKE) -j `nproc` --no-print-directory -C $(BUILD_DIR) $(CLIENT_BIN)
-	@cp $(BUILD_DIR)/bin/$(CLIENT_BIN) .
+#-@cp $(BUILD_DIR)/bin/$(CLIENT_BIN) .
+	-@cp $(BUILD_DIR)/$(CLIENT_BIN) .
 
 client_fclean:
 	@$(RM) -r $(CLIENT_BIN)
@@ -84,7 +86,8 @@ tests_run: fclean setup-build-tree
 # OTHERS RULES
 
 setup-build-tree:
-	@mkdir -p $(BUILD_DIR) && cd $(BUILD_DIR) && conan install ..
+	@mkdir -p $(BUILD_DIR) && cd $(BUILD_DIR)
+#@mkdir -p $(BUILD_DIR) && cd $(BUILD_DIR) && conan install ..
 	@cmake $(OPTIONS) -B $(BUILD_DIR)
 
 
