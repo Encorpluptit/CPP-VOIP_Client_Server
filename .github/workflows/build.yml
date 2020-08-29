@@ -13,6 +13,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Upgrade Gcc
+        run: sudo apt-get --only-upgrade install Package
+
       - name: Install Boost
         run: sudo apt-get install libboost-all-dev
 
