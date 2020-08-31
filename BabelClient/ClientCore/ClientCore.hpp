@@ -18,7 +18,7 @@ namespace BabelClient {
     class ClientCore final : virtual public BabelUtils::ARunnable {
         /* <- Constructor - Destructor -> */
     public:
-        ClientCore(int ac, char **av);
+        ClientCore(char **av);
 
         ~ClientCore() final;
 
@@ -30,18 +30,28 @@ namespace BabelClient {
 
         void run();
 
+        void checkTypeResponse(std::shared_ptr<BabelNetwork::AResponse> response);
+        void doUserResponse(std::shared_ptr<BabelNetwork::AResponse> response);
+        void doCallResponse(std::shared_ptr<BabelNetwork::AResponse> response);
+        void doFriendResponse(std::shared_ptr<BabelNetwork::AResponse> response);
+        void doMessageResponse(std::shared_ptr<BabelNetwork::AResponse> response);
+        void doUnknowTypeResponse(std::shared_ptr<BabelNetwork::AResponse> response);
+
         /* <- Private Methods -> */
     private:
         void init();
 
-        void initSocket(int ac, char **av);
-
-        void checkResponse(std::shared_ptr<BabelNetwork::AResponse> response);
+        void initSocket(char **av);
 
         /* <- Getters / Setters -> */
     public:
         BabelUtils::Logger _logger;
         BabelUtils::SharedPtr<BabelNetwork::ClientSocket> _socket;
+        std::vector<std::function<void(ClientCore*, std::shared_ptr<BabelNetwork::AResponse>)>> dispatch_ptr = {&BabelClient::ClientCore::doUnknowTypeResponse, &BabelClient::ClientCore::doUserResponse, &BabelClient::ClientCore::doCallResponse, &BabelClient::ClientCore::doFriendResponse, &BabelClient::ClientCore::doMessageResponse};
+        std::vector<std::function<void(ClientCore*, std::shared_ptr<BabelNetwork::AResponse>)>> user_ptr = {};
+        std::vector<std::function<void(ClientCore*, std::shared_ptr<BabelNetwork::AResponse>)>> call_ptr = {};
+        std::vector<std::function<void(ClientCore*, std::shared_ptr<BabelNetwork::AResponse>)>> friend_ptr = {};
+        std::vector<std::function<void(ClientCore*, std::shared_ptr<BabelNetwork::AResponse>)>> message_ptr = {};
     };
 
 }

@@ -10,11 +10,13 @@
 #include "ClientCore.hpp"
 #include "UserResponse.hpp"
 #include "CallResponse.hpp"
+#include "FriendResponse.hpp"
+#include "MessageResponse.hpp"
 
-BabelClient::ClientCore::ClientCore(int ac, char **av)
+BabelClient::ClientCore::ClientCore(char **av)
     : _logger(BabelUtils::Logger::ClientLog)
 {
-    initSocket(ac, av);
+    initSocket(av);
 }
 
 BabelClient::ClientCore::~ClientCore()
@@ -24,14 +26,39 @@ BabelClient::ClientCore::~ClientCore()
 
 void BabelClient::ClientCore::start()
 {
-    while (!_socket->isReady())
-        std::cout << "Waiting Socket to be ready" << std::endl;
+    while (!_socket->isReady());
+    std::cout << _socket->describe() << std::endl;
 }
 
-void BabelClient::ClientCore::checkResponse(std::shared_ptr<BabelNetwork::AResponse> response)
+void BabelClient::ClientCore::doUserResponse(std::shared_ptr<BabelNetwork::AResponse> response)
 {
     printf("code : %d\n", response->getCode());
-    printf("%s\n", response->getDescription());
+}
+
+void BabelClient::ClientCore::doCallResponse(std::shared_ptr<BabelNetwork::AResponse> response)
+{
+    printf("code : %d\n", response->getCode());
+}
+
+void BabelClient::ClientCore::doFriendResponse(std::shared_ptr<BabelNetwork::AResponse> response)
+{
+    printf("code : %d\n", response->getCode());
+}
+
+void BabelClient::ClientCore::doMessageResponse(std::shared_ptr<BabelNetwork::AResponse> response)
+{
+    printf("code : %d\n", response->getCode());
+}
+
+void BabelClient::ClientCore::doUnknowTypeResponse(std::shared_ptr<BabelNetwork::AResponse> response)
+{
+    printf("code : %d\n", response->getCode());
+    throw(BabelErrors::BabelError("Unknow Response Type"));
+}   
+
+void BabelClient::ClientCore::checkTypeResponse(std::shared_ptr<BabelNetwork::AResponse> response)
+{
+    dispatch_ptr[response->getResponseType()](this, response);
 }
 
 void BabelClient::ClientCore::run()
@@ -42,14 +69,20 @@ void BabelClient::ClientCore::run()
     while (1) {
         std::getline(std::cin, data);
         response = _socket->popResponse();
-        if (data == "lol")
+        if (data == "1")
+            response = BabelNetwork::UserResponse::NewLoginRequest("ugo", "lolol");
+        if (data == "2")
             response = BabelNetwork::CallResponse::CallRequest("ugo", "damien");
+        if (data == "3")
+            response = BabelNetwork::FriendResponse::FriendRequestAccepted("ugo", "damien");
+        if (data == "4")
+            response = BabelNetwork::MessageResponse::MessageReceive("ugo", "damien", "t'es mauvais");
         if (data == "exit" || !_socket->isReady()) {
             std::cout << "exit loop" << std::endl;
             break;
         }
         if (response != nullptr) {
-            checkResponse(response);
+            checkTypeResponse(response);
             response = nullptr;
         }
     }
@@ -65,7 +98,7 @@ void BabelClient::ClientCore::init()
 
 }
 
-void BabelClient::ClientCore::initSocket(int ac, char **av)
+void BabelClient::ClientCore::initSocket(char **av)
 {
     BabelNetwork::NetworkInfos nwi(av[1], av[2]);
     _socket = boost::make_shared<BabelNetwork::AsioClientSocket>(

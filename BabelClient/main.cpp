@@ -15,7 +15,7 @@ int main(int ac, char **av)
         return 84;
     std::cout << "Babel client!" << std::endl;
     try {
-        BabelClient::ClientCore core(ac, av);
+        BabelClient::ClientCore core(av);
         core.start();
         core.run();
     } catch (const BabelErrors::BabelError &e) {

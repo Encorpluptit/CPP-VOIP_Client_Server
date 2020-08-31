@@ -15,12 +15,12 @@ namespace BabelNetwork {
         /* <- Class Enum -> */
     public:
         enum ResponseCode {
-            RequestSendMessage = 201,
-            SendMessageOk = 202,
-            ReceiveMessage = 203,
-            ReceiveOk = 204,
+            RequestSendMessage = 401,
+            SendMessageOk = 402,
+            ReceiveMessage = 403,
+            ReceiveOk = 404,
 
-            UnknowUser = 250
+            UnknowUser = 450
         };
     private:
         enum MaxDataSize {

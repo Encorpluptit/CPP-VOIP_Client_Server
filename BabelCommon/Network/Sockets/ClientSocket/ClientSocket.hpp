@@ -35,6 +35,8 @@ namespace BabelNetwork {
         [[nodiscard]] virtual bool sendResponse(const std::shared_ptr<AResponse> &response) = 0;
 
         [[nodiscard]] virtual std::shared_ptr<AResponse> popResponse() {
+            if (_read_queue.size() < 1)
+                return (nullptr);
             auto resp = _read_queue.front();
             _read_queue.pop();
             return resp;

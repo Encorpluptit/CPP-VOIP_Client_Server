@@ -12,7 +12,7 @@
 
 void launch(char **av);
 
-static void tests(char **av)
+/*static void tests(char **av)
 {
     std::cout << "TEST LAUNCHED" << std::endl;
     BabelUtils::Logger logger(BabelUtils::Logger::LogType::ServerLog);
@@ -27,7 +27,7 @@ static void tests(char **av)
             break;
         }
     }
-}
+}*/
 
 int main(int ac, char **av)
 {
