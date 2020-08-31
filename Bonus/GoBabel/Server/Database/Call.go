@@ -7,10 +7,11 @@ import (
 	"time"
 )
 
-func CreateCall() (*ent.Call, error) {
+func CreateCall(users ...*ent.User) (*ent.Call, error) {
 	call, err := ServerDb.Client.Call.
 		Create().
 		SetStartedAt(time.Now()).
+		AddParticipants(users...).
 		Save(ServerDb.Ctx)
 	if err != nil {
 		return nil, fmt.Errorf("failed creating call: %v", err)
@@ -19,11 +20,11 @@ func CreateCall() (*ent.Call, error) {
 	return call, nil
 }
 
-func AddUserToCall(call *ent.Call, user *ent.User) (*ent.Call, error) {
+func AddUserToCall(call *ent.Call, users ...*ent.User) (*ent.Call, error) {
 	var err error
-	call, err = call.Update().AddParticipants(user).Save(ServerDb.Ctx)
+	call, err = call.Update().AddParticipants(users...).Save(ServerDb.Ctx)
 	if err != nil {
-		return nil, fmt.Errorf("failed add user to call: %v (call: %v)", err, call)
+		return nil, fmt.Errorf("failed add user to call: %v users: %v (call: %v)", err, users, call)
 	}
 	return call, nil
 }
