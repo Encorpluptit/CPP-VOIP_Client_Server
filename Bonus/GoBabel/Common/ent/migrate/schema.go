@@ -8,6 +8,30 @@ import (
 )
 
 var (
+	// CallsColumns holds the columns for the "calls" table.
+	CallsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "started_at", Type: field.TypeTime},
+		{Name: "finished_at", Type: field.TypeTime},
+	}
+	// CallsTable holds the schema information for the "calls" table.
+	CallsTable = &schema.Table{
+		Name:        "calls",
+		Columns:     CallsColumns,
+		PrimaryKey:  []*schema.Column{CallsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{},
+	}
+	// ConferencesColumns holds the columns for the "conferences" table.
+	ConferencesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+	}
+	// ConferencesTable holds the schema information for the "conferences" table.
+	ConferencesTable = &schema.Table{
+		Name:        "conferences",
+		Columns:     ConferencesColumns,
+		PrimaryKey:  []*schema.Column{ConferencesColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{},
+	}
 	// UsersColumns holds the columns for the "users" table.
 	UsersColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -21,11 +45,73 @@ var (
 		PrimaryKey:  []*schema.Column{UsersColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{},
 	}
+	// ConferenceCallsColumns holds the columns for the "conference_calls" table.
+	ConferenceCallsColumns = []*schema.Column{
+		{Name: "conference_id", Type: field.TypeInt},
+		{Name: "call_id", Type: field.TypeInt},
+	}
+	// ConferenceCallsTable holds the schema information for the "conference_calls" table.
+	ConferenceCallsTable = &schema.Table{
+		Name:       "conference_calls",
+		Columns:    ConferenceCallsColumns,
+		PrimaryKey: []*schema.Column{ConferenceCallsColumns[0], ConferenceCallsColumns[1]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:  "conference_calls_conference_id",
+				Columns: []*schema.Column{ConferenceCallsColumns[0]},
+
+				RefColumns: []*schema.Column{ConferencesColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+			{
+				Symbol:  "conference_calls_call_id",
+				Columns: []*schema.Column{ConferenceCallsColumns[1]},
+
+				RefColumns: []*schema.Column{CallsColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+		},
+	}
+	// UserConferencesColumns holds the columns for the "user_conferences" table.
+	UserConferencesColumns = []*schema.Column{
+		{Name: "user_id", Type: field.TypeInt},
+		{Name: "conference_id", Type: field.TypeInt},
+	}
+	// UserConferencesTable holds the schema information for the "user_conferences" table.
+	UserConferencesTable = &schema.Table{
+		Name:       "user_conferences",
+		Columns:    UserConferencesColumns,
+		PrimaryKey: []*schema.Column{UserConferencesColumns[0], UserConferencesColumns[1]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:  "user_conferences_user_id",
+				Columns: []*schema.Column{UserConferencesColumns[0]},
+
+				RefColumns: []*schema.Column{UsersColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+			{
+				Symbol:  "user_conferences_conference_id",
+				Columns: []*schema.Column{UserConferencesColumns[1]},
+
+				RefColumns: []*schema.Column{ConferencesColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+		},
+	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
+		CallsTable,
+		ConferencesTable,
 		UsersTable,
+		ConferenceCallsTable,
+		UserConferencesTable,
 	}
 )
 
 func init() {
+	ConferenceCallsTable.ForeignKeys[0].RefTable = ConferencesTable
+	ConferenceCallsTable.ForeignKeys[1].RefTable = CallsTable
+	UserConferencesTable.ForeignKeys[0].RefTable = UsersTable
+	UserConferencesTable.ForeignKeys[1].RefTable = ConferencesTable
 }

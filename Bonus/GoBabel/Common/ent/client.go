@@ -9,10 +9,13 @@ import (
 
 	"GoBabel/Common/ent/migrate"
 
+	"GoBabel/Common/ent/call"
+	"GoBabel/Common/ent/conference"
 	"GoBabel/Common/ent/user"
 
 	"github.com/facebook/ent/dialect"
 	"github.com/facebook/ent/dialect/sql"
+	"github.com/facebook/ent/dialect/sql/sqlgraph"
 )
 
 // Client is the client that holds all ent builders.
@@ -20,6 +23,10 @@ type Client struct {
 	config
 	// Schema is the client for creating, migrating and dropping schema.
 	Schema *migrate.Schema
+	// Call is the client for interacting with the Call builders.
+	Call *CallClient
+	// Conference is the client for interacting with the Conference builders.
+	Conference *ConferenceClient
 	// User is the client for interacting with the User builders.
 	User *UserClient
 }
@@ -35,6 +42,8 @@ func NewClient(opts ...Option) *Client {
 
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
+	c.Call = NewCallClient(c.config)
+	c.Conference = NewConferenceClient(c.config)
 	c.User = NewUserClient(c.config)
 }
 
@@ -66,9 +75,11 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	}
 	cfg := config{driver: tx, log: c.log, debug: c.debug, hooks: c.hooks}
 	return &Tx{
-		ctx:    ctx,
-		config: cfg,
-		User:   NewUserClient(cfg),
+		ctx:        ctx,
+		config:     cfg,
+		Call:       NewCallClient(cfg),
+		Conference: NewConferenceClient(cfg),
+		User:       NewUserClient(cfg),
 	}, nil
 }
 
@@ -83,15 +94,17 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	}
 	cfg := config{driver: &txDriver{tx: tx, drv: c.driver}, log: c.log, debug: c.debug, hooks: c.hooks}
 	return &Tx{
-		config: cfg,
-		User:   NewUserClient(cfg),
+		config:     cfg,
+		Call:       NewCallClient(cfg),
+		Conference: NewConferenceClient(cfg),
+		User:       NewUserClient(cfg),
 	}, nil
 }
 
 // Debug returns a new debug-client. It's used to get verbose logging on specific operations.
 //
 //	client.Debug().
-//		User.
+//		Call.
 //		Query().
 //		Count(ctx)
 //
@@ -113,7 +126,233 @@ func (c *Client) Close() error {
 // Use adds the mutation hooks to all the entity clients.
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
+	c.Call.Use(hooks...)
+	c.Conference.Use(hooks...)
 	c.User.Use(hooks...)
+}
+
+// CallClient is a client for the Call schema.
+type CallClient struct {
+	config
+}
+
+// NewCallClient returns a client for the Call from the given config.
+func NewCallClient(c config) *CallClient {
+	return &CallClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `call.Hooks(f(g(h())))`.
+func (c *CallClient) Use(hooks ...Hook) {
+	c.hooks.Call = append(c.hooks.Call, hooks...)
+}
+
+// Create returns a create builder for Call.
+func (c *CallClient) Create() *CallCreate {
+	mutation := newCallMutation(c.config, OpCreate)
+	return &CallCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// BulkCreate returns a builder for creating a bulk of Call entities.
+func (c *CallClient) CreateBulk(builders ...*CallCreate) *CallCreateBulk {
+	return &CallCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for Call.
+func (c *CallClient) Update() *CallUpdate {
+	mutation := newCallMutation(c.config, OpUpdate)
+	return &CallUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *CallClient) UpdateOne(ca *Call) *CallUpdateOne {
+	mutation := newCallMutation(c.config, OpUpdateOne, withCall(ca))
+	return &CallUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *CallClient) UpdateOneID(id int) *CallUpdateOne {
+	mutation := newCallMutation(c.config, OpUpdateOne, withCallID(id))
+	return &CallUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Call.
+func (c *CallClient) Delete() *CallDelete {
+	mutation := newCallMutation(c.config, OpDelete)
+	return &CallDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *CallClient) DeleteOne(ca *Call) *CallDeleteOne {
+	return c.DeleteOneID(ca.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *CallClient) DeleteOneID(id int) *CallDeleteOne {
+	builder := c.Delete().Where(call.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &CallDeleteOne{builder}
+}
+
+// Query returns a query builder for Call.
+func (c *CallClient) Query() *CallQuery {
+	return &CallQuery{config: c.config}
+}
+
+// Get returns a Call entity by its id.
+func (c *CallClient) Get(ctx context.Context, id int) (*Call, error) {
+	return c.Query().Where(call.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *CallClient) GetX(ctx context.Context, id int) *Call {
+	ca, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return ca
+}
+
+// QueryConference queries the conference edge of a Call.
+func (c *CallClient) QueryConference(ca *Call) *ConferenceQuery {
+	query := &ConferenceQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := ca.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(call.Table, call.FieldID, id),
+			sqlgraph.To(conference.Table, conference.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, true, call.ConferenceTable, call.ConferencePrimaryKey...),
+		)
+		fromV = sqlgraph.Neighbors(ca.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *CallClient) Hooks() []Hook {
+	return c.hooks.Call
+}
+
+// ConferenceClient is a client for the Conference schema.
+type ConferenceClient struct {
+	config
+}
+
+// NewConferenceClient returns a client for the Conference from the given config.
+func NewConferenceClient(c config) *ConferenceClient {
+	return &ConferenceClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `conference.Hooks(f(g(h())))`.
+func (c *ConferenceClient) Use(hooks ...Hook) {
+	c.hooks.Conference = append(c.hooks.Conference, hooks...)
+}
+
+// Create returns a create builder for Conference.
+func (c *ConferenceClient) Create() *ConferenceCreate {
+	mutation := newConferenceMutation(c.config, OpCreate)
+	return &ConferenceCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// BulkCreate returns a builder for creating a bulk of Conference entities.
+func (c *ConferenceClient) CreateBulk(builders ...*ConferenceCreate) *ConferenceCreateBulk {
+	return &ConferenceCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for Conference.
+func (c *ConferenceClient) Update() *ConferenceUpdate {
+	mutation := newConferenceMutation(c.config, OpUpdate)
+	return &ConferenceUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *ConferenceClient) UpdateOne(co *Conference) *ConferenceUpdateOne {
+	mutation := newConferenceMutation(c.config, OpUpdateOne, withConference(co))
+	return &ConferenceUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *ConferenceClient) UpdateOneID(id int) *ConferenceUpdateOne {
+	mutation := newConferenceMutation(c.config, OpUpdateOne, withConferenceID(id))
+	return &ConferenceUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Conference.
+func (c *ConferenceClient) Delete() *ConferenceDelete {
+	mutation := newConferenceMutation(c.config, OpDelete)
+	return &ConferenceDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *ConferenceClient) DeleteOne(co *Conference) *ConferenceDeleteOne {
+	return c.DeleteOneID(co.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *ConferenceClient) DeleteOneID(id int) *ConferenceDeleteOne {
+	builder := c.Delete().Where(conference.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &ConferenceDeleteOne{builder}
+}
+
+// Query returns a query builder for Conference.
+func (c *ConferenceClient) Query() *ConferenceQuery {
+	return &ConferenceQuery{config: c.config}
+}
+
+// Get returns a Conference entity by its id.
+func (c *ConferenceClient) Get(ctx context.Context, id int) (*Conference, error) {
+	return c.Query().Where(conference.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *ConferenceClient) GetX(ctx context.Context, id int) *Conference {
+	co, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return co
+}
+
+// QueryUsers queries the users edge of a Conference.
+func (c *ConferenceClient) QueryUsers(co *Conference) *UserQuery {
+	query := &UserQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := co.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(conference.Table, conference.FieldID, id),
+			sqlgraph.To(user.Table, user.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, true, conference.UsersTable, conference.UsersPrimaryKey...),
+		)
+		fromV = sqlgraph.Neighbors(co.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryCalls queries the calls edge of a Conference.
+func (c *ConferenceClient) QueryCalls(co *Conference) *CallQuery {
+	query := &CallQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := co.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(conference.Table, conference.FieldID, id),
+			sqlgraph.To(call.Table, call.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, conference.CallsTable, conference.CallsPrimaryKey...),
+		)
+		fromV = sqlgraph.Neighbors(co.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *ConferenceClient) Hooks() []Hook {
+	return c.hooks.Conference
 }
 
 // UserClient is a client for the User schema.
@@ -197,6 +436,22 @@ func (c *UserClient) GetX(ctx context.Context, id int) *User {
 		panic(err)
 	}
 	return u
+}
+
+// QueryConferences queries the conferences edge of a User.
+func (c *UserClient) QueryConferences(u *User) *ConferenceQuery {
+	query := &ConferenceQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := u.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(user.Table, user.FieldID, id),
+			sqlgraph.To(conference.Table, conference.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, user.ConferencesTable, user.ConferencesPrimaryKey...),
+		)
+		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
 }
 
 // Hooks returns the client hooks.

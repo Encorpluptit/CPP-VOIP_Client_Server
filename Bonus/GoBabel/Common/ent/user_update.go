@@ -3,6 +3,7 @@
 package ent
 
 import (
+	"GoBabel/Common/ent/conference"
 	"GoBabel/Common/ent/predicate"
 	"GoBabel/Common/ent/user"
 	"context"
@@ -39,9 +40,39 @@ func (uu *UserUpdate) SetPassword(s string) *UserUpdate {
 	return uu
 }
 
+// AddConferenceIDs adds the conferences edge to Conference by ids.
+func (uu *UserUpdate) AddConferenceIDs(ids ...int) *UserUpdate {
+	uu.mutation.AddConferenceIDs(ids...)
+	return uu
+}
+
+// AddConferences adds the conferences edges to Conference.
+func (uu *UserUpdate) AddConferences(c ...*Conference) *UserUpdate {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return uu.AddConferenceIDs(ids...)
+}
+
 // Mutation returns the UserMutation object of the builder.
 func (uu *UserUpdate) Mutation() *UserMutation {
 	return uu.mutation
+}
+
+// RemoveConferenceIDs removes the conferences edge to Conference by ids.
+func (uu *UserUpdate) RemoveConferenceIDs(ids ...int) *UserUpdate {
+	uu.mutation.RemoveConferenceIDs(ids...)
+	return uu
+}
+
+// RemoveConferences removes conferences edges to Conference.
+func (uu *UserUpdate) RemoveConferences(c ...*Conference) *UserUpdate {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return uu.RemoveConferenceIDs(ids...)
 }
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
@@ -56,6 +87,7 @@ func (uu *UserUpdate) Save(ctx context.Context) (int, error) {
 			return 0, &ValidationError{Name: "password", err: fmt.Errorf("ent: validator failed for field \"password\": %w", err)}
 		}
 	}
+
 	var (
 		err      error
 		affected int
@@ -137,6 +169,44 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: user.FieldPassword,
 		})
 	}
+	if nodes := uu.mutation.RemovedConferencesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   user.ConferencesTable,
+			Columns: user.ConferencesPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: conference.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uu.mutation.ConferencesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   user.ConferencesTable,
+			Columns: user.ConferencesPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: conference.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, uu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{user.Label}
@@ -167,9 +237,39 @@ func (uuo *UserUpdateOne) SetPassword(s string) *UserUpdateOne {
 	return uuo
 }
 
+// AddConferenceIDs adds the conferences edge to Conference by ids.
+func (uuo *UserUpdateOne) AddConferenceIDs(ids ...int) *UserUpdateOne {
+	uuo.mutation.AddConferenceIDs(ids...)
+	return uuo
+}
+
+// AddConferences adds the conferences edges to Conference.
+func (uuo *UserUpdateOne) AddConferences(c ...*Conference) *UserUpdateOne {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return uuo.AddConferenceIDs(ids...)
+}
+
 // Mutation returns the UserMutation object of the builder.
 func (uuo *UserUpdateOne) Mutation() *UserMutation {
 	return uuo.mutation
+}
+
+// RemoveConferenceIDs removes the conferences edge to Conference by ids.
+func (uuo *UserUpdateOne) RemoveConferenceIDs(ids ...int) *UserUpdateOne {
+	uuo.mutation.RemoveConferenceIDs(ids...)
+	return uuo
+}
+
+// RemoveConferences removes conferences edges to Conference.
+func (uuo *UserUpdateOne) RemoveConferences(c ...*Conference) *UserUpdateOne {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return uuo.RemoveConferenceIDs(ids...)
 }
 
 // Save executes the query and returns the updated entity.
@@ -184,6 +284,7 @@ func (uuo *UserUpdateOne) Save(ctx context.Context) (*User, error) {
 			return nil, &ValidationError{Name: "password", err: fmt.Errorf("ent: validator failed for field \"password\": %w", err)}
 		}
 	}
+
 	var (
 		err  error
 		node *User
@@ -262,6 +363,44 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (u *User, err error) {
 			Value:  value,
 			Column: user.FieldPassword,
 		})
+	}
+	if nodes := uuo.mutation.RemovedConferencesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   user.ConferencesTable,
+			Columns: user.ConferencesPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: conference.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uuo.mutation.ConferencesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   user.ConferencesTable,
+			Columns: user.ConferencesPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: conference.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	u = &User{config: uuo.config}
 	_spec.Assign = u.assignValues

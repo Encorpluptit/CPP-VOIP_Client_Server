@@ -2,6 +2,7 @@ package schema
 
 import (
 	"github.com/facebook/ent"
+	"github.com/facebook/ent/schema/edge"
 	"github.com/facebook/ent/schema/field"
 )
 
@@ -13,11 +14,14 @@ type Call struct {
 // Fields of the Call.
 func (Call) Fields() []ent.Field {
 	return []ent.Field{
-		field.Time("registered_at"),
+		field.Time("started_at"),
+		field.Time("finished_at"),
 	}
 }
 
 // Edges of the Call.
 func (Call) Edges() []ent.Edge {
-	return nil
+	return []ent.Edge{
+		edge.From("conference", Conference.Type).Ref("calls"),
+	}
 }
