@@ -12,7 +12,7 @@
 int main(int ac, char **av)
 {
     if (ac != 3)
-        return 84;
+        return (84);
     std::cout << "Babel client!" << std::endl;
     try {
         BabelClient::ClientCore core(ac, av);

@@ -31,16 +31,13 @@ void BabelClient::ClientCore::start()
 void BabelClient::ClientCore::run()
 {
     std::string data;
-    while (std::getline(std::cin, data)) {
+    while (1) {
+        std::getline(std::cin, data)
         if (data == "exit" || !_socket->isReady()) {
             std::cout << "exit loop" << std::endl;
             break;
         }
-        auto Calltest = BabelNetwork::CallResponse::NewCallStarted("damien", "ugo", 156);
-        if (!Calltest)
-            std::cerr << "Call test Null" << std::endl;
-        else
-            _socket->sendResponse(Calltest);
+        if (_socket->popResponse())
     }
 }
 
