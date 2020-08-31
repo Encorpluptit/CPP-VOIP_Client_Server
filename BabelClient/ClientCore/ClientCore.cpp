@@ -28,19 +28,30 @@ void BabelClient::ClientCore::start()
         std::cout << "Waiting Socket to be ready" << std::endl;
 }
 
+void BabelClient::ClientCore::checkResponse(std::shared_ptr<BabelNetwork::AResponse> response)
+{
+    printf("code : %d\n", response->getCode());
+    printf("%s\n", response->getDescription());
+}
+
 void BabelClient::ClientCore::run()
 {
     std::string data;
-    while (std::getline(std::cin, data)) {
+    std::shared_ptr<BabelNetwork::AResponse> response;
+
+    while (1) {
+        std::getline(std::cin, data);
+        response = _socket->popResponse();
+        if (data == "lol")
+            response = BabelNetwork::CallResponse::CallRequest("ugo", "damien");
         if (data == "exit" || !_socket->isReady()) {
             std::cout << "exit loop" << std::endl;
             break;
         }
-        auto Calltest = BabelNetwork::CallResponse::NewCallStarted("damien", "ugo", 156);
-        if (!Calltest)
-            std::cerr << "Call test Null" << std::endl;
-        else
-            _socket->sendResponse(Calltest);
+        if (response != nullptr) {
+            checkResponse(response);
+            response = nullptr;
+        }
     }
 }
 

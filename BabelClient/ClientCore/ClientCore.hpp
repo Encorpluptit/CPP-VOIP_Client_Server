@@ -9,6 +9,7 @@
 #define CPP_BABEL_2020_CLIENTCORE_HPP
 
 #include "AsioClientSocket.hpp"
+#include "AResponse.hpp"
 #include "boost/shared_ptr.hpp"
 #include "SharedPtr.hpp"
 
@@ -34,6 +35,8 @@ namespace BabelClient {
         void init();
 
         void initSocket(int ac, char **av);
+
+        void checkResponse(std::shared_ptr<BabelNetwork::AResponse> response);
 
         /* <- Getters / Setters -> */
     public:
