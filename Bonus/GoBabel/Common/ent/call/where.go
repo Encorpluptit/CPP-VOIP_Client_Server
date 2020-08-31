@@ -287,6 +287,34 @@ func HasConferenceWith(preds ...predicate.Conference) predicate.Call {
 	})
 }
 
+// HasParticipants applies the HasEdge predicate on the "participants" edge.
+func HasParticipants() predicate.Call {
+	return predicate.Call(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(ParticipantsTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, true, ParticipantsTable, ParticipantsPrimaryKey...),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasParticipantsWith applies the HasEdge predicate on the "participants" edge with a given conditions (other predicates).
+func HasParticipantsWith(preds ...predicate.User) predicate.Call {
+	return predicate.Call(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(ParticipantsInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, true, ParticipantsTable, ParticipantsPrimaryKey...),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
 // And groups list of predicates with the AND operator between them.
 func And(predicates ...predicate.Call) predicate.Call {
 	return predicate.Call(func(s *sql.Selector) {

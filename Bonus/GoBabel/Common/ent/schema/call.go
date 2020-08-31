@@ -23,5 +23,6 @@ func (Call) Fields() []ent.Field {
 func (Call) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.From("conference", Conference.Type).Ref("calls"),
+		edge.From("participants", User.Type).Ref("calls"),
 	}
 }

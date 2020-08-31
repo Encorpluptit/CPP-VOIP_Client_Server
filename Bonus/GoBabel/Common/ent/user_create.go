@@ -3,6 +3,7 @@
 package ent
 
 import (
+	"GoBabel/Common/ent/call"
 	"GoBabel/Common/ent/conference"
 	"GoBabel/Common/ent/user"
 	"context"
@@ -45,6 +46,21 @@ func (uc *UserCreate) AddConferences(c ...*Conference) *UserCreate {
 		ids[i] = c[i].ID
 	}
 	return uc.AddConferenceIDs(ids...)
+}
+
+// AddCallIDs adds the calls edge to Call by ids.
+func (uc *UserCreate) AddCallIDs(ids ...int) *UserCreate {
+	uc.mutation.AddCallIDs(ids...)
+	return uc
+}
+
+// AddCalls adds the calls edges to Call.
+func (uc *UserCreate) AddCalls(c ...*Call) *UserCreate {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return uc.AddCallIDs(ids...)
 }
 
 // Mutation returns the UserMutation object of the builder.
@@ -164,6 +180,25 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: conference.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := uc.mutation.CallsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   user.CallsTable,
+			Columns: user.CallsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: call.FieldID,
 				},
 			},
 		}

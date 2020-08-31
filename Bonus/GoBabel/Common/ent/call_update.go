@@ -6,6 +6,7 @@ import (
 	"GoBabel/Common/ent/call"
 	"GoBabel/Common/ent/conference"
 	"GoBabel/Common/ent/predicate"
+	"GoBabel/Common/ent/user"
 	"context"
 	"fmt"
 	"time"
@@ -56,6 +57,21 @@ func (cu *CallUpdate) AddConference(c ...*Conference) *CallUpdate {
 	return cu.AddConferenceIDs(ids...)
 }
 
+// AddParticipantIDs adds the participants edge to User by ids.
+func (cu *CallUpdate) AddParticipantIDs(ids ...int) *CallUpdate {
+	cu.mutation.AddParticipantIDs(ids...)
+	return cu
+}
+
+// AddParticipants adds the participants edges to User.
+func (cu *CallUpdate) AddParticipants(u ...*User) *CallUpdate {
+	ids := make([]int, len(u))
+	for i := range u {
+		ids[i] = u[i].ID
+	}
+	return cu.AddParticipantIDs(ids...)
+}
+
 // Mutation returns the CallMutation object of the builder.
 func (cu *CallUpdate) Mutation() *CallMutation {
 	return cu.mutation
@@ -74,6 +90,21 @@ func (cu *CallUpdate) RemoveConference(c ...*Conference) *CallUpdate {
 		ids[i] = c[i].ID
 	}
 	return cu.RemoveConferenceIDs(ids...)
+}
+
+// RemoveParticipantIDs removes the participants edge to User by ids.
+func (cu *CallUpdate) RemoveParticipantIDs(ids ...int) *CallUpdate {
+	cu.mutation.RemoveParticipantIDs(ids...)
+	return cu
+}
+
+// RemoveParticipants removes participants edges to User.
+func (cu *CallUpdate) RemoveParticipants(u ...*User) *CallUpdate {
+	ids := make([]int, len(u))
+	for i := range u {
+		ids[i] = u[i].ID
+	}
+	return cu.RemoveParticipantIDs(ids...)
 }
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
@@ -198,6 +229,44 @@ func (cu *CallUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if nodes := cu.mutation.RemovedParticipantsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   call.ParticipantsTable,
+			Columns: call.ParticipantsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: user.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := cu.mutation.ParticipantsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   call.ParticipantsTable,
+			Columns: call.ParticipantsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: user.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, cu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{call.Label}
@@ -243,6 +312,21 @@ func (cuo *CallUpdateOne) AddConference(c ...*Conference) *CallUpdateOne {
 	return cuo.AddConferenceIDs(ids...)
 }
 
+// AddParticipantIDs adds the participants edge to User by ids.
+func (cuo *CallUpdateOne) AddParticipantIDs(ids ...int) *CallUpdateOne {
+	cuo.mutation.AddParticipantIDs(ids...)
+	return cuo
+}
+
+// AddParticipants adds the participants edges to User.
+func (cuo *CallUpdateOne) AddParticipants(u ...*User) *CallUpdateOne {
+	ids := make([]int, len(u))
+	for i := range u {
+		ids[i] = u[i].ID
+	}
+	return cuo.AddParticipantIDs(ids...)
+}
+
 // Mutation returns the CallMutation object of the builder.
 func (cuo *CallUpdateOne) Mutation() *CallMutation {
 	return cuo.mutation
@@ -261,6 +345,21 @@ func (cuo *CallUpdateOne) RemoveConference(c ...*Conference) *CallUpdateOne {
 		ids[i] = c[i].ID
 	}
 	return cuo.RemoveConferenceIDs(ids...)
+}
+
+// RemoveParticipantIDs removes the participants edge to User by ids.
+func (cuo *CallUpdateOne) RemoveParticipantIDs(ids ...int) *CallUpdateOne {
+	cuo.mutation.RemoveParticipantIDs(ids...)
+	return cuo
+}
+
+// RemoveParticipants removes participants edges to User.
+func (cuo *CallUpdateOne) RemoveParticipants(u ...*User) *CallUpdateOne {
+	ids := make([]int, len(u))
+	for i := range u {
+		ids[i] = u[i].ID
+	}
+	return cuo.RemoveParticipantIDs(ids...)
 }
 
 // Save executes the query and returns the updated entity.
@@ -375,6 +474,44 @@ func (cuo *CallUpdateOne) sqlSave(ctx context.Context) (c *Call, err error) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: conference.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if nodes := cuo.mutation.RemovedParticipantsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   call.ParticipantsTable,
+			Columns: call.ParticipantsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: user.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := cuo.mutation.ParticipantsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   call.ParticipantsTable,
+			Columns: call.ParticipantsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: user.FieldID,
 				},
 			},
 		}

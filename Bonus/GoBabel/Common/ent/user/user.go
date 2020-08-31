@@ -14,6 +14,8 @@ const (
 
 	// EdgeConferences holds the string denoting the conferences edge name in mutations.
 	EdgeConferences = "conferences"
+	// EdgeCalls holds the string denoting the calls edge name in mutations.
+	EdgeCalls = "calls"
 
 	// Table holds the table name of the user in the database.
 	Table = "users"
@@ -22,6 +24,11 @@ const (
 	// ConferencesInverseTable is the table name for the Conference entity.
 	// It exists in this package in order to avoid circular dependency with the "conference" package.
 	ConferencesInverseTable = "conferences"
+	// CallsTable is the table the holds the calls relation/edge. The primary key declared below.
+	CallsTable = "user_calls"
+	// CallsInverseTable is the table name for the Call entity.
+	// It exists in this package in order to avoid circular dependency with the "call" package.
+	CallsInverseTable = "calls"
 )
 
 // Columns holds all SQL columns for user fields.
@@ -35,6 +42,9 @@ var (
 	// ConferencesPrimaryKey and ConferencesColumn2 are the table columns denoting the
 	// primary key for the conferences relation (M2M).
 	ConferencesPrimaryKey = []string{"user_id", "conference_id"}
+	// CallsPrimaryKey and CallsColumn2 are the table columns denoting the
+	// primary key for the calls relation (M2M).
+	CallsPrimaryKey = []string{"user_id", "call_id"}
 )
 
 var (

@@ -3,6 +3,7 @@
 package ent
 
 import (
+	"GoBabel/Common/ent/call"
 	"GoBabel/Common/ent/conference"
 	"GoBabel/Common/ent/predicate"
 	"GoBabel/Common/ent/user"
@@ -55,6 +56,21 @@ func (uu *UserUpdate) AddConferences(c ...*Conference) *UserUpdate {
 	return uu.AddConferenceIDs(ids...)
 }
 
+// AddCallIDs adds the calls edge to Call by ids.
+func (uu *UserUpdate) AddCallIDs(ids ...int) *UserUpdate {
+	uu.mutation.AddCallIDs(ids...)
+	return uu
+}
+
+// AddCalls adds the calls edges to Call.
+func (uu *UserUpdate) AddCalls(c ...*Call) *UserUpdate {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return uu.AddCallIDs(ids...)
+}
+
 // Mutation returns the UserMutation object of the builder.
 func (uu *UserUpdate) Mutation() *UserMutation {
 	return uu.mutation
@@ -73,6 +89,21 @@ func (uu *UserUpdate) RemoveConferences(c ...*Conference) *UserUpdate {
 		ids[i] = c[i].ID
 	}
 	return uu.RemoveConferenceIDs(ids...)
+}
+
+// RemoveCallIDs removes the calls edge to Call by ids.
+func (uu *UserUpdate) RemoveCallIDs(ids ...int) *UserUpdate {
+	uu.mutation.RemoveCallIDs(ids...)
+	return uu
+}
+
+// RemoveCalls removes calls edges to Call.
+func (uu *UserUpdate) RemoveCalls(c ...*Call) *UserUpdate {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return uu.RemoveCallIDs(ids...)
 }
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
@@ -207,6 +238,44 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if nodes := uu.mutation.RemovedCallsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   user.CallsTable,
+			Columns: user.CallsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: call.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uu.mutation.CallsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   user.CallsTable,
+			Columns: user.CallsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: call.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, uu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{user.Label}
@@ -252,6 +321,21 @@ func (uuo *UserUpdateOne) AddConferences(c ...*Conference) *UserUpdateOne {
 	return uuo.AddConferenceIDs(ids...)
 }
 
+// AddCallIDs adds the calls edge to Call by ids.
+func (uuo *UserUpdateOne) AddCallIDs(ids ...int) *UserUpdateOne {
+	uuo.mutation.AddCallIDs(ids...)
+	return uuo
+}
+
+// AddCalls adds the calls edges to Call.
+func (uuo *UserUpdateOne) AddCalls(c ...*Call) *UserUpdateOne {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return uuo.AddCallIDs(ids...)
+}
+
 // Mutation returns the UserMutation object of the builder.
 func (uuo *UserUpdateOne) Mutation() *UserMutation {
 	return uuo.mutation
@@ -270,6 +354,21 @@ func (uuo *UserUpdateOne) RemoveConferences(c ...*Conference) *UserUpdateOne {
 		ids[i] = c[i].ID
 	}
 	return uuo.RemoveConferenceIDs(ids...)
+}
+
+// RemoveCallIDs removes the calls edge to Call by ids.
+func (uuo *UserUpdateOne) RemoveCallIDs(ids ...int) *UserUpdateOne {
+	uuo.mutation.RemoveCallIDs(ids...)
+	return uuo
+}
+
+// RemoveCalls removes calls edges to Call.
+func (uuo *UserUpdateOne) RemoveCalls(c ...*Call) *UserUpdateOne {
+	ids := make([]int, len(c))
+	for i := range c {
+		ids[i] = c[i].ID
+	}
+	return uuo.RemoveCallIDs(ids...)
 }
 
 // Save executes the query and returns the updated entity.
@@ -394,6 +493,44 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (u *User, err error) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: conference.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if nodes := uuo.mutation.RemovedCallsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   user.CallsTable,
+			Columns: user.CallsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: call.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uuo.mutation.CallsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   user.CallsTable,
+			Columns: user.CallsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: call.FieldID,
 				},
 			},
 		}

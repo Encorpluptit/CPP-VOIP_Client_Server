@@ -5,6 +5,7 @@ package ent
 import (
 	"GoBabel/Common/ent/call"
 	"GoBabel/Common/ent/conference"
+	"GoBabel/Common/ent/user"
 	"context"
 	"errors"
 	"fmt"
@@ -46,6 +47,21 @@ func (cc *CallCreate) AddConference(c ...*Conference) *CallCreate {
 		ids[i] = c[i].ID
 	}
 	return cc.AddConferenceIDs(ids...)
+}
+
+// AddParticipantIDs adds the participants edge to User by ids.
+func (cc *CallCreate) AddParticipantIDs(ids ...int) *CallCreate {
+	cc.mutation.AddParticipantIDs(ids...)
+	return cc
+}
+
+// AddParticipants adds the participants edges to User.
+func (cc *CallCreate) AddParticipants(u ...*User) *CallCreate {
+	ids := make([]int, len(u))
+	for i := range u {
+		ids[i] = u[i].ID
+	}
+	return cc.AddParticipantIDs(ids...)
 }
 
 // Mutation returns the CallMutation object of the builder.
@@ -155,6 +171,25 @@ func (cc *CallCreate) createSpec() (*Call, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: conference.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := cc.mutation.ParticipantsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   call.ParticipantsTable,
+			Columns: call.ParticipantsPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: user.FieldID,
 				},
 			},
 		}

@@ -19,14 +19,20 @@ func CreateCall() (*ent.Call, error) {
 	return call, nil
 }
 
-//func CreateCallWithUsers(users ...*ent.User) (*ent.Call, error) {
-//conf, err := ServerDb.Client.Call.
-//	Create().
-//	AddUsers(users...).
-//	Save(ServerDb.Ctx)
-//if err != nil {
-//	return nil, fmt.Errorf("failed creating user: %v", err)
-//}
-//log.Println("Conf was created: ", conf, "with users", users)
-//return conf, nil
-//}
+func AddUserToCall(call *ent.Call, user *ent.User) (*ent.Call, error) {
+	var err error
+	call, err = call.Update().AddParticipants(user).Save(ServerDb.Ctx)
+	if err != nil {
+		return nil, fmt.Errorf("failed add user to call: %v (call: %v)", err, call)
+	}
+	return call, nil
+}
+
+func StopCall(call *ent.Call) (*ent.Call, error) {
+	var err error
+	call, err = call.Update().SetFinishedAt(time.Now()).Save(ServerDb.Ctx)
+	if err != nil {
+		return nil, fmt.Errorf("failed stoping call: %v (call: %v)", err, call)
+	}
+	return call, nil
+}

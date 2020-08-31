@@ -6,18 +6,7 @@ import (
 	"log"
 )
 
-func CreateConference() (*ent.Conference, error) {
-	conf, err := ServerDb.Client.Conference.
-		Create().
-		Save(ServerDb.Ctx)
-	if err != nil {
-		return nil, fmt.Errorf("failed creating conference: %v", err)
-	}
-	log.Println("Conf was created: ", conf)
-	return conf, nil
-}
-
-func CreateConferenceWithUsers(users ...*ent.User) (*ent.Conference, error) {
+func CreateConference(users ...*ent.User) (*ent.Conference, error) {
 	conf, err := ServerDb.Client.Conference.
 		Create().
 		AddUsers(users...).

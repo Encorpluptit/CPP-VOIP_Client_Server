@@ -230,6 +230,22 @@ func (c *CallClient) QueryConference(ca *Call) *ConferenceQuery {
 	return query
 }
 
+// QueryParticipants queries the participants edge of a Call.
+func (c *CallClient) QueryParticipants(ca *Call) *UserQuery {
+	query := &UserQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := ca.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(call.Table, call.FieldID, id),
+			sqlgraph.To(user.Table, user.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, true, call.ParticipantsTable, call.ParticipantsPrimaryKey...),
+		)
+		fromV = sqlgraph.Neighbors(ca.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // Hooks returns the client hooks.
 func (c *CallClient) Hooks() []Hook {
 	return c.hooks.Call
@@ -447,6 +463,22 @@ func (c *UserClient) QueryConferences(u *User) *ConferenceQuery {
 			sqlgraph.From(user.Table, user.FieldID, id),
 			sqlgraph.To(conference.Table, conference.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, false, user.ConferencesTable, user.ConferencesPrimaryKey...),
+		)
+		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryCalls queries the calls edge of a User.
+func (c *UserClient) QueryCalls(u *User) *CallQuery {
+	query := &CallQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := u.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(user.Table, user.FieldID, id),
+			sqlgraph.To(call.Table, call.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, user.CallsTable, user.CallsPrimaryKey...),
 		)
 		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
 		return fromV, nil

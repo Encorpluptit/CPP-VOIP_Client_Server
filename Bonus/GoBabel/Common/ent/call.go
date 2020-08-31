@@ -29,9 +29,11 @@ type Call struct {
 type CallEdges struct {
 	// Conference holds the value of the conference edge.
 	Conference []*Conference
+	// Participants holds the value of the participants edge.
+	Participants []*User
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [1]bool
+	loadedTypes [2]bool
 }
 
 // ConferenceOrErr returns the Conference value or an error if the edge
@@ -41,6 +43,15 @@ func (e CallEdges) ConferenceOrErr() ([]*Conference, error) {
 		return e.Conference, nil
 	}
 	return nil, &NotLoadedError{edge: "conference"}
+}
+
+// ParticipantsOrErr returns the Participants value or an error if the edge
+// was not loaded in eager-loading.
+func (e CallEdges) ParticipantsOrErr() ([]*User, error) {
+	if e.loadedTypes[1] {
+		return e.Participants, nil
+	}
+	return nil, &NotLoadedError{edge: "participants"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -80,6 +91,11 @@ func (c *Call) assignValues(values ...interface{}) error {
 // QueryConference queries the conference edge of the Call.
 func (c *Call) QueryConference() *ConferenceQuery {
 	return (&CallClient{config: c.config}).QueryConference(c)
+}
+
+// QueryParticipants queries the participants edge of the Call.
+func (c *Call) QueryParticipants() *UserQuery {
+	return (&CallClient{config: c.config}).QueryParticipants(c)
 }
 
 // Update returns a builder for updating this Call.
