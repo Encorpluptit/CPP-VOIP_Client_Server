@@ -18,7 +18,6 @@ func (Conference) Fields() []ent.Field {
 // Edges of the Conference.
 func (Conference) Edges() []ent.Edge {
 	return []ent.Edge{
-		//edge.To("users", User.Type),
 		edge.From("users", User.Type).Ref("conferences"),
 		edge.To("calls", Call.Type),
 	}
