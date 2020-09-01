@@ -209,6 +209,54 @@ func DenyMutationOperationRule(op ent.Op) MutationRule {
 	return OnMutationOperation(rule, op)
 }
 
+// The CallQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type CallQueryRuleFunc func(context.Context, *ent.CallQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f CallQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.CallQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.CallQuery", q)
+}
+
+// The CallMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type CallMutationRuleFunc func(context.Context, *ent.CallMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f CallMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.CallMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.CallMutation", m)
+}
+
+// The ConferenceQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type ConferenceQueryRuleFunc func(context.Context, *ent.ConferenceQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f ConferenceQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.ConferenceQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.ConferenceQuery", q)
+}
+
+// The ConferenceMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type ConferenceMutationRuleFunc func(context.Context, *ent.ConferenceMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f ConferenceMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.ConferenceMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.ConferenceMutation", m)
+}
+
 // The UserQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
 type UserQueryRuleFunc func(context.Context, *ent.UserQuery) error

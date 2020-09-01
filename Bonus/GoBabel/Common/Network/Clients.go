@@ -11,6 +11,7 @@ import (
 var (
 	ClientAlreadyLogged = errors.New("client already logged")
 	ClientNotLogged     = errors.New("client not logged")
+	WrongUserDatas      = errors.New("wrong userDatas")
 )
 
 const (

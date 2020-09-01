@@ -2,9 +2,9 @@
 
 package runtime
 
-// The schema-stitching logic is generated in BabelGo/ent/runtime.go
+// The schema-stitching logic is generated in GoBabel/Common/ent/runtime.go
 
 const (
-	Version = "v0.4.0"                                          // Version of ent codegen.
-	Sum     = "h1:7k+LsvK5Sq4yx/NHqdEgAsOpVeVxChmo4peBljpp6OA=" // Sum of ent codegen.
+	Version = "v0.4.2"                                          // Version of ent codegen.
+	Sum     = "h1:JzU5dYJH9XdjfIKgOiPPK3szkqLqcdPWgVder4Ogows=" // Sum of ent codegen.
 )

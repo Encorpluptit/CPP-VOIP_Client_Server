@@ -8,6 +8,32 @@ import (
 	"fmt"
 )
 
+// The CallFunc type is an adapter to allow the use of ordinary
+// function as Call mutator.
+type CallFunc func(context.Context, *ent.CallMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f CallFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.CallMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.CallMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The ConferenceFunc type is an adapter to allow the use of ordinary
+// function as Conference mutator.
+type ConferenceFunc func(context.Context, *ent.ConferenceMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f ConferenceFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.ConferenceMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.ConferenceMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The UserFunc type is an adapter to allow the use of ordinary
 // function as User mutator.
 type UserFunc func(context.Context, *ent.UserMutation) (ent.Value, error)

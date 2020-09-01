@@ -22,7 +22,7 @@ func TestUserCreation(t *testing.T) {
 			t.Error(err)
 		}
 		if !checkUser(user, u) {
-			t.Errorf("")
+			t.Errorf("User Datas not valids")
 		}
 	}
 }

@@ -6,5 +6,11 @@ import (
 	"github.com/facebook/ent/dialect/sql"
 )
 
+// Call is the predicate function for call builders.
+type Call func(*sql.Selector)
+
+// Conference is the predicate function for conference builders.
+type Conference func(*sql.Selector)
+
 // User is the predicate function for user builders.
 type User func(*sql.Selector)

@@ -6,6 +6,7 @@ import (
 	"GoBabel/Common/ent/predicate"
 
 	"github.com/facebook/ent/dialect/sql"
+	"github.com/facebook/ent/dialect/sql/sqlgraph"
 )
 
 // ID filters vertices based on their identifier.
@@ -324,6 +325,62 @@ func PasswordEqualFold(v string) predicate.User {
 func PasswordContainsFold(v string) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldPassword), v))
+	})
+}
+
+// HasConferences applies the HasEdge predicate on the "conferences" edge.
+func HasConferences() predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(ConferencesTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, ConferencesTable, ConferencesPrimaryKey...),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasConferencesWith applies the HasEdge predicate on the "conferences" edge with a given conditions (other predicates).
+func HasConferencesWith(preds ...predicate.Conference) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(ConferencesInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, ConferencesTable, ConferencesPrimaryKey...),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasCalls applies the HasEdge predicate on the "calls" edge.
+func HasCalls() predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(CallsTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, CallsTable, CallsPrimaryKey...),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasCallsWith applies the HasEdge predicate on the "calls" edge with a given conditions (other predicates).
+func HasCallsWith(preds ...predicate.Call) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(CallsInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, CallsTable, CallsPrimaryKey...),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
 	})
 }
 
