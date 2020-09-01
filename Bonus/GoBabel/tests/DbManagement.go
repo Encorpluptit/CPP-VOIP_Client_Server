@@ -47,6 +47,10 @@ var TestConfDatas = []*ent.Conference{
 	}},
 }
 
+func init() {
+	log.Println("TESTING INI FCT")
+}
+
 func PopulateDb() {
 	createUsers()
 }
