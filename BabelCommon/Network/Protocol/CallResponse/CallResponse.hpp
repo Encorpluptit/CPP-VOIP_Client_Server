@@ -15,15 +15,15 @@ namespace BabelNetwork {
         /* <- Class Enum -> */
     public:
         enum ResponseCode {
-            CallStarted = 400,
-            RequestCall = 401,
-            CallLeft = 402,
-            RequestEndCall = 403,
-            IncomingCall = 404,
-            CallAccepted = 405,
+            CallStarted = 200,
+            RequestCall = 201,
+            CallLeft = 202,
+            RequestEndCall = 203,
+            IncomingCall = 204,
+            CallAccepted = 205,
 
-            CallRefused = 470,
-            UserDisconnected = 471,
+            CallRefused = 270,
+            UserDisconnected = 271,
         };
 
     private:
@@ -131,7 +131,7 @@ namespace BabelNetwork {
 
     public:
         [[nodiscard]] static std::shared_ptr<AResponse> NewCallStarted(const std::string &sender, const std::string &receiver, uint16_t call_id);
-        [[nodiscard]] static std::shared_ptr<AResponse> CallRequest(const std::string &sender, const std::string &receiver);
+        static std::shared_ptr<AResponse> CallRequest(const std::string &sender, const std::string &receiver);
         [[nodiscard]] static std::shared_ptr<AResponse> LeftCall(const std::string &sender, const std::string &receiver, uint16_t call_id);
         [[nodiscard]] static std::shared_ptr<AResponse> EndCallRequest(const std::string &sender, const std::string &receiver);
         [[nodiscard]] static std::shared_ptr<AResponse> CallIncoming(const std::string &sender, const std::string &receiver, uint16_t call_id);

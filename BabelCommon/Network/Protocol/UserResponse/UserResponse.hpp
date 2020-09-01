@@ -28,9 +28,9 @@ namespace BabelNetwork {
             UnknownUserError = 170,
             WrongLogin = 171,
             WrongPassword = 172,
-            RequestedAccountDeleted = 173, /* ? */
             LoginAlreadyTaken = 173,
             AlreadyLoggedIn = 174,
+            RequestedAccountDeleted = 175
         };
     public:
         enum MaxDataSize {
