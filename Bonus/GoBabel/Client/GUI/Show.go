@@ -9,11 +9,15 @@ import (
 const preferenceCurrentTab = "currentTab"
 
 func Show(gui *App.BabelGui) {
-	tabs := Screens.SetMenuSidebar(gui.BabelApp, gui.ClientContext)
-	tabs.SelectTabIndex(gui.App.Preferences().Int(preferenceCurrentTab))
-	gui.Win.SetContent(tabs)
-	gui.Win.Show()
+	//tabs := Screens.SetMenuSidebar(gui.BabelApp, gui.ClientContext)
+	//tabs.SelectTabIndex(gui.App.Preferences().Int(preferenceCurrentTab))
+	//gui.Win.SetContent(tabs)
+	//gui.Win.Show()
 	for {
+		tabs := Screens.SetMenuSidebar(gui.BabelApp, gui.ClientContext)
+		tabs.SelectTabIndex(gui.App.Preferences().Int(preferenceCurrentTab))
+		gui.Win.SetContent(tabs)
+		gui.Win.Show()
 		rq := gui.GuiCom.GetFromNetwork()
 		log.Println("GUI got From Network", rq)
 		//gui.Win.Show()

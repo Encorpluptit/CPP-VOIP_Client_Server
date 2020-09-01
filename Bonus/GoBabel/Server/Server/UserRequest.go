@@ -8,8 +8,6 @@ import (
 	"log"
 )
 
-var WrongUserDatas = errors.New("wrong userDatas")
-
 var userManager = map[uint16]func(*nw.Client, *nw.UserDatas) error{
 	nw.UserRqLogin:    LoginUser,
 	nw.UserRqLogout:   LogoutUser,
@@ -23,7 +21,7 @@ func UserManager(client *nw.Client, request *nw.Request) error {
 	}
 	userDatas, ok := request.Datas.(*nw.UserDatas)
 	if !ok {
-		return WrongUserDatas
+		return nw.WrongUserDatas
 	}
 	return fn(client, userDatas)
 }
