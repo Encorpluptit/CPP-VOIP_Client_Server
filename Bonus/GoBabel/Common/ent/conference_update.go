@@ -204,10 +204,10 @@ func (cu *ConferenceUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if nodes := cu.mutation.RemovedCallsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
+			Rel:     sqlgraph.O2M,
 			Inverse: false,
 			Table:   conference.CallsTable,
-			Columns: conference.CallsPrimaryKey,
+			Columns: []string{conference.CallsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -223,10 +223,10 @@ func (cu *ConferenceUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if nodes := cu.mutation.CallsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
+			Rel:     sqlgraph.O2M,
 			Inverse: false,
 			Table:   conference.CallsTable,
-			Columns: conference.CallsPrimaryKey,
+			Columns: []string{conference.CallsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -431,10 +431,10 @@ func (cuo *ConferenceUpdateOne) sqlSave(ctx context.Context) (c *Conference, err
 	}
 	if nodes := cuo.mutation.RemovedCallsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
+			Rel:     sqlgraph.O2M,
 			Inverse: false,
 			Table:   conference.CallsTable,
-			Columns: conference.CallsPrimaryKey,
+			Columns: []string{conference.CallsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -450,10 +450,10 @@ func (cuo *ConferenceUpdateOne) sqlSave(ctx context.Context) (c *Conference, err
 	}
 	if nodes := cuo.mutation.CallsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
+			Rel:     sqlgraph.O2M,
 			Inverse: false,
 			Table:   conference.CallsTable,
-			Columns: conference.CallsPrimaryKey,
+			Columns: []string{conference.CallsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{

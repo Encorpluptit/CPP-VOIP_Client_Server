@@ -23,31 +23,48 @@ var TestUsersDatas = []*ent.User{
 
 var TestCallDatas = []*ent.Call{
 	{Edges: ent.CallEdges{Participants: []*ent.User{TestUsersDatas[UDam], TestUsersDatas[UArthur]}}},
+	{Edges: ent.CallEdges{Participants: []*ent.User{TestUsersDatas[UDam], TestUsersDatas[UGreg]}}},
+	{Edges: ent.CallEdges{Participants: []*ent.User{TestUsersDatas[UDam], TestUsersDatas[UUgo]}}},
+	{Edges: ent.CallEdges{Participants: []*ent.User{TestUsersDatas[UDam], TestUsersDatas[UArthur]}}},
+	//{Edges: ent.CallEdges{Participants: []*ent.User{TestUsersDatas[UDam], TestUsersDatas[UArthur]}, Conference: TestConfDatas[0]}},
+	//{Edges: ent.CallEdges{Participants: []*ent.User{TestUsersDatas[UDam], TestUsersDatas[UGreg]}, Conference: TestConfDatas[0]}},
+	//{Edges: ent.CallEdges{Participants: []*ent.User{TestUsersDatas[UDam], TestUsersDatas[UUgo]}, Conference: TestConfDatas[1]}},
+	//{Edges: ent.CallEdges{Participants: []*ent.User{TestUsersDatas[UDam], TestUsersDatas[UArthur]}, Conference: TestConfDatas[1]}},
 }
 
 var TestConfDatas = []*ent.Conference{
 	{Edges: ent.ConferenceEdges{
-		Users: []*ent.User{TestUsersDatas[UDam], TestUsersDatas[UArthur]},
+		Users: []*ent.User{TestUsersDatas[UDam], TestUsersDatas[UArthur], TestUsersDatas[UGreg]},
+		Calls: []*ent.Call{TestCallDatas[0], TestCallDatas[1]},
+	}},
+	{Edges: ent.ConferenceEdges{
+		Users: []*ent.User{TestUsersDatas[UDam], TestUsersDatas[UArthur], TestUsersDatas[UUgo]},
+		Calls: []*ent.Call{TestCallDatas[2], TestCallDatas[3]},
+	}},
+	{Edges: ent.ConferenceEdges{
+		Users: nil,
 		Calls: nil,
 	}},
-	{Edges: ent.ConferenceEdges{}},
-	{Edges: ent.ConferenceEdges{}},
 }
 
 func PopulateDb() {
-	for _, user := range TestUsersDatas {
-		_, err := Database.CreateUser(user)
-		if err != nil {
-			log.Printf("failed creating user: %v\ns", err)
-		}
-	}
+	createUsers()
 }
 
 func createUsers() {
 	for _, user := range TestUsersDatas {
 		_, err := Database.CreateUser(user)
 		if err != nil {
-			log.Printf("failed creating user: %v\ns", err)
+			log.Printf("failed creating user: %v (user: %v)\n", err, user)
+		}
+	}
+}
+
+func createConfs() {
+	for _, conf := range TestConfDatas {
+		_, err := Database.CreateConference(conf.Edges.Users...)
+		if err != nil {
+			log.Printf("failed creating conference: %v (conf: %v)\n", err, conf)
 		}
 	}
 }

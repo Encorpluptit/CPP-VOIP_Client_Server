@@ -126,7 +126,7 @@ func HasCalls() predicate.Conference {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
 			sqlgraph.To(CallsTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2M, false, CallsTable, CallsPrimaryKey...),
+			sqlgraph.Edge(sqlgraph.O2M, false, CallsTable, CallsColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
@@ -138,7 +138,7 @@ func HasCallsWith(preds ...predicate.Call) predicate.Conference {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
 			sqlgraph.To(CallsInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2M, false, CallsTable, CallsPrimaryKey...),
+			sqlgraph.Edge(sqlgraph.O2M, false, CallsTable, CallsColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {

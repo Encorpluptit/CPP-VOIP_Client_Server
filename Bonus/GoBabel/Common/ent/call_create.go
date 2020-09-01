@@ -34,19 +34,23 @@ func (cc *CallCreate) SetFinishedAt(t time.Time) *CallCreate {
 	return cc
 }
 
-// AddConferenceIDs adds the conference edge to Conference by ids.
-func (cc *CallCreate) AddConferenceIDs(ids ...int) *CallCreate {
-	cc.mutation.AddConferenceIDs(ids...)
+// SetConferenceID sets the conference edge to Conference by id.
+func (cc *CallCreate) SetConferenceID(id int) *CallCreate {
+	cc.mutation.SetConferenceID(id)
 	return cc
 }
 
-// AddConference adds the conference edges to Conference.
-func (cc *CallCreate) AddConference(c ...*Conference) *CallCreate {
-	ids := make([]int, len(c))
-	for i := range c {
-		ids[i] = c[i].ID
+// SetNillableConferenceID sets the conference edge to Conference by id if the given value is not nil.
+func (cc *CallCreate) SetNillableConferenceID(id *int) *CallCreate {
+	if id != nil {
+		cc = cc.SetConferenceID(*id)
 	}
-	return cc.AddConferenceIDs(ids...)
+	return cc
+}
+
+// SetConference sets the conference edge to Conference.
+func (cc *CallCreate) SetConference(c *Conference) *CallCreate {
+	return cc.SetConferenceID(c.ID)
 }
 
 // AddParticipantIDs adds the participants edge to User by ids.
@@ -162,10 +166,10 @@ func (cc *CallCreate) createSpec() (*Call, *sqlgraph.CreateSpec) {
 	}
 	if nodes := cc.mutation.ConferenceIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
+			Rel:     sqlgraph.M2O,
 			Inverse: true,
 			Table:   call.ConferenceTable,
-			Columns: call.ConferencePrimaryKey,
+			Columns: []string{call.ConferenceColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{

@@ -38,8 +38,8 @@ type CallMutation struct {
 	started_at          *time.Time
 	finished_at         *time.Time
 	clearedFields       map[string]struct{}
-	conference          map[int]struct{}
-	removedconference   map[int]struct{}
+	conference          *int
+	clearedconference   bool
 	participants        map[int]struct{}
 	removedparticipants map[int]struct{}
 	done                bool
@@ -199,38 +199,35 @@ func (m *CallMutation) ResetFinishedAt() {
 	m.finished_at = nil
 }
 
-// AddConferenceIDs adds the conference edge to Conference by ids.
-func (m *CallMutation) AddConferenceIDs(ids ...int) {
-	if m.conference == nil {
-		m.conference = make(map[int]struct{})
-	}
-	for i := range ids {
-		m.conference[ids[i]] = struct{}{}
-	}
+// SetConferenceID sets the conference edge to Conference by id.
+func (m *CallMutation) SetConferenceID(id int) {
+	m.conference = &id
 }
 
-// RemoveConferenceIDs removes the conference edge to Conference by ids.
-func (m *CallMutation) RemoveConferenceIDs(ids ...int) {
-	if m.removedconference == nil {
-		m.removedconference = make(map[int]struct{})
-	}
-	for i := range ids {
-		m.removedconference[ids[i]] = struct{}{}
-	}
+// ClearConference clears the conference edge to Conference.
+func (m *CallMutation) ClearConference() {
+	m.clearedconference = true
 }
 
-// RemovedConference returns the removed ids of conference.
-func (m *CallMutation) RemovedConferenceIDs() (ids []int) {
-	for id := range m.removedconference {
-		ids = append(ids, id)
+// ConferenceCleared returns if the edge conference was cleared.
+func (m *CallMutation) ConferenceCleared() bool {
+	return m.clearedconference
+}
+
+// ConferenceID returns the conference id in the mutation.
+func (m *CallMutation) ConferenceID() (id int, exists bool) {
+	if m.conference != nil {
+		return *m.conference, true
 	}
 	return
 }
 
 // ConferenceIDs returns the conference ids in the mutation.
+// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
+// ConferenceID instead. It exists only for internal usage by the builders.
 func (m *CallMutation) ConferenceIDs() (ids []int) {
-	for id := range m.conference {
-		ids = append(ids, id)
+	if id := m.conference; id != nil {
+		ids = append(ids, *id)
 	}
 	return
 }
@@ -238,7 +235,7 @@ func (m *CallMutation) ConferenceIDs() (ids []int) {
 // ResetConference reset all changes of the "conference" edge.
 func (m *CallMutation) ResetConference() {
 	m.conference = nil
-	m.removedconference = nil
+	m.clearedconference = false
 }
 
 // AddParticipantIDs adds the participants edge to User by ids.
@@ -430,11 +427,9 @@ func (m *CallMutation) AddedEdges() []string {
 func (m *CallMutation) AddedIDs(name string) []ent.Value {
 	switch name {
 	case call.EdgeConference:
-		ids := make([]ent.Value, 0, len(m.conference))
-		for id := range m.conference {
-			ids = append(ids, id)
+		if id := m.conference; id != nil {
+			return []ent.Value{*id}
 		}
-		return ids
 	case call.EdgeParticipants:
 		ids := make([]ent.Value, 0, len(m.participants))
 		for id := range m.participants {
@@ -449,9 +444,6 @@ func (m *CallMutation) AddedIDs(name string) []ent.Value {
 // mutation.
 func (m *CallMutation) RemovedEdges() []string {
 	edges := make([]string, 0, 2)
-	if m.removedconference != nil {
-		edges = append(edges, call.EdgeConference)
-	}
 	if m.removedparticipants != nil {
 		edges = append(edges, call.EdgeParticipants)
 	}
@@ -462,12 +454,6 @@ func (m *CallMutation) RemovedEdges() []string {
 // the given edge name.
 func (m *CallMutation) RemovedIDs(name string) []ent.Value {
 	switch name {
-	case call.EdgeConference:
-		ids := make([]ent.Value, 0, len(m.removedconference))
-		for id := range m.removedconference {
-			ids = append(ids, id)
-		}
-		return ids
 	case call.EdgeParticipants:
 		ids := make([]ent.Value, 0, len(m.removedparticipants))
 		for id := range m.removedparticipants {
@@ -482,6 +468,9 @@ func (m *CallMutation) RemovedIDs(name string) []ent.Value {
 // mutation.
 func (m *CallMutation) ClearedEdges() []string {
 	edges := make([]string, 0, 2)
+	if m.clearedconference {
+		edges = append(edges, call.EdgeConference)
+	}
 	return edges
 }
 
@@ -489,6 +478,8 @@ func (m *CallMutation) ClearedEdges() []string {
 // cleared in this mutation.
 func (m *CallMutation) EdgeCleared(name string) bool {
 	switch name {
+	case call.EdgeConference:
+		return m.clearedconference
 	}
 	return false
 }
@@ -497,6 +488,9 @@ func (m *CallMutation) EdgeCleared(name string) bool {
 // error if the edge name is not defined in the schema.
 func (m *CallMutation) ClearEdge(name string) error {
 	switch name {
+	case call.EdgeConference:
+		m.ClearConference()
+		return nil
 	}
 	return fmt.Errorf("unknown Call unique edge %s", name)
 }

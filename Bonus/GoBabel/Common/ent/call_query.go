@@ -29,6 +29,7 @@ type CallQuery struct {
 	// eager-loading edges.
 	withConference   *ConferenceQuery
 	withParticipants *UserQuery
+	withFKs          bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -68,7 +69,7 @@ func (cq *CallQuery) QueryConference() *ConferenceQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(call.Table, call.FieldID, cq.sqlQuery()),
 			sqlgraph.To(conference.Table, conference.FieldID),
-			sqlgraph.Edge(sqlgraph.M2M, true, call.ConferenceTable, call.ConferencePrimaryKey...),
+			sqlgraph.Edge(sqlgraph.M2O, true, call.ConferenceTable, call.ConferenceColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(cq.driver.Dialect(), step)
 		return fromU, nil
@@ -360,16 +361,26 @@ func (cq *CallQuery) prepareQuery(ctx context.Context) error {
 func (cq *CallQuery) sqlAll(ctx context.Context) ([]*Call, error) {
 	var (
 		nodes       = []*Call{}
+		withFKs     = cq.withFKs
 		_spec       = cq.querySpec()
 		loadedTypes = [2]bool{
 			cq.withConference != nil,
 			cq.withParticipants != nil,
 		}
 	)
+	if cq.withConference != nil {
+		withFKs = true
+	}
+	if withFKs {
+		_spec.Node.Columns = append(_spec.Node.Columns, call.ForeignKeys...)
+	}
 	_spec.ScanValues = func() []interface{} {
 		node := &Call{config: cq.config}
 		nodes = append(nodes, node)
 		values := node.scanValues()
+		if withFKs {
+			values = append(values, node.fkValues()...)
+		}
 		return values
 	}
 	_spec.Assign = func(values ...interface{}) error {
@@ -388,64 +399,26 @@ func (cq *CallQuery) sqlAll(ctx context.Context) ([]*Call, error) {
 	}
 
 	if query := cq.withConference; query != nil {
-		fks := make([]driver.Value, 0, len(nodes))
-		ids := make(map[int]*Call, len(nodes))
-		for _, node := range nodes {
-			ids[node.ID] = node
-			fks = append(fks, node.ID)
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*Call)
+		for i := range nodes {
+			if fk := nodes[i].conference_calls; fk != nil {
+				ids = append(ids, *fk)
+				nodeids[*fk] = append(nodeids[*fk], nodes[i])
+			}
 		}
-		var (
-			edgeids []int
-			edges   = make(map[int][]*Call)
-		)
-		_spec := &sqlgraph.EdgeQuerySpec{
-			Edge: &sqlgraph.EdgeSpec{
-				Inverse: true,
-				Table:   call.ConferenceTable,
-				Columns: call.ConferencePrimaryKey,
-			},
-			Predicate: func(s *sql.Selector) {
-				s.Where(sql.InValues(call.ConferencePrimaryKey[1], fks...))
-			},
-
-			ScanValues: func() [2]interface{} {
-				return [2]interface{}{&sql.NullInt64{}, &sql.NullInt64{}}
-			},
-			Assign: func(out, in interface{}) error {
-				eout, ok := out.(*sql.NullInt64)
-				if !ok || eout == nil {
-					return fmt.Errorf("unexpected id value for edge-out")
-				}
-				ein, ok := in.(*sql.NullInt64)
-				if !ok || ein == nil {
-					return fmt.Errorf("unexpected id value for edge-in")
-				}
-				outValue := int(eout.Int64)
-				inValue := int(ein.Int64)
-				node, ok := ids[outValue]
-				if !ok {
-					return fmt.Errorf("unexpected node id in edges: %v", outValue)
-				}
-				edgeids = append(edgeids, inValue)
-				edges[inValue] = append(edges[inValue], node)
-				return nil
-			},
-		}
-		if err := sqlgraph.QueryEdges(ctx, cq.driver, _spec); err != nil {
-			return nil, fmt.Errorf(`query edges "conference": %v`, err)
-		}
-		query.Where(conference.IDIn(edgeids...))
+		query.Where(conference.IDIn(ids...))
 		neighbors, err := query.All(ctx)
 		if err != nil {
 			return nil, err
 		}
 		for _, n := range neighbors {
-			nodes, ok := edges[n.ID]
+			nodes, ok := nodeids[n.ID]
 			if !ok {
-				return nil, fmt.Errorf(`unexpected "conference" node returned %v`, n.ID)
+				return nil, fmt.Errorf(`unexpected foreign-key "conference_calls" returned %v`, n.ID)
 			}
 			for i := range nodes {
-				nodes[i].Edges.Conference = append(nodes[i].Edges.Conference, n)
+				nodes[i].Edges.Conference = n
 			}
 		}
 	}

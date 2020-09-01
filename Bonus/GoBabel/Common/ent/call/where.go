@@ -265,7 +265,7 @@ func HasConference() predicate.Call {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
 			sqlgraph.To(ConferenceTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2M, true, ConferenceTable, ConferencePrimaryKey...),
+			sqlgraph.Edge(sqlgraph.M2O, true, ConferenceTable, ConferenceColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
@@ -277,7 +277,7 @@ func HasConferenceWith(preds ...predicate.Conference) predicate.Call {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
 			sqlgraph.To(ConferenceInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2M, true, ConferenceTable, ConferencePrimaryKey...),
+			sqlgraph.Edge(sqlgraph.M2O, true, ConferenceTable, ConferenceColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {

@@ -4,6 +4,7 @@ package ent
 
 import (
 	"GoBabel/Common/ent/call"
+	"GoBabel/Common/ent/conference"
 	"fmt"
 	"strings"
 	"time"
@@ -22,13 +23,14 @@ type Call struct {
 	FinishedAt time.Time `json:"finished_at,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the CallQuery when eager-loading is set.
-	Edges CallEdges `json:"edges"`
+	Edges            CallEdges `json:"edges"`
+	conference_calls *int
 }
 
 // CallEdges holds the relations/edges for other nodes in the graph.
 type CallEdges struct {
 	// Conference holds the value of the conference edge.
-	Conference []*Conference
+	Conference *Conference
 	// Participants holds the value of the participants edge.
 	Participants []*User
 	// loadedTypes holds the information for reporting if a
@@ -37,9 +39,14 @@ type CallEdges struct {
 }
 
 // ConferenceOrErr returns the Conference value or an error if the edge
-// was not loaded in eager-loading.
-func (e CallEdges) ConferenceOrErr() ([]*Conference, error) {
+// was not loaded in eager-loading, or loaded but was not found.
+func (e CallEdges) ConferenceOrErr() (*Conference, error) {
 	if e.loadedTypes[0] {
+		if e.Conference == nil {
+			// The edge conference was loaded in eager-loading,
+			// but was not found.
+			return nil, &NotFoundError{label: conference.Label}
+		}
 		return e.Conference, nil
 	}
 	return nil, &NotLoadedError{edge: "conference"}
@@ -60,6 +67,13 @@ func (*Call) scanValues() []interface{} {
 		&sql.NullInt64{}, // id
 		&sql.NullTime{},  // started_at
 		&sql.NullTime{},  // finished_at
+	}
+}
+
+// fkValues returns the types for scanning foreign-keys values from sql.Rows.
+func (*Call) fkValues() []interface{} {
+	return []interface{}{
+		&sql.NullInt64{}, // conference_calls
 	}
 }
 
@@ -84,6 +98,15 @@ func (c *Call) assignValues(values ...interface{}) error {
 		return fmt.Errorf("unexpected type %T for field finished_at", values[1])
 	} else if value.Valid {
 		c.FinishedAt = value.Time
+	}
+	values = values[2:]
+	if len(values) == len(call.ForeignKeys) {
+		if value, ok := values[0].(*sql.NullInt64); !ok {
+			return fmt.Errorf("unexpected type %T for edge-field conference_calls", value)
+		} else if value.Valid {
+			c.conference_calls = new(int)
+			*c.conference_calls = int(value.Int64)
+		}
 	}
 	return nil
 }

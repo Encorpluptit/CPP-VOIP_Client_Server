@@ -30,7 +30,7 @@ run-client: client
 	@./$(CLIENT_BIN) $(filter-out $@,$(MAKECMDGOALS))
 
 tests_run:
-	@go test -coverpkg=./... ./tests
+	@go test -v -coverpkg=./... ./tests
 
 clean:
 

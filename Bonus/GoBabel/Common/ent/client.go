@@ -222,7 +222,7 @@ func (c *CallClient) QueryConference(ca *Call) *ConferenceQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(call.Table, call.FieldID, id),
 			sqlgraph.To(conference.Table, conference.FieldID),
-			sqlgraph.Edge(sqlgraph.M2M, true, call.ConferenceTable, call.ConferencePrimaryKey...),
+			sqlgraph.Edge(sqlgraph.M2O, true, call.ConferenceTable, call.ConferenceColumn),
 		)
 		fromV = sqlgraph.Neighbors(ca.driver.Dialect(), step)
 		return fromV, nil
@@ -358,7 +358,7 @@ func (c *ConferenceClient) QueryCalls(co *Conference) *CallQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(conference.Table, conference.FieldID, id),
 			sqlgraph.To(call.Table, call.FieldID),
-			sqlgraph.Edge(sqlgraph.M2M, false, conference.CallsTable, conference.CallsPrimaryKey...),
+			sqlgraph.Edge(sqlgraph.O2M, false, conference.CallsTable, conference.CallsColumn),
 		)
 		fromV = sqlgraph.Neighbors(co.driver.Dialect(), step)
 		return fromV, nil

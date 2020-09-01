@@ -145,10 +145,10 @@ func (cc *ConferenceCreate) createSpec() (*Conference, *sqlgraph.CreateSpec) {
 	}
 	if nodes := cc.mutation.CallsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
+			Rel:     sqlgraph.O2M,
 			Inverse: false,
 			Table:   conference.CallsTable,
-			Columns: conference.CallsPrimaryKey,
+			Columns: []string{conference.CallsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{

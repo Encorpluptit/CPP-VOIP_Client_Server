@@ -20,11 +20,13 @@ const (
 	// UsersInverseTable is the table name for the User entity.
 	// It exists in this package in order to avoid circular dependency with the "user" package.
 	UsersInverseTable = "users"
-	// CallsTable is the table the holds the calls relation/edge. The primary key declared below.
-	CallsTable = "conference_calls"
+	// CallsTable is the table the holds the calls relation/edge.
+	CallsTable = "calls"
 	// CallsInverseTable is the table name for the Call entity.
 	// It exists in this package in order to avoid circular dependency with the "call" package.
 	CallsInverseTable = "calls"
+	// CallsColumn is the table column denoting the calls relation/edge.
+	CallsColumn = "conference_calls"
 )
 
 // Columns holds all SQL columns for conference fields.
@@ -36,7 +38,4 @@ var (
 	// UsersPrimaryKey and UsersColumn2 are the table columns denoting the
 	// primary key for the users relation (M2M).
 	UsersPrimaryKey = []string{"user_id", "conference_id"}
-	// CallsPrimaryKey and CallsColumn2 are the table columns denoting the
-	// primary key for the calls relation (M2M).
-	CallsPrimaryKey = []string{"conference_id", "call_id"}
 )

@@ -19,11 +19,13 @@ const (
 
 	// Table holds the table name of the call in the database.
 	Table = "calls"
-	// ConferenceTable is the table the holds the conference relation/edge. The primary key declared below.
-	ConferenceTable = "conference_calls"
+	// ConferenceTable is the table the holds the conference relation/edge.
+	ConferenceTable = "calls"
 	// ConferenceInverseTable is the table name for the Conference entity.
 	// It exists in this package in order to avoid circular dependency with the "conference" package.
 	ConferenceInverseTable = "conferences"
+	// ConferenceColumn is the table column denoting the conference relation/edge.
+	ConferenceColumn = "conference_calls"
 	// ParticipantsTable is the table the holds the participants relation/edge. The primary key declared below.
 	ParticipantsTable = "user_calls"
 	// ParticipantsInverseTable is the table name for the User entity.
@@ -38,10 +40,12 @@ var Columns = []string{
 	FieldFinishedAt,
 }
 
+// ForeignKeys holds the SQL foreign-keys that are owned by the Call type.
+var ForeignKeys = []string{
+	"conference_calls",
+}
+
 var (
-	// ConferencePrimaryKey and ConferenceColumn2 are the table columns denoting the
-	// primary key for the conference relation (M2M).
-	ConferencePrimaryKey = []string{"conference_id", "call_id"}
 	// ParticipantsPrimaryKey and ParticipantsColumn2 are the table columns denoting the
 	// primary key for the participants relation (M2M).
 	ParticipantsPrimaryKey = []string{"user_id", "call_id"}

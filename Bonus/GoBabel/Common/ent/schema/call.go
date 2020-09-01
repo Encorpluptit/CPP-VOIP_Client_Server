@@ -22,7 +22,7 @@ func (Call) Fields() []ent.Field {
 // Edges of the Call.
 func (Call) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.From("conference", Conference.Type).Ref("calls"),
+		edge.From("conference", Conference.Type).Ref("calls").Unique(),
 		edge.From("participants", User.Type).Ref("calls"),
 	}
 }

@@ -42,19 +42,23 @@ func (cu *CallUpdate) SetFinishedAt(t time.Time) *CallUpdate {
 	return cu
 }
 
-// AddConferenceIDs adds the conference edge to Conference by ids.
-func (cu *CallUpdate) AddConferenceIDs(ids ...int) *CallUpdate {
-	cu.mutation.AddConferenceIDs(ids...)
+// SetConferenceID sets the conference edge to Conference by id.
+func (cu *CallUpdate) SetConferenceID(id int) *CallUpdate {
+	cu.mutation.SetConferenceID(id)
 	return cu
 }
 
-// AddConference adds the conference edges to Conference.
-func (cu *CallUpdate) AddConference(c ...*Conference) *CallUpdate {
-	ids := make([]int, len(c))
-	for i := range c {
-		ids[i] = c[i].ID
+// SetNillableConferenceID sets the conference edge to Conference by id if the given value is not nil.
+func (cu *CallUpdate) SetNillableConferenceID(id *int) *CallUpdate {
+	if id != nil {
+		cu = cu.SetConferenceID(*id)
 	}
-	return cu.AddConferenceIDs(ids...)
+	return cu
+}
+
+// SetConference sets the conference edge to Conference.
+func (cu *CallUpdate) SetConference(c *Conference) *CallUpdate {
+	return cu.SetConferenceID(c.ID)
 }
 
 // AddParticipantIDs adds the participants edge to User by ids.
@@ -77,19 +81,10 @@ func (cu *CallUpdate) Mutation() *CallMutation {
 	return cu.mutation
 }
 
-// RemoveConferenceIDs removes the conference edge to Conference by ids.
-func (cu *CallUpdate) RemoveConferenceIDs(ids ...int) *CallUpdate {
-	cu.mutation.RemoveConferenceIDs(ids...)
+// ClearConference clears the conference edge to Conference.
+func (cu *CallUpdate) ClearConference() *CallUpdate {
+	cu.mutation.ClearConference()
 	return cu
-}
-
-// RemoveConference removes conference edges to Conference.
-func (cu *CallUpdate) RemoveConference(c ...*Conference) *CallUpdate {
-	ids := make([]int, len(c))
-	for i := range c {
-		ids[i] = c[i].ID
-	}
-	return cu.RemoveConferenceIDs(ids...)
 }
 
 // RemoveParticipantIDs removes the participants edge to User by ids.
@@ -191,12 +186,12 @@ func (cu *CallUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: call.FieldFinishedAt,
 		})
 	}
-	if nodes := cu.mutation.RemovedConferenceIDs(); len(nodes) > 0 {
+	if cu.mutation.ConferenceCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
+			Rel:     sqlgraph.M2O,
 			Inverse: true,
 			Table:   call.ConferenceTable,
-			Columns: call.ConferencePrimaryKey,
+			Columns: []string{call.ConferenceColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -205,17 +200,14 @@ func (cu *CallUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				},
 			},
 		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := cu.mutation.ConferenceIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
+			Rel:     sqlgraph.M2O,
 			Inverse: true,
 			Table:   call.ConferenceTable,
-			Columns: call.ConferencePrimaryKey,
+			Columns: []string{call.ConferenceColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -297,19 +289,23 @@ func (cuo *CallUpdateOne) SetFinishedAt(t time.Time) *CallUpdateOne {
 	return cuo
 }
 
-// AddConferenceIDs adds the conference edge to Conference by ids.
-func (cuo *CallUpdateOne) AddConferenceIDs(ids ...int) *CallUpdateOne {
-	cuo.mutation.AddConferenceIDs(ids...)
+// SetConferenceID sets the conference edge to Conference by id.
+func (cuo *CallUpdateOne) SetConferenceID(id int) *CallUpdateOne {
+	cuo.mutation.SetConferenceID(id)
 	return cuo
 }
 
-// AddConference adds the conference edges to Conference.
-func (cuo *CallUpdateOne) AddConference(c ...*Conference) *CallUpdateOne {
-	ids := make([]int, len(c))
-	for i := range c {
-		ids[i] = c[i].ID
+// SetNillableConferenceID sets the conference edge to Conference by id if the given value is not nil.
+func (cuo *CallUpdateOne) SetNillableConferenceID(id *int) *CallUpdateOne {
+	if id != nil {
+		cuo = cuo.SetConferenceID(*id)
 	}
-	return cuo.AddConferenceIDs(ids...)
+	return cuo
+}
+
+// SetConference sets the conference edge to Conference.
+func (cuo *CallUpdateOne) SetConference(c *Conference) *CallUpdateOne {
+	return cuo.SetConferenceID(c.ID)
 }
 
 // AddParticipantIDs adds the participants edge to User by ids.
@@ -332,19 +328,10 @@ func (cuo *CallUpdateOne) Mutation() *CallMutation {
 	return cuo.mutation
 }
 
-// RemoveConferenceIDs removes the conference edge to Conference by ids.
-func (cuo *CallUpdateOne) RemoveConferenceIDs(ids ...int) *CallUpdateOne {
-	cuo.mutation.RemoveConferenceIDs(ids...)
+// ClearConference clears the conference edge to Conference.
+func (cuo *CallUpdateOne) ClearConference() *CallUpdateOne {
+	cuo.mutation.ClearConference()
 	return cuo
-}
-
-// RemoveConference removes conference edges to Conference.
-func (cuo *CallUpdateOne) RemoveConference(c ...*Conference) *CallUpdateOne {
-	ids := make([]int, len(c))
-	for i := range c {
-		ids[i] = c[i].ID
-	}
-	return cuo.RemoveConferenceIDs(ids...)
 }
 
 // RemoveParticipantIDs removes the participants edge to User by ids.
@@ -444,12 +431,12 @@ func (cuo *CallUpdateOne) sqlSave(ctx context.Context) (c *Call, err error) {
 			Column: call.FieldFinishedAt,
 		})
 	}
-	if nodes := cuo.mutation.RemovedConferenceIDs(); len(nodes) > 0 {
+	if cuo.mutation.ConferenceCleared() {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
+			Rel:     sqlgraph.M2O,
 			Inverse: true,
 			Table:   call.ConferenceTable,
-			Columns: call.ConferencePrimaryKey,
+			Columns: []string{call.ConferenceColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -458,17 +445,14 @@ func (cuo *CallUpdateOne) sqlSave(ctx context.Context) (c *Call, err error) {
 				},
 			},
 		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
 	if nodes := cuo.mutation.ConferenceIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.M2M,
+			Rel:     sqlgraph.M2O,
 			Inverse: true,
 			Table:   call.ConferenceTable,
-			Columns: call.ConferencePrimaryKey,
+			Columns: []string{call.ConferenceColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{

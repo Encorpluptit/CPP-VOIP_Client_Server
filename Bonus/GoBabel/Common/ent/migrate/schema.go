@@ -13,13 +13,22 @@ var (
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "started_at", Type: field.TypeTime},
 		{Name: "finished_at", Type: field.TypeTime},
+		{Name: "conference_calls", Type: field.TypeInt, Nullable: true},
 	}
 	// CallsTable holds the schema information for the "calls" table.
 	CallsTable = &schema.Table{
-		Name:        "calls",
-		Columns:     CallsColumns,
-		PrimaryKey:  []*schema.Column{CallsColumns[0]},
-		ForeignKeys: []*schema.ForeignKey{},
+		Name:       "calls",
+		Columns:    CallsColumns,
+		PrimaryKey: []*schema.Column{CallsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:  "calls_conferences_calls",
+				Columns: []*schema.Column{CallsColumns[3]},
+
+				RefColumns: []*schema.Column{ConferencesColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
 	}
 	// ConferencesColumns holds the columns for the "conferences" table.
 	ConferencesColumns = []*schema.Column{
@@ -44,33 +53,6 @@ var (
 		Columns:     UsersColumns,
 		PrimaryKey:  []*schema.Column{UsersColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{},
-	}
-	// ConferenceCallsColumns holds the columns for the "conference_calls" table.
-	ConferenceCallsColumns = []*schema.Column{
-		{Name: "conference_id", Type: field.TypeInt},
-		{Name: "call_id", Type: field.TypeInt},
-	}
-	// ConferenceCallsTable holds the schema information for the "conference_calls" table.
-	ConferenceCallsTable = &schema.Table{
-		Name:       "conference_calls",
-		Columns:    ConferenceCallsColumns,
-		PrimaryKey: []*schema.Column{ConferenceCallsColumns[0], ConferenceCallsColumns[1]},
-		ForeignKeys: []*schema.ForeignKey{
-			{
-				Symbol:  "conference_calls_conference_id",
-				Columns: []*schema.Column{ConferenceCallsColumns[0]},
-
-				RefColumns: []*schema.Column{ConferencesColumns[0]},
-				OnDelete:   schema.Cascade,
-			},
-			{
-				Symbol:  "conference_calls_call_id",
-				Columns: []*schema.Column{ConferenceCallsColumns[1]},
-
-				RefColumns: []*schema.Column{CallsColumns[0]},
-				OnDelete:   schema.Cascade,
-			},
-		},
 	}
 	// UserConferencesColumns holds the columns for the "user_conferences" table.
 	UserConferencesColumns = []*schema.Column{
@@ -131,15 +113,13 @@ var (
 		CallsTable,
 		ConferencesTable,
 		UsersTable,
-		ConferenceCallsTable,
 		UserConferencesTable,
 		UserCallsTable,
 	}
 )
 
 func init() {
-	ConferenceCallsTable.ForeignKeys[0].RefTable = ConferencesTable
-	ConferenceCallsTable.ForeignKeys[1].RefTable = CallsTable
+	CallsTable.ForeignKeys[0].RefTable = ConferencesTable
 	UserConferencesTable.ForeignKeys[0].RefTable = UsersTable
 	UserConferencesTable.ForeignKeys[1].RefTable = ConferencesTable
 	UserCallsTable.ForeignKeys[0].RefTable = UsersTable
