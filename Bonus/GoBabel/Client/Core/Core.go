@@ -90,20 +90,20 @@ func (c *Core) WaitServerRequest() {
 			break
 		}
 		log.Println("Network got", rq)
-		rqManager, err := getRequestManager(rq)
-		if err != nil {
-			log.Println(err)
-			continue
-		}
-		if err := rqManager(c, rq); err != nil {
-			log.Println(err)
-			continue
-		}
-
-		//if rqManager, err := getRequestManager(rq); err != nil || rqManager(c, rq) != nil {
+		//rqManager, err := getRequestManager(rq)
+		//if err != nil {
 		//	log.Println(err)
 		//	continue
 		//}
+		//if err := rqManager(c, rq); err != nil {
+		//	log.Println(err)
+		//	continue
+		//}
+
+		if rqManager, err := getRequestManager(rq); err != nil || rqManager(c, rq) != nil {
+			log.Println(err)
+			continue
+		}
 
 		//c.GuiCom.SendToGui(rq)
 		//rqManager, err := RequestManagerGetter(rq)
