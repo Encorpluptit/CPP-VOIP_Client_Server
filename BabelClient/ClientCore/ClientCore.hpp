@@ -22,7 +22,7 @@ namespace BabelClient {
     class ClientCore final : virtual public BabelUtils::ARunnable {
         /* <- Constructor - Destructor -> */
     public:
-        ClientCore(char **av);
+        explicit ClientCore(char **av);
 
         ~ClientCore() final;
 
@@ -68,7 +68,7 @@ namespace BabelClient {
 
         /* <- Private Methods -> */
     private:
-        void init();
+//        void init();
 
         void initSocket(char **av);
 

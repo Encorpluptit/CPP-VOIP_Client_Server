@@ -242,10 +242,10 @@ void BabelClient::ClientCore::stop()
     _socket->stop();
 }
 
-void BabelClient::ClientCore::init()
-{
-
-}
+//void BabelClient::ClientCore::init()
+//{
+//
+//}
 
 void BabelClient::ClientCore::initSocket(char **av)
 {
