@@ -1,4 +1,4 @@
-package tests
+package Save
 
 import (
 	"GoBabel/Common/ent"
@@ -14,8 +14,6 @@ var TestsUsers = []*ent.User{
 }
 
 func TestUserCreation(t *testing.T) {
-	DbTearDown := InitDb()
-	defer DbTearDown()
 	for _, user := range TestsUsers {
 		u, err := Database.CreateUser(user)
 		if err != nil {
@@ -23,6 +21,12 @@ func TestUserCreation(t *testing.T) {
 		}
 		if !checkUser(user, u) {
 			t.Errorf("User Datas not valids")
+		}
+	}
+	for _, user := range TestsUsers {
+		err := Database.DeleteUser(user)
+		if err != nil {
+			t.Error(err)
 		}
 	}
 }

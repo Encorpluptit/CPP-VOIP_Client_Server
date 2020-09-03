@@ -33,3 +33,11 @@ func QueryUser(requestedUser *ent.User) (*ent.User, error) {
 	log.Println("user returned: ", u)
 	return u, nil
 }
+
+func DeleteUser(requestedUser *ent.User) error {
+	_, err := ServerDb.Client.User.Delete().Exec(ServerDb.Ctx)
+	if err != nil {
+		return fmt.Errorf("failed deleting user: %v", err)
+	}
+	return nil
+}

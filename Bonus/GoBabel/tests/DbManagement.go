@@ -14,59 +14,70 @@ const (
 	UUgo
 )
 
-var TestUsersDatas = []*ent.User{
-	{Login: "damien.bernard@epitech.eu", Password: "1234AB_cd666"},
-	{Login: "gregoire.brasseur@epitech.eu", Password: "1234AB_cd666"},
-	{Login: "arthur.benard@epitech.eu", Password: "1234AB_cd666"},
-	{Login: "ugo.levi-cescutti@epitech.eu", Password: "1234AB_cd666"},
-}
-
-var TestCallDatas = []*ent.Call{
-	{Edges: ent.CallEdges{Participants: []*ent.User{TestUsersDatas[UDam], TestUsersDatas[UArthur]}}},
-	{Edges: ent.CallEdges{Participants: []*ent.User{TestUsersDatas[UDam], TestUsersDatas[UGreg]}}},
-	{Edges: ent.CallEdges{Participants: []*ent.User{TestUsersDatas[UDam], TestUsersDatas[UUgo]}}},
-	{Edges: ent.CallEdges{Participants: []*ent.User{TestUsersDatas[UDam], TestUsersDatas[UArthur]}}},
-	//{Edges: ent.CallEdges{Participants: []*ent.User{TestUsersDatas[UDam], TestUsersDatas[UArthur]}, Conference: TestConfDatas[0]}},
-	//{Edges: ent.CallEdges{Participants: []*ent.User{TestUsersDatas[UDam], TestUsersDatas[UGreg]}, Conference: TestConfDatas[0]}},
-	//{Edges: ent.CallEdges{Participants: []*ent.User{TestUsersDatas[UDam], TestUsersDatas[UUgo]}, Conference: TestConfDatas[1]}},
-	//{Edges: ent.CallEdges{Participants: []*ent.User{TestUsersDatas[UDam], TestUsersDatas[UArthur]}, Conference: TestConfDatas[1]}},
-}
-
-var TestConfDatas = []*ent.Conference{
-	{Edges: ent.ConferenceEdges{
-		Users: []*ent.User{TestUsersDatas[UDam], TestUsersDatas[UArthur], TestUsersDatas[UGreg]},
-		Calls: []*ent.Call{TestCallDatas[0], TestCallDatas[1]},
-	}},
-	{Edges: ent.ConferenceEdges{
-		Users: []*ent.User{TestUsersDatas[UDam], TestUsersDatas[UArthur], TestUsersDatas[UUgo]},
-		Calls: []*ent.Call{TestCallDatas[2], TestCallDatas[3]},
-	}},
-	{Edges: ent.ConferenceEdges{
-		Users: nil,
-		Calls: nil,
-	}},
-}
-
-func init() {
-	log.Println("TESTING INI FCT")
-}
-
+//
+//func init() {
+//	cleanup := func() {
+//		err := os.Remove(Database.TestDBFile)
+//		if err != nil {
+//			log.Println(err)
+//		}
+//	}
+//	cleanup()
+//	_ = Database.Init(Database.TestDBFile)
+//	//TestDbCloser := func() {
+//	//	dbCloser()
+//	//	cleanup()
+//	//}
+//	log.Println("TESTING INI FCT")
+//}
+//
 func PopulateDb() {
+	f := InitDb()
+	defer f()
 	createUsers()
+	createConfs()
+}
+
+type UserPtr struct {
+	Ptr **ent.User
+}
+
+var TestUsers = []*ent.User{
+	{Login: "damien.bernard@epitech.eu", Password: "1234AB_cd666"},
+	//{Login: "gregoire.brasseur@epitech.eu", Password: "1234AB_cd666"},
+	//{Login: "arthur.benard@epitech.eu", Password: "1234AB_cd666"},
+	//{Login: "ugo.levi-cescutti@epitech.eu", Password: "1234AB_cd666"},
+}
+
+var TestConf = []*ent.Conference{
+	{Edges: ent.ConferenceEdges{
+		Users: []*ent.User{TestUsers[UDam], TestUsers[UArthur], TestUsers[UGreg]},
+		//Calls: []*ent.Call{TestCallDataset[0], TestCallDataset[1]},
+	}},
+	{Edges: ent.ConferenceEdges{
+		Users: []*ent.User{TestUsers[UDam], TestUsers[UArthur], TestUsers[UUgo]},
+		//Calls: []*ent.Call{TestCallDataset[2], TestCallDataset[3]},
+	}},
+	//{Edges: ent.ConferenceEdges{
+	//	Users: nil,
+	//	Calls: nil,
+	//}},
 }
 
 func createUsers() {
-	for _, user := range TestUsersDatas {
-		_, err := Database.CreateUser(user)
+	for idx, user := range TestUsers {
+		u, err := Database.CreateUser(user)
 		if err != nil {
 			log.Printf("failed creating user: %v (user: %v)\n", err, user)
+		} else {
+			TestUsers[idx] = u
 		}
 	}
 }
 
 func createConfs() {
-	for _, conf := range TestConfDatas {
-		_, err := Database.CreateConference(conf.Edges.Users...)
+	for _, conf := range TestConf {
+		conf, err := Database.CreateConference(conf.Edges.Users...)
 		if err != nil {
 			log.Printf("failed creating conference: %v (conf: %v)\n", err, conf)
 		}
