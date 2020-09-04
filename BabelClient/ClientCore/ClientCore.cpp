@@ -214,7 +214,7 @@ void BabelClient::ClientCore::checkTypeResponse(std::shared_ptr<BabelNetwork::AR
 void BabelClient::ClientCore::run()
 {
     std::string data;
-    std::shared_ptr<BabelNetwork::AResponse> response;
+    std::shared_ptr<BabelNetwork::AResponse> response = nullptr;
 
     while (1) {
         std::getline(std::cin, data);
@@ -233,6 +233,7 @@ void BabelClient::ClientCore::run()
         }
         if (response != nullptr) {
             checkTypeResponse(response);
+            _socket->sendResponse(response);
         }
     }
 }

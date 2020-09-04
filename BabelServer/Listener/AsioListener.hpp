@@ -9,11 +9,12 @@
 #define CPP_BABEL_2020_ASIOLISTENER_HPP
 
 #include "AsioClientSocket.hpp"
+#include "Listener.hpp"
 
 namespace BabelServer {
     using namespace boost::asio;
 
-    class AsioListener final : public BabelNetwork::ASocket {
+    class AsioListener final : public BabelServer::Listener {
 
         /* <- Constructor - Destructor -> */
     public:
@@ -48,6 +49,13 @@ namespace BabelServer {
         [[nodiscard]] const ip::tcp::acceptor &getAcceptor() const;
 
         [[nodiscard]] const signal_set &getSignals() const;
+
+        std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>> getClientList() final {
+            return std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>>(_asioClients.begin(), _asioClients.end());
+            std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>> list(_asioClients.begin(), _asioClients.end());
+            return list;
+        };
+
 
         [[nodiscard]] io_context &getContext() const;
 

@@ -16,7 +16,7 @@
 #ifndef CPP_BABEL_2020_SERVER_HPP
 #define CPP_BABEL_2020_SERVER_HPP
 
-#include "AsioListener.hpp"
+#include "Listener.hpp"
 #include "Logger.hpp"
 
 namespace BabelServer {
@@ -48,7 +48,7 @@ namespace BabelServer {
         /* <- Attributes -> */
     private:
         BabelUtils::Logger _logger;
-        std::vector<BabelUtils::SharedPtr<BabelNetwork::ASocket>> _servers;
+        std::vector<BabelUtils::SharedPtr<BabelServer::Listener>> _servers;
         BabelUtils::SharedPtr<BabelUtils::BoostThread> _thread;
         // TODO: Include Db
     };

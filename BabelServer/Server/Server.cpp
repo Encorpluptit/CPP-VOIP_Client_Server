@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include "Server.hpp"
+#include "AsioListener.hpp"
 
 using namespace BabelServer;
 
@@ -28,6 +29,15 @@ void Server::start()
 
     std::string data;
     while (std::getline(std::cin, data)) {
+        for (const auto & server : _servers) {
+            auto clients = server->getClientList();
+            for (const auto & client : clients) {
+                auto resp = client->popResponse();
+                if (!resp)
+                    continue;
+                std::cout << resp << std::endl;
+            }
+        }
         std::cout << data << std::endl;
         if (data == "exit") {
             std::cout << "exit loop" << std::endl;

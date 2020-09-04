@@ -135,7 +135,7 @@ set(
         ${SERVER_DIR}/Socket
         ${SERVER_DIR}/Listener
         ${SERVER_DIR}/Client
-        ${SERVER_DIR}/AsioListener
+        ${SERVER_DIR}/Listener
 )
 
 
@@ -144,7 +144,7 @@ set(
 set(
         SERVER_SOURCES
         ${SERVER_DIR}/Server/Server.cpp
-        ${SERVER_DIR}/AsioListener/AsioListener.cpp
+        ${SERVER_DIR}/Listener/AsioListener.cpp
 )
 
 
