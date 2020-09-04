@@ -29,11 +29,12 @@ void BabelClient::ClientCore::start()
 {
     while (!_socket->isReady());
     std::cout << _socket->describe() << std::endl;
+    setReady();
 }
 
 
-//  TODO: GROSSE MERDE, T'ES MAUVAIS
-//  PASSE LES SHARED PTR EN CONST REF
+// TODO: GROSSE MERDE, T'ES MAUVAIS
+// PASSE LES SHARED PTR EN CONST REF
 void BabelClient::ClientCore::LoggedIn(std::shared_ptr<BabelNetwork::UserResponse> response)
 {
     logged = true;
@@ -216,7 +217,7 @@ void BabelClient::ClientCore::run()
     std::string data;
     std::shared_ptr<BabelNetwork::AResponse> response = nullptr;
 
-    while (1) {
+    while (isReady()) {
         std::getline(std::cin, data);
         response = _socket->popResponse();
         if (data == "1")
@@ -251,6 +252,7 @@ void BabelClient::ClientCore::stop()
 void BabelClient::ClientCore::initSocket(char **av)
 {
     BabelNetwork::NetworkInfos nwi(av[1], av[2]);
+
     _socket = boost::make_shared<BabelNetwork::AsioClientSocket>(
         av[1], av[2],
         _logger,

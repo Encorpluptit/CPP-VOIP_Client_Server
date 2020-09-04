@@ -14,19 +14,33 @@ using namespace BabelServer;
 Server::Server(int ac, char **av)
     : _logger(BabelUtils::Logger::LogType::ServerLog)
 {
+    _ready = false;
     initServers(ac, av);
 }
 
 Server::~Server()
 {
     stop();
+    if (_thread)
+        _thread->stop();
 }
 
 void Server::start()
 {
     for (const auto &server : _servers)
         server->start();
-
+    setReady();
+//    setThread(boost::make_shared<BabelUtils::BoostThread>(
+//        [this] {
+//            try {
+//                std::cout << "HANDLE CLIENTS REQUESTS" << std::endl;
+//                this->runListener();
+//                std::cout << "HANDLE CLIENTS REQUESTS FINISHED" << std::endl;
+//            } catch (const std::exception &e) {
+//                std::cerr << e.what() << std::endl;
+//            }
+//        })
+//    );
     std::string data;
     while (std::getline(std::cin, data)) {
         for (const auto & server : _servers) {
@@ -54,6 +68,35 @@ void Server::stop()
         _thread->stop();
 }
 
+void Server::runListener()
+{
+    auto sz = _servers.size();
+    unsigned long szStopped = 0;
+
+//    while (isReady() && sz != szStopped) {
+    while (isReady() && sz != szStopped) {
+        sz = _servers.size();
+        szStopped = 0;
+        for (const auto &server : _servers) {
+            if (!server->isReady()) {
+                szStopped += 1;
+                continue;
+            }
+            auto clients = server->getClientList();
+            if (clients.empty())
+                continue;
+            for (const auto &client : clients) {
+                auto resp = client->popResponse();
+                if (!resp)
+                    continue;
+                std::cout << "HERE " << resp << std::endl;
+            }
+        }
+//        if (sz == szStopped)
+//            break;
+    }
+}
+
 void Server::initServers(int ac, char **av)
 {
     using namespace BabelNetwork;
@@ -62,12 +105,12 @@ void Server::initServers(int ac, char **av)
         _servers.emplace_back(new AsioListener(av[0], av[i], _logger));
 }
 
-[[nodiscard]] const BabelUtils::SharedPtr<BabelUtils::BoostThread> &Server::getThread() const
+[[nodiscard]] const BabelUtils::SharedPtr<BabelUtils::AThread> &Server::getThread() const
 {
     return _thread;
 }
 
-void Server::setThread(const BabelUtils::SharedPtr<BabelUtils::BoostThread> &thread)
+void Server::setThread(const BabelUtils::SharedPtr<BabelUtils::AThread> &thread)
 {
     _thread = thread;
 }

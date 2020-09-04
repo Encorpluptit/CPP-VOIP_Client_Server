@@ -226,15 +226,17 @@ void AsioClientSocket::handle_error(const std::string &msg, const boost::system:
     if (getHandler() == SocketHandler::Client) {
         auto errorMsg = msg + error.message();
         if (error == boost::asio::error::eof) {
-            _logger.logThis(errorMsg + " ==> Connection closed by server.");
+            errorMsg += " ==> Connection closed by server.";
+            _logger.logThis(errorMsg);
         } else {
-            _logger.logThis("Error : " + errorMsg);
+            errorMsg = "Error : " + errorMsg;
+            _logger.logThis(errorMsg);
         }
         stop();
         throw BabelErrors::ClientError(errorMsg, *this);
     } else {
         // TODO: Destroy properly client in Listener and remove from queue
-        auto errorMsg = msg + " (Client Connection Stopped) : " + error.message() + +"\n" + describe();
+        auto errorMsg = msg + " (Client Connection Stopped) : " + error.message() + "\n" + describe();
         _logger.logThis(errorMsg);
         throw BabelErrors::ClientError(errorMsg, *this);
     }

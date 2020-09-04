@@ -53,9 +53,8 @@ namespace BabelNetwork {
 
         void stop() final
         {
-            if (getHandler() == SocketHandler::Client) {
+            if (getHandler() == SocketHandler::Client)
                 _context.stop();
-            }
             _socket.close();
             setNotReady();
         };

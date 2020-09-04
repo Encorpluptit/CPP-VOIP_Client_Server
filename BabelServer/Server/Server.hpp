@@ -38,18 +38,20 @@ namespace BabelServer {
     private:
         void initServers(int ac, char **av);
 
+        void runListener();
+
         /* <- Getters / Setters -> */
     public:
-        [[nodiscard]] const BabelUtils::SharedPtr<BabelUtils::BoostThread> &getThread() const;
+        [[nodiscard]] const BabelUtils::SharedPtr<BabelUtils::AThread> &getThread() const;
 
-        void setThread(const BabelUtils::SharedPtr<BabelUtils::BoostThread> &thread);
+        void setThread(const BabelUtils::SharedPtr<BabelUtils::AThread> &thread);
 
 
         /* <- Attributes -> */
     private:
         BabelUtils::Logger _logger;
         std::vector<BabelUtils::SharedPtr<BabelServer::Listener>> _servers;
-        BabelUtils::SharedPtr<BabelUtils::BoostThread> _thread;
+        BabelUtils::SharedPtr<BabelUtils::AThread> _thread;
         // TODO: Include Db
     };
 

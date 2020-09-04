@@ -36,8 +36,7 @@ int main(int ac, char **av)
     try {
         BabelServer::Server server(ac - 1, av + 1);
         server.start();
-    }
-    catch (std::exception &e) {
+    } catch (std::exception &e) {
         std::cerr << e.what() << std::endl;
     }
     std::cout << "End main" <<std::endl;

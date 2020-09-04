@@ -86,6 +86,13 @@ void AsioListener::accept()
     );
 }
 
+std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>> AsioListener::getClientList()
+{
+    if (_asioClients.empty())
+        return std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>>();
+    return std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>>(_asioClients.begin(), _asioClients.end());
+}
+
 void AsioListener::stop()
 {
     std::cout << "LISTENER STOPPED" << std::endl;
@@ -157,3 +164,8 @@ void AsioListener::stopContext()
 {
     return const_cast<io_context &>(_context);
 }
+//
+//bool AsioListener::isReady()
+//{
+//    return false;
+//}

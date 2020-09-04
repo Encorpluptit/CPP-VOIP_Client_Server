@@ -50,12 +50,14 @@ namespace BabelServer {
 
         [[nodiscard]] const signal_set &getSignals() const;
 
-        std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>> getClientList() final {
-            return std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>>(_asioClients.begin(), _asioClients.end());
-            std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>> list(_asioClients.begin(), _asioClients.end());
-            return list;
-        };
+        std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>> getClientList() final;
+//        std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>> getClientList() final {
+//            return std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>>(_asioClients.begin(), _asioClients.end());
+//            std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>> list(_asioClients.begin(), _asioClients.end());
+//            return list;
+//        };
 
+//        [[nodiscard]] bool isReady() const override;
 
         [[nodiscard]] io_context &getContext() const;
 
