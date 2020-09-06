@@ -7,27 +7,7 @@
 
 #include <iostream>
 #include <functional>
-#include "AsioListener.hpp"
 #include "Server.hpp"
-
-void launch(char **av);
-
-/*static void tests(char **av)
-{
-    std::cout << "TEST LAUNCHED" << std::endl;
-    BabelUtils::Logger logger(BabelUtils::Logger::LogType::ServerLog);
-    BabelServer::AsioListener listener(av[1], av[2], logger);
-    listener.start();
-
-    std::string data;
-    while (std::getline(std::cin, data)) {
-        std::cout << data << std::endl;
-        if (data == "exit") {
-            std::cout << "exit loop" << std::endl;
-            break;
-        }
-    }
-}*/
 
 int main(int ac, char **av)
 {
@@ -35,10 +15,15 @@ int main(int ac, char **av)
         return 84;
     try {
         BabelServer::Server server(ac - 1, av + 1);
-        server.start();
+        try {
+            server.start();
+        } catch (std::exception &e) {
+            std::cerr << "Server Runtime: " << e.what() << std::endl;
+            server.stop();
+        }
     } catch (std::exception &e) {
-        std::cerr << e.what() << std::endl;
+        std::cerr << "Server Initialisation: " << e.what() << std::endl;
     }
-    std::cout << "End main" <<std::endl;
+    std::cout << "End main" << std::endl;
     return 0;
 }

@@ -21,8 +21,6 @@ Server::Server(int ac, char **av)
 Server::~Server()
 {
     stop();
-//    if (_thread)
-//        _thread->stop();
 }
 
 void Server::start()
@@ -36,8 +34,10 @@ void Server::start()
 
 void Server::stop()
 {
-    for (const auto &server : _servers)
-        server->stop();
+    if (listenerRunning()) {
+        for (const auto &server : _servers)
+            server->stop();
+    }
     if (_thread)
         _thread->stop();
 }
@@ -55,8 +55,6 @@ void Server::runListener()
     while (listenerRunning()) {
         std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>> clients;
         for (const auto &server : _servers) {
-            if (!server->isReady())
-                continue;
             auto list = server->getClientList();
             if (list.empty())
                 continue;
