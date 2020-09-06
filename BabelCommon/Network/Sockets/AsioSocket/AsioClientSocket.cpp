@@ -50,6 +50,7 @@ void AsioClientSocket::start()
 {
     dbg("%s", "START SESSION")
     _logger.logThis("START SESSION");
+    setReady();
     read_header();
 }
 

@@ -38,18 +38,12 @@ void AsioListener::start()
     );
     _logger.logThis(s);
     std::cout << s << std::endl;
-    setReady();
     setThread(
         boost::make_shared<BabelUtils::BoostThread>(
             [this] { this->launch_listener(); }
         )
     );
-//    setThread(
-//        boost::shared_ptr<BabelUtils::BoostThread>(new BabelUtils::BoostThread(
-//            [this] { this->launch_listener(); }
-//            )
-//        )
-//    );
+    setReady();
 }
 
 void AsioListener::launch_listener()
@@ -68,37 +62,52 @@ void AsioListener::launch_listener()
 void AsioListener::accept()
 {
     std::cout << "ACCEPT" << std::endl;
-
-    _asioClients.emplace_back(
-        boost::make_shared<BabelNetwork::AsioClientSocket>(
-            _networkInfos.getIp(),
-            _networkInfos.getPortStr(),
-            _logger,
-            _context,
-            BabelNetwork::AsioClientSocket::SocketHandler::Server
-        )
+//    _asioClients.emplace_back(
+//        boost::make_shared<BabelNetwork::AsioClientSocket>(
+//            _networkInfos.getIp(),
+//            _networkInfos.getPortStr(),
+//            _logger,
+//            _context,
+//            BabelNetwork::AsioClientSocket::SocketHandler::Server
+//        )
+//    );
+//    auto new_session = _asioClients.back();
+//
+    auto new_session = boost::make_shared<BabelNetwork::AsioClientSocket>(
+        _networkInfos.getIp(),
+        _networkInfos.getPortStr(),
+        _logger,
+        _context,
+        BabelNetwork::AsioClientSocket::SocketHandler::Server
     );
-    auto new_session = _asioClients.back();
 
     _acceptor.async_accept(
         new_session->getSocket(),
         boost::bind(&AsioListener::handle_accept, this, new_session, boost::asio::placeholders::error)
     );
+//    _asioClients.emplace_back(new_session);
 }
 
 std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>> AsioListener::getClientList()
 {
+//    return std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>>();
     if (_asioClients.empty())
         return std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>>();
-    return std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>>(_asioClients.begin(), _asioClients.end());
+    _mtx.lock();
+    auto lol = std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>>(_asioClients.begin(), _asioClients.end());
+    _mtx.unlock();
+    return lol;
+//    return std::vector<std::shared_ptr<BabelNetwork::ClientSocket>>(_asioClients.begin(), _asioClients.end());
 }
 
 void AsioListener::stop()
 {
     std::cout << "LISTENER STOPPED" << std::endl;
-    stopContext();
-    _acceptor.close();
+    setNotReady();
     _signals.clear();
+    if (_acceptor.is_open())
+        _acceptor.close();
+    stopContext();
 }
 
 void AsioListener::handle_accept(
@@ -116,10 +125,15 @@ void AsioListener::handle_accept(
         std::cout << s << std::endl;
         try {
             session->start();
-        } catch (const std::runtime_error &e) {
+        } catch (const BabelErrors::ClientError &e) {
             std::cout << "In Session Execution\n" << e.what() << std::endl;
         }
+    } else {
+        std::cerr << error << std::endl;
     }
+    _mtx.lock();
+    _asioClients.emplace_back(session);
+    _mtx.unlock();
     accept();
 }
 
@@ -127,8 +141,7 @@ void AsioListener::setSignalsHandeled()
 {
     _signals.add(SIGINT);
     _signals.add(SIGTERM);
-//    _signals.async_wait(boost::bind(&AsioListener::stop, this));
-    _signals.async_wait(boost::bind(&AsioListener::stopContext, this));
+    _signals.async_wait(boost::bind(&AsioListener::stop, this));
 }
 
 void AsioListener::startContext()

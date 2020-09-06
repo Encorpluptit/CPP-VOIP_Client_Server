@@ -14,26 +14,8 @@ const (
 	UUgo
 )
 
-//
-//func init() {
-//	cleanup := func() {
-//		err := os.Remove(Database.TestDBFile)
-//		if err != nil {
-//			log.Println(err)
-//		}
-//	}
-//	cleanup()
-//	_ = Database.Init(Database.TestDBFile)
-//	//TestDbCloser := func() {
-//	//	dbCloser()
-//	//	cleanup()
-//	//}
-//	log.Println("TESTING INI FCT")
-//}
-//
 func PopulateDb() {
-	f := InitDb()
-	defer f()
+	InitDb()
 	createUsers()
 	createConfs()
 }
@@ -44,9 +26,9 @@ type UserPtr struct {
 
 var TestUsers = []*ent.User{
 	{Login: "damien.bernard@epitech.eu", Password: "1234AB_cd666"},
-	//{Login: "gregoire.brasseur@epitech.eu", Password: "1234AB_cd666"},
-	//{Login: "arthur.benard@epitech.eu", Password: "1234AB_cd666"},
-	//{Login: "ugo.levi-cescutti@epitech.eu", Password: "1234AB_cd666"},
+	{Login: "gregoire.brasseur@epitech.eu", Password: "1234AB_cd666"},
+	{Login: "arthur.benard@epitech.eu", Password: "1234AB_cd666"},
+	{Login: "ugo.levi-cescutti@epitech.eu", Password: "1234AB_cd666"},
 }
 
 var TestConf = []*ent.Conference{
@@ -95,7 +77,7 @@ func InitDb() func() {
 	}
 	return TestDbCloser
 }
-
-func setup() {
-	PopulateDb()
-}
+//
+//func setup() {
+//	PopulateDb()
+//}

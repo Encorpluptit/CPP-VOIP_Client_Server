@@ -21,8 +21,8 @@ Server::Server(int ac, char **av)
 Server::~Server()
 {
     stop();
-    if (_thread)
-        _thread->stop();
+//    if (_thread)
+//        _thread->stop();
 }
 
 void Server::start()
@@ -30,39 +30,37 @@ void Server::start()
     for (const auto &server : _servers)
         server->start();
     setReady();
-//    setThread(boost::make_shared<BabelUtils::BoostThread>(
-//        [this] {
-//            try {
-//                std::cout << "HANDLE CLIENTS REQUESTS" << std::endl;
-//                this->runListener();
-//                std::cout << "HANDLE CLIENTS REQUESTS FINISHED" << std::endl;
-//            } catch (const std::exception &e) {
-//                std::cerr << e.what() << std::endl;
-//            }
-//        })
-//    );
     std::string data;
-    while (std::getline(std::cin, data)) {
-        for (const auto & server : _servers) {
-            auto clients = server->getClientList();
-            for (const auto & client : clients) {
-                auto resp = client->popResponse();
-                if (!resp)
-                    continue;
-                std::cout << resp << std::endl;
+
+    while (isReady()) {
+        std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>> clients;
+        for (const auto &server : _servers) {
+            if (!server->isReady()) {
+                continue;
             }
+            auto list = server->getClientList();
+            if (list.empty())
+                continue;
+            clients.insert(clients.end(), list.begin(), list.end());
         }
-        std::cout << data << std::endl;
-        if (data == "exit") {
-            std::cout << "exit loop" << std::endl;
-            break;
+        if (clients.empty()) {
+            sleep(1);
+            continue;
+        }
+        for (const auto &client : clients) {
+            if (!client->isReady())
+                continue;
+            auto resp = client->popResponse();
+            if (!resp)
+                continue;
+            std::cout << "HERE: " << resp << std::endl;
         }
     }
 }
 
 void Server::stop()
 {
-    for (const auto& server : _servers)
+    for (const auto &server : _servers)
         server->stop();
     if (_thread)
         _thread->stop();
@@ -70,30 +68,29 @@ void Server::stop()
 
 void Server::runListener()
 {
-    auto sz = _servers.size();
-    unsigned long szStopped = 0;
-
-//    while (isReady() && sz != szStopped) {
-    while (isReady() && sz != szStopped) {
-        sz = _servers.size();
-        szStopped = 0;
+    while (isReady()) {
+        std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>> clients;
         for (const auto &server : _servers) {
             if (!server->isReady()) {
-                szStopped += 1;
                 continue;
             }
-            auto clients = server->getClientList();
-            if (clients.empty())
+            auto list = server->getClientList();
+            if (list.empty())
                 continue;
-            for (const auto &client : clients) {
-                auto resp = client->popResponse();
-                if (!resp)
-                    continue;
-                std::cout << "HERE " << resp << std::endl;
-            }
+            clients.insert(clients.end(), list.begin(), list.end());
         }
-//        if (sz == szStopped)
-//            break;
+        if (clients.empty()) {
+            sleep(1);
+            continue;
+        }
+        for (const auto &client : clients) {
+            if (!client->isReady())
+                continue;
+            auto resp = client->popResponse();
+            if (!resp)
+                continue;
+            std::cout << "HERE: " << resp << std::endl;
+        }
     }
 }
 

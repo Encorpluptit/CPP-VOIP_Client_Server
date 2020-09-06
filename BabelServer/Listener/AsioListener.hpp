@@ -51,6 +51,7 @@ namespace BabelServer {
         [[nodiscard]] const signal_set &getSignals() const;
 
         std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>> getClientList() final;
+
 //        std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>> getClientList() final {
 //            return std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>>(_asioClients.begin(), _asioClients.end());
 //            std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>> list(_asioClients.begin(), _asioClients.end());
@@ -72,6 +73,7 @@ namespace BabelServer {
         boost::asio::ip::tcp::acceptor _acceptor;
         boost::asio::signal_set _signals;
         std::vector<BabelUtils::SharedPtr<BabelNetwork::AsioClientSocket>> _asioClients;
+        std::mutex _mtx;
     };
 }
 
