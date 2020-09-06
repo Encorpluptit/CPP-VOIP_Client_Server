@@ -40,6 +40,8 @@ namespace BabelServer {
 
         void runListener();
 
+        [[nodiscard]] bool listenerRunning();
+
         /* <- Getters / Setters -> */
     public:
         [[nodiscard]] const BabelUtils::SharedPtr<BabelUtils::AThread> &getThread() const;

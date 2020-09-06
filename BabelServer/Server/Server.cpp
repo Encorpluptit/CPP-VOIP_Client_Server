@@ -30,32 +30,8 @@ void Server::start()
     for (const auto &server : _servers)
         server->start();
     setReady();
-    std::string data;
 
-    while (isReady()) {
-        std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>> clients;
-        for (const auto &server : _servers) {
-            if (!server->isReady()) {
-                continue;
-            }
-            auto list = server->getClientList();
-            if (list.empty())
-                continue;
-            clients.insert(clients.end(), list.begin(), list.end());
-        }
-        if (clients.empty()) {
-            sleep(1);
-            continue;
-        }
-        for (const auto &client : clients) {
-            if (!client->isReady())
-                continue;
-            auto resp = client->popResponse();
-            if (!resp)
-                continue;
-            std::cout << "HERE: " << resp << std::endl;
-        }
-    }
+    runListener();
 }
 
 void Server::stop()
@@ -66,23 +42,28 @@ void Server::stop()
         _thread->stop();
 }
 
+bool Server::listenerRunning()
+{
+    return std::all_of(
+        _servers.cbegin(), _servers.cend(),
+        [](const BabelUtils::SharedPtr<BabelServer::Listener> &server) { return server->isReady(); }
+    );
+}
+
 void Server::runListener()
 {
-    while (isReady()) {
+    while (listenerRunning()) {
         std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>> clients;
         for (const auto &server : _servers) {
-            if (!server->isReady()) {
+            if (!server->isReady())
                 continue;
-            }
             auto list = server->getClientList();
             if (list.empty())
                 continue;
             clients.insert(clients.end(), list.begin(), list.end());
         }
-        if (clients.empty()) {
-            sleep(1);
+        if (clients.empty())
             continue;
-        }
         for (const auto &client : clients) {
             if (!client->isReady())
                 continue;
@@ -102,7 +83,7 @@ void Server::initServers(int ac, char **av)
         _servers.emplace_back(new AsioListener(av[0], av[i], _logger));
 }
 
-[[nodiscard]] const BabelUtils::SharedPtr<BabelUtils::AThread> &Server::getThread() const
+const BabelUtils::SharedPtr<BabelUtils::AThread> &Server::getThread() const
 {
     return _thread;
 }
