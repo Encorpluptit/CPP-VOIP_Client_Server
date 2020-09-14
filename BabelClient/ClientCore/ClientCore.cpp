@@ -234,7 +234,8 @@ void BabelClient::ClientCore::run()
         }
         if (response != nullptr) {
             checkTypeResponse(response);
-            _socket->sendResponse(response);
+            for (uint32_t i = 0; i < 100; i += 1)
+                _socket->sendResponse(response);
         }
     }
 }
