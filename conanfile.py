@@ -12,6 +12,7 @@ class Babel(ConanFile):
     # build_requires = "sqlite_orm/1.5@bincrafters/stable"
     requires = "sqlite_orm/1.5@bincrafters/stable",             \
         "zlib/1.2.11@conan/stable",                             \
+        "bzip2/1.0.8@conan/stable",                             \
         "boost/1.71.0@conan/stable",                            \
         "qt/5.14.2@bincrafters/stable",                         \
         "sqlite3/3.32.3@_/_",                                   \
