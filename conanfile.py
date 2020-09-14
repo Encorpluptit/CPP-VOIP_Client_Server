@@ -7,9 +7,7 @@ class Babel(ConanFile):
     build_policy = "always"
     options = {"shared": [True, False], "fPIC": [True, False]}
     default_options = "shared=False", "fPIC=True"
-    # generators = "cmake", "cmake_find_package", "cmake_paths", "qt", "gcc"
     generators = "cmake", "cmake_find_package", "cmake_paths", "gcc"
-    # build_requires = "sqlite_orm/1.5@bincrafters/stable"
     requires = "sqlite_orm/1.5@bincrafters/stable",             \
         "zlib/1.2.11@conan/stable",                             \
         "bzip2/1.0.8@conan/stable",                             \
@@ -47,9 +45,7 @@ class Babel(ConanFile):
                     "libxcb-xinerama0-dev"
                 ]
             elif tools.os_info.with_dnf:
-                print("DNF")
                 # conan profile update settings.compiler.libcxx=libstdc++11 default
-                # system(dn)
                 packages = [
                     "xorg-x11-server-devel",
                     "libxcb-devel",
@@ -85,10 +81,6 @@ class Babel(ConanFile):
                 packages = ["Xorg-x11-devel"]
             else:
                 self.warn("Do not know how to install system requirements for {}.".format(tools.os_info.linux_distro))
-            # if tools.os_info.with_dnf:
-            #     print("ICI")
-            #     package_tool.install(update=False, packages=" ".join(packages))
-            # else:
             package_tool.install(update=True, packages=" ".join(packages))
 
 
