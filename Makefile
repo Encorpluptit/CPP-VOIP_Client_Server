@@ -48,8 +48,6 @@ debug: $(NAME)
 # SERVER RULES
 server: setup-build-tree
 	@$(MAKE) -j `nproc` --no-print-directory -C $(BUILD_DIR) $(SERVER_BIN)
-#-@cp $(BUILD_DIR)/bin/$(SERVER_BIN) .
-	-@cp $(BUILD_DIR)/$(SERVER_BIN) .
 
 server_fclean:
 	@$(RM) -r $(SERVER_BIN)
@@ -60,8 +58,7 @@ server_fclean:
 # CLIENTS RULES
 client: setup-build-tree
 	@$(MAKE) -j `nproc` --no-print-directory -C $(BUILD_DIR) $(CLIENT_BIN)
-#-@cp $(BUILD_DIR)/bin/$(CLIENT_BIN) .
-	-@cp $(BUILD_DIR)/$(CLIENT_BIN) .
+#	-@cp $(BUILD_DIR)/$(CLIENT_BIN) .
 
 client_fclean:
 	@$(RM) -r $(CLIENT_BIN)
@@ -76,9 +73,6 @@ tests_run: fclean setup-build-tree
 	@./$(CRITERION_BIN)
 	@gcovr -r . -s --exclude='tests|lib' --exclude='BabelCommon/Utils/Runnable|BabelCommon/Utils/Logger|BabelCommon/Network/Sockets'
 	@gcovr -b . -s --exclude='tests|lib'
-#-@$(MAKE) -j `nproc` --no-print-directory -C $(BUILD_DIR) test_server
-#-@$(MAKE) -j `nproc` --no-print-directory -C $(BUILD_DIR) test_client
-#@cp $(BUILD_DIR)/bin/test_client $(BUILD_DIR)/bin/test_server .
 
 
 
@@ -86,21 +80,22 @@ tests_run: fclean setup-build-tree
 # OTHERS RULES
 
 setup-build-tree:
-	@mkdir -p $(BUILD_DIR) && cd $(BUILD_DIR)
-#@mkdir -p $(BUILD_DIR) && cd $(BUILD_DIR) && conan install ..
+	@mkdir -p $(BUILD_DIR)
+	@cd $(BUILD_DIR) && conan install ..
 	@cmake $(OPTIONS) -B $(BUILD_DIR)
 
 
-gh-install:
-	@mkdir -p $(BUILD_DIR) && cd $(BUILD_DIR) && conan install .. --build=portaudio --build=qt
+#gh-install:
+#	@mkdir -p $(BUILD_DIR) && cd $(BUILD_DIR) && conan install .. --build=portaudio --build=qt
+
 
 mouli-install: fclean
 	-conan remote add tech-repo https://api.bintray.com/conan/epitech/public-conan
 	-conan remote add public-repo https://api.bintray.com/conan/bincrafters/public-conan
 	@mkdir -p $(BUILD_DIR) && cd $(BUILD_DIR) && conan install .. --build=missing
-
-mouli: fclean
-	@mkdir -p $(BUILD_DIR) && cd $(BUILD_DIR) && conan install .. && cmake .. && cmake –build . && make --no-print-directory
+#
+#mouli: fclean
+#	@mkdir -p $(BUILD_DIR) && cd $(BUILD_DIR) && conan install .. && echo "lol" && cmake .. && echo "lol2" && cmake –build . && make --no-print-directory
 
 clean:
 	@$(RM) -r $(BUILD_DIR)

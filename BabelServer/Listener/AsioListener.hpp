@@ -15,6 +15,7 @@ namespace BabelServer {
     using namespace boost::asio;
 
     class AsioListener final : public BabelServer::Listener {
+        using AsioClientList = std::vector<BabelUtils::SharedPtr<BabelNetwork::AsioClientSocket>>;
 
         /* <- Constructor - Destructor -> */
     public:
@@ -50,15 +51,7 @@ namespace BabelServer {
 
         [[nodiscard]] const signal_set &getSignals() const;
 
-        std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>> getClientList() final;
-
-//        std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>> getClientList() final {
-//            return std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>>(_asioClients.begin(), _asioClients.end());
-//            std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>> list(_asioClients.begin(), _asioClients.end());
-//            return list;
-//        };
-
-//        [[nodiscard]] bool isReady() const override;
+        ClientList getClientList() final;
 
         [[nodiscard]] io_context &getContext() const;
 
@@ -72,7 +65,8 @@ namespace BabelServer {
         ip::tcp::endpoint _endpoint;
         boost::asio::ip::tcp::acceptor _acceptor;
         boost::asio::signal_set _signals;
-        std::vector<BabelUtils::SharedPtr<BabelNetwork::AsioClientSocket>> _asioClients;
+//        std::vector<BabelUtils::SharedPtr<BabelNetwork::AsioClientSocket>> _asioClients;
+        AsioClientList _asioClients;
         std::mutex _mtx;
     };
 }

@@ -6,9 +6,9 @@ set(CMAKE_C_COMPILER_VERSION 10.1)
 set(CMAKE_CXX_COMPILER_VERSION 10.1)
 
 
-#set(CMAKE_AUTOMOC ON)
-#set(CMAKE_AUTORCC ON)
-#set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOUIC ON)
 
 ###############################################################################
 # Language Configuration
@@ -60,12 +60,18 @@ endif (USE_DEBUG)
 
 ###############################################################################
 # Conan Build Management
-#include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-#conan_basic_setup()
-#
-#find_package(Qt5Widgets CONFIG REQUIRED)
-#
-#include_directories(${CMAKE_INCLUDE_PATH})
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup()
+
+
+include_directories(${CMAKE_INCLUDE_PATH})
+
+find_package(Qt5Widgets CONFIG REQUIRED)
+
+find_package(Boost COMPONENTS thread REQUIRED)
+if (Boost_FOUND)
+    set(CONAN_LIBS ${CONAN_LIBS} Boost::thread)
+endif (Boost_FOUND)
 
 
 ###############################################################################
@@ -136,6 +142,8 @@ set(
         ${SERVER_DIR}/Listener
         ${SERVER_DIR}/Client
         ${SERVER_DIR}/Listener
+        ${SERVER_DIR}/RequestManager
+        ${SERVER_DIR}/Database
 )
 
 
@@ -145,12 +153,14 @@ set(
         SERVER_SOURCES
         ${SERVER_DIR}/Server/Server.cpp
         ${SERVER_DIR}/Listener/AsioListener.cpp
+        ${SERVER_DIR}/RequestManager/RequestManager.cpp
+        ${SERVER_DIR}/Database/Database.cpp
 )
 
 
 ##########################
 # Server Executable
-#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/..)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/..)
 add_executable(
         babel_server
         ${SERVER_DIR}/main.cpp
@@ -163,17 +173,7 @@ target_include_directories(
         ${SERVER_INCLUDES}
 )
 
-find_package(Boost COMPONENTS thread REQUIRED)
-if (Boost_FOUND)
-    target_include_directories(
-            babel_server PUBLIC
-            ${Boost_INCLUDE_DIRS}
-    )
-    target_link_libraries(babel_server Boost::thread)
-endif (Boost_FOUND)
-target_link_libraries(babel_server stdc++fs)
-
-#target_link_libraries(babel_server ${CONAN_LIBS} stdc++fs)
+target_link_libraries(babel_server ${CONAN_LIBS} stdc++fs )
 
 
 ###############################################################################
@@ -215,20 +215,9 @@ target_include_directories(
 
 target_compile_definitions(babel_client PRIVATE BABEL_CLIENT_BIN)
 
-find_package(Boost COMPONENTS thread REQUIRED)
-if (Boost_FOUND)
-    target_include_directories(
-            babel_client PUBLIC
-            ${Boost_INCLUDE_DIRS}
-    )
-    target_link_libraries(babel_client Boost::thread)
-endif (Boost_FOUND)
-target_link_libraries(babel_client stdc++fs)
-
 #find_package(Qt5 COMPONENTS Network REQUIRED)
-
-#target_link_libraries(babel_client stdc++fs Qt5::Widgets Qt5::Network)
 #target_link_libraries(babel_client ${CONAN_LIBS} stdc++fs Qt5::Widgets Qt5::Network)
+target_link_libraries(babel_client ${CONAN_LIBS} stdc++fs)
 
 
 ###############################################################################
@@ -247,7 +236,6 @@ set(
         tests/criterion_unit_tests/src/Common/NetworkInfos_Tests.cpp
 )
 
-#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/..)
 add_executable(
         unit_tests
         ${COMMON_SOURCES}
@@ -262,20 +250,21 @@ target_include_directories(unit_tests PRIVATE tests/criterion_unit_tests/include
 
 target_link_libraries(unit_tests criterion pthread gcov)
 
+
 ##########################
 # Test Executable
-add_executable(
-        test_server
-        tests/server/Chat_Message.hpp
-        tests/server/Chat_Server.cpp
-)
-target_link_libraries(test_server pthread)
+
+#add_executable(
+#        test_server
+#        tests/server/Chat_Message.hpp
+#        tests/server/Chat_Server.cpp
+#)
 #target_link_libraries(test_server pthread ${CONAN_LIBS})
-
-add_executable(
-        test_client
-        tests/server/Chat_Message.hpp
-        tests/server/Chat_Client.cpp
-)
-
+#
+#add_executable(
+#        test_client
+#        tests/server/Chat_Message.hpp
+#        tests/server/Chat_Client.cpp
+#)
+#
 #target_link_libraries(test_client pthread ${CONAN_LIBS})
