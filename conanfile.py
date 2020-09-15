@@ -16,6 +16,7 @@ class Babel(ConanFile):
         "sqlite3/3.32.3@_/_",                                   \
         "portaudio/v190600.20161030@bincrafters/stable",        \
         "opus/1.3.1@bincrafters/stable"
+    # "qt/5.15.1@bincrafters/stable",                         \
 
 
     def configure(self):

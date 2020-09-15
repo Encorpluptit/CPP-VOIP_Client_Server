@@ -228,14 +228,17 @@ void BabelClient::ClientCore::run()
             response = BabelNetwork::FriendResponse::FriendRequestAccepted("ugo", "damien");
         if (data == "4")
             response = BabelNetwork::MessageResponse::MessageReceive("ugo", "damien", "t'es mauvais");
+        if (data == "5")
+            response = BabelNetwork::UserResponse::AccountCreationRequest("ugo", "lolol");
         if (data == "exit" || !_socket->isReady()) {
             std::cout << "exit loop" << std::endl;
             break;
         }
         if (response != nullptr) {
             checkTypeResponse(response);
-            for (uint32_t i = 0; i < 100; i += 1)
-                _socket->sendResponse(response);
+            _socket->sendResponse(response);
+//            for (uint32_t i = 0; i < 100; i += 1)
+//                _socket->sendResponse(response);
         }
     }
 }

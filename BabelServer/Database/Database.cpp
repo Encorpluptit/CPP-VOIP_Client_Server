@@ -5,21 +5,99 @@
 ** [Database.cpp]: Source file for Database feature.
 */
 
-#include <sqlite_orm.h>
-#include "User.hpp"
 #include "Database.hpp"
 
-using namespace BabelServer;
 
+#include <iostream>
+
+using namespace BabelServer;
+using namespace sqlite_orm;
+
+//
+//auto storage = make_storage("db.sqlite",
+//    make_table("users",
+//        make_column("id", &UserModel::id, autoincrement(), primary_key()),
+//        make_column("login", &UserModel::login, unique()),
+//        make_column("password", &UserModel::password)
+//    )/*,
+//            */
+//);
+
+// TODO: Adding Logger
 Database::Database()
 {
-    using namespace sqlite_orm;
-    auto storage = make_storage("db.sqlite",
+    std::cout << "LOLOL" << std::endl;
+//    auto storage = getDatabase();
+}
+
+Database::~Database()
+{
+    lock();
+    unlock();
+}
+
+//template<>
+//struct statement_binder<UserModel> {
+//    int bind(sqlite3_stmt *stmt, int index, const UserModel &value) {
+////        if(auto str = GenderToString(value)) {
+////            return statement_binder<std::string>().bind(stmt, index, *str);
+////        } else {
+//            return statement_binder<std::nullptr_t>().bind(stmt, index, nullptr);
+////        }
+//    }
+//};
+
+auto &Database::getDatabase()
+{
+    static auto storage = make_storage("db.sqlite",
         make_table("users",
-            make_column("id", &User::id, autoincrement(), primary_key()),
-            make_column("first_name", &User::login),
-            make_column("last_name", &User::password)
-        )/*,
+            make_column("id", &UserModel::id, autoincrement(), primary_key()),
+            make_column("login", &UserModel::login, unique()),
+            make_column("password", &UserModel::password)
+        )
+        /*,
             */
     );
+    storage.sync_schema();
+    return storage;
+}
+
+int Database::createUser(const std::string &login, const std::string &password)
+{
+    auto user = UserModel(login, password);
+    lock();
+    auto storage = getDatabase();
+    std::cout << "User:" << user.login << "|" << user.password << std::endl;
+    auto id = storage.insert(user);
+    std::cout << "User:" << user.login << "|" << user.password << "|" << id << std::endl;
+    unlock();
+    return id;
+}
+
+std::unique_ptr<UserModel> Database::getUser(const std::string &login)
+{
+    lock();
+
+    auto storage = getDatabase();
+//    auto user = storage.get<UserModel>(login);
+//    auto user = storage.get_pointer<UserModel>(where(c(&UserModel::login) == login));
+//    storage.transaction_guard()
+    auto users = storage.get_all<UserModel>(where(c(&UserModel::login) == login));
+    for (auto user : users) {
+        std::cout << user.login << std::endl;
+    }
+//    auto user = storage.get_pointer<UserModel>(login);
+    unlock();
+    return nullptr;
+//    return user;
+//    return user;
+}
+
+std::unique_ptr<UserModel> Database::getUser(int id)
+{
+    lock();
+    auto storage = getDatabase();
+    auto user = storage.get_pointer<UserModel>(id);
+    unlock();
+    return user;
 }
