@@ -68,10 +68,8 @@ int Database::createUser(const std::string &login, const std::string &password)
     lock();
     auto storage = getDatabase();
     int id = -1;
-    std::cout << "User:" << user.login << "|" << user.password << std::endl;
     try {
         id = storage.insert(user);
-        std::cout << "User:" << user.login << "|" << user.password << "|" << id << std::endl;
     } catch (const std::system_error &e) {
         std::cout << e.what() << std::endl;
     } catch (...) {
@@ -83,25 +81,34 @@ int Database::createUser(const std::string &login, const std::string &password)
 
 std::unique_ptr<UserModel> Database::getUser(const std::string &login)
 {
+    std::vector<UserModel>users{};
     lock();
-
     auto storage = getDatabase();
-    auto users = storage.get_all<UserModel>(where(c(&UserModel::login) == login));
-    for (const auto &user : users) {
-        std::cout << "User Found: " << user.login << std::endl;
+    try {
+        users = storage.get_all<UserModel>(where(c(&UserModel::login) == login));
+    } catch (const std::system_error &e) {
+        std::cout << e.what() << std::endl;
+    } catch (...) {
+        std::cout << "unknown exeption" << std::endl;
     }
-//    auto user = storage.get_pointer<UserModel>(login);
     unlock();
-    return nullptr;
-//    return user;
-//    return user;
+    if (users.size() != 1)
+        return nullptr;
+    return std::make_unique<UserModel>(users.front());
 }
 
 std::unique_ptr<UserModel> Database::getUser(int id)
 {
+    std::unique_ptr<UserModel> user = nullptr;
     lock();
     auto storage = getDatabase();
-    auto user = storage.get_pointer<UserModel>(id);
+    try {
+        user = storage.get_pointer<UserModel>(id);
+    } catch (const std::system_error &e) {
+        std::cout << e.what() << std::endl;
+    } catch (...) {
+        std::cout << "unknown exeption" << std::endl;
+    }
     unlock();
     return user;
 }

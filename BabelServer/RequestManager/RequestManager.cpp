@@ -9,27 +9,39 @@
 
 using namespace BabelServer;
 
-bool RequestManager::manage(std::shared_ptr<BabelNetwork::AResponse>)
+bool RequestManager::manage(const std::shared_ptr<BabelNetwork::AResponse> &response)
+{
+    switch (response->getResponseType()) {
+        case BabelNetwork::AResponse::User:
+            return manageUser(reinterpret_cast<const std::shared_ptr<BabelNetwork::UserResponse>&>(response));
+        case BabelNetwork::AResponse::Call:
+            return manageCall(reinterpret_cast<const std::shared_ptr<BabelNetwork::CallResponse>&>(response));
+        case BabelNetwork::AResponse::Friend:
+            return manageFriend(reinterpret_cast<const std::shared_ptr<BabelNetwork::FriendResponse>&>(response));
+        case BabelNetwork::AResponse::Message:
+            return manageMessage(reinterpret_cast<const std::shared_ptr<BabelNetwork::MessageResponse>&>(response));
+        case BabelNetwork::AResponse::UnknownType:
+            break;
+    }
+    return false;
+}
+
+bool RequestManager::manageUser(const std::shared_ptr<BabelNetwork::UserResponse> &response)
 {
     return false;
 }
 
-bool RequestManager::manageUser(std::shared_ptr<BabelNetwork::UserResponse>)
+bool RequestManager::manageCall(const std::shared_ptr<BabelNetwork::CallResponse> &response)
 {
     return false;
 }
 
-bool RequestManager::manageCall(std::shared_ptr<BabelNetwork::CallResponse>)
+bool RequestManager::manageFriend(const std::shared_ptr<BabelNetwork::FriendResponse> &response)
 {
     return false;
 }
 
-bool RequestManager::manageFriend(std::shared_ptr<BabelNetwork::FriendResponse>)
-{
-    return false;
-}
-
-bool RequestManager::manageMessage(std::shared_ptr<BabelNetwork::MessageResponse>)
+bool RequestManager::manageMessage(const std::shared_ptr<BabelNetwork::MessageResponse> &response)
 {
     return false;
 }

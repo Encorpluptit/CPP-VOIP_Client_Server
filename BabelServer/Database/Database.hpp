@@ -13,7 +13,7 @@
 
 namespace BabelServer {
     struct UserModel {
-        int id;
+        int id{};
         std::string login;
         std::string password;
         UserModel() = default;
@@ -36,6 +36,7 @@ namespace BabelServer {
         std::unique_ptr<UserModel> getUser(int id);
 //        bool deleteUser(const std::string &login);
 //        bool deleteUser(const int id);
+
         /* <- Private Methods -> */
     private:
         void lock() { _mtx.lock(); }

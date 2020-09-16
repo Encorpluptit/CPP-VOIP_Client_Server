@@ -25,15 +25,20 @@
 namespace BabelServer {
     class RequestManager {
 
-        using AResponseProt = void(BabelNetwork::ClientSocket*,const std::shared_ptr<BabelNetwork::AResponse> &/*, Database */);
+        using AResponseProt = void(BabelNetwork::ClientSocket *,
+            const std::shared_ptr<BabelNetwork::AResponse> &/*, Database */);
 
-        using UserResponseProt = void(BabelNetwork::ClientSocket*,const std::shared_ptr<BabelNetwork::UserResponse> &/*, Database */);
+        using UserResponseProt = void(BabelNetwork::ClientSocket *,
+            const std::shared_ptr<BabelNetwork::UserResponse> &/*, Database */);
 
-        using CallResponseProt = void(BabelNetwork::ClientSocket*,const std::shared_ptr<BabelNetwork::CallResponse> &/*, Database */);
+        using CallResponseProt = void(BabelNetwork::ClientSocket *,
+            const std::shared_ptr<BabelNetwork::CallResponse> &/*, Database */);
 
-        using FriendResponseProt = void(BabelNetwork::ClientSocket*,const std::shared_ptr<BabelNetwork::FriendResponse> &/*, Database */);
+        using FriendResponseProt = void(BabelNetwork::ClientSocket *,
+            const std::shared_ptr<BabelNetwork::FriendResponse> &/*, Database */);
 
-        using MessageResponseProt = void(BabelNetwork::ClientSocket*,const std::shared_ptr<BabelNetwork::FriendResponse> &/*, Database */);
+        using MessageResponseProt = void(BabelNetwork::ClientSocket *,
+            const std::shared_ptr<BabelNetwork::FriendResponse> &/*, Database */);
 
         /* <- Constructor - Destructor -> */
     public:
@@ -44,15 +49,15 @@ namespace BabelServer {
 
         /* <- Private Methods -> */
     private:
-        [[nodiscard]] bool manage(std::shared_ptr<BabelNetwork::AResponse>);
+        [[nodiscard]] bool manage(const std::shared_ptr<BabelNetwork::AResponse> &response);
 
-        [[nodiscard]] bool manageUser(std::shared_ptr<BabelNetwork::UserResponse>);
+        [[nodiscard]] bool manageUser(const std::shared_ptr<BabelNetwork::UserResponse> &response);
 
-        [[nodiscard]] bool manageCall(std::shared_ptr<BabelNetwork::CallResponse>);
+        [[nodiscard]] bool manageCall(const std::shared_ptr<BabelNetwork::CallResponse> &response);
 
-        [[nodiscard]] bool manageFriend(std::shared_ptr<BabelNetwork::FriendResponse>);
+        [[nodiscard]] bool manageFriend(const std::shared_ptr<BabelNetwork::FriendResponse> &response);
 
-        [[nodiscard]] bool manageMessage(std::shared_ptr<BabelNetwork::MessageResponse>);
+        [[nodiscard]] bool manageMessage(const std::shared_ptr<BabelNetwork::MessageResponse> &response);
 
         /* <- Attributes -> */
     private:
