@@ -186,7 +186,7 @@ set(
         CLIENT_INCLUDES
         ${CLIENT_DIR}/include
         ${CLIENT_DIR}/ClientCore
-        ${CLIENT_DIR}/src
+        ${CLIENT_DIR}/qtFront
 )
 
 
@@ -195,6 +195,8 @@ set(
 set(
         CLIENT_SOURCES
         ${CLIENT_DIR}/ClientCore/ClientCore.cpp
+        ${CLIENT_DIR}/qtFront/CallWidget.cpp
+        #${CLIENT_DIR}/qtFront/callwidget.ui
 )
 
 
