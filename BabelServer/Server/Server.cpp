@@ -17,21 +17,21 @@ Server::Server(int ac, char **av)
 {
     _ready = false;
     initServers(ac, av);
-    auto id = _database.createUser("lol", "mdr");
-    std::cout << id << std::endl;
-    auto user = _database.getUser(id);
-    if (user)
-        std::cout << user->login << std::endl;
-    else
-        std::cout << "null" << std::endl;
-
-//    std::cout << user.login << std::endl;
-
-    user = _database.getUser("lol");
-    if (user)
-        std::cout << user->login << std::endl;
-    else
-        std::cout << "null" << std::endl;
+//    auto id = _database.createUser("lol", "mdr");
+//    std::cout << id << std::endl;
+//    auto user = _database.getUser(id);
+//    if (user)
+//        std::cout << user->login << std::endl;
+//    else
+//        std::cout << "null" << std::endl;
+//
+////    std::cout << user.login << std::endl;
+//
+//    user = _database.getUser("lol");
+//    if (user)
+//        std::cout << user->login << std::endl;
+//    else
+//        std::cout << "null" << std::endl;
 }
 
 Server::~Server()
@@ -70,10 +70,18 @@ void Server::runListener()
 {
     while (listenerRunning()) {
         std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>> clients;
+        // TODO: Manage User Response server by server ?
         for (const auto &server : _servers) {
             auto list = server->getClientList();
             if (list.empty())
                 continue;
+//            for (const auto &client : clients) {
+//                if (!client->isReady())
+//                    continue;
+//                auto resp = client->popResponse();
+//                if (!resp)
+//                    continue;
+//                _manager.manage(resp);
             clients.insert(clients.end(), list.begin(), list.end());
         }
         if (clients.empty())
@@ -84,6 +92,8 @@ void Server::runListener()
             auto resp = client->popResponse();
             if (!resp)
                 continue;
+            _manager.manage(client, resp, clients, _database);
+//            _manag TODO: Manager
             std::cout << "HERE: " << resp << std::endl;
         }
     }

@@ -5,23 +5,14 @@
 ** [Database.cpp]: Source file for Database feature.
 */
 
-#include "Database.hpp"
-
-
+//TODO: REMOVE
 #include <iostream>
+
+#include "Database.hpp"
 
 using namespace BabelServer;
 using namespace sqlite_orm;
 
-//
-//auto storage = make_storage("db.sqlite",
-//    make_table("users",
-//        make_column("id", &UserModel::id, autoincrement(), primary_key()),
-//        make_column("login", &UserModel::login, unique()),
-//        make_column("password", &UserModel::password)
-//    )/*,
-//            */
-//);
 
 // TODO: Adding Logger
 Database::Database()
@@ -35,17 +26,6 @@ Database::~Database()
     lock();
     unlock();
 }
-
-//template<>
-//struct statement_binder<UserModel> {
-//    int bind(sqlite3_stmt *stmt, int index, const UserModel &value) {
-////        if(auto str = GenderToString(value)) {
-////            return statement_binder<std::string>().bind(stmt, index, *str);
-////        } else {
-//            return statement_binder<std::nullptr_t>().bind(stmt, index, nullptr);
-////        }
-//    }
-//};
 
 auto &Database::getDatabase()
 {
@@ -76,6 +56,8 @@ int Database::createUser(const std::string &login, const std::string &password)
         std::cout << "unknown exeption" << std::endl;
     }
     unlock();
+    // TODO: REMOVE
+    std::cout << "User Created" << std::endl;
     return id;
 }
 

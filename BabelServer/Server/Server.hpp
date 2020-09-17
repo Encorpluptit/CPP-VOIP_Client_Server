@@ -19,6 +19,7 @@
 #include "Listener.hpp"
 #include "Logger.hpp"
 #include "Database.hpp"
+#include "RequestManager.hpp"
 
 namespace BabelServer {
     class Server final : public BabelUtils::ARunnable {
@@ -55,6 +56,7 @@ namespace BabelServer {
         BabelUtils::Logger _logger;
         std::vector<BabelUtils::SharedPtr<BabelServer::Listener>> _servers;
         BabelUtils::SharedPtr<BabelUtils::AThread> _thread;
+        RequestManager _manager;
         Database _database;
         // TODO: Include Db
     };

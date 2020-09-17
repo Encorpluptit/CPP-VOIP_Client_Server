@@ -142,8 +142,9 @@ set(
         ${SERVER_DIR}/Listener
         ${SERVER_DIR}/Client
         ${SERVER_DIR}/Listener
-        ${SERVER_DIR}/RequestManager
         ${SERVER_DIR}/Database
+        ${SERVER_DIR}/RequestManager
+        ${SERVER_DIR}/RequestManager/UserManager
 )
 
 
@@ -153,8 +154,9 @@ set(
         SERVER_SOURCES
         ${SERVER_DIR}/Server/Server.cpp
         ${SERVER_DIR}/Listener/AsioListener.cpp
-        ${SERVER_DIR}/RequestManager/RequestManager.cpp
         ${SERVER_DIR}/Database/Database.cpp
+        ${SERVER_DIR}/RequestManager/RequestManager.cpp
+        ${SERVER_DIR}/RequestManager/UserManager/UserManager.cpp
 )
 
 
@@ -172,6 +174,8 @@ target_include_directories(
         babel_server PUBLIC
         ${SERVER_INCLUDES}
 )
+# TODO: REMOVE WHEN FIX SQLITE_ORM.
+target_compile_options(babel_server PRIVATE -Wno-redundant-move)
 
 target_link_libraries(babel_server ${CONAN_LIBS} stdc++fs )
 

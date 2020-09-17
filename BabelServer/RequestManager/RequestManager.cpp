@@ -5,43 +5,67 @@
 ** [RequestManager.cpp]: Source file for RequestManager feature.
 */
 
+//TODO: REMOVE
+#include <iostream>
+
 #include "RequestManager.hpp"
 
 using namespace BabelServer;
 
-bool RequestManager::manage(const std::shared_ptr<BabelNetwork::AResponse> &response)
+bool RequestManager::manage(
+    const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
+    const std::shared_ptr<BabelNetwork::AResponse> &response,
+    const BabelNetwork::ClientList &clientList,
+    Database &database
+)
 {
+    // TODO: Remove
+    std::cout << "MANAGE response with code" << response->getCode() << std::endl;
     switch (response->getResponseType()) {
         case BabelNetwork::AResponse::User:
-            return manageUser(reinterpret_cast<const std::shared_ptr<BabelNetwork::UserResponse>&>(response));
+            manageUser(clientSocket, dynamic_cast<BabelNetwork::UserResponse &>(*response),
+                clientList, database);
+            return true;
         case BabelNetwork::AResponse::Call:
-            return manageCall(reinterpret_cast<const std::shared_ptr<BabelNetwork::CallResponse>&>(response));
+            manageCall(dynamic_cast<BabelNetwork::CallResponse &>(*response));
+            return true;
         case BabelNetwork::AResponse::Friend:
-            return manageFriend(reinterpret_cast<const std::shared_ptr<BabelNetwork::FriendResponse>&>(response));
+            manageFriend(dynamic_cast<BabelNetwork::FriendResponse &>(*response));
+            return true;
         case BabelNetwork::AResponse::Message:
-            return manageMessage(reinterpret_cast<const std::shared_ptr<BabelNetwork::MessageResponse>&>(response));
+            manageMessage(dynamic_cast<BabelNetwork::MessageResponse &>(*response));
+            return true;
         case BabelNetwork::AResponse::UnknownType:
             break;
     }
     return false;
 }
 
-bool RequestManager::manageUser(const std::shared_ptr<BabelNetwork::UserResponse> &response)
+void RequestManager::manageUser(
+    const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
+    const BabelNetwork::UserResponse &response,
+    const BabelNetwork::ClientList &clientList,
+    Database &database
+)
 {
-    return false;
+    auto code = response.getCode();
+    auto userTabPtr = _userManager.getUserResponsePtrTab();
+
+    for (const auto &ptr : userTabPtr) {
+        if (std::get<0>(ptr) == code) {
+            return std::get<1>(ptr)(&_userManager, clientSocket, response, clientList, database);
+        }
+    }
 }
 
-bool RequestManager::manageCall(const std::shared_ptr<BabelNetwork::CallResponse> &response)
+void RequestManager::manageCall(const BabelNetwork::CallResponse &response)
 {
-    return false;
 }
 
-bool RequestManager::manageFriend(const std::shared_ptr<BabelNetwork::FriendResponse> &response)
+void RequestManager::manageFriend(const BabelNetwork::FriendResponse &response)
 {
-    return false;
 }
 
-bool RequestManager::manageMessage(const std::shared_ptr<BabelNetwork::MessageResponse> &response)
+void RequestManager::manageMessage(const BabelNetwork::MessageResponse &response)
 {
-    return false;
 }

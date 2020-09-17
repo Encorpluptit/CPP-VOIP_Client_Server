@@ -21,7 +21,7 @@ namespace BabelServer {
             : id(), login(std::move(login)), password(std::move(password)) {}
     };
 
-    class Database {
+class Database : virtual public std::mutex {
         /* <- Constructor - Destructor -> */
     public:
         Database();
@@ -30,7 +30,6 @@ namespace BabelServer {
 
         /* <- Public Methods -> */
     public:
-        static auto & getDatabase();
         int createUser(const std::string &login, const std::string &password);
         std::unique_ptr<UserModel> getUser(const std::string &login);
         std::unique_ptr<UserModel> getUser(int id);
@@ -39,13 +38,17 @@ namespace BabelServer {
 
         /* <- Private Methods -> */
     private:
-        void lock() { _mtx.lock(); }
+//        void lock() { _mtx.lock(); }
+//
+//        void unlock() { _mtx.unlock(); }
 
-        void unlock() { _mtx.unlock(); }
+        /* <- Getters / Setters -> */
+    private:
+        static auto & getDatabase();
 
         /* <- Attributes -> */
     private:
-        std::mutex _mtx;
+//        std::mutex _mtx;
 //        sqlite_orm::internal::transaction_guard_t _mtx2;
     };
 
