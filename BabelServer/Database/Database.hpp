@@ -32,8 +32,8 @@ namespace BabelServer {
         std::string content;
         MessageModel() = default;
 
-        MessageModel(const int sender, const int receiver, std::string content)
-            : id(), senderID(sender), receiverID(receiver), content(std::move(content)) {}
+        MessageModel(const int sender, const int receiver, std::string msg_content, const time_t msg_timestamp)
+            : id(), senderID(sender), receiverID(receiver), timestamp(msg_timestamp), content(std::move(msg_content)) {}
     };
 
     class Database : virtual public std::mutex {

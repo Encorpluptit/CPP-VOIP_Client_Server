@@ -17,14 +17,14 @@ using namespace sqlite_orm;
 // TODO: Adding Logger
 Database::Database(BabelUtils::Logger &logger) : _logger(logger)
 {
-    std::cout << "LOLOL" << std::endl;
-//    auto storage = getDatabase();
 }
 
 Database::~Database()
 {
-    lock();
-    unlock();
+//    lock();
+//    auto storage = getDatabase();
+//    storage.close();
+//    unlock();
 }
 
 auto &Database::getDatabase()
@@ -67,8 +67,8 @@ int Database::createUser(const std::string &login, const std::string &password)
                 login.c_str(), password.c_str()));
     }
     unlock();
-    // TODO: REMOVE
-    std::cout << "User Created" << std::endl;
+    _logger.logThis(
+        BabelUtils::format("User Created: id {%d}, login {%s}, password {%s}", user.id, user.login.c_str(), user.password.c_str()));
     return id;
 }
 

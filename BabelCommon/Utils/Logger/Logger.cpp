@@ -96,7 +96,11 @@ void Logger::logThis(const std::string &msg) {
     if (!isOk())
         return;
     getTime();
-    _logFile << "[ " << _description << " ] - " << _timeBuffer << " ==> " << msg << "\n";
+    std::string log_msg("[ " + _description + " ] - " + _timeBuffer + " ==> " + msg + "\n");
+    #if _DEBUG_
+        std::cerr << log_msg;
+    #endif
+    _logFile << log_msg;
 }
 
 void Logger::logThis(const BabelNetwork::AResponse &response, const std::string &msg) {

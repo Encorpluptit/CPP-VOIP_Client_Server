@@ -21,7 +21,6 @@ void UserManager::createAccount(
     Database &database
 ) const
 {
-    // TODO: Log Function
     _logger.logThis(BabelUtils::format("Request for User Creation with login {%s} and password {%s}", response->getLogin(), response->getPassword()));
     database.createUser(response->getLogin(), response->getPassword());
 }
