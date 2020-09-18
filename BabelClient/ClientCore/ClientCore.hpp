@@ -9,7 +9,7 @@
 #define CPP_BABEL_2020_CLIENTCORE_HPP
 
 #include <QApplication>
-#include "mainwindow.h"
+#include "mainwindow.hpp"
 
 #include "AsioClientSocket.hpp"
 #include "AResponse.hpp"
