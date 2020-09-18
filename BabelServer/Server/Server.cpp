@@ -12,7 +12,9 @@
 using namespace BabelServer;
 
 Server::Server(int ac, char **av)
-    : _logger(BabelUtils::Logger::LogType::ServerLog)
+    : _logger(BabelUtils::Logger::LogType::ServerLog),
+    _database(_logger),
+    _manager(_logger)
 {
     _ready = false;
     initServers(ac, av);
@@ -54,10 +56,18 @@ void Server::runListener()
 {
     while (listenerRunning()) {
         std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>> clients;
+        // TODO: Manage User Response server by server ?
         for (const auto &server : _servers) {
             auto list = server->getClientList();
             if (list.empty())
                 continue;
+//            for (const auto &client : clients) {
+//                if (!client->isReady())
+//                    continue;
+//                auto resp = client->popResponse();
+//                if (!resp)
+//                    continue;
+//                _manager.manage(resp);
             clients.insert(clients.end(), list.begin(), list.end());
         }
         if (clients.empty())
@@ -68,6 +78,8 @@ void Server::runListener()
             auto resp = client->popResponse();
             if (!resp)
                 continue;
+            _manager.manage(client, resp, clients, _database);
+//            _manag TODO: Manager
             std::cout << "HERE: " << resp << std::endl;
         }
     }

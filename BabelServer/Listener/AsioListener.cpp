@@ -72,7 +72,7 @@ void AsioListener::accept()
 //        )
 //    );
 //    auto new_session = _asioClients.back();
-//
+
     auto new_session = boost::make_shared<BabelNetwork::AsioClientSocket>(
         _networkInfos.getIp(),
         _networkInfos.getPortStr(),
@@ -177,8 +177,3 @@ void AsioListener::stopContext()
 {
     return const_cast<io_context &>(_context);
 }
-//
-//bool AsioListener::isReady()
-//{
-//    return false;
-//}

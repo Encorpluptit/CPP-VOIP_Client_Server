@@ -134,7 +134,7 @@ namespace BabelNetwork {
         [[nodiscard]] static std::shared_ptr<AResponse> AccountCreationRequest(const std::string &login, const std::string &password);
         [[nodiscard]] static std::shared_ptr<AResponse> LogoutRequest(const std::string &login);
         [[nodiscard]] static std::shared_ptr<AResponse> AccountDeletionRequest(const std::string &login);
-        [[nodiscard]] static std::shared_ptr<AResponse> LoggingInOk(const std::string &login);
+        [[nodiscard]] static std::shared_ptr<AResponse> LoggedInOk(const std::string &login);
         [[nodiscard]] static std::shared_ptr<AResponse> LoggedOutOk(const std::string &login);
         [[nodiscard]] static std::shared_ptr<AResponse> AccountDeletedOk(const std::string &login);
         [[nodiscard]] static std::shared_ptr<AResponse> UnknowUser(const std::string &login);

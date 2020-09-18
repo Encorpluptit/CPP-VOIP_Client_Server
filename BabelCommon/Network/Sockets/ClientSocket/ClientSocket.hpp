@@ -56,6 +56,7 @@ namespace BabelNetwork {
     /* <- Operators -> */
 //    std::ostream &operator<<(std::ostream &os, const AResponse &response);
 
+    using ClientList = std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>>;
 }
 
 #endif /* CPP_BABEL_2020_CLIENTSOCKET_HPP */

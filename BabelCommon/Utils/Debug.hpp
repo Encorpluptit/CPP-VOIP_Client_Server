@@ -9,6 +9,7 @@
 
 #ifdef _DEBUG_
 
+#include <iostream>
 #include "StringFormat.tpp"
 
 #define __F__ (std::string(__FILE__).substr(std::string(__FILE__).find_last_of('/')).c_str() + 1)

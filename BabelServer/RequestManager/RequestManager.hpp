@@ -10,62 +10,71 @@
 
 #include <vector>
 #include <functional>
+#include <tuple>
 
 #include "ClientSocket.hpp"
-#include "AResponse.hpp"
-
-//#include "
-
 
 #include "UserResponse.hpp"
 #include "CallResponse.hpp"
 #include "FriendResponse.hpp"
 #include "MessageResponse.hpp"
 
+#include "Database.hpp"
+#include "UserManager.hpp"
+
 namespace BabelServer {
     class RequestManager {
 
-        using AResponseProt = void(BabelNetwork::ClientSocket*,const std::shared_ptr<BabelNetwork::AResponse> &/*, Database */);
-
-        using UserResponseProt = void(BabelNetwork::ClientSocket*,const std::shared_ptr<BabelNetwork::UserResponse> &/*, Database */);
-
-        using CallResponseProt = void(BabelNetwork::ClientSocket*,const std::shared_ptr<BabelNetwork::CallResponse> &/*, Database */);
-
-        using FriendResponseProt = void(BabelNetwork::ClientSocket*,const std::shared_ptr<BabelNetwork::FriendResponse> &/*, Database */);
-
-        using MessageResponseProt = void(BabelNetwork::ClientSocket*,const std::shared_ptr<BabelNetwork::FriendResponse> &/*, Database */);
-
         /* <- Constructor - Destructor -> */
     public:
-        RequestManager() = default;
+        explicit RequestManager(BabelUtils::Logger& logger): _logger(logger), _userManager(logger){};
 
         /* <- Public Methods -> */
     public:
+        [[nodiscard]] bool manage(
+            const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
+            const std::shared_ptr<BabelNetwork::AResponse> &response,
+            const BabelNetwork::ClientList &clientList,
+            Database &database
+        );
 
         /* <- Private Methods -> */
     private:
-        [[nodiscard]] bool manage(std::shared_ptr<BabelNetwork::AResponse>);
+        void manageUser(
+            const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
+            const std::shared_ptr<BabelNetwork::UserResponse> &response,
+            const BabelNetwork::ClientList &clientList,
+            Database &database
+        );
 
-        [[nodiscard]] bool manageUser(std::shared_ptr<BabelNetwork::UserResponse>);
+        void manageCall(
+            const BabelNetwork::CallResponse &response
+        );
 
-        [[nodiscard]] bool manageCall(std::shared_ptr<BabelNetwork::CallResponse>);
+        void manageFriend(
+            const BabelNetwork::FriendResponse &response
+        );
 
-        [[nodiscard]] bool manageFriend(std::shared_ptr<BabelNetwork::FriendResponse>);
-
-        [[nodiscard]] bool manageMessage(std::shared_ptr<BabelNetwork::MessageResponse>);
+        void manageMessage(
+            const BabelNetwork::MessageResponse &response
+        );
 
         /* <- Attributes -> */
     private:
-        const std::vector<std::function<AResponseProt>> AResponsePtrTab = {
-        };
-        const std::vector<std::function<UserResponseProt >> UserResponsePtrTab = {
-        };
-        const std::vector<std::function<CallResponseProt >> CallResponsePtrTab = {
-        };
-        const std::vector<std::function<FriendResponseProt >> FriendResponsePtrTab = {
-        };
-        const std::vector<std::function<MessageResponseProt >> MessageResponsePtrTab = {
-        };
+        BabelUtils::Logger & _logger;
+        const UserManager _userManager;
+//        const std::vector<AResponseTuple> AResponsePtrTab = {
+//            (BabelNetwork::AResponse::ResponseType, ),
+//
+//        };
+//        const std::vector<std::function<UserResponseProt >> UserResponsePtrTab = {
+//        };
+//        const std::vector<std::function<CallResponseProt >> CallResponsePtrTab = {
+//        };
+//        const std::vector<std::function<FriendResponseProt >> FriendResponsePtrTab = {
+//        };
+//        const std::vector<std::function<MessageResponseProt >> MessageResponsePtrTab = {
+//        };
     };
 }
 
