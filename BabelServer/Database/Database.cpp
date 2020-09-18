@@ -15,7 +15,7 @@ using namespace sqlite_orm;
 
 
 // TODO: Adding Logger
-Database::Database()
+Database::Database(BabelUtils::Logger &logger) : _logger(logger)
 {
     std::cout << "LOLOL" << std::endl;
 //    auto storage = getDatabase();
@@ -34,9 +34,16 @@ auto &Database::getDatabase()
             make_column("id", &UserModel::id, autoincrement(), primary_key()),
             make_column("login", &UserModel::login, unique()),
             make_column("password", &UserModel::password)
+        ),
+        make_table("message",
+            make_column("id", &MessageModel::id, autoincrement(), primary_key()),
+            make_column("sender", &MessageModel::senderID),
+            make_column("receiver", &MessageModel::receiverID),
+            make_column("timestamp", &MessageModel::timestamp),
+            make_column("content", &MessageModel::content),
+            foreign_key(&MessageModel::senderID).references(&UserModel::id),
+            foreign_key(&MessageModel::receiverID).references(&UserModel::id)
         )
-        /*,
-            */
     );
     storage.sync_schema();
     return storage;
@@ -51,9 +58,13 @@ int Database::createUser(const std::string &login, const std::string &password)
     try {
         id = storage.insert(user);
     } catch (const std::system_error &e) {
-        std::cout << e.what() << std::endl;
+        _logger.logThis(
+            BabelUtils::format("Error in create User with login: {%s} and password: {%s} -> %s", login.c_str(),
+                password.c_str(), e.what()));
     } catch (...) {
-        std::cout << "unknown exeption" << std::endl;
+        _logger.logThis(
+            BabelUtils::format("Error in create User with login: {%s} and password: {%s} -> unknown exception",
+                login.c_str(), password.c_str()));
     }
     unlock();
     // TODO: REMOVE
@@ -63,15 +74,15 @@ int Database::createUser(const std::string &login, const std::string &password)
 
 std::unique_ptr<UserModel> Database::getUser(const std::string &login)
 {
-    std::vector<UserModel>users{};
+    std::vector<UserModel> users{};
     lock();
     auto storage = getDatabase();
     try {
         users = storage.get_all<UserModel>(where(c(&UserModel::login) == login));
     } catch (const std::system_error &e) {
-        std::cout << e.what() << std::endl;
+        _logger.logThis(BabelUtils::format("Error in getUser(login): %s", e.what()));
     } catch (...) {
-        std::cout << "unknown exeption" << std::endl;
+        _logger.logThis("Error in getUser(login): unknown exception");
     }
     unlock();
     if (users.size() != 1)
@@ -87,9 +98,9 @@ std::unique_ptr<UserModel> Database::getUser(int id)
     try {
         user = storage.get_pointer<UserModel>(id);
     } catch (const std::system_error &e) {
-        std::cout << e.what() << std::endl;
+        _logger.logThis(BabelUtils::format("Error in getUser(id): %s", e.what()));
     } catch (...) {
-        std::cout << "unknown exeption" << std::endl;
+        _logger.logThis("Error in getUser(id): unknown exception");
     }
     unlock();
     return user;

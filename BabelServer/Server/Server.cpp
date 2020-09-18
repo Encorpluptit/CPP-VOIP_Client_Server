@@ -13,25 +13,11 @@ using namespace BabelServer;
 
 Server::Server(int ac, char **av)
     : _logger(BabelUtils::Logger::LogType::ServerLog),
-    _database()
+    _database(_logger),
+    _manager(_logger)
 {
     _ready = false;
     initServers(ac, av);
-//    auto id = _database.createUser("lol", "mdr");
-//    std::cout << id << std::endl;
-//    auto user = _database.getUser(id);
-//    if (user)
-//        std::cout << user->login << std::endl;
-//    else
-//        std::cout << "null" << std::endl;
-//
-////    std::cout << user.login << std::endl;
-//
-//    user = _database.getUser("lol");
-//    if (user)
-//        std::cout << user->login << std::endl;
-//    else
-//        std::cout << "null" << std::endl;
 }
 
 Server::~Server()

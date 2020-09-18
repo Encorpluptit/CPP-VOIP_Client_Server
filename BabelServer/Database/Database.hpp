@@ -9,47 +9,60 @@
 #define CPP_BABEL_2020_DATABASE_HPP
 
 #include <mutex>
+#include <utility>
 #include <sqlite_orm.h>
+#include "Logger.hpp"
 
 namespace BabelServer {
     struct UserModel {
         int id{};
         std::string login;
         std::string password;
+
         UserModel() = default;
+
         UserModel(std::string login, std::string password)
             : id(), login(std::move(login)), password(std::move(password)) {}
     };
+    struct MessageModel {
+        int id{};
+        int senderID{};
+        int receiverID{};
+        time_t timestamp{};
+        std::string content;
+        MessageModel() = default;
 
-class Database : virtual public std::mutex {
+        MessageModel(const int sender, const int receiver, std::string content)
+            : id(), senderID(sender), receiverID(receiver), content(std::move(content)) {}
+    };
+
+    class Database : virtual public std::mutex {
         /* <- Constructor - Destructor -> */
     public:
-        Database();
+        explicit Database(BabelUtils::Logger &logger);
 
         ~Database();
 
         /* <- Public Methods -> */
     public:
         int createUser(const std::string &login, const std::string &password);
+
         std::unique_ptr<UserModel> getUser(const std::string &login);
+
         std::unique_ptr<UserModel> getUser(int id);
 //        bool deleteUser(const std::string &login);
 //        bool deleteUser(const int id);
 
         /* <- Private Methods -> */
     private:
-//        void lock() { _mtx.lock(); }
-//
-//        void unlock() { _mtx.unlock(); }
 
         /* <- Getters / Setters -> */
     private:
-        static auto & getDatabase();
+        static auto &getDatabase();
 
         /* <- Attributes -> */
     private:
-//        std::mutex _mtx;
-//        sqlite_orm::internal::transaction_guard_t _mtx2;
+        BabelUtils::Logger &_logger;
     };
 
 }

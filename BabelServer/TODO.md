@@ -1,5 +1,13 @@
 # MANAGER
- - pass const ref to response to shred ptr with std::dynamic_pointer_cast
  - User Responses
  
-# 
+# Database
+ - 
+
+## User
+ - User Delete fct
+
+## Message
+ - Add timestamp in message table
+ - Do fct for adding, getting, deleting msg
+ - 

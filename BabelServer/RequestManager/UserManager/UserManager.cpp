@@ -16,13 +16,14 @@ const std::vector<UserManager::UserResponseTuple> &BabelServer::UserManager::get
 
 void UserManager::createAccount(
     const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
-    const BabelNetwork::UserResponse &response,
+    const std::shared_ptr<BabelNetwork::UserResponse> &response,
     __attribute__((unused))const BabelNetwork::ClientList &clientList,
     Database &database
 ) const
 {
-    std::cout << "Create Account" << std::endl;
-    database.createUser(response.getLogin(), response.getPassword());
+    // TODO: Log Function
+    _logger.logThis(BabelUtils::format("Request for User Creation with login {%s} and password {%s}", response->getLogin(), response->getPassword()));
+    database.createUser(response->getLogin(), response->getPassword());
 }
 
 //void BabelServer::UserManager::createAccount(int lol)

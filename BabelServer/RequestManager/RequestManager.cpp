@@ -23,8 +23,7 @@ bool RequestManager::manage(
     std::cout << "MANAGE response with code" << response->getCode() << std::endl;
     switch (response->getResponseType()) {
         case BabelNetwork::AResponse::User:
-            manageUser(clientSocket, dynamic_cast<BabelNetwork::UserResponse &>(*response),
-                clientList, database);
+            manageUser(clientSocket, std::dynamic_pointer_cast<BabelNetwork::UserResponse> (response), clientList, database);
             return true;
         case BabelNetwork::AResponse::Call:
             manageCall(dynamic_cast<BabelNetwork::CallResponse &>(*response));
@@ -43,29 +42,31 @@ bool RequestManager::manage(
 
 void RequestManager::manageUser(
     const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
-    const BabelNetwork::UserResponse &response,
+    const std::shared_ptr<BabelNetwork::UserResponse> &response,
     const BabelNetwork::ClientList &clientList,
     Database &database
 )
 {
-    auto code = response.getCode();
+    auto code = response->getCode();
     auto userTabPtr = _userManager.getUserResponsePtrTab();
 
     for (const auto &ptr : userTabPtr) {
-        if (std::get<0>(ptr) == code) {
+        if (std::get<0>(ptr) == code)
             return std::get<1>(ptr)(&_userManager, clientSocket, response, clientList, database);
-        }
     }
 }
 
 void RequestManager::manageCall(const BabelNetwork::CallResponse &response)
 {
+    (void)response;
 }
 
 void RequestManager::manageFriend(const BabelNetwork::FriendResponse &response)
 {
+    (void)response;
 }
 
 void RequestManager::manageMessage(const BabelNetwork::MessageResponse &response)
 {
+    (void)response;
 }
