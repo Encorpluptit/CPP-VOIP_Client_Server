@@ -2,8 +2,8 @@
 # Project Configuration
 cmake_minimum_required(VERSION 3.14)
 project(CPP_babel_2020)
-set(CMAKE_C_COMPILER_VERSION 10.1)
-set(CMAKE_CXX_COMPILER_VERSION 10.1)
+#set(CMAKE_C_COMPILER_VERSION 10.1)
+#set(CMAKE_CXX_COMPILER_VERSION 10.1)
 
 
 set(CMAKE_AUTOMOC ON)
@@ -200,7 +200,6 @@ set(
         CLIENT_SOURCES
         ${CLIENT_DIR}/ClientCore/ClientCore.cpp
         ${CLIENT_DIR}/QtGraphics/mainwindow.cpp
-        ${CLIENT_DIR}/QtGraphics/mainwindow.h
         ${CLIENT_DIR}/QtGraphics/mainwindow.ui
 
 )

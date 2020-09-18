@@ -15,7 +15,9 @@ int main(int ac, char **av)
         return (84);
     std::cout << "Babel client!" << std::endl;
     try {
-        BabelClient::ClientCore core(av);
+        char *lol[] = {"lol"};
+        int lol2 = 0;
+        BabelClient::ClientCore core(lol2, av, lol);
         core.start();
         core.run();
     } catch (const BabelErrors::BabelError &e) {

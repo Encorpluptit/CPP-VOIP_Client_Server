@@ -9,6 +9,7 @@
 #define CPP_BABEL_2020_CLIENTCORE_HPP
 
 #include <QApplication>
+#include "mainwindow.h"
 
 #include "AsioClientSocket.hpp"
 #include "AResponse.hpp"
@@ -24,7 +25,7 @@ namespace BabelClient {
     class ClientCore final : virtual public BabelUtils::ARunnable {
         /* <- Constructor - Destructor -> */
     public:
-        explicit ClientCore(char **av);
+        explicit ClientCore(const int &ac, char **av, char **argv);
 
         ~ClientCore() final;
 
@@ -34,7 +35,7 @@ namespace BabelClient {
 
         void stop() final;
 
-        void run();
+        int run();
 
         void checkTypeResponse(std::shared_ptr<BabelNetwork::AResponse> response);
         void doUserResponse(std::shared_ptr<BabelNetwork::AResponse> response);
@@ -92,6 +93,7 @@ namespace BabelClient {
         std::vector<int> friendCodeIdx = {301, 302, 350};
         std::vector<int> messageCodeIdx = {402, 403, 450};
         QApplication _app;
+        MainWindow _win;
     };
 
 }
