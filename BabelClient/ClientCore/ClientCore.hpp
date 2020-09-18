@@ -8,6 +8,8 @@
 #ifndef CPP_BABEL_2020_CLIENTCORE_HPP
 #define CPP_BABEL_2020_CLIENTCORE_HPP
 
+#include <QApplication>
+
 #include "AsioClientSocket.hpp"
 #include "AResponse.hpp"
 #include "boost/shared_ptr.hpp"
@@ -89,6 +91,7 @@ namespace BabelClient {
         std::vector<int> callCodeIdx = {200, 202, 204, 205, 270, 271};
         std::vector<int> friendCodeIdx = {301, 302, 350};
         std::vector<int> messageCodeIdx = {402, 403, 450};
+        QApplication _app;
     };
 
 }

@@ -186,7 +186,7 @@ set(
         CLIENT_INCLUDES
         ${CLIENT_DIR}/include
         ${CLIENT_DIR}/ClientCore
-        ${CLIENT_DIR}/qtFront
+        ${CLIENT_DIR}/QtGraphics/
 )
 
 
@@ -195,8 +195,10 @@ set(
 set(
         CLIENT_SOURCES
         ${CLIENT_DIR}/ClientCore/ClientCore.cpp
-        ${CLIENT_DIR}/qtFront/CallWidget.cpp
-        #${CLIENT_DIR}/qtFront/callwidget.ui
+        ${CLIENT_DIR}/QtGraphics/mainwindow.cpp
+        ${CLIENT_DIR}/QtGraphics/mainwindow.h
+        ${CLIENT_DIR}/QtGraphics/mainwindow.ui
+
 )
 
 
@@ -217,9 +219,9 @@ target_include_directories(
 
 target_compile_definitions(babel_client PRIVATE BABEL_CLIENT_BIN)
 
-#find_package(Qt5 COMPONENTS Network REQUIRED)
-#target_link_libraries(babel_client ${CONAN_LIBS} stdc++fs Qt5::Widgets Qt5::Network)
-target_link_libraries(babel_client ${CONAN_LIBS} stdc++fs)
+find_package(Qt5 COMPONENTS Network Widgets REQUIRED)
+target_link_libraries(babel_client ${CONAN_LIBS} stdc++fs Qt5::Widgets Qt5::Network)
+#target_link_libraries(babel_client ${CONAN_LIBS} stdc++fs)
 
 
 ###############################################################################
