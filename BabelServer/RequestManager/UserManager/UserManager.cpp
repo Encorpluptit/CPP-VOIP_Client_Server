@@ -2,9 +2,7 @@
 // Created by encorpluptit on 9/16/20.
 //
 
-//TODO: REMOVE
-#include <iostream>
-
+#include "Debug.hpp"
 #include "UserManager.hpp"
 
 using namespace BabelServer;
@@ -21,7 +19,9 @@ void UserManager::createAccount(
     Database &database
 ) const
 {
-    _logger.logThis(BabelUtils::format("Request for User Creation with login {%s} and password {%s}", response->getLogin(), response->getPassword()));
+    std::string log(BabelUtils::format("Request for User Creation with login {%s} and password {%s}", response->getLogin(), response->getPassword()));
+    dbg("%s\n", log.c_str());
+    _logger.logThis(log);
     database.createUser(response->getLogin(), response->getPassword());
 }
 

@@ -5,9 +5,7 @@
 ** [Database.cpp]: Source file for Database feature.
 */
 
-//TODO: REMOVE
-#include <iostream>
-
+#include "Debug.hpp"
 #include "Database.hpp"
 
 using namespace BabelServer;
@@ -51,6 +49,7 @@ auto &Database::getDatabase()
 
 int Database::createUser(const std::string &login, const std::string &password)
 {
+    std::string log;
     auto user = UserModel(login, password);
     lock();
     auto storage = getDatabase();
@@ -58,31 +57,45 @@ int Database::createUser(const std::string &login, const std::string &password)
     try {
         id = storage.insert(user);
     } catch (const std::system_error &e) {
-        _logger.logThis(
-            BabelUtils::format("Error in create User with login: {%s} and password: {%s} -> %s", login.c_str(),
-                password.c_str(), e.what()));
+        log = BabelUtils::format("Error in create User with login: {%s} and password: {%s} -> %s", login.c_str(), password.c_str(), e.what());
+        dbg("%s", log.c_str());
+        _logger.logThis(log);
+        unlock();
+        return id;
     } catch (...) {
-        _logger.logThis(
-            BabelUtils::format("Error in create User with login: {%s} and password: {%s} -> unknown exception",
-                login.c_str(), password.c_str()));
+        log = BabelUtils::format("Error in create User with login: {%s} and password: {%s} -> unknown exception", login.c_str(), password.c_str());
+        dbg("%s", log.c_str());
+        _logger.logThis(log);
+        unlock();
+        return id;
     }
     unlock();
-    _logger.logThis(
-        BabelUtils::format("User Created: id {%d}, login {%s}, password {%s}", user.id, user.login.c_str(), user.password.c_str()));
+    log = BabelUtils::format("User Created: id {%d}, login {%s}, password {%s}", user.id, user.login.c_str(), user.password.c_str());
+    dbg("%s", log.c_str());
+    _logger.logThis(log);
     return id;
 }
 
 std::unique_ptr<UserModel> Database::getUser(const std::string &login)
 {
     std::vector<UserModel> users{};
+    std::string log;
     lock();
     auto storage = getDatabase();
     try {
         users = storage.get_all<UserModel>(where(c(&UserModel::login) == login));
     } catch (const std::system_error &e) {
-        _logger.logThis(BabelUtils::format("Error in getUser(login): %s", e.what()));
+        log = BabelUtils::format("Error in getUser(login): %s", e.what());
+        dbg("%s", log.c_str());
+        _logger.logThis(log);
+        unlock();
+        return nullptr;
     } catch (...) {
-        _logger.logThis("Error in getUser(login): unknown exception");
+        log = "Error in getUser(login): unknown exception";
+        dbg("%s", log.c_str());
+        _logger.logThis(log);
+        unlock();
+        return nullptr;
     }
     unlock();
     if (users.size() != 1)
@@ -92,15 +105,20 @@ std::unique_ptr<UserModel> Database::getUser(const std::string &login)
 
 std::unique_ptr<UserModel> Database::getUser(int id)
 {
+    std::string log;
     std::unique_ptr<UserModel> user = nullptr;
     lock();
     auto storage = getDatabase();
     try {
         user = storage.get_pointer<UserModel>(id);
     } catch (const std::system_error &e) {
-        _logger.logThis(BabelUtils::format("Error in getUser(id): %s", e.what()));
+        log = BabelUtils::format("Error in getUser(id: {%d}): %s", id, e.what());
+        dbg("%s", log.c_str());
+        _logger.logThis(log);
     } catch (...) {
-        _logger.logThis("Error in getUser(id): unknown exception");
+        log = BabelUtils::format("Error in getUser(id): unknown exception");
+        dbg("%s", log.c_str());
+        _logger.logThis(log);
     }
     unlock();
     return user;
