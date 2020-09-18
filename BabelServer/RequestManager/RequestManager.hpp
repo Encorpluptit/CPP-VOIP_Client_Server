@@ -27,7 +27,7 @@ namespace BabelServer {
 
         /* <- Constructor - Destructor -> */
     public:
-        RequestManager() = default;
+        explicit RequestManager(BabelUtils::Logger& logger): _logger(logger), _userManager(logger){};
 
         /* <- Public Methods -> */
     public:
@@ -42,7 +42,7 @@ namespace BabelServer {
     private:
         void manageUser(
             const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
-            const BabelNetwork::UserResponse &response,
+            const std::shared_ptr<BabelNetwork::UserResponse> &response,
             const BabelNetwork::ClientList &clientList,
             Database &database
         );
@@ -61,7 +61,8 @@ namespace BabelServer {
 
         /* <- Attributes -> */
     private:
-        const UserManager _userManager{};
+        BabelUtils::Logger & _logger;
+        const UserManager _userManager;
 //        const std::vector<AResponseTuple> AResponsePtrTab = {
 //            (BabelNetwork::AResponse::ResponseType, ),
 //

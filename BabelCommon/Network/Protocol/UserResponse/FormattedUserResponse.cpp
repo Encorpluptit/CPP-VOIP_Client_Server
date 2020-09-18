@@ -41,7 +41,7 @@ std::shared_ptr<AResponse> UserResponse::AccountDeletionRequest(const std::strin
     return resp;
 }
 
-std::shared_ptr<AResponse> UserResponse::LoggingInOk(const std::string &login)
+std::shared_ptr<AResponse> UserResponse::LoggedInOk(const std::string &login)
 {
     auto resp = std::make_shared<UserResponse>(login, "");
 

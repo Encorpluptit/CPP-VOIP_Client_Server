@@ -5,7 +5,6 @@
 ** [AsioClientSocket.cpp]: Source file for AsioClientSocket feature.
 */
 
-#include <iostream>
 #include "AsioClientSocket.hpp"
 #include "ClientError.hpp"
 #include "Debug.hpp"
@@ -173,8 +172,8 @@ void AsioClientSocket::read_data(const boost::system::error_code &error)
 void AsioClientSocket::queue_read_response(const boost::system::error_code &error)
 {
     if (!error && _read_msg->decode_data()) {
-        std::cout << _read_msg << std::endl;
         _read_queue.push(_read_msg);
+        dbg("Request Received: %s", _read_msg->serialize().c_str())
         _logger.logThis(_read_msg);
         read_header();
     } else {

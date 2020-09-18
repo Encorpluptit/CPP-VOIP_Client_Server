@@ -56,8 +56,8 @@ namespace BabelServer {
         BabelUtils::Logger _logger;
         std::vector<BabelUtils::SharedPtr<BabelServer::Listener>> _servers;
         BabelUtils::SharedPtr<BabelUtils::AThread> _thread;
-        RequestManager _manager;
         Database _database;
+        RequestManager _manager;
         // TODO: Include Db
     };
 

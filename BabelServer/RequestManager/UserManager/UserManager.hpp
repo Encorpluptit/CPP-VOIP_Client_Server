@@ -6,6 +6,7 @@
 #define CPP_BABEL_2020_USERMANAGER_HPP
 
 #include "Listener.hpp"
+#include "Logger.hpp"
 #include "UserResponse.hpp"
 #include "Database.hpp"
 
@@ -15,7 +16,7 @@ namespace BabelServer {
         using UserResponseProt = void(
             const UserManager *,
             const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
-            const BabelNetwork::UserResponse &,
+            const std::shared_ptr<BabelNetwork::UserResponse> &,
             const BabelNetwork::ClientList &,
             BabelServer::Database &
         );
@@ -23,15 +24,21 @@ namespace BabelServer {
 
         /* <- Constructor - Destructor -> */
     public:
-        UserManager() = default;
+        explicit UserManager(BabelUtils::Logger &logger) : _logger(logger){};
 
         ~UserManager() = default;
 
         /* <- Public Methods -> */
-    public:
+    private:
         void createAccount(
             const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
-            const BabelNetwork::UserResponse &response,
+            const std::shared_ptr<BabelNetwork::UserResponse> &response,
+            const BabelNetwork::ClientList &clientList,
+            Database &database
+        ) const;
+        void Login(
+            const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
+            const std::shared_ptr<BabelNetwork::UserResponse> &response,
             const BabelNetwork::ClientList &clientList,
             Database &database
         ) const;
@@ -46,8 +53,10 @@ namespace BabelServer {
 
         /* <- Attributes -> */
     private:
+        BabelUtils::Logger &_logger;
         const std::vector<UserResponseTuple> UserResponsePtrTab = {
             {BabelNetwork::UserResponse::ResponseCode::RequestAccountCreation, &UserManager::createAccount},
+            {BabelNetwork::UserResponse::ResponseCode::RequestLogin, &UserManager::Login},
 //            {BabelNetwork::UserResponse::ResponseCode::RequestAccountCreation, &UserManager::createAccount},
         };
 
