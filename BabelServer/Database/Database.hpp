@@ -8,24 +8,48 @@
 #ifndef CPP_BABEL_2020_DATABASE_HPP
 #define CPP_BABEL_2020_DATABASE_HPP
 
+#include <mutex>
+#include <sqlite_orm.h>
+
 namespace BabelServer {
-    class Database {
+    struct UserModel {
+        int id{};
+        std::string login;
+        std::string password;
+        UserModel() = default;
+        UserModel(std::string login, std::string password)
+            : id(), login(std::move(login)), password(std::move(password)) {}
+    };
+
+class Database : virtual public std::mutex {
         /* <- Constructor - Destructor -> */
     public:
-        explicit Database();
+        Database();
+
+        ~Database();
 
         /* <- Public Methods -> */
     public:
+        int createUser(const std::string &login, const std::string &password);
+        std::unique_ptr<UserModel> getUser(const std::string &login);
+        std::unique_ptr<UserModel> getUser(int id);
+//        bool deleteUser(const std::string &login);
+//        bool deleteUser(const int id);
+
         /* <- Private Methods -> */
     private:
-        void lock() { _mtx.lock(); }
+//        void lock() { _mtx.lock(); }
+//
+//        void unlock() { _mtx.unlock(); }
 
-        void unlock() { _mtx.unlock(); }
+        /* <- Getters / Setters -> */
+    private:
+        static auto & getDatabase();
 
         /* <- Attributes -> */
     private:
-        std::mutex _mtx;
-
+//        std::mutex _mtx;
+//        sqlite_orm::internal::transaction_guard_t _mtx2;
     };
 
 }

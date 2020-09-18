@@ -1,0 +1,59 @@
+//
+// Created by encorpluptit on 9/16/20.
+//
+
+#ifndef CPP_BABEL_2020_USERMANAGER_HPP
+#define CPP_BABEL_2020_USERMANAGER_HPP
+
+#include "Listener.hpp"
+#include "UserResponse.hpp"
+#include "Database.hpp"
+
+namespace BabelServer {
+
+    class UserManager {
+        using UserResponseProt = void(
+            const UserManager *,
+            const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
+            const BabelNetwork::UserResponse &,
+            const BabelNetwork::ClientList &,
+            BabelServer::Database &
+        );
+        using UserResponseTuple = std::tuple<BabelNetwork::UserResponse::ResponseCode, std::function<UserResponseProt>>;
+
+        /* <- Constructor - Destructor -> */
+    public:
+        UserManager() = default;
+
+        ~UserManager() = default;
+
+        /* <- Public Methods -> */
+    public:
+        void createAccount(
+            const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
+            const BabelNetwork::UserResponse &response,
+            const BabelNetwork::ClientList &clientList,
+            Database &database
+        ) const;
+
+        /* <- Private Methods -> */
+    private:
+
+        /* <- Getters / Setters -> */
+    public:
+        [[nodiscard]] const std::vector<UserResponseTuple> &getUserResponsePtrTab() const;
+
+
+        /* <- Attributes -> */
+    private:
+        const std::vector<UserResponseTuple> UserResponsePtrTab = {
+            {BabelNetwork::UserResponse::ResponseCode::RequestAccountCreation, &UserManager::createAccount},
+//            {BabelNetwork::UserResponse::ResponseCode::RequestAccountCreation, &UserManager::createAccount},
+        };
+
+
+    };
+
+}
+
+#endif //CPP_BABEL_2020_USERMANAGER_HPP

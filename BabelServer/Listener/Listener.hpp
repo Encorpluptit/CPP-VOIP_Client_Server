@@ -9,11 +9,11 @@
 #define CPP_BABEL_2020_LISTENER_HPP
 
 #include "ASocket.hpp"
-#include "AsioClientSocket.hpp"
+#include "ClientSocket.hpp"
 
 namespace BabelServer {
 
-    using ClientList = std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>>;
+//    using ClientList = std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>>;
 
     class Listener : virtual public BabelNetwork::ASocket {
         /* <- Constructor - Destructor -> */
@@ -22,7 +22,7 @@ namespace BabelServer {
     public:
 //        virtual std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>> getClientList() = 0;
 
-        virtual ClientList getClientList() = 0;
+        virtual BabelNetwork::ClientList getClientList() = 0;
 
         /* <- Attributes -> */
     protected:

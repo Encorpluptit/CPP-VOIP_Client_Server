@@ -51,7 +51,7 @@ namespace BabelServer {
 
         [[nodiscard]] const signal_set &getSignals() const;
 
-        ClientList getClientList() final;
+        BabelNetwork::ClientList getClientList() final;
 
         [[nodiscard]] io_context &getContext() const;
 
