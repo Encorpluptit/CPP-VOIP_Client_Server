@@ -13,8 +13,8 @@
 #include "FriendResponse.hpp"
 #include "MessageResponse.hpp"
 
-BabelClient::ClientCore::ClientCore(char **av)
-    : _logger(BabelUtils::Logger::ClientLog)
+BabelClient::ClientCore::ClientCore(int ac, char **av)
+    : _logger(BabelUtils::Logger::ClientLog), _app(ac, av)
 {
     initSocket(av);
     logged = false;

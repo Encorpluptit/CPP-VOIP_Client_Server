@@ -24,7 +24,7 @@ namespace BabelClient {
     class ClientCore final : virtual public BabelUtils::ARunnable {
         /* <- Constructor - Destructor -> */
     public:
-        explicit ClientCore(char **av);
+        ClientCore(int ac, char **av);
 
         ~ClientCore() final;
 
