@@ -29,8 +29,14 @@ namespace BabelServer {
         ~UserManager() = default;
 
         /* <- Public Methods -> */
-    public:
+    private:
         void createAccount(
+            const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
+            const std::shared_ptr<BabelNetwork::UserResponse> &response,
+            const BabelNetwork::ClientList &clientList,
+            Database &database
+        ) const;
+        void Login(
             const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
             const std::shared_ptr<BabelNetwork::UserResponse> &response,
             const BabelNetwork::ClientList &clientList,
@@ -50,6 +56,7 @@ namespace BabelServer {
         BabelUtils::Logger &_logger;
         const std::vector<UserResponseTuple> UserResponsePtrTab = {
             {BabelNetwork::UserResponse::ResponseCode::RequestAccountCreation, &UserManager::createAccount},
+            {BabelNetwork::UserResponse::ResponseCode::RequestLogin, &UserManager::Login},
 //            {BabelNetwork::UserResponse::ResponseCode::RequestAccountCreation, &UserManager::createAccount},
         };
 

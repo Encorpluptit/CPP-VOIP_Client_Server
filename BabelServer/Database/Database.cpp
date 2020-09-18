@@ -13,17 +13,19 @@ using namespace sqlite_orm;
 
 
 // TODO: Adding Logger
-Database::Database(BabelUtils::Logger &logger) : _logger(logger)
+Database::Database(BabelUtils::Logger &logger)
+    : _logger(logger)
 {
 }
 
-Database::~Database()
-{
-//    lock();
-//    auto storage = getDatabase();
-//    storage.close();
-//    unlock();
-}
+Database::~Database() = default;
+//Database::~Database()
+//{
+////    lock();
+////    auto storage = getDatabase();
+////    storage.close();
+////    unlock();
+//}
 
 auto &Database::getDatabase()
 {
@@ -57,20 +59,23 @@ int Database::createUser(const std::string &login, const std::string &password)
     try {
         id = storage.insert(user);
     } catch (const std::system_error &e) {
-        log = BabelUtils::format("Error in create User with login: {%s} and password: {%s} -> %s", login.c_str(), password.c_str(), e.what());
+        log = BabelUtils::format("Error in create User with login: {%s} and password: {%s} -> %s", login.c_str(),
+            password.c_str(), e.what());
         dbg("%s", log.c_str());
         _logger.logThis(log);
         unlock();
         return id;
     } catch (...) {
-        log = BabelUtils::format("Error in create User with login: {%s} and password: {%s} -> unknown exception", login.c_str(), password.c_str());
+        log = BabelUtils::format("Error in create User with login: {%s} and password: {%s} -> unknown exception",
+            login.c_str(), password.c_str());
         dbg("%s", log.c_str());
         _logger.logThis(log);
         unlock();
         return id;
     }
     unlock();
-    log = BabelUtils::format("User Created: id {%d}, login {%s}, password {%s}", user.id, user.login.c_str(), user.password.c_str());
+    log = BabelUtils::format("User Created: id {%d}, login {%s}, password {%s}", user.id, user.login.c_str(),
+        user.password.c_str());
     dbg("%s", log.c_str());
     _logger.logThis(log);
     return id;
@@ -116,7 +121,7 @@ std::unique_ptr<UserModel> Database::getUser(int id)
         dbg("%s", log.c_str());
         _logger.logThis(log);
     } catch (...) {
-        log = BabelUtils::format("Error in getUser(id): unknown exception");
+        log = BabelUtils::format("Error in getUser(id: {%d}): unknown exception", id);
         dbg("%s", log.c_str());
         _logger.logThis(log);
     }
