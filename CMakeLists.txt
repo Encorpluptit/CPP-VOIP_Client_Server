@@ -200,7 +200,7 @@ set(
         CLIENT_SOURCES
         ${CLIENT_DIR}/ClientCore/ClientCore.cpp
         ${CLIENT_DIR}/QtGraphics/mainwindow.cpp
-        ${CLIENT_DIR}/QtGraphics/mainwindow.h
+        ${CLIENT_DIR}/QtGraphics/mainwindow.hpp
         ${CLIENT_DIR}/QtGraphics/mainwindow.ui
 
 )

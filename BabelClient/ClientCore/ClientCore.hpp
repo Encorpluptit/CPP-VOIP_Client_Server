@@ -10,6 +10,7 @@
 
 #include <QApplication>
 
+#include "mainwindow.hpp"
 #include "AsioClientSocket.hpp"
 #include "AResponse.hpp"
 #include "boost/shared_ptr.hpp"
@@ -78,7 +79,7 @@ namespace BabelClient {
     public:
         BabelUtils::Logger _logger;
         BabelUtils::SharedPtr<BabelNetwork::ClientSocket> _socket;
-    
+
     private:
         std::vector<std::function<void(ClientCore*, std::shared_ptr<BabelNetwork::AResponse>)>> dispatch_ptr = {&BabelClient::ClientCore::doUnknowTypeResponse, &BabelClient::ClientCore::doUserResponse, &BabelClient::ClientCore::doCallResponse, &BabelClient::ClientCore::doFriendResponse, &BabelClient::ClientCore::doMessageResponse};
         std::vector<std::function<void(ClientCore*, std::shared_ptr<BabelNetwork::UserResponse>)>> user_ptr = {&BabelClient::ClientCore::LoggedIn, &BabelClient::ClientCore::LoggedOut, &BabelClient::ClientCore::AccountCreate, &BabelClient::ClientCore::AccountDelete, &BabelClient::ClientCore::WrongLogin, &BabelClient::ClientCore::WrongPassword, &BabelClient::ClientCore::LoginAlreadyTaken, &BabelClient::ClientCore::AlreadyLoggedIn};
