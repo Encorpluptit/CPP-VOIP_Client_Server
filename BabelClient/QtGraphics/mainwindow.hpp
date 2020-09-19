@@ -3,11 +3,14 @@
 
 #include <vector>
 #include <string>
+#include <ClientCore.hpp>
 #include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
+
+using namespace BabelClient;
 
 class MainWindow : public QMainWindow
 {
@@ -24,5 +27,6 @@ private slots:
 private:
     Ui::MainWindow *ui;
     std::vector<std::string> _loginInfo;
+    ClientCore *_client;
 };
 #endif // MAINWINDOW_H

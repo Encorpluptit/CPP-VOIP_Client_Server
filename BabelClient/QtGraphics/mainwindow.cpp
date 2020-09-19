@@ -7,7 +7,7 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+    , ui(new Ui::MainWindow), _client(new ClientCore)
 {
     ui->setupUi(this);
 }
@@ -38,6 +38,8 @@ void MainWindow::on_ConnectionButton_clicked()
     _loginInfo.push_back(port);
     _loginInfo.push_back(user);
     _loginInfo.push_back(pass);
+
+    _client->initSocket(getLoginInfo());
 
     std::cout << ip << std::endl;
     std::cout << port << std::endl;
