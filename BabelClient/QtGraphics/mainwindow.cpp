@@ -17,6 +17,11 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+std::vector<std::string> MainWindow::getLoginInfo() const
+{
+    return _loginInfo;
+}
+
 void MainWindow::on_ConnectionButton_clicked()
 {
     /*qDebug()<< ui->IpLine->text();
@@ -28,6 +33,11 @@ void MainWindow::on_ConnectionButton_clicked()
     std::string port = ui->PortLine->text().toLocal8Bit().constData();
     std::string user = ui->UserLine->text().toLocal8Bit().constData();
     std::string pass = ui->PassLine->text().toLocal8Bit().constData();
+
+    _loginInfo.push_back(ip);
+    _loginInfo.push_back(port);
+    _loginInfo.push_back(user);
+    _loginInfo.push_back(pass);
 
     std::cout << ip << std::endl;
     std::cout << port << std::endl;

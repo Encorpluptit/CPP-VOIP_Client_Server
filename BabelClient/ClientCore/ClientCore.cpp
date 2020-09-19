@@ -18,6 +18,7 @@ using namespace BabelClient;
 BabelClient::ClientCore::ClientCore(const int &ac, char **av, char **argv)
     : _logger(BabelUtils::Logger::ClientLog), _app(const_cast<int &>(ac), argv), _win()
 {
+    run();
     initSocket(av);
     logged = false;
 }
@@ -240,7 +241,7 @@ void ClientCore::checkTypeResponse(std::shared_ptr<BabelNetwork::AResponse> resp
 int BabelClient::ClientCore::run()
 {
     _win.show();
-    return _app.exec();
+    _app.exec();
 
 //    std::string data;
 //    std::shared_ptr<BabelNetwork::AResponse> response = nullptr;
@@ -280,10 +281,14 @@ void ClientCore::stop()
 
 void ClientCore::initSocket(char **av)
 {
-    BabelNetwork::NetworkInfos nwi(av[1], av[2]);
+    std::vector<std::string> loginInfo = _win.getLoginInfo();
+
+    std::cout << loginInfo[0] << " " << loginInfo[1] << std::endl;
+
+    BabelNetwork::NetworkInfos nwi(loginInfo[0].c_str(), loginInfo[1].c_str());
 
     _socket = boost::make_shared<BabelNetwork::AsioClientSocket>(
-        av[1], av[2],
+        loginInfo[0].c_str(), loginInfo[1].c_str(),
         _logger,
         BabelNetwork::AsioClientSocket::SocketHandler::Client);
     _socket->connect();
