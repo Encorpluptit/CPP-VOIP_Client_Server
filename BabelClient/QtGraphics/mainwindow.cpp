@@ -24,8 +24,7 @@ void MainWindow::adress(char **av)
 
 void MainWindow::on_ConnectionButton_clicked()
 {
-    /*qDebug()<< ui->IpLine->text();
-    qDebug()<< ui->PortLine->text();
+    /*
     qDebug()<< ui->UserLine->text();
     qDebug()<< ui->PassLine->text();
     */
