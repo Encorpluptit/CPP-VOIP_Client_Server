@@ -10,6 +10,8 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), client(new ClientCore)
     , ui(new Ui::MainWindow)
 {
+    QtSocket *sock = new QtSocket();
+    serv = sock;
     ui->setupUi(this);
 }
 
@@ -18,10 +20,16 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::readyRead()
+{
+    std::cout << "COUCOU" << std::endl;
+}
+
 void MainWindow::adress(char **av)
 {
     client->initSocket(av);
-    connect(client->_socket, SIGNAL(readyRead()), this, SLOT(readyRead()));
+    serv->Binding(8000);
+    connect(serv->socket, SIGNAL(readyRead()), this, SLOT(readyRead()));
 }
 
 void MainWindow::on_ConnectionButton_clicked()

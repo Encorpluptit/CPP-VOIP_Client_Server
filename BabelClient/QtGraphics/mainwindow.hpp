@@ -3,6 +3,7 @@
 
 #include "ClientCore.hpp"
 #include <QMainWindow>
+#include "QtSocket.hpp"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -19,6 +20,8 @@ public:
     ~MainWindow();
     void adress(char **av);
     ClientCore *client;
+    QtSocket *serv;
+
 
 private slots:
     void on_ConnectionButton_clicked();
