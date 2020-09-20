@@ -12,6 +12,7 @@
 #include <utility>
 #include <sqlite_orm.h>
 #include "Logger.hpp"
+#include "UserResponse.hpp"
 
 namespace BabelServer {
     struct UserModel {
@@ -47,13 +48,13 @@ namespace BabelServer {
 
         /* <- Public Methods -> */
     public:
-        int createUser(const std::string &login, const std::string &password);
+        BabelNetwork::UserResponse::ResponseCode createUser(const std::string &login, const std::string &password);
 
         std::unique_ptr<UserModel> getUser(const std::string &login);
 
         std::unique_ptr<UserModel> getUser(int id);
 
-        bool deleteUser(const std::string &login);
+        BabelNetwork::UserResponse::ResponseCode deleteUser(const std::string &login);
 
 //        bool deleteUser(const int id);
 

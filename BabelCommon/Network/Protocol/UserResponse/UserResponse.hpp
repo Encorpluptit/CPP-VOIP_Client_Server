@@ -137,10 +137,10 @@ namespace BabelNetwork {
         [[nodiscard]] static std::shared_ptr<AResponse> LoggedInOk(const std::string &login);
         [[nodiscard]] static std::shared_ptr<AResponse> LoggedOutOk(const std::string &login);
         [[nodiscard]] static std::shared_ptr<AResponse> AccountDeletedOk(const std::string &login);
-        [[nodiscard]] static std::shared_ptr<AResponse> UnknowUser(const std::string &login);
+        [[nodiscard]] static std::shared_ptr<AResponse> UnknowError(const std::string &login);
         [[nodiscard]] static std::shared_ptr<AResponse> BadLogin(const std::string &login);
         [[nodiscard]] static std::shared_ptr<AResponse> BadPassword(const std::string &login);
-        [[nodiscard]] static std::shared_ptr<AResponse> LoginUse(const std::string &login);
+        [[nodiscard]] static std::shared_ptr<AResponse> LoginAlreadyUsed(const std::string &login);
         [[nodiscard]] static std::shared_ptr<AResponse> AlreadyLog(const std::string &login);
         [[nodiscard]] static std::shared_ptr<AResponse> AccountCreatedOk(const std::string &login);
         [[nodiscard]] static std::shared_ptr<AResponse> RequestedDeletedAccount(const std::string &login);

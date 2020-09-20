@@ -73,7 +73,7 @@ std::shared_ptr<AResponse> UserResponse::AccountDeletedOk(const std::string &log
     return resp;
 }
 
-std::shared_ptr<AResponse> UserResponse::UnknowUser(const std::string &login)
+std::shared_ptr<AResponse> UserResponse::UnknowError(const std::string &login)
 {
     auto resp = std::make_shared<UserResponse>(login, "");
 
@@ -97,7 +97,7 @@ std::shared_ptr<AResponse> UserResponse::BadPassword(const std::string &login)
     return resp;
 }
 
-std::shared_ptr<AResponse> UserResponse::LoginUse(const std::string &login)
+std::shared_ptr<AResponse> UserResponse::LoginAlreadyUsed(const std::string &login)
 {
     auto resp = std::make_shared<UserResponse>(login, "");
 

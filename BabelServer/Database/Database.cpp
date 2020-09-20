@@ -45,7 +45,7 @@ auto &Database::getDatabase()
     return storage;
 }
 
-int Database::createUser(const std::string &login, const std::string &password)
+BabelNetwork::UserResponse::ResponseCode Database::createUser(const std::string &login, const std::string &password)
 {
     std::string log;
     auto user = UserModel(login, password);
@@ -60,21 +60,21 @@ int Database::createUser(const std::string &login, const std::string &password)
         dbg("%s", log.c_str());
         _logger.logThis(log);
         unlock();
-        return id;
+        return BabelNetwork::UserResponse::LoginAlreadyTaken;
     } catch (...) {
         log = BabelUtils::format("Error in create User with login: {%s} and password: {%s} -> unknown exception",
             login.c_str(), password.c_str());
         dbg("%s", log.c_str());
         _logger.logThis(log);
         unlock();
-        return id;
+        return BabelNetwork::UserResponse::UnknownUserError;
     }
     unlock();
     log = BabelUtils::format("User Created: id {%d}, login {%s}, password {%s}", id, user.login.c_str(),
         user.password.c_str());
     dbg("%s", log.c_str());
     _logger.logThis(log);
-    return id;
+    return BabelNetwork::UserResponse::AccountCreated;
 }
 
 std::unique_ptr<UserModel> Database::getUser(const std::string &login)
@@ -125,17 +125,17 @@ std::unique_ptr<UserModel> Database::getUser(int id)
     return user;
 }
 
-bool Database::deleteUser(const std::string &login)
+BabelNetwork::UserResponse::ResponseCode Database::deleteUser(const std::string &login)
 {
     std::string log;
     try {
         auto user = getUser(login);
         if (!user)
-            return true;
+            return BabelNetwork::UserResponse::RequestedAccountDeleted;
         lock();
         auto storage = getDatabase();
         storage.remove<UserModel>(user->id);
-        // TODO: ADD Function to remove frienship ?
+        // TODO: ADD Function to remove friendship ?
         log = BabelUtils::format(
             "User Deleted: id {%d}, login {%s}, password {%s}",
             user->id, user->login.c_str(), user->password.c_str());
@@ -146,14 +146,14 @@ bool Database::deleteUser(const std::string &login)
         dbg("%s", log.c_str());
         _logger.logThis(log);
         unlock();
-        return false;
+        return BabelNetwork::UserResponse::UnknownUserError;
     } catch (...) {
         log = "Error in deleteUser(login): unknown exception";
         dbg("%s", log.c_str());
         _logger.logThis(log);
         unlock();
-        return false;
+        return BabelNetwork::UserResponse::UnknownUserError;
     }
     unlock();
-    return true;
+    return BabelNetwork::UserResponse::AccountDeleted;
 }

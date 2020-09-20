@@ -27,11 +27,17 @@ void UserManager::createAccount(
     dbg("%s\n", log.c_str());
     _logger.logThis(log);
     //TODO: Hash Password ?
-    if (database.createUser(login, response->getPassword()) < 0) {
-        clientSocket->sendResponse(BabelNetwork::UserResponse::BadLogin(login));
-        return;
+    switch (database.createUser(login, response->getPassword())) {
+        case BabelNetwork::UserResponse::LoginAlreadyTaken:
+            clientSocket->sendResponse(BabelNetwork::UserResponse::LoginAlreadyUsed(login));
+            return;
+        case BabelNetwork::UserResponse::AccountCreated:
+            clientSocket->sendResponse(BabelNetwork::UserResponse::AccountCreatedOk(login));
+            return;
+        default:
+            clientSocket->sendResponse(BabelNetwork::UserResponse::UnknowError(login));
+            return;
     }
-    clientSocket->sendResponse(BabelNetwork::UserResponse::AccountCreatedOk(login));
 }
 
 void UserManager::Login(
@@ -69,6 +75,7 @@ void UserManager::DeleteAccount(
     Database &database
 ) const
 {
+    std::string login(response->getLogin());
     std::string log(BabelUtils::format(
         "Request for Delete Account with login {%s} and password {%s}",
         response->getLogin(), response->getPassword())
@@ -76,12 +83,16 @@ void UserManager::DeleteAccount(
     //TODO: Check if user requesting account deletion is logged and the owner
     dbg("%s\n", log.c_str());
     _logger.logThis(log);
-    // TODO: Add Already Logged in Management
-    auto deleted = database.deleteUser(response->getLogin());
-    if (!deleted)
-        clientSocket->sendResponse(BabelNetwork::UserResponse::UnknowUser(response->getLogin()));
-    clientSocket->sendResponse(BabelNetwork::UserResponse::AccountDeletedOk(response->getLogin()));
-
-
+    switch (database.deleteUser(response->getLogin())) {
+        case BabelNetwork::UserResponse::RequestedAccountDeleted:
+            clientSocket->sendResponse(BabelNetwork::UserResponse::RequestedDeletedAccount(login));
+            return;
+        case BabelNetwork::UserResponse::AccountDeleted:
+            clientSocket->sendResponse(BabelNetwork::UserResponse::AccountDeletedOk(login));
+            return;
+        default:
+            clientSocket->sendResponse(BabelNetwork::UserResponse::UnknowError(login));
+            return;
+    }
     //TODO: Send "Delete Friend" to friend list.
 }
