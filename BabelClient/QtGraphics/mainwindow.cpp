@@ -1,4 +1,5 @@
 #include "mainwindow.hpp"
+#include "UserResponse.hpp"
 #include "./ui_mainwindow.h"
 
 #include <QtDebug>
@@ -20,6 +21,7 @@ MainWindow::~MainWindow()
 void MainWindow::adress(char **av)
 {
     client->initSocket(av);
+    connect(client->_socket, SIGNAL(readyRead()), this, SLOT(readyRead()));
 }
 
 void MainWindow::on_ConnectionButton_clicked()
@@ -34,4 +36,6 @@ void MainWindow::on_ConnectionButton_clicked()
 
     std::cout << user << std::endl;
     std::cout << pass << std::endl;
+    auto response = BabelNetwork::UserResponse::NewLoginRequest(user, pass);
+    client->_socket->sendResponse(response);
 }

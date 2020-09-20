@@ -22,6 +22,7 @@ public:
 
 private slots:
     void on_ConnectionButton_clicked();
+    void readyRead();
 
 private:
     Ui::MainWindow *ui;
