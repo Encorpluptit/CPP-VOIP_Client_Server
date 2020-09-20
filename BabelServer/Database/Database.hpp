@@ -54,6 +54,7 @@ namespace BabelServer {
         std::unique_ptr<UserModel> getUser(int id);
 
         bool deleteUser(const std::string &login);
+
 //        bool deleteUser(const int id);
 
         /* <- Private Methods -> */
@@ -65,6 +66,7 @@ namespace BabelServer {
 
         /* <- Attributes -> */
     private:
+        std::mutex _mtx;
         BabelUtils::Logger &_logger;
     };
 

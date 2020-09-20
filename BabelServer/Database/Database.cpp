@@ -25,17 +25,16 @@ auto &Database::getDatabase()
             make_column("id", &UserModel::id, autoincrement(), primary_key()),
             make_column("login", &UserModel::login, unique()),
             make_column("password", &UserModel::password)
+        ),
+        make_table("message",
+            make_column("id", &MessageModel::id, autoincrement(), primary_key()),
+            make_column("sender", &MessageModel::senderID),
+            make_column("receiver", &MessageModel::receiverID),
+            make_column("timestamp", &MessageModel::timestamp),
+            make_column("content", &MessageModel::content),
+            foreign_key(&MessageModel::senderID).references(&UserModel::id),
+            foreign_key(&MessageModel::receiverID).references(&UserModel::id)
         )
-//        ,
-//        make_table("message",
-//            make_column("id", &MessageModel::id, autoincrement(), primary_key()),
-//            make_column("sender", &MessageModel::senderID),
-//            make_column("receiver", &MessageModel::receiverID),
-//            make_column("timestamp", &MessageModel::timestamp),
-//            make_column("content", &MessageModel::content),
-//            foreign_key(&MessageModel::senderID).references(&UserModel::id),
-//            foreign_key(&MessageModel::receiverID).references(&UserModel::id)
-//        )
     );
     static bool init = true;
 
@@ -71,7 +70,7 @@ int Database::createUser(const std::string &login, const std::string &password)
         return id;
     }
     unlock();
-    log = BabelUtils::format("User Created: id {%d}, login {%s}, password {%s}", user.id, user.login.c_str(),
+    log = BabelUtils::format("User Created: id {%d}, login {%s}, password {%s}", id, user.login.c_str(),
         user.password.c_str());
     dbg("%s", log.c_str());
     _logger.logThis(log);
@@ -131,11 +130,18 @@ bool Database::deleteUser(const std::string &login)
     std::string log;
     try {
         auto user = getUser(login);
+        if (!user)
+            return true;
         lock();
         auto storage = getDatabase();
         storage.remove<UserModel>(user->id);
+        // TODO: ADD Function to remove frienship ?
+        log = BabelUtils::format(
+            "User Deleted: id {%d}, login {%s}, password {%s}",
+            user->id, user->login.c_str(), user->password.c_str());
+        dbg("%s", log.c_str());
+        _logger.logThis(log);
     } catch (const std::system_error &e) {
-        std::cout << e.what() << std::endl;
         log = BabelUtils::format("Error in deleteUser(login): %s", e.what());
         dbg("%s", log.c_str());
         _logger.logThis(log);

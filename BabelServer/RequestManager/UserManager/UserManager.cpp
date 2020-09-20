@@ -62,7 +62,26 @@ void UserManager::Login(
     //TODO: Send "Friend connected" to friend list.
 }
 
-//void BabelServer::UserManager::createAccount(int lol)
-//{
-//    (void)lol;
-//}
+void UserManager::DeleteAccount(
+    const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
+    const std::shared_ptr<BabelNetwork::UserResponse> &response,
+    const BabelNetwork::ClientList &clientList,
+    Database &database
+) const
+{
+    std::string log(BabelUtils::format(
+        "Request for Delete Account with login {%s} and password {%s}",
+        response->getLogin(), response->getPassword())
+    );
+    //TODO: Check if user requesting account deletion is logged and the owner
+    dbg("%s\n", log.c_str());
+    _logger.logThis(log);
+    // TODO: Add Already Logged in Management
+    auto deleted = database.deleteUser(response->getLogin());
+    if (!deleted)
+        clientSocket->sendResponse(BabelNetwork::UserResponse::UnknowUser(response->getLogin()));
+    clientSocket->sendResponse(BabelNetwork::UserResponse::AccountDeletedOk(response->getLogin()));
+
+
+    //TODO: Send "Delete Friend" to friend list.
+}
