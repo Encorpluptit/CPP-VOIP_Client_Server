@@ -1,4 +1,4 @@
-#include "mainwindow.hpp"
+#include "mainwindow.h"
 #include "./ui_mainwindow.h"
 
 #include <QtDebug>
@@ -15,11 +15,6 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
-}
-
-void MainWindow::adress(int ac, char **av)
-{
-    client->initSocket(ac, av);
 }
 
 void MainWindow::on_ConnectionButton_clicked()

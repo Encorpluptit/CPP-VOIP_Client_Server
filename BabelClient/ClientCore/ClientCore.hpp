@@ -70,7 +70,7 @@ namespace BabelClient {
             void setSocketNotReady() const;
             void getSocketState() const;
 
-            void initSocket(std::vector<std::string> loginInfo);
+            void initSocket(int ac, char **av);
 
             /* <- Private Methods -> */
         private:

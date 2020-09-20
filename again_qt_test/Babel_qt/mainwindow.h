@@ -1,14 +1,11 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "ClientCore.hpp"
 #include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
-
-using namespace BabelClient;
 
 class MainWindow : public QMainWindow
 {
@@ -17,8 +14,6 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    void adress(int ac, char **av);
-    ClientCore *client;
 
 private slots:
     void on_ConnectionButton_clicked();
