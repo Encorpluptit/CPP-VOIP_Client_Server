@@ -11,21 +11,12 @@
 using namespace BabelServer;
 using namespace sqlite_orm;
 
-
-// TODO: Adding Logger
 Database::Database(BabelUtils::Logger &logger)
     : _logger(logger)
 {
 }
 
 Database::~Database() = default;
-//Database::~Database()
-//{
-////    lock();
-////    auto storage = getDatabase();
-////    storage.close();
-////    unlock();
-//}
 
 auto &Database::getDatabase()
 {
@@ -34,18 +25,24 @@ auto &Database::getDatabase()
             make_column("id", &UserModel::id, autoincrement(), primary_key()),
             make_column("login", &UserModel::login, unique()),
             make_column("password", &UserModel::password)
-        ),
-        make_table("message",
-            make_column("id", &MessageModel::id, autoincrement(), primary_key()),
-            make_column("sender", &MessageModel::senderID),
-            make_column("receiver", &MessageModel::receiverID),
-            make_column("timestamp", &MessageModel::timestamp),
-            make_column("content", &MessageModel::content),
-            foreign_key(&MessageModel::senderID).references(&UserModel::id),
-            foreign_key(&MessageModel::receiverID).references(&UserModel::id)
         )
+//        ,
+//        make_table("message",
+//            make_column("id", &MessageModel::id, autoincrement(), primary_key()),
+//            make_column("sender", &MessageModel::senderID),
+//            make_column("receiver", &MessageModel::receiverID),
+//            make_column("timestamp", &MessageModel::timestamp),
+//            make_column("content", &MessageModel::content),
+//            foreign_key(&MessageModel::senderID).references(&UserModel::id),
+//            foreign_key(&MessageModel::receiverID).references(&UserModel::id)
+//        )
     );
-    storage.sync_schema();
+    static bool init = true;
+
+    if (init) {
+        storage.sync_schema();
+        init = false;
+    }
     return storage;
 }
 
@@ -127,4 +124,30 @@ std::unique_ptr<UserModel> Database::getUser(int id)
     }
     unlock();
     return user;
+}
+
+bool Database::deleteUser(const std::string &login)
+{
+    std::string log;
+    try {
+        auto user = getUser(login);
+        lock();
+        auto storage = getDatabase();
+        storage.remove<UserModel>(user->id);
+    } catch (const std::system_error &e) {
+        std::cout << e.what() << std::endl;
+        log = BabelUtils::format("Error in deleteUser(login): %s", e.what());
+        dbg("%s", log.c_str());
+        _logger.logThis(log);
+        unlock();
+        return false;
+    } catch (...) {
+        log = "Error in deleteUser(login): unknown exception";
+        dbg("%s", log.c_str());
+        _logger.logThis(log);
+        unlock();
+        return false;
+    }
+    unlock();
+    return true;
 }

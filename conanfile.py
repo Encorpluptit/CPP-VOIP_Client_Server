@@ -43,7 +43,7 @@ class Babel(ConanFile):
                     "libxcb-shape0-dev",
                     "libxcb-sync-dev",
                     "libxcb-xfixes0-dev",
-                    "libxcb-xinerama0-dev"
+                    "libxcb-xinerama0-dev",
                 ]
             elif tools.os_info.with_dnf:
                 # conan profile update settings.compiler.libcxx=libstdc++11 default
@@ -67,7 +67,10 @@ class Babel(ConanFile):
                     "xcb-util-renderutil-devel",
                     "libXdamage-devel",
                     "libXv-devel",
-                    "xkeyboard-config-devel"
+                    "xkeyboard-config-devel",
+                    "xcb-util-image-devel",
+                    "libXxf86vm-devel",
+                    "libXft-devel"
                 ]
             elif tools.os_info.with_yum:
                 packages = [

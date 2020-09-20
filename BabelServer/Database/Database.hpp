@@ -24,12 +24,14 @@ namespace BabelServer {
         UserModel(std::string login, std::string password)
             : id(), login(std::move(login)), password(std::move(password)) {}
     };
+
     struct MessageModel {
         int id{};
         int senderID{};
         int receiverID{};
         time_t timestamp{};
         std::string content;
+
         MessageModel() = default;
 
         MessageModel(const int sender, const int receiver, std::string msg_content, const time_t msg_timestamp)
@@ -50,7 +52,8 @@ namespace BabelServer {
         std::unique_ptr<UserModel> getUser(const std::string &login);
 
         std::unique_ptr<UserModel> getUser(int id);
-//        bool deleteUser(const std::string &login);
+
+        bool deleteUser(const std::string &login);
 //        bool deleteUser(const int id);
 
         /* <- Private Methods -> */

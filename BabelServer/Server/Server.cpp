@@ -18,6 +18,8 @@ Server::Server(int ac, char **av)
 {
     _ready = false;
     initServers(ac, av);
+    _database.createUser("dam", "lol");
+    _database.deleteUser("dam");
 }
 
 Server::~Server()
