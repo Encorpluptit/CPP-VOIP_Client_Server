@@ -17,7 +17,7 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    void adress(int ac, char **av);
+    void adress(char **av);
     ClientCore *client;
 
 private slots:

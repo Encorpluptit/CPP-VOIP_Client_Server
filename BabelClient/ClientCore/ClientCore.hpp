@@ -70,7 +70,7 @@ namespace BabelClient {
             void setSocketNotReady() const;
             void getSocketState() const;
 
-            void initSocket(int ac, char **av);
+            void initSocket(char **av);
 
             /* <- Private Methods -> */
         private:

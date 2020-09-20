@@ -275,14 +275,14 @@ void ClientCore::stop()
 //
 //}
 
-void ClientCore::initSocket(int ac, char **av)
+void ClientCore::initSocket(char **av)
 {
-    std::cout << ac << " " << av[1] << std::endl;
+    std::cout << av[1] << " " << av[2] << std::endl;
 
-    BabelNetwork::NetworkInfos nwi(ac, av[1]);
+    BabelNetwork::NetworkInfos nwi(av[1], av[2]);
 
     _socket = boost::make_shared<BabelNetwork::AsioClientSocket>(
-        ac, av[1],
+        av[1], av[2],
         _logger,
         BabelNetwork::AsioClientSocket::SocketHandler::Client);
     _socket->connect();

@@ -6,7 +6,7 @@
 #include <iostream>
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
+    : QMainWindow(parent), client(new ClientCore)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
@@ -17,9 +17,9 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::adress(int ac, char **av)
+void MainWindow::adress(char **av)
 {
-    client->initSocket(ac, av);
+    client->initSocket(av);
 }
 
 void MainWindow::on_ConnectionButton_clicked()

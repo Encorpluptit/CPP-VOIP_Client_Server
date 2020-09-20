@@ -14,7 +14,7 @@ int main(int ac, char **av)
     QApplication app(ac, av);
     MainWindow w;
 
-    w.adress(ac, av);
+    w.adress(av);
     w.show();
 
     return app.exec();
