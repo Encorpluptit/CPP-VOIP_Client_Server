@@ -3,3 +3,10 @@
 //
 
 #include "FriendManager.hpp"
+
+using namespace BabelServer;
+
+const std::vector<FriendManager::FriendResponseFPtr> &FriendManager::getFriendResponsePtrTab() const
+{
+    return FriendResponsePtrTab;
+}

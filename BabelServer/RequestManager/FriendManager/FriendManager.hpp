@@ -13,14 +13,59 @@
 namespace BabelServer {
 
     class FriendManager {
-        using UserManagerMethodProt = void(
+        using FriendManagerMethodProt = void(
             const FriendManager *,
             const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
             const std::shared_ptr<BabelNetwork::UserResponse> &,
             const BabelNetwork::ClientList &,
             BabelServer::Database &
         );
-        using UserResponseTuple = std::tuple<BabelNetwork::UserResponse::ResponseCode, std::function<UserManagerMethodProt>>;
+        using FriendResponseFPtr = std::tuple<BabelNetwork::FriendResponse::ResponseCode, std::function<FriendManagerMethodProt>>;
+        /* <- Constructor - Destructor -> */
+    public:
+        explicit FriendManager(BabelUtils::Logger &logger) : _logger(logger) {};
+
+        ~FriendManager() = default;
+
+        /* <- Public Methods -> */
+    private:
+//        void createAccount(
+//            const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
+//            const std::shared_ptr<BabelNetwork::UserResponse> &response,
+//            const BabelNetwork::ClientList &clientList,
+//            Database &database
+//        ) const;
+//
+//        void Login(
+//            const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
+//            const std::shared_ptr<BabelNetwork::UserResponse> &response,
+//            const BabelNetwork::ClientList &clientList,
+//            Database &database
+//        ) const;
+//
+//        void DeleteAccount(
+//            const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
+//            const std::shared_ptr<BabelNetwork::UserResponse> &response,
+//            const BabelNetwork::ClientList &clientList,
+//            Database &database
+//        ) const;
+
+        /* <- Private Methods -> */
+    private:
+
+        /* <- Getters / Setters -> */
+    public:
+        [[nodiscard]] const std::vector<FriendResponseFPtr> &getFriendResponsePtrTab() const;
+
+
+        /* <- Attributes -> */
+    private:
+        BabelUtils::Logger &_logger;
+        const std::vector<std::tuple<BabelNetwork::FriendResponse::ResponseCode, std::function<FriendManagerMethodProt>>> FriendResponsePtrTab = {
+            {BabelNetwork::FriendResponse::ResponseCode::RequestAddFriend, nullptr},
+            {BabelNetwork::FriendResponse::ResponseCode::AddFriend, nullptr},
+        };
+
 
     };
 }

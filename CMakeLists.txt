@@ -88,6 +88,8 @@ set(
 
         ${COMMON_DIR}/Errors
 
+        ${COMMON_DIR}/Database
+
         ${COMMON_DIR}/Network/NetworkInfos
 
         ${COMMON_DIR}/Network/Sockets/ASocket
@@ -145,6 +147,8 @@ set(
         ${SERVER_DIR}/Database
         ${SERVER_DIR}/RequestManager
         ${SERVER_DIR}/RequestManager/UserManager
+        ${SERVER_DIR}/RequestManager/CallManager
+        ${SERVER_DIR}/RequestManager/FriendManager
 )
 
 
@@ -157,6 +161,8 @@ set(
         ${SERVER_DIR}/Database/Database.cpp
         ${SERVER_DIR}/RequestManager/RequestManager.cpp
         ${SERVER_DIR}/RequestManager/UserManager/UserManager.cpp
+        ${SERVER_DIR}/RequestManager/CallManager/CallManager.cpp
+        ${SERVER_DIR}/RequestManager/FriendManager/FriendManager.cpp
 )
 
 

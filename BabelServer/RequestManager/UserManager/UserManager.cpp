@@ -3,11 +3,12 @@
 //
 
 #include "Debug.hpp"
+#include "Models.hpp"
 #include "UserManager.hpp"
 
 using namespace BabelServer;
 
-const std::vector<UserManager::UserResponseTuple> &BabelServer::UserManager::getUserResponsePtrTab() const
+const std::vector<UserManager::UserManagerFPtr> &BabelServer::UserManager::getUserResponsePtrTab() const
 {
     return UserResponsePtrTab;
 }

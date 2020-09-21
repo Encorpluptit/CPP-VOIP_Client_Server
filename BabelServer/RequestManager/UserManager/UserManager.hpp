@@ -20,7 +20,7 @@ namespace BabelServer {
             const BabelNetwork::ClientList &,
             BabelServer::Database &
         );
-        using UserResponseTuple = std::tuple<BabelNetwork::UserResponse::ResponseCode, std::function<UserManagerMethodProt>>;
+        using UserManagerFPtr = std::tuple<BabelNetwork::UserResponse::ResponseCode, std::function<UserManagerMethodProt>>;
 
         /* <- Constructor - Destructor -> */
     public:
@@ -56,7 +56,7 @@ namespace BabelServer {
 
         /* <- Getters / Setters -> */
     public:
-        [[nodiscard]] const std::vector<UserResponseTuple> &getUserResponsePtrTab() const;
+        [[nodiscard]] const std::vector<UserManagerFPtr> &getUserResponsePtrTab() const;
 
 
         /* <- Attributes -> */

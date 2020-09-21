@@ -58,7 +58,6 @@ server_fclean:
 # CLIENTS RULES
 client: setup-build-tree
 	@$(MAKE) -j `nproc` --no-print-directory -C $(BUILD_DIR) $(CLIENT_BIN)
-#	-@cp $(BUILD_DIR)/$(CLIENT_BIN) .
 
 client_fclean:
 	@$(RM) -r $(CLIENT_BIN)
