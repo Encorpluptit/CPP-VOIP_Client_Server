@@ -14,7 +14,7 @@ int main(int ac, char **av)
     QApplication app(ac, av);
     MainWindow w;
 
-    w.adress(av);
+    w.adress(av[1], std::stoi(av[2]));
     w.show();
 
     return app.exec();

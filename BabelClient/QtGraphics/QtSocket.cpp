@@ -1,17 +1,53 @@
+
+#include <memory>
+#include <iostream>
 #include "QtSocket.hpp"
 
-QtSocket::QtSocket(QObject *parent) : QObject(parent)
+MyTcpSocket::MyTcpSocket(QObject *parent) : QObject(parent)
 {
-    socket = new QTcpSocket();
+    socket = new QTcpSocket(this);
 }
 
-void QtSocket::Binding(int port)
+void MyTcpSocket::doConnect(std::string ip, int port)
 {
-    socket->bind(QHostAddress::LocalHost, port);
+    connect(socket, SIGNAL(connected()),this, SLOT(connected()));
+    connect(socket, SIGNAL(disconnected()),this, SLOT(disconnected()));
+    connect(socket, SIGNAL(bytesWritten(qint64)),this, SLOT(bytesWritten(qint64)));
+    connect(socket, SIGNAL(readyRead()),this, SLOT(readyRead()));
+    qDebug() << "connecting...";
+    socket->connectToHost(ip.c_str(), port);
+    if(!socket->waitForConnected(5000))
+    {
+        qDebug() << "Error: " << socket->errorString();
+    }
 }
 
-bool QtSocket::sendResponse(const std::shared_ptr<BabelNetwork::AResponse> &response)
+void MyTcpSocket::connected()
 {
-    (void)response;
-    return (true);
+    qDebug() << "connected...";
+}
+
+void MyTcpSocket::disconnected()
+{
+    qDebug() << "disconnected...";
+}
+
+void MyTcpSocket::bytesWritten(qint64 bytes)
+{
+    qDebug() << bytes << " bytes written...";
+}
+
+void MyTcpSocket::readyRead()
+{
+    qDebug() << "reading...";
+
+    qDebug() << socket->readAll();
+}
+
+void MyTcpSocket::writeData(std::shared_ptr<BabelNetwork::AResponse> response)
+{
+    BabelNetwork::AResponse::ResponseHeader info = response->getResponseHeader();
+    char *str = reinterpret_cast<char *>(&info);
+
+    socket->write("mdr");
 }

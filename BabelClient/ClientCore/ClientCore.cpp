@@ -263,6 +263,7 @@ int BabelClient::ClientCore::run()
 //                _socket->sendResponse(response);
 //        }
 //    }
+    return (0);
 }
 
 void ClientCore::stop()

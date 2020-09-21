@@ -101,6 +101,8 @@ namespace BabelNetwork {
 
         [[nodiscard]] ResponseType getResponseType() const;
 
+        [[nodiscard]] ResponseHeader getResponseHeader() const;
+
         [[nodiscard]] virtual char *getDataByteDataInfos() const noexcept = 0;
 
         [[nodiscard]] virtual char *getDataByteBody() const noexcept = 0;

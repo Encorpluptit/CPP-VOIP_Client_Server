@@ -18,9 +18,9 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    void adress(char **av);
+    void adress(std::string ip, int port);
     ClientCore *client;
-    QtSocket *serv;
+    MyTcpSocket *serv;
 
 
 private slots:

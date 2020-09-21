@@ -83,3 +83,8 @@ AResponse::ResponseType AResponse::getResponseType() const
 {
     return _header._responseType;
 }
+
+AResponse::ResponseHeader AResponse::getResponseHeader() const
+{
+    return (_header);
+}

@@ -5,6 +5,7 @@
 ** [AsioClientSocket.cpp]: Source file for AsioClientSocket feature.
 */
 
+#include <iostream>
 #include "AsioClientSocket.hpp"
 #include "ClientError.hpp"
 #include "Debug.hpp"

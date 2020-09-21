@@ -10,8 +10,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), client(new ClientCore)
     , ui(new Ui::MainWindow)
 {
-    QtSocket *sock = new QtSocket();
-    serv = sock;
+    serv = new MyTcpSocket();
     ui->setupUi(this);
 }
 
@@ -25,11 +24,9 @@ void MainWindow::readyRead()
     std::cout << "COUCOU" << std::endl;
 }
 
-void MainWindow::adress(char **av)
+void MainWindow::adress(std::string ip, int port)
 {
-    client->initSocket(av);
-    serv->Binding(8000);
-    connect(serv->socket, SIGNAL(readyRead()), this, SLOT(readyRead()));
+    serv->doConnect(ip, port);
 }
 
 void MainWindow::on_ConnectionButton_clicked()
@@ -44,5 +41,5 @@ void MainWindow::on_ConnectionButton_clicked()
     std::cout << user << std::endl;
     std::cout << pass << std::endl;
     auto response = BabelNetwork::UserResponse::NewLoginRequest(user, pass);
-    client->_socket->sendResponse(response);
+    serv->writeData(response);
 }
