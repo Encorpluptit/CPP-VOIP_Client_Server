@@ -13,14 +13,14 @@
 namespace BabelServer {
 
     class UserManager {
-        using UserResponseProt = void(
+        using UserManagerMethodProt = void(
             const UserManager *,
             const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
             const std::shared_ptr<BabelNetwork::UserResponse> &,
             const BabelNetwork::ClientList &,
             BabelServer::Database &
         );
-        using UserResponseTuple = std::tuple<BabelNetwork::UserResponse::ResponseCode, std::function<UserResponseProt>>;
+        using UserResponseTuple = std::tuple<BabelNetwork::UserResponse::ResponseCode, std::function<UserManagerMethodProt>>;
 
         /* <- Constructor - Destructor -> */
     public:
@@ -62,7 +62,7 @@ namespace BabelServer {
         /* <- Attributes -> */
     private:
         BabelUtils::Logger &_logger;
-        const std::vector<UserResponseTuple> UserResponsePtrTab = {
+        const std::vector<std::tuple<BabelNetwork::UserResponse::ResponseCode, std::function<UserManagerMethodProt>>> UserResponsePtrTab = {
             {BabelNetwork::UserResponse::ResponseCode::RequestAccountCreation, &UserManager::createAccount},
             {BabelNetwork::UserResponse::ResponseCode::RequestLogin,           &UserManager::Login},
             {BabelNetwork::UserResponse::ResponseCode::RequestAccountDeletion, &UserManager::DeleteAccount},
