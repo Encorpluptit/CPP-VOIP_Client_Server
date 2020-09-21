@@ -21,6 +21,7 @@ namespace BabelServer {
             BabelServer::Database &
         );
         using FriendResponseFPtr = std::tuple<BabelNetwork::FriendResponse::ResponseCode, std::function<FriendManagerMethodProt>>;
+
         /* <- Constructor - Destructor -> */
     public:
         explicit FriendManager(BabelUtils::Logger &logger) : _logger(logger) {};
