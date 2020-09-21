@@ -26,10 +26,10 @@ bool RequestManager::manage(
             manageUser(clientSocket, std::dynamic_pointer_cast<BabelNetwork::UserResponse> (response), clientList, database);
             return true;
         case BabelNetwork::AResponse::Call:
-            manageCall(dynamic_cast<BabelNetwork::CallResponse &>(*response));
+            manageCall(clientSocket, std::dynamic_pointer_cast<BabelNetwork::CallResponse> (response), clientList, database);
             return true;
         case BabelNetwork::AResponse::Friend:
-            manageFriend(dynamic_cast<BabelNetwork::FriendResponse &>(*response));
+            manageFriend(clientSocket, std::dynamic_pointer_cast<BabelNetwork::FriendResponse> (response), clientList, database);
             return true;
         case BabelNetwork::AResponse::Message:
             manageMessage(dynamic_cast<BabelNetwork::MessageResponse &>(*response));
@@ -63,13 +63,13 @@ void RequestManager::manageCall(
     Database &database
     )
 {
-//    auto code = response->getCode();
-//    auto userTabPtr = _userManager.getUserResponsePtrTab();
-//
-//    for (const auto &ptr : userTabPtr) {
-//        if (std::get<0>(ptr) == code)
-//            return std::get<1>(ptr)(&_userManager, clientSocket, response, clientList, database);
-//    }
+    auto code = response->getCode();
+    auto callTabPtr = _callManager.getCallResponsePtrTab();
+
+    for (const auto &ptr : callTabPtr) {
+        if (std::get<0>(ptr) == code)
+            return std::get<1>(ptr)(&_callManager, clientSocket, response, clientList, database);
+    }
 }
 
 void RequestManager::manageFriend(
@@ -79,13 +79,13 @@ void RequestManager::manageFriend(
     Database &database
 )
 {
-//    auto code = response->getCode();
-//    auto userTabPtr = _userManager.getUserResponsePtrTab();
-//
-//    for (const auto &ptr : userTabPtr) {
-//        if (std::get<0>(ptr) == code)
-//            return std::get<1>(ptr)(&_userManager, clientSocket, response, clientList, database);
-//    }
+    auto code = response->getCode();
+    auto friendTabPtr = _friendManager.getFriendResponsePtrTab();
+
+    for (const auto &ptr : friendTabPtr) {
+        if (std::get<0>(ptr) == code)
+            return std::get<1>(ptr)(&_friendManager, clientSocket, response, clientList, database);
+    }
 }
 
 void RequestManager::manageMessage(const BabelNetwork::MessageResponse &response)

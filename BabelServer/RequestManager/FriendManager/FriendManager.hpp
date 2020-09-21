@@ -16,7 +16,7 @@ namespace BabelServer {
         using FriendManagerMethodProt = void(
             const FriendManager *,
             const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
-            const std::shared_ptr<BabelNetwork::UserResponse> &,
+            const std::shared_ptr<BabelNetwork::FriendResponse> &,
             const BabelNetwork::ClientList &,
             BabelServer::Database &
         );

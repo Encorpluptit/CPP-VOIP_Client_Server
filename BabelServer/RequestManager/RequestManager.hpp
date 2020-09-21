@@ -21,13 +21,16 @@
 
 #include "Database.hpp"
 #include "UserManager.hpp"
+#include "FriendManager.hpp"
+#include "CallManager.hpp"
 
 namespace BabelServer {
     class RequestManager {
 
         /* <- Constructor - Destructor -> */
     public:
-        explicit RequestManager(BabelUtils::Logger& logger): _logger(logger), _userManager(logger){};
+        explicit RequestManager(BabelUtils::Logger& logger)
+        : _logger(logger), _userManager(logger), _callManager(logger), _friendManager(logger){};
 
         /* <- Public Methods -> */
     public:
@@ -69,6 +72,8 @@ namespace BabelServer {
     private:
         BabelUtils::Logger & _logger;
         const UserManager _userManager;
+        const CallManager _callManager;
+        const FriendManager _friendManager;
 //        const std::vector<AResponseTuple> AResponsePtrTab = {
 //            (BabelNetwork::AResponse::ResponseType, ),
 //

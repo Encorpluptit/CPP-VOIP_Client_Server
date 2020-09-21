@@ -16,11 +16,11 @@ namespace BabelServer {
         using CallManagerMethodProt = void(
             const CallManager *,
             const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
-            const std::shared_ptr<BabelNetwork::UserResponse> &,
+            const std::shared_ptr<BabelNetwork::CallResponse> &,
             const BabelNetwork::ClientList &,
             BabelServer::Database &
         );
-        using CallResponseFPtr = std::tuple<BabelNetwork::CallResponse::ResponseCode, std::function<FriendManagerMethodProt>>;
+        using CallResponseFPtr = std::tuple<BabelNetwork::CallResponse::ResponseCode, std::function<CallManagerMethodProt>>;
 
         /* <- Constructor - Destructor -> */
     public:
@@ -62,9 +62,10 @@ namespace BabelServer {
         /* <- Attributes -> */
     private:
         BabelUtils::Logger &_logger;
-        const std::vector<std::tuple<BabelNetwork::CallResponse::ResponseCode, std::function<FriendManagerMethodProt>>> CallResponsePtrTab = {
-            {BabelNetwork::FriendResponse::ResponseCode::RequestAddFriend, nullptr},
-            {BabelNetwork::FriendResponse::ResponseCode::AddFriend, nullptr},
+        const std::vector<std::tuple<BabelNetwork::CallResponse::ResponseCode, std::function<CallManagerMethodProt>>> CallResponsePtrTab = {
+            {BabelNetwork::CallResponse::ResponseCode::RequestCall, nullptr},
+            {BabelNetwork::CallResponse::ResponseCode::, nullptr},
+//            {BabelNetwork::FriendResponse::ResponseCode::AddFriend, nullptr},
         };
 
     };
