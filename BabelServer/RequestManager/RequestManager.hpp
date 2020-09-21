@@ -48,11 +48,17 @@ namespace BabelServer {
         );
 
         void manageCall(
-            const BabelNetwork::CallResponse &response
+            const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
+            const std::shared_ptr<BabelNetwork::CallResponse> &response,
+            const BabelNetwork::ClientList &clientList,
+            Database &database
         );
 
         void manageFriend(
-            const BabelNetwork::FriendResponse &response
+            const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
+            const std::shared_ptr<BabelNetwork::FriendResponse> &response,
+            const BabelNetwork::ClientList &clientList,
+            Database &database
         );
 
         void manageMessage(

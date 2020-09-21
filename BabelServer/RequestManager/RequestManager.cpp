@@ -56,14 +56,36 @@ void RequestManager::manageUser(
     }
 }
 
-void RequestManager::manageCall(const BabelNetwork::CallResponse &response)
+void RequestManager::manageCall(
+    const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
+    const std::shared_ptr<BabelNetwork::CallResponse> &response,
+    const BabelNetwork::ClientList &clientList,
+    Database &database
+    )
 {
-    (void)response;
+//    auto code = response->getCode();
+//    auto userTabPtr = _userManager.getUserResponsePtrTab();
+//
+//    for (const auto &ptr : userTabPtr) {
+//        if (std::get<0>(ptr) == code)
+//            return std::get<1>(ptr)(&_userManager, clientSocket, response, clientList, database);
+//    }
 }
 
-void RequestManager::manageFriend(const BabelNetwork::FriendResponse &response)
+void RequestManager::manageFriend(
+    const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
+    const std::shared_ptr<BabelNetwork::FriendResponse> &response,
+    const BabelNetwork::ClientList &clientList,
+    Database &database
+)
 {
-    (void)response;
+//    auto code = response->getCode();
+//    auto userTabPtr = _userManager.getUserResponsePtrTab();
+//
+//    for (const auto &ptr : userTabPtr) {
+//        if (std::get<0>(ptr) == code)
+//            return std::get<1>(ptr)(&_userManager, clientSocket, response, clientList, database);
+//    }
 }
 
 void RequestManager::manageMessage(const BabelNetwork::MessageResponse &response)
