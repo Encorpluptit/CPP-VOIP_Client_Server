@@ -16,9 +16,9 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
-    void adress(std::string ip, int port);
+    explicit MainWindow(QWidget *parent = nullptr);
+    ~MainWindow() override;
+    void adress(const std::string &ip, uint16_t port) const;
     ClientCore *client;
     MyTcpSocket *serv;
 

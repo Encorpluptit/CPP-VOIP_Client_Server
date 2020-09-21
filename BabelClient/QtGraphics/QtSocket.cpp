@@ -8,7 +8,7 @@ MyTcpSocket::MyTcpSocket(QObject *parent) : QObject(parent)
     socket = new QTcpSocket(this);
 }
 
-void MyTcpSocket::doConnect(std::string ip, int port)
+void MyTcpSocket::doConnect(const std::string &ip, int port)
 {
     connect(socket, SIGNAL(connected()),this, SLOT(connected()));
     connect(socket, SIGNAL(disconnected()),this, SLOT(disconnected()));
@@ -32,7 +32,7 @@ void MyTcpSocket::disconnected()
     qDebug() << "disconnected...";
 }
 
-void MyTcpSocket::bytesWritten(qint64 bytes)
+void MyTcpSocket::bytesWritten(const qint64 bytes)
 {
     qDebug() << bytes << " bytes written...";
 }
@@ -44,10 +44,7 @@ void MyTcpSocket::readyRead()
     qDebug() << socket->readAll();
 }
 
-void MyTcpSocket::writeData(std::shared_ptr<BabelNetwork::AResponse> response)
+void MyTcpSocket::writeData(const std::shared_ptr<BabelNetwork::AResponse> &response)
 {
-    BabelNetwork::AResponse::ResponseHeader info = response->getResponseHeader();
-    char *str = reinterpret_cast<char *>(&info);
-
-    socket->write("mdr");
+    socket->write(response->getDataByte(), response->getResponseSize());
 }

@@ -24,7 +24,7 @@ void MainWindow::readyRead()
     std::cout << "COUCOU" << std::endl;
 }
 
-void MainWindow::adress(std::string ip, int port)
+void MainWindow::adress(const std::string &ip, const uint16_t port) const
 {
     serv->doConnect(ip, port);
 }

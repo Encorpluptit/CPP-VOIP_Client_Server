@@ -5,16 +5,18 @@
 ** [main.cpp]: Main program entry.
 */
 
-#include <QApplication>
-#include "mainwindow.hpp"
 #include <iostream>
+#include <QApplication>
+#include "NetworkInfos.hpp"
+#include "mainwindow.hpp"
 
 int main(int ac, char **av)
 {
     QApplication app(ac, av);
     MainWindow w;
+    BabelNetwork::NetworkInfos nwi(av[1], av[2]);
 
-    w.adress(av[1], std::stoi(av[2]));
+    w.adress(nwi.getIp(), nwi.getPort());
     w.show();
 
     return app.exec();

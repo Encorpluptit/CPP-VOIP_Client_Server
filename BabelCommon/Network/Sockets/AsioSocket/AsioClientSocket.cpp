@@ -13,6 +13,7 @@
 using namespace BabelNetwork;
 
 #ifdef BABEL_CLIENT_BIN
+
 AsioClientSocket::AsioClientSocket(
     const std::string &address,
     const std::string &port,
@@ -21,8 +22,8 @@ AsioClientSocket::AsioClientSocket(
 )
     : ClientSocket(address, port, logger),
       _socket(_context),
-      _handler(handlerType)
-{}
+      _handler(handlerType) {}
+
 #else
 AsioClientSocket::AsioClientSocket(
     const std::string &address,
@@ -137,12 +138,21 @@ void AsioClientSocket::read_data_infos(const boost::system::error_code &error)
         if (!_read_msg) {
             AResponse::ResponseHeader _hdr{};
             memcpy(&_hdr, _headerBuffer, AResponse::HeaderSize);
-            _logger.logThis(
+            std::string log = BabelUtils::format(
                 "Read msg null \ncode : %d, type %d, sz: %u",
                 _hdr._code, _hdr._responseType, _hdr._dataInfosSize
             );
+            dbg("%s", log.c_str());
+            _logger.logThis(log);
             return;
         }
+        #ifdef _DEBUG_
+        AResponse::ResponseHeader _hdr{};
+        memcpy(&_hdr, _headerBuffer, AResponse::HeaderSize);
+        dbg("Read msg read \ncode : %d, type %d, sz: %u",
+            _hdr._code, _hdr._responseType, _hdr._dataInfosSize
+        );
+        #endif
         boost::asio::async_read(
             _socket,
             boost::asio::buffer(_read_msg->getDataByteDataInfos(), _read_msg->getDataInfosSize()),
