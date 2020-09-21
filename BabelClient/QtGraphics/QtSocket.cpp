@@ -46,5 +46,6 @@ void MyTcpSocket::readyRead()
 
 void MyTcpSocket::writeData(const std::shared_ptr<BabelNetwork::AResponse> &response)
 {
+    response->encode();
     socket->write(response->getDataByte(), response->getResponseSize());
 }
