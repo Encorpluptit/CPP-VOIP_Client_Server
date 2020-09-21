@@ -64,7 +64,8 @@ namespace BabelServer {
         BabelUtils::Logger &_logger;
         const std::vector<std::tuple<BabelNetwork::CallResponse::ResponseCode, std::function<CallManagerMethodProt>>> CallResponsePtrTab = {
             {BabelNetwork::CallResponse::ResponseCode::RequestCall, nullptr},
-            {BabelNetwork::CallResponse::ResponseCode::, nullptr},
+            {BabelNetwork::CallResponse::ResponseCode::CallRefused, nullptr},
+            {BabelNetwork::CallResponse::ResponseCode::CallAccepted, nullptr},
 //            {BabelNetwork::FriendResponse::ResponseCode::AddFriend, nullptr},
         };
 
