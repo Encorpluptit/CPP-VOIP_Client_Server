@@ -85,7 +85,8 @@ class Babel(ConanFile):
                 packages = ["Xorg-x11-devel"]
             else:
                 self.warn("Do not know how to install system requirements for {}.".format(tools.os_info.linux_distro))
-            package_tool.install(update=True, packages=" ".join(packages))
+            # package_tool.install(update=True, packages=" ".join(packages))
+            package_tool.install(update=False, packages=" ".join(packages))
 
 
     # def imports(self):
