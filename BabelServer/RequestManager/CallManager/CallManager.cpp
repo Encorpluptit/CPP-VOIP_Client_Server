@@ -18,6 +18,7 @@ void CallManager::requestCall(
     Database &database
 ) const
 {
+    // TODO: add check if caller call himself
     for (const auto &target: clientList) {
         if (target->getUser() && target->getUser()->login == response->getReceiver()) {
             target->sendResponse(BabelNetwork::CallResponse::CallIncoming(response->getSender(), response->getReceiver(), getCallId()));
