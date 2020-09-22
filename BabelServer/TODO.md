@@ -1,5 +1,6 @@
 # MANAGER
  - CallResponse
+ - Add caller address and port in callResponse to allow receiver to call directly
  
 # Database
  - 

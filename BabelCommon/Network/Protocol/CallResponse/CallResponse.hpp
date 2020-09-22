@@ -62,6 +62,12 @@ namespace BabelNetwork {
 
         CallResponse(const std::string &sender, const std::string &receiver);
 
+//        CallResponse(
+//            const std::shared_ptr<CallResponse>&response,
+//            const std::string & address,
+//            const std::string & port
+//            );
+
         ~CallResponse() = default;
 
         /* <- Encode / Decode Methods -> */

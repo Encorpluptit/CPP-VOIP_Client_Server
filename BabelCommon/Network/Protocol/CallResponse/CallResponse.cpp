@@ -25,6 +25,16 @@ CallResponse::CallResponse(const std::string &sender, const std::string &receive
         throw BabelErrors::CallResponse("sender or receiver too long");
 }
 
+//CallResponse(
+//    const std::shared_ptr<CallResponse>&response,
+//    const std::string & address,
+//    const std::string & port
+//)
+//{
+//
+//}
+
+
 bool CallResponse::setSender(const std::string &sender) noexcept
 {
     if (sender.size() > MaxDataSize::Sender)
