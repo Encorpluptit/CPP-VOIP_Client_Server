@@ -238,31 +238,6 @@ void ClientCore::checkTypeResponse(std::shared_ptr<BabelNetwork::AResponse> resp
 
 int BabelClient::ClientCore::run()
 {
-
-//    std::string data;
-//    std::shared_ptr<BabelNetwork::AResponse> response = nullptr;
-//
-//    while (isReady()) {
-//        std::getline(std::cin, data);
-//        response = _socket->popResponse();
-//        if (data == "1")
-//            response = BabelNetwork::UserResponse::NewLoginRequest("ugo", "lolol");
-//        if (data == "2")
-//            response = BabelNetwork::CallResponse::CallRequest("ugo", "damien");
-//        if (data == "3")
-//            response = BabelNetwork::FriendResponse::FriendRequestAccepted("ugo", "damien");
-//        if (data == "4")
-//            response = BabelNetwork::MessageResponse::MessageReceive("ugo", "damien", "t'es mauvais");
-//        if (data == "exit" || !_socket->isReady()) {
-//            std::cout << "exit loop" << std::endl;
-//            break;
-//        }
-//        if (response != nullptr) {
-//            checkTypeResponse(response);
-//            for (uint32_t i = 0; i < 100; i += 1)
-//                _socket->sendResponse(response);
-//        }
-//    }
     return (0);
 }
 

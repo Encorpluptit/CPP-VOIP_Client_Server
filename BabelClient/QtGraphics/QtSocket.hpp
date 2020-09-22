@@ -14,6 +14,9 @@ public:
     
     void doConnect(const std::string &ip, int port);
     void writeData(const std::shared_ptr<BabelNetwork::AResponse> &response);
+    std::shared_ptr<BabelNetwork::AResponse> decodeUserResponse(const char *header);
+
+    QTcpSocket *socket;
 
 signals:
 
@@ -21,9 +24,6 @@ public slots:
     void connected();
     void disconnected();
     void bytesWritten(const qint64 bytes);
-    void readyRead();
-
-private:
-    QTcpSocket *socket;
+    std::shared_ptr<BabelNetwork::AResponse> readResponse();
     
 };
