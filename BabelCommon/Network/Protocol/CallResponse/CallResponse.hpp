@@ -29,7 +29,9 @@ namespace BabelNetwork {
     private:
         enum MaxDataSize {
             Sender = 128,
-            Receiver = 128
+            Receiver = 128,
+            Ip = 15,
+            Port = 5
         };
 
         /* <- Class Structure -> */
@@ -39,6 +41,8 @@ namespace BabelNetwork {
             char receiver[MaxDataSize::Receiver];
             time_t timestamp;
             uint16_t callId;
+            char ip[MaxDataSize::Sender];
+            char port[MaxDataSize::Receiver];
         };
         static const size_t DataSize = sizeof(Data);
 
@@ -49,6 +53,8 @@ namespace BabelNetwork {
             uint16_t _receiverSize;
             uint8_t _timestampSize;
             uint8_t _callIdSize;
+            uint8_t _ipSize;
+            uint8_t _portSize;
         };
         static const size_t DataInfosSize = sizeof(DataInfos);
 
@@ -62,11 +68,12 @@ namespace BabelNetwork {
 
         CallResponse(const std::string &sender, const std::string &receiver);
 
-//        CallResponse(
-//            const std::shared_ptr<CallResponse>&response,
-//            const std::string & address,
-//            const std::string & port
-//            );
+        CallResponse(
+            const std::string &sender,
+            const std::string &receiver,
+            const std::string &ip,
+            const std::string &port
+        );
 
         ~CallResponse() = default;
 
@@ -108,7 +115,8 @@ namespace BabelNetwork {
 
         [[nodiscard]] char *getDataByteBody() const noexcept final;
 
-        [[nodiscard]] const std::string &getDescription() const noexcept final {
+        [[nodiscard]] const std::string &getDescription() const noexcept final
+        {
             return _description;
         };
 
@@ -120,6 +128,10 @@ namespace BabelNetwork {
 
         [[nodiscard]] bool setCallId(uint16_t call_id) noexcept;
 
+        [[nodiscard]] bool setIp(const std::string &ip) noexcept;
+
+        [[nodiscard]] bool setPort(const std::string &port) noexcept;
+
         [[nodiscard]] const char *getSender() const noexcept { return _data.sender; };
 
         [[nodiscard]] const char *getReceiver() const noexcept { return _data.receiver; };
@@ -128,22 +140,46 @@ namespace BabelNetwork {
 
         [[nodiscard]] time_t getTimestamp() const noexcept { return _data.timestamp; };
 
+        [[nodiscard]] const char *getIp() const noexcept { return _data.ip; };
+
+        [[nodiscard]] const char *getPort() const noexcept { return _data.port; };
+
     private:
         const std::string _description = "Call Related Request";
         char _data_byte[MaxResponseSize] = {0};
         DataInfos _dataInfos{};
-//        DataInfos _dataInfos{0,0, sizeof(time_t), sizeof(uint16_t)};
         Data _data{};
 
     public:
-        [[nodiscard]] static std::shared_ptr<AResponse> NewCallStarted(const std::string &sender, const std::string &receiver, uint16_t call_id);
+        [[nodiscard]] static std::shared_ptr<AResponse>
+        NewCallStarted(const std::string &sender, const std::string &receiver);
+
+        [[nodiscard]] static std::shared_ptr<AResponse> NewCallStarted(
+            const std::string &sender,
+            const std::string &receiver,
+            const std::string &ip,
+            const std::string &port
+        );
+
         static std::shared_ptr<AResponse> CallRequest(const std::string &sender, const std::string &receiver);
-        [[nodiscard]] static std::shared_ptr<AResponse> LeftCall(const std::string &sender, const std::string &receiver, uint16_t call_id);
-        [[nodiscard]] static std::shared_ptr<AResponse> EndCallRequest(const std::string &sender, const std::string &receiver);
-        [[nodiscard]] static std::shared_ptr<AResponse> CallIncoming(const std::string &sender, const std::string &receiver, uint16_t call_id);
-        [[nodiscard]] static std::shared_ptr<AResponse> AcceptCall(const std::string &sender, const std::string &receiver);
-        [[nodiscard]] static std::shared_ptr<AResponse> RefusedCall(const std::string &sender, const std::string &receiver);
-        [[nodiscard]] static std::shared_ptr<AResponse> DisconnectedUser(const std::string &sender, const std::string &receiver);
+
+        [[nodiscard]] static std::shared_ptr<AResponse>
+        LeftCall(const std::string &sender, const std::string &receiver, uint16_t call_id);
+
+        [[nodiscard]] static std::shared_ptr<AResponse>
+        EndCallRequest(const std::string &sender, const std::string &receiver);
+
+        [[nodiscard]] static std::shared_ptr<AResponse>
+        CallIncoming(const std::string &sender, const std::string &receiver, uint16_t call_id);
+
+        [[nodiscard]] static std::shared_ptr<AResponse>
+        AcceptCall(const std::string &sender, const std::string &receiver);
+
+        [[nodiscard]] static std::shared_ptr<AResponse>
+        RefusedCall(const std::string &sender, const std::string &receiver);
+
+        [[nodiscard]] static std::shared_ptr<AResponse>
+        DisconnectedUser(const std::string &sender, const std::string &receiver);
     };
 }
 

@@ -68,7 +68,7 @@ client_fclean:
 # TESTS RULES
 tests_run: fclean setup-build-tree
 	@$(MAKE) -j `nproc` --no-print-directory -C $(BUILD_DIR) $(CRITERION_BIN)
-	@cp $(BUILD_DIR)/bin/$(CRITERION_BIN) .
+	-@cp $(BUILD_DIR)/bin/$(CRITERION_BIN) .
 	@./$(CRITERION_BIN)
 	@gcovr -r . -s --exclude='tests|lib' --exclude='BabelCommon/Utils/Runnable|BabelCommon/Utils/Logger|BabelCommon/Network/Sockets'
 	@gcovr -b . -s --exclude='tests|lib'

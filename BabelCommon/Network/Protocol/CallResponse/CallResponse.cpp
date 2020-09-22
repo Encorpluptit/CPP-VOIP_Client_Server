@@ -25,15 +25,16 @@ CallResponse::CallResponse(const std::string &sender, const std::string &receive
         throw BabelErrors::CallResponse("sender or receiver too long");
 }
 
-//CallResponse(
-//    const std::shared_ptr<CallResponse>&response,
-//    const std::string & address,
-//    const std::string & port
-//)
-//{
-//
-//}
-
+CallResponse::CallResponse(
+    const std::string &sender,
+    const std::string &receiver,
+    const std::string &address,
+    const std::string &port
+) : CallResponse(sender, receiver)
+{
+    if (!setIp(address) || !setPort(port))
+        throw BabelErrors::CallResponse("sender or receiver too long");
+}
 
 bool CallResponse::setSender(const std::string &sender) noexcept
 {
@@ -72,12 +73,33 @@ bool CallResponse::setCallId(const uint16_t call_id) noexcept
     return true;
 }
 
+bool CallResponse::setIp(const std::string &ip) noexcept
+{
+    if (ip.size() > MaxDataSize::Ip)
+        return false;
+    strcat(_data.ip, ip.c_str());
+    _dataInfos._ipSize = ip.size();
+    return true;
+}
+
+bool CallResponse::setPort(const std::string &port) noexcept
+{
+    if (port.size() > MaxDataSize::Port)
+        return false;
+    strcat(_data.port, port.c_str());
+    _dataInfos._portSize = port.size();
+    return true;
+}
+
+
 bool CallResponse::encode() noexcept
 {
-    char * const sender = getDataByteBody();
-    char * const receiver = sender + _dataInfos._senderSize;
-    char * const timestamp = receiver + _dataInfos._receiverSize;
-    char * const call_id = timestamp + _dataInfos._timestampSize;
+    char *const sender = getDataByteBody();
+    char *const receiver = sender + _dataInfos._senderSize;
+    char *const timestamp = receiver + _dataInfos._receiverSize;
+    char *const call_id = timestamp + _dataInfos._timestampSize;
+    char *const ip = call_id + _dataInfos._callIdSize;
+    char *const port = ip + _dataInfos._ipSize;
 
     memcpy(_data_byte, &_header, HeaderSize);
     memcpy(getDataByteDataInfos(), &_dataInfos, DataInfosSize);
@@ -85,6 +107,8 @@ bool CallResponse::encode() noexcept
     memcpy(receiver, _data.receiver, _dataInfos._receiverSize);
     memcpy(timestamp, &_data.timestamp, _dataInfos._timestampSize);
     memcpy(call_id, &_data.callId, _dataInfos._callIdSize);
+    memcpy(ip, _data.ip, _dataInfos._ipSize);
+    memcpy(port, _data.port, _dataInfos._callIdSize);
     return true;
 }
 
@@ -102,15 +126,19 @@ bool CallResponse::decode_data_infos() noexcept
 
 bool CallResponse::decode_data() noexcept
 {
-    char * const sender = getDataByteBody();
-    char * const receiver = sender + _dataInfos._senderSize;
-    char * const timestamp = receiver + _dataInfos._receiverSize;
-    char * const call_id = timestamp + _dataInfos._timestampSize;
+    char *const sender = getDataByteBody();
+    char *const receiver = sender + _dataInfos._senderSize;
+    char *const timestamp = receiver + _dataInfos._receiverSize;
+    char *const call_id = timestamp + _dataInfos._timestampSize;
+    char *const ip = call_id + _dataInfos._callIdSize;
+    char *const port = ip + _dataInfos._ipSize;
 
     memcpy(_data.sender, sender, _dataInfos._senderSize);
     memcpy(_data.receiver, receiver, _dataInfos._receiverSize);
     memcpy(&_data.timestamp, timestamp, _dataInfos._timestampSize);
     memcpy(&_data.callId, call_id, _dataInfos._callIdSize);
+    memcpy(_data.ip, ip, _dataInfos._ipSize);
+    memcpy(_data.port, port, _dataInfos._portSize);
 
     return true;
 }
@@ -149,21 +177,23 @@ size_t CallResponse::getResponseSize() const noexcept
 size_t CallResponse::getDataSize() const noexcept
 {
     return _dataInfos._senderSize + _dataInfos._receiverSize
-    + _dataInfos._timestampSize + _dataInfos._callIdSize;
+        + _dataInfos._timestampSize + _dataInfos._callIdSize
+        + _dataInfos._ipSize + _dataInfos._portSize;
 }
 
 std::string CallResponse::serialize_data_infos() const noexcept
 {
     return BabelUtils::format(
         "Sender Size: %zu | Receiver Size: %zu | Timestamp Size : %zu | CallId Size : %zu",
-        _dataInfos._senderSize, _dataInfos._receiverSize, _dataInfos._timestampSize, _dataInfos._callIdSize
+        _dataInfos._senderSize, _dataInfos._receiverSize, _dataInfos._timestampSize, _dataInfos._callIdSize,
+        _dataInfos._ipSize, _dataInfos._portSize
     );
 }
 
 std::string CallResponse::serialize_data() const noexcept
 {
     return BabelUtils::format(
-        "Sender: %s | Receiver: %s | Timestamp : %ld | CallId: %u",
-        _data.sender, _data.receiver,_data.timestamp, _data.callId
+        "Sender: %s | Receiver: %s | Timestamp : %ld | CallId: %u | Ip: %s | Port: %s",
+        _data.sender, _data.receiver, _data.timestamp, _data.callId, _data.ip, _data.port
     );
 }

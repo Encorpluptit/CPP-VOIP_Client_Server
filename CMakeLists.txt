@@ -258,7 +258,7 @@ target_compile_options(unit_tests PRIVATE --coverage)
 
 target_include_directories(unit_tests PRIVATE tests/criterion_unit_tests/include)
 
-target_link_libraries(unit_tests criterion pthread gcov)
+target_link_libraries(unit_tests criterion ${CONAN_LIBS} gcov)
 
 
 ##########################
