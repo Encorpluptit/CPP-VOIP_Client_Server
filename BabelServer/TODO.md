@@ -1,13 +1,16 @@
 # MANAGER
- - User Responses
+ - CallResponse
  
 # Database
  - 
 
 ## User
- - User Delete fct
+ - Test User Account Creation / Account Deletion / Account Logged in / Account Logged Out
+ 
+## Call
+ - Manage send back Ip and port to allow User to open voice socket 
+ - Adding first draft of Call System Accept management
 
 ## Message
  - Add timestamp in message table
  - Do fct for adding, getting, deleting msg
- - Finishing modifying Logger to debug
