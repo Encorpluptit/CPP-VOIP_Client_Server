@@ -95,6 +95,11 @@ namespace BabelNetwork {
 
         [[nodiscard]] io_context &getContext() const { return const_cast<io_context &>(_context);}
 
+        [[nodiscard]] std::string getIp() final;
+
+        [[nodiscard]] std::string getPort() final;
+
+
         /* <- Attributes -> */
     private:
         #ifdef BABEL_CLIENT_BIN

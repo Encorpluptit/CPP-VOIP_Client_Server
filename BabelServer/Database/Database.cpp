@@ -77,7 +77,7 @@ BabelNetwork::UserResponse::ResponseCode Database::createUser(const std::string 
     return BabelNetwork::UserResponse::AccountCreated;
 }
 
-std::unique_ptr<UserModel> Database::getUser(const std::string &login)
+std::shared_ptr<UserModel> Database::getUser(const std::string &login)
 {
     std::vector<UserModel> users{};
     std::string log;
@@ -101,7 +101,7 @@ std::unique_ptr<UserModel> Database::getUser(const std::string &login)
     unlock();
     if (users.size() != 1)
         return nullptr;
-    return std::make_unique<UserModel>(users.front());
+    return std::make_shared<UserModel>(users.front());
 }
 
 std::unique_ptr<UserModel> Database::getUser(int id)

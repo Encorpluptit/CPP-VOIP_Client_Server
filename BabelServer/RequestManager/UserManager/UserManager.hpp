@@ -44,6 +44,13 @@ namespace BabelServer {
             Database &database
         ) const;
 
+        void Logout(
+            const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
+            const std::shared_ptr<BabelNetwork::UserResponse> &response,
+            const BabelNetwork::ClientList &clientList,
+            Database &database
+        ) const;
+
         void DeleteAccount(
             const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
             const std::shared_ptr<BabelNetwork::UserResponse> &response,

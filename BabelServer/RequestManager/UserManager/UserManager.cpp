@@ -54,7 +54,10 @@ void UserManager::Login(
     );
     dbg("%s\n", log.c_str());
     _logger.logThis(log);
-    // TODO: Add Already Logged in Management
+    if (clientSocket->getUser()) {
+        clientSocket->sendResponse(BabelNetwork::UserResponse::AlreadyLog(response->getLogin()));
+        return;
+    }
     auto user = database.getUser(response->getLogin());
     if (!user) {
         clientSocket->sendResponse(BabelNetwork::UserResponse::BadLogin(response->getLogin()));
@@ -65,8 +68,34 @@ void UserManager::Login(
         clientSocket->sendResponse(BabelNetwork::UserResponse::BadPassword(response->getLogin()));
         return;
     }
-    clientSocket->sendResponse(BabelNetwork::UserResponse::BadPassword(response->getLogin()));
+    clientSocket->setUser(user);
+    clientSocket->sendResponse(BabelNetwork::UserResponse::LoggedInOk(response->getLogin()));
     //TODO: Send "Friend connected" to friend list.
+}
+
+void UserManager::Logout(
+    const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
+    const std::shared_ptr<BabelNetwork::UserResponse> &response,
+    const BabelNetwork::ClientList &clientList,
+    Database &database
+) const
+{
+    std::string log(BabelUtils::format(
+        "Request for Logout User with login {%s} and password {%s}",
+        response->getLogin(), response->getPassword())
+    );
+    dbg("%s\n", log.c_str());
+    _logger.logThis(log);
+    // TODO: Add Already Logged out Management
+    auto user = database.getUser(response->getLogin());
+    if (!user) {
+        clientSocket->sendResponse(BabelNetwork::UserResponse::RequestedDeletedAccount(response->getLogin()));
+        return;
+    }
+    //TODO: UnHash Password ?
+    clientSocket->setUser(nullptr);
+    clientSocket->sendResponse(BabelNetwork::UserResponse::LoggedOutOk(response->getLogin()));
+    //TODO: Send "Friend disconnected" to friend list.
 }
 
 void UserManager::DeleteAccount(

@@ -242,3 +242,13 @@ void AsioClientSocket::handle_error(const std::string &msg, const boost::system:
     }
 }
 
+std::string AsioClientSocket::getIp()
+{
+    return _socket.remote_endpoint().address().to_string();
+}
+
+std::string AsioClientSocket::getPort()
+{
+    return std::to_string(_socket.remote_endpoint().port());
+}
+

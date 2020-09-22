@@ -30,7 +30,7 @@ namespace BabelServer {
 
         /* <- Public Methods -> */
     private:
-//        void createAccount(
+//        void requestCall(
 //            const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
 //            const std::shared_ptr<BabelNetwork::UserResponse> &response,
 //            const BabelNetwork::ClientList &clientList,

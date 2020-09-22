@@ -28,7 +28,7 @@ namespace BabelServer {
     public:
         BabelNetwork::UserResponse::ResponseCode createUser(const std::string &login, const std::string &password);
 
-        std::unique_ptr<UserModel> getUser(const std::string &login);
+        std::shared_ptr<UserModel> getUser(const std::string &login);
 
         std::unique_ptr<UserModel> getUser(int id);
 

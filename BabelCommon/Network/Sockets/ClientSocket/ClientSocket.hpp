@@ -9,6 +9,7 @@
 #define CPP_BABEL_2020_CLIENTSOCKET_HPP
 
 #include "ASocket.hpp"
+#include "Models.hpp"
 
 namespace BabelNetwork {
 
@@ -34,7 +35,8 @@ namespace BabelNetwork {
 
         [[nodiscard]] virtual bool sendResponse(const std::shared_ptr<AResponse> &response) = 0;
 
-        [[nodiscard]] virtual std::shared_ptr<AResponse> popResponse() {
+        [[nodiscard]] virtual std::shared_ptr<AResponse> popResponse()
+        {
             if (_read_queue.empty())
                 return nullptr;
             auto resp = _read_queue.front();
@@ -44,6 +46,16 @@ namespace BabelNetwork {
 
         [[nodiscard]] virtual std::string describe() = 0;
 
+        /* <- Getters / Setters -> */
+    public:
+        [[nodiscard]] virtual std::string getIp() = 0;
+
+        [[nodiscard]] virtual std::string getPort() = 0;
+
+        const std::shared_ptr<UserModel> &getUser() const { return _user; }
+
+        void setUser(const std::shared_ptr<UserModel> &user) { _user = user; }
+
         virtual void connect() = 0;
 
         /* <- Attributes -> */
@@ -52,6 +64,7 @@ namespace BabelNetwork {
         std::shared_ptr<AResponse> _read_msg = nullptr;
         std::queue<std::shared_ptr<AResponse>> _read_queue;
         std::queue<std::shared_ptr<AResponse>> _write_queue;
+        std::shared_ptr<UserModel> _user = nullptr;
     };
     /* <- Operators -> */
 //    std::ostream &operator<<(std::ostream &os, const AResponse &response);
