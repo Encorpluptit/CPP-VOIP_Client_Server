@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <string>
 #include <QMainWindow>
 #include "ClientCore.hpp"
 #include "QtSocket.hpp"
@@ -61,6 +62,14 @@ public:
 
 private slots:
     void on_ConnectionButton_clicked();
+    void on_DisconnectButton_clicked();
+    void coucou(const QString &name);
+    void on_ManageFriendButton_clicked();
+    void on_AddFriendButton_clicked();
+    void on_DeleteFriendButton_clicked();
+    void on_BackButton_clicked();
+    void on_BackButtonRegister_clicked();
+    void on_ToRegisterButton_clicked();
     void readyRead();
 
 private:
@@ -73,6 +82,6 @@ private:
     std::vector<int> userCodeIdx = {100, 102, 110, 112, 171, 172, 173, 174, 170};
     std::vector<int> callCodeIdx = {200, 202, 204, 205, 270, 271};
     std::vector<int> friendCodeIdx = {301, 302, 350};
-    std::vector<int> messageCodeIdx = {402, 403, 450};    
+    std::vector<int> messageCodeIdx = {402, 403, 450};
 };
 #endif // MAINWINDOW_H

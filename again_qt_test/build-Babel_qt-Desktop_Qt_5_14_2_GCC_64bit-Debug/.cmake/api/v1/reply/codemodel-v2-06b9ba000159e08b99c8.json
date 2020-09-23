@@ -1,0 +1,68 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.5"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "Babel_qt",
+					"targetIndexes" : 
+					[
+						0,
+						1
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "Babel_qt::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Babel_qt-Debug-4d543c1d5aa96f5ca831.json",
+					"name" : "Babel_qt",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "Babel_qt_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Babel_qt_autogen-Debug-ef59092837b1dfc55df6.json",
+					"name" : "Babel_qt_autogen",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/abenardFIX/AA_Epitech/tek3/B-CPP-500-PAR-5-1-babel-ugo.levi-cescutti/again_qt_test/build-Babel_qt-Desktop_Qt_5_14_2_GCC_64bit-Debug",
+		"source" : "/home/abenardFIX/AA_Epitech/tek3/B-CPP-500-PAR-5-1-babel-ugo.levi-cescutti/again_qt_test/Babel_qt"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 0
+	}
+}
