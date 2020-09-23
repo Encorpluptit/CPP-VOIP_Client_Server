@@ -124,7 +124,10 @@ void MainWindow::on_ToRegisterButton_clicked()
     ui->gridStackedWidget->setCurrentWidget(ui->RegisterPage);
 }
 
-
+void MainWindow::on_RegisterButton_clicked()
+{
+    std::cout << "COUCOU ENCULE PD" << std::endl;
+}
 
 
 

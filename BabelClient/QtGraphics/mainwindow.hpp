@@ -70,6 +70,7 @@ private slots:
     void on_BackButton_clicked();
     void on_BackButtonRegister_clicked();
     void on_ToRegisterButton_clicked();
+    void on_RegisterButton_clicked();
     void readyRead();
 
 private:
