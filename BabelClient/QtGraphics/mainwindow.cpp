@@ -78,8 +78,6 @@ void MainWindow::on_ConnectionButton_clicked()
     std::string pass = ui->PassLine->text().toLocal8Bit().constData();
 
     ui->gridStackedWidget->setCurrentWidget(ui->CallPage);
-    std::cout << user << std::endl;
-    std::cout << pass << std::endl;
     bool tmp = true;
     //if (tmp == true)
     //    ui->WrongLoginText->show();
@@ -87,6 +85,8 @@ void MainWindow::on_ConnectionButton_clicked()
         //ui->LoginWidget->hide();
         //ui->LogedWidget->show();
     }
+    auto response = BabelNetwork::UserResponse::NewLoginRequest(user, pass);
+    serv->writeData(response);
 }
 
 void MainWindow::on_DisconnectButton_clicked()
@@ -134,6 +134,7 @@ void MainWindow::on_ToRegisterButton_clicked()
 
 void MainWindow::LoggedIn(const std::shared_ptr<BabelNetwork::UserResponse> &response)
 {
+    std::cout << "LOGGED IN" << std::endl;
     (void)response;
 }
 
@@ -144,6 +145,7 @@ void MainWindow::LoggedOut(const std::shared_ptr<BabelNetwork::UserResponse> &re
 
 void MainWindow::AccountCreate(const std::shared_ptr<BabelNetwork::UserResponse> &response)
 {
+    std::cout << "ACCOUNT CREATE" << std::endl;
     (void)response;
 }
 
