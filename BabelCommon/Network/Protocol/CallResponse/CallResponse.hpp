@@ -154,13 +154,6 @@ namespace BabelNetwork {
         [[nodiscard]] static std::shared_ptr<AResponse>
         NewCallStarted(const std::string &sender, const std::string &receiver);
 
-        [[nodiscard]] static std::shared_ptr<AResponse> NewCallStarted(
-            const std::string &sender,
-            const std::string &receiver,
-            const std::string &ip,
-            const std::string &port
-        );
-
         static std::shared_ptr<AResponse> CallRequest(const std::string &sender, const std::string &receiver);
 
         [[nodiscard]] static std::shared_ptr<AResponse>
@@ -174,6 +167,13 @@ namespace BabelNetwork {
 
         [[nodiscard]] static std::shared_ptr<AResponse>
         AcceptCall(const std::string &sender, const std::string &receiver);
+
+        [[nodiscard]] static std::shared_ptr<AResponse> AcceptCall(
+            const std::string &sender,
+            const std::string &receiver,
+            const std::string &ip,
+            const std::string &port
+        );
 
         [[nodiscard]] static std::shared_ptr<AResponse>
         RefusedCall(const std::string &sender, const std::string &receiver);

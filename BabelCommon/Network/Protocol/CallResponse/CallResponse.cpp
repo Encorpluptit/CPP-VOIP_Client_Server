@@ -108,7 +108,7 @@ bool CallResponse::encode() noexcept
     memcpy(timestamp, &_data.timestamp, _dataInfos._timestampSize);
     memcpy(call_id, &_data.callId, _dataInfos._callIdSize);
     memcpy(ip, _data.ip, _dataInfos._ipSize);
-    memcpy(port, _data.port, _dataInfos._callIdSize);
+    memcpy(port, _data.port, _dataInfos._portSize);
     return true;
 }
 

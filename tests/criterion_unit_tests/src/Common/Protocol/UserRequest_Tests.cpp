@@ -31,7 +31,7 @@ Test(Common, UserResponse_02)
 
 Test(Common, UserResponse_03)
 {
-    static const AResponse::ResponseHeader hdr = {
+    const AResponse::ResponseHeader hdr = {
         ._code = UserResponse::ResponseCode::UnknownUserError,
         ._responseType = AResponse::ResponseType::User,
         ._dataInfosSize = 0
@@ -45,7 +45,7 @@ Test(Common, UserResponse_03)
 
 Test(Common, UserResponse_04)
 {
-    static const AResponse::ResponseHeader hdr = {
+    const AResponse::ResponseHeader hdr = {
         ._code = UserResponse::ResponseCode::LoggedIn,
         ._responseType = AResponse::ResponseType::User,
         ._dataInfosSize = 0,
@@ -59,7 +59,7 @@ Test(Common, UserResponse_04)
 
 Test(Common, UserResponse_05)
 {
-    static const AResponse::ResponseHeader hdr = {
+    const AResponse::ResponseHeader hdr = {
         ._code = 0,
         ._responseType = AResponse::ResponseType::User,
         ._dataInfosSize = 5
@@ -73,7 +73,7 @@ Test(Common, UserResponse_05)
 
 Test(Common, UserResponse_06)
 {
-    static const AResponse::ResponseHeader hdr = {
+    const AResponse::ResponseHeader hdr = {
         ._code = 0,
         ._responseType = AResponse::ResponseType::User,
         ._dataInfosSize = 0
@@ -90,7 +90,7 @@ Test(Common, UserResponse_06)
 
 Test(Common, UserResponse_07)
 {
-    static const AResponse::ResponseHeader hdr = {
+    const AResponse::ResponseHeader hdr = {
         ._code = 40,
         ._responseType = AResponse::ResponseType::User,
         ._dataInfosSize = 50
@@ -108,60 +108,60 @@ Test(Common, UserResponse_07)
 
 Test(Common, UserResponse_08)
 {
-    static const AResponse::ResponseHeader hdr = {
+    const AResponse::ResponseHeader hdr = {
         ._code = 40,
         ._responseType = AResponse::ResponseType::User,
         ._dataInfosSize = 50
     };
     UserResponse test(hdr);
-    static const std::string login = std::string(UserResponse::MaxDataSize::Login, '*');
+    const std::string login = std::string(UserResponse::MaxDataSize::Login, '*');
 
     ASSERT_BOOL(test.setLogin(login), true);
 }
 
 Test(Common, UserResponse_09)
 {
-    static const AResponse::ResponseHeader hdr = {
+    const AResponse::ResponseHeader hdr = {
         ._code = 40,
         ._responseType = AResponse::ResponseType::User,
         ._dataInfosSize = 50
     };
     UserResponse test(hdr);
-    static const std::string login = std::string(UserResponse::MaxDataSize::Login + 1, '*');
+    const std::string login = std::string(UserResponse::MaxDataSize::Login + 1, '*');
 
     ASSERT_BOOL(test.setLogin(login), false);
 }
 
 Test(Common, UserResponse_10)
 {
-    static const AResponse::ResponseHeader hdr = {
+    const AResponse::ResponseHeader hdr = {
         ._code = 40,
         ._responseType = AResponse::ResponseType::User,
         ._dataInfosSize = 50
     };
     UserResponse test(hdr);
-    static const std::string pass = std::string(UserResponse::MaxDataSize::Password, '*');
+    const std::string pass = std::string(UserResponse::MaxDataSize::Password, '*');
 
     ASSERT_BOOL(test.setPassword(pass), true);
 }
 
 Test(Common, UserResponse_11)
 {
-    static const AResponse::ResponseHeader hdr = {
+    const AResponse::ResponseHeader hdr = {
         ._code = 40,
         ._responseType = AResponse::ResponseType::User,
         ._dataInfosSize = 50
     };
     UserResponse test(hdr);
-    static const std::string pass = std::string(UserResponse::MaxDataSize::Password + 1, '*');
+    const std::string pass = std::string(UserResponse::MaxDataSize::Password + 1, '*');
 
     ASSERT_BOOL(test.setPassword(pass), false);
 }
 
 Test(Common, UserResponse_12)
 {
-    static const std::string login = std::string(UserResponse::MaxDataSize::Login, '*');
-    static const std::string pass = std::string(UserResponse::MaxDataSize::Password + 1, '*');
+    const std::string login = std::string(UserResponse::MaxDataSize::Login, '*');
+    const std::string pass = std::string(UserResponse::MaxDataSize::Password + 1, '*');
 
     cr_assert_throw(
         UserResponse test(login, pass),
@@ -176,8 +176,8 @@ Test(Common, UserResponse_12)
 
 Test(Common, UserResponse_13)
 {
-    static const std::string login = std::string(UserResponse::MaxDataSize::Login, '*');
-    static const std::string pass = std::string(UserResponse::MaxDataSize::Password, '*');
+    const std::string login = std::string(UserResponse::MaxDataSize::Login, '*');
+    const std::string pass = std::string(UserResponse::MaxDataSize::Password, '*');
 
     cr_assert_no_throw(
         UserResponse test(login, pass),
@@ -187,8 +187,8 @@ Test(Common, UserResponse_13)
 
 Test(Common, UserResponse_14)
 {
-    static const std::string login = std::string(UserResponse::MaxDataSize::Login + 1, '*');
-    static const std::string pass = std::string(UserResponse::MaxDataSize::Password, '*');
+    const std::string login = std::string(UserResponse::MaxDataSize::Login + 1, '*');
+    const std::string pass = std::string(UserResponse::MaxDataSize::Password, '*');
 
     cr_assert_throw(
         UserResponse test(login, pass),
@@ -203,8 +203,8 @@ Test(Common, UserResponse_14)
 
 Test(Common, UserResponse_15)
 {
-    static const std::string login("toto");
-    static const std::string pass("tata");
+    const std::string login("toto");
+    const std::string pass("tata");
 
     UserResponse test(login, pass);
     ASSERT_BOOL(test.encode(), true);
@@ -218,8 +218,8 @@ Test(Common, UserResponse_15)
 
 Test(Common, UserResponse_16)
 {
-    static const std::string login("toto");
-    static const std::string pass("tata");
+    const std::string login("toto");
+    const std::string pass("tata");
     UserResponse test(login, pass);
     size_t sz = login.size() + pass.size() + AResponse::HeaderSize + UserResponse::DataInfosSize;
 
@@ -228,7 +228,7 @@ Test(Common, UserResponse_16)
 
 Test(Common, UserResponse_17)
 {
-    static const AResponse::ResponseHeader hdr = {
+    const AResponse::ResponseHeader hdr = {
         ._code = UserResponse::ResponseCode::AccountCreated,
         ._responseType = AResponse::ResponseType::User,
         ._dataInfosSize = 0,
@@ -242,7 +242,7 @@ Test(Common, UserResponse_17)
 
 Test(Common, UserResponse_18)
 {
-    static const AResponse::ResponseHeader hdr = {
+    const AResponse::ResponseHeader hdr = {
         ._code = UserResponse::ResponseCode::AccountDeleted,
         ._responseType = AResponse::ResponseType::User,
         ._dataInfosSize = 0,
@@ -256,8 +256,8 @@ Test(Common, UserResponse_18)
 
 Test(Common, UserResponse_19)
 {
-    static const std::string login("toto");
-    static const std::string pass("tata");
+    const std::string login("toto");
+    const std::string pass("tata");
 
     UserResponse test(login, pass);
     auto ptr = test.get_shared_from_this();
@@ -273,8 +273,8 @@ Test(Common, UserResponse_19)
 
 Test(Common, UserResponse_20)
 {
-    static const std::string login("toto");
-    static const std::string pass("tata");
+    const std::string login("toto");
+    const std::string pass("tata");
 
     UserResponse test(login, pass);
     test.setCode(UserResponse::ResponseCode::LoggedIn);
@@ -291,8 +291,8 @@ Test(Common, UserResponse_20)
 
 Test(Common, UserResponse_21)
 {
-    static const std::string login("toto");
-    static const std::string pass("tata");
+    const std::string login("toto");
+    const std::string pass("tata");
 
     UserResponse test(login, pass);
     test.setCode(UserResponse::ResponseCode::LoggedIn);
