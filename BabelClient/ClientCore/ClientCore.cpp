@@ -255,6 +255,8 @@ void ClientCore::run()
             response = BabelNetwork::UserResponse::AccountCreationRequest("ugo", "lolol");
         if (data == "6")
             response = BabelNetwork::UserResponse::AccountDeletionRequest("ugo");
+        if (data == "7")
+            response = BabelNetwork::CallResponse::CallRequest("ugo", "dam", _socket->getIp(), _socket->getPort());
         if (data == "exit" || !_socket->isReady()) {
             std::cout << "exit loop" << std::endl;
             break;
