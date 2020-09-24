@@ -126,7 +126,11 @@ void MainWindow::on_ToRegisterButton_clicked()
 
 void MainWindow::on_RegisterButton_clicked()
 {
-    std::cout << "COUCOU ENCULE PD" << std::endl;
+    std::string user = ui->UserRegisterLine->text().toLocal8Bit().constData();
+    std::string pass = ui->PasswordRegisterLine->text().toLocal8Bit().constData();
+
+    auto response = BabelNetwork::UserResponse::AccountCreationRequest(user, pass);
+    serv->writeData(response);
 }
 
 
