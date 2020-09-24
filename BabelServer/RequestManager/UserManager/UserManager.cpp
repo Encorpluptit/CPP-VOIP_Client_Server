@@ -28,7 +28,7 @@ void UserManager::createAccount(
     _logger.logThis(log);
     //TODO: Hash Password ?
     if (database.createUser(login, response->getPassword()) < 0) {
-        clientSocket->sendResponse(BabelNetwork::UserResponse::BadLogin(login));
+        clientSocket->sendResponse(BabelNetwork::UserResponse::LoginUse(login));
         return;
     }
     clientSocket->sendResponse(BabelNetwork::UserResponse::AccountCreatedOk(login));
@@ -54,11 +54,12 @@ void UserManager::Login(
         return;
     }
     //TODO: UnHash Password ?
+    std::cout << "RESPONSE : " << response->getPassword() << "USER : " << user->password << std::endl;
     if (response->getPassword() != user->password) {
         clientSocket->sendResponse(BabelNetwork::UserResponse::BadPassword(response->getLogin()));
         return;
     }
-    clientSocket->sendResponse(BabelNetwork::UserResponse::BadPassword(response->getLogin()));
+    clientSocket->sendResponse(BabelNetwork::UserResponse::LoggedInOk(response->getLogin()));
     //TODO: Send "Friend connected" to friend list.
 }
 

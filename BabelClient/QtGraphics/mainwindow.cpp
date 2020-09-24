@@ -54,13 +54,15 @@ MainWindow::MainWindow(QWidget *parent)
         mapper->setMapping(button, button->text());
         connect(mapper, SIGNAL(mapped(const QString &)), this, SLOT(coucou(const QString &)));
     }
-
+    ui->WrongLoginText->hide();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
 }
+
+/*          EVENT FRONT         */
 
 void MainWindow::coucou(const QString &name)
 {
@@ -77,14 +79,7 @@ void MainWindow::on_ConnectionButton_clicked()
     std::string user = ui->UserLine->text().toLocal8Bit().constData();
     std::string pass = ui->PassLine->text().toLocal8Bit().constData();
 
-    ui->gridStackedWidget->setCurrentWidget(ui->CallPage);
-    bool tmp = true;
-    //if (tmp == true)
-    //    ui->WrongLoginText->show();
-    if (tmp == true) {
-        //ui->LoginWidget->hide();
-        //ui->LogedWidget->show();
-    }
+    //ui->gridStackedWidget->setCurrentWidget(ui->CallPage);
     auto response = BabelNetwork::UserResponse::NewLoginRequest(user, pass);
     serv->writeData(response);
 }
@@ -135,12 +130,14 @@ void MainWindow::on_RegisterButton_clicked()
 
 
 
-
+/*          EVENT RESPONSE           */
 
 
 
 void MainWindow::LoggedIn(const std::shared_ptr<BabelNetwork::UserResponse> &response)
 {
+    ui->gridStackedWidget->setCurrentWidget(ui->CallPage);
+    ui->WrongLoginText->hide();
     std::cout << "LOGGED IN" << std::endl;
     (void)response;
 }
@@ -164,104 +161,91 @@ void MainWindow::AccountDelete(const std::shared_ptr<BabelNetwork::UserResponse>
 void MainWindow::UnknowUserError(const std::shared_ptr<BabelNetwork::UserResponse> &response)
 {
     (void) response;
-    //FRONT ARTHUR;
 }
 
 void MainWindow::WrongLogin(const std::shared_ptr<BabelNetwork::UserResponse> &response)
 {
+    ui->WrongLoginText->show();
     std::cout << "WRONG LOGIN" << std::endl;
     (void) response;
-    //FRONT ARTHUR
 }
 
 void MainWindow::WrongPassword(const std::shared_ptr<BabelNetwork::UserResponse> &response)
 {
+    ui->WrongLoginText->show(); // METTRE WRONG PASSWORD
+    std::cout << "WRONG PASSWORD" << std::endl;
     (void) response;
-    //FRONT ARTHUR
 }
 
 void MainWindow::LoginAlreadyTaken(const std::shared_ptr<BabelNetwork::UserResponse> &response)
 {
+    std::cout << "LOGIN ALREADY TAKEN" << std::endl;
     (void) response;
-    //FRONT ARTHUR
 }
 
 void MainWindow::AlreadyLoggedIn(const std::shared_ptr<BabelNetwork::UserResponse> &response)
 {
     (void) response;
-    //FRONT ARTHUR
 }
 
 void MainWindow::CallStarted(const std::shared_ptr<BabelNetwork::CallResponse> &response)
 {
     (void) response;
-    //FRONT ARTHUR
 }
 
 void MainWindow::CallLeft(const std::shared_ptr<BabelNetwork::CallResponse> &response)
 {
     (void) response;
-    //FRONT ARTHUR
 }
 
 void MainWindow::IncomingCall(const std::shared_ptr<BabelNetwork::CallResponse> &response)
 {
     (void) response;
-    //FRONT ARTHUR
 }
 
 void MainWindow::CallAccepted(const std::shared_ptr<BabelNetwork::CallResponse> &response)
 {
     (void) response;
-    //FRONT ARTHUR
 }
 
 void MainWindow::CallRefused(const std::shared_ptr<BabelNetwork::CallResponse> &response)
 {
     (void) response;
-    //FRONT ARTHUR
 }
 
 void MainWindow::UserDisconnected(const std::shared_ptr<BabelNetwork::CallResponse> &response)
 {
     (void) response;
-    //FRONT ARTHUR
 }
 
 void MainWindow::AddFriend(const std::shared_ptr<BabelNetwork::FriendResponse> &response)
 {
     (void) response;
-    //FRONT ARTHUR
 }
 
 void MainWindow::FriendRequest(const std::shared_ptr<BabelNetwork::FriendResponse> &response)
 {
     (void) response;
-    //FRONT ARTHUR
 }
 
 void MainWindow::UnknowUser(const std::shared_ptr<BabelNetwork::FriendResponse> &response)
 {
     (void) response;
-    //FRONT ARTHUR
 }
 
 void MainWindow::SendMessageOk(const std::shared_ptr<BabelNetwork::MessageResponse> &response)
 {
     (void) response;
-    //FRONT ARTHUR
 }
 
 void MainWindow::ReceiveMessage(const std::shared_ptr<BabelNetwork::MessageResponse> &response)
 {
     (void) response;
-    //FRONT ARTHUR
 }
 
 void MainWindow::UnknowUserMessage(const std::shared_ptr<BabelNetwork::MessageResponse> &response)
 {
     (void) response;
-    //FRONT ARTHUR
 }
 
 void MainWindow::doUserResponse(const std::shared_ptr<BabelNetwork::AResponse> &response)
@@ -314,6 +298,7 @@ void MainWindow::doUnknowTypeResponse(const std::shared_ptr<BabelNetwork::ARespo
 
 void MainWindow::checkTypeResponse(const std::shared_ptr<BabelNetwork::AResponse> &response)
 {
+    std::cout << "COUCOU" << std::endl;
     dispatch_ptr[response->getResponseType()](this, response);
 }
 
