@@ -154,7 +154,17 @@ namespace BabelNetwork {
         [[nodiscard]] static std::shared_ptr<AResponse>
         NewCallStarted(const std::string &sender, const std::string &receiver);
 
-        static std::shared_ptr<AResponse> CallRequest(const std::string &sender, const std::string &receiver);
+        [[nodiscard]] static std::shared_ptr<AResponse> CallRequest(
+            const std::string &sender,
+            const std::string &receiver
+        );
+
+        [[nodiscard]] static std::shared_ptr<AResponse> CallRequest(
+            const std::string &sender,
+            const std::string &receiver,
+            const std::string &ip,
+            const std::string &port
+        );
 
         [[nodiscard]] static std::shared_ptr<AResponse>
         LeftCall(const std::string &sender, const std::string &receiver, uint16_t call_id);
@@ -166,14 +176,10 @@ namespace BabelNetwork {
         CallIncoming(const std::string &sender, const std::string &receiver, uint16_t call_id);
 
         [[nodiscard]] static std::shared_ptr<AResponse>
-        AcceptCall(const std::string &sender, const std::string &receiver);
+        CallIncoming(const std::shared_ptr<BabelNetwork::CallResponse> &response, uint16_t call_id);
 
-        [[nodiscard]] static std::shared_ptr<AResponse> AcceptCall(
-            const std::string &sender,
-            const std::string &receiver,
-            const std::string &ip,
-            const std::string &port
-        );
+        [[nodiscard]] static std::shared_ptr<AResponse>
+        AcceptCall(const std::string &sender, const std::string &receiver);
 
         [[nodiscard]] static std::shared_ptr<AResponse>
         RefusedCall(const std::string &sender, const std::string &receiver);
