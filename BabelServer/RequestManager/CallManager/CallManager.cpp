@@ -21,9 +21,9 @@ void CallManager::requestCall(
     // TODO: add check if caller call himself
     for (const auto &target: clientList) {
         if (target->getUser() && target->getUser()->login == response->getReceiver()) {
-            target->sendResponse(BabelNetwork::CallResponse::CallIncoming(response->getSender(), response->getReceiver(), getCallId()));
-//            target->sendResponse(BabelNetwork::CallResponse::CallIncoming(response->getSender(), response->getReceiver(), getCallId()));
+            target->sendResponse(BabelNetwork::CallResponse::CallIncoming(response,getCallId()));
             return;
         }
     }
+    clientSocket->sendResponse(BabelNetwork::CallResponse::DisconnectedUser(response->getSender(), response->getReceiver()));
 }
