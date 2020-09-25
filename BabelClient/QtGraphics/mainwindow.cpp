@@ -54,7 +54,9 @@ MainWindow::MainWindow(QWidget *parent)
         mapper->setMapping(button, button->text());
         connect(mapper, SIGNAL(mapped(const QString &)), this, SLOT(coucou(const QString &)));
     }
+    ui->RegisterSuccesLine->hide();
     ui->WrongLoginText->hide();
+    ui->AlreadyRegisterLine->hide();
 }
 
 MainWindow::~MainWindow()
@@ -67,7 +69,6 @@ MainWindow::~MainWindow()
 void MainWindow::coucou(const QString &name)
 {
     ui->ContactName->setMarkdown(name);
-    //std::cout << "coucou fonction" << std::endl;
 }
 
 void MainWindow::on_ConnectionButton_clicked()
@@ -149,6 +150,7 @@ void MainWindow::LoggedOut(const std::shared_ptr<BabelNetwork::UserResponse> &re
 
 void MainWindow::AccountCreate(const std::shared_ptr<BabelNetwork::UserResponse> &response)
 {
+    ui->RegisterSuccesLine->show();
     std::cout << "ACCOUNT CREATE" << std::endl;
     (void)response;
 }
@@ -160,6 +162,7 @@ void MainWindow::AccountDelete(const std::shared_ptr<BabelNetwork::UserResponse>
 
 void MainWindow::UnknowUserError(const std::shared_ptr<BabelNetwork::UserResponse> &response)
 {
+    ui->WrongLoginText->show();
     (void) response;
 }
 
@@ -179,6 +182,7 @@ void MainWindow::WrongPassword(const std::shared_ptr<BabelNetwork::UserResponse>
 
 void MainWindow::LoginAlreadyTaken(const std::shared_ptr<BabelNetwork::UserResponse> &response)
 {
+    ui->AlreadyRegisterLine->show();
     std::cout << "LOGIN ALREADY TAKEN" << std::endl;
     (void) response;
 }
