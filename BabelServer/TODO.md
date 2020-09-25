@@ -14,4 +14,4 @@
 
 ## Message
  - Add timestamp in message table
- - Do fct for adding, getting, deleting msg
+ - Do fct for adding, getting, deleting msg in Database
