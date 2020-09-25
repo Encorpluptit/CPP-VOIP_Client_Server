@@ -104,6 +104,6 @@ func (c *Core) handleClient(client *nw.Client) {
 			break
 		}
 		nb += 1
-		log.Println("Request received:", nb)
+		log.Println("Number of Request received:", nb)
 	}
 }
