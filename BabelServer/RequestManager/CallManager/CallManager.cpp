@@ -22,6 +22,40 @@ void CallManager::requestCall(
     for (const auto &target: clientList) {
         if (target->getUser() && target->getUser()->login == response->getReceiver()) {
             target->sendResponse(BabelNetwork::CallResponse::CallIncoming(response,getCallId()));
+            // TODO: Adding Increment (pb with const)
+//            incrementCallId();
+            return;
+        }
+    }
+    clientSocket->sendResponse(BabelNetwork::CallResponse::DisconnectedUser(response->getSender(), response->getReceiver()));
+}
+
+void CallManager::refuseCall(
+    const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
+    const std::shared_ptr<BabelNetwork::CallResponse> &response,
+    const BabelNetwork::ClientList &clientList,
+    Database &database
+) const
+{
+    for (const auto &target: clientList) {
+        if (target->getUser() && target->getUser()->login == response->getReceiver()) {
+            target->sendResponse(response);
+            return;
+        }
+    }
+    clientSocket->sendResponse(BabelNetwork::CallResponse::DisconnectedUser(response->getSender(), response->getReceiver()));
+}
+
+void CallManager::acceptCall(
+    const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
+    const std::shared_ptr<BabelNetwork::CallResponse> &response,
+    const BabelNetwork::ClientList &clientList,
+    Database &database
+) const
+{
+    for (const auto &target: clientList) {
+        if (target->getUser() && target->getUser()->login == response->getReceiver()) {
+            target->sendResponse(response);
             return;
         }
     }

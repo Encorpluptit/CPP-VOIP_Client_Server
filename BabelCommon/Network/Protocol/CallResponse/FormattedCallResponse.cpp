@@ -78,7 +78,8 @@ CallResponse::CallIncoming(const std::shared_ptr<BabelNetwork::CallResponse> &re
     CallResponse reponse(*response);
 
     response->setCode(CallResponse::ResponseCode::IncomingCall);
-    response->setCallId(call_id);
+    if (!response->setCallId(call_id))
+        return nullptr;
     return response;
 }
 
