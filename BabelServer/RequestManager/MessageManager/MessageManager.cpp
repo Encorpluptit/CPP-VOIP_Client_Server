@@ -20,6 +20,9 @@ void MessageManager::sendMessage(
             return;
         }
     }
-    clientSocket->sendResponse(BabelNetwork::CallResponse::DisconnectedUser(response->getSender(), response->getReceiver()));
-
+//    if (!database.saveMessage()) {
+//        clientSocket->sendResponse(BabelNetwork::MessageResponse::UserNotFound(response));
+//        return;
+//    }
+    clientSocket->sendResponse(BabelNetwork::MessageResponse::ReceiveMessageOk(response->getSender(), response->getReceiver()));
 }

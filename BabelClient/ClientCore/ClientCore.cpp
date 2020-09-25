@@ -262,7 +262,7 @@ void ClientCore::run()
         if (data == "9")
             response = BabelNetwork::CallResponse::AcceptCall("ugo", "dam");
         if (data == "10")
-            response = BabelNetwork::MessageResponse::RequestMessageSend("ugo", "dam", "coucou");
+            response = BabelNetwork::MessageResponse::RequestMessageSend("dam", "ugo", "coucou");
         if (data == "exit" || !_socket->isReady()) {
             std::cout << "exit loop" << std::endl;
             break;

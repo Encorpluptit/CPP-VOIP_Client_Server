@@ -45,3 +45,9 @@ std::shared_ptr<AResponse> MessageResponse::ReceiveMessageOk(const std::string &
         return nullptr;
     return resp;
 }
+
+std::shared_ptr<AResponse> MessageResponse::UserNotFound(const std::shared_ptr<MessageResponse>& response)
+{
+    response->setCode(MessageResponse::ResponseCode::UnknownUser);
+    return response;
+}
