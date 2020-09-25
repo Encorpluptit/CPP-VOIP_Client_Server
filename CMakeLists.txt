@@ -149,6 +149,7 @@ set(
         ${SERVER_DIR}/RequestManager/UserManager
         ${SERVER_DIR}/RequestManager/CallManager
         ${SERVER_DIR}/RequestManager/FriendManager
+        ${SERVER_DIR}/RequestManager/MessageManager
 )
 
 
@@ -163,6 +164,7 @@ set(
         ${SERVER_DIR}/RequestManager/UserManager/UserManager.cpp
         ${SERVER_DIR}/RequestManager/CallManager/CallManager.cpp
         ${SERVER_DIR}/RequestManager/FriendManager/FriendManager.cpp
+        ${SERVER_DIR}/RequestManager/MessageManager/MessageManager.cpp
 )
 
 
