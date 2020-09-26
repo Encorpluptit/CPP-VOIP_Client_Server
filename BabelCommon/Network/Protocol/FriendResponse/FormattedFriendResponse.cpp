@@ -53,6 +53,6 @@ std::shared_ptr<AResponse> FriendResponse::UserNotExist(const std::string &login
 {
     auto resp = std::make_shared<FriendResponse>(login, friendLogin);
 
-    resp->setCode(FriendResponse::ResponseCode::UnknowUser);
+    resp->setCode(FriendResponse::ResponseCode::UnknownUser);
     return resp;
 }

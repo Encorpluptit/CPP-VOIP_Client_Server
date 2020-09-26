@@ -77,11 +77,13 @@ namespace BabelNetwork {
     public:
         [[nodiscard]] virtual bool isOk() noexcept = 0;
 
-        [[nodiscard]] std::string serialize() const noexcept;
+        [[nodiscard]] std::string describe() const noexcept;
 
-        [[nodiscard]] virtual std::string serialize_data_infos() const noexcept = 0;
+        [[nodiscard]] virtual std::string describe_code() const noexcept = 0;
 
-        [[nodiscard]] virtual std::string serialize_data() const noexcept = 0;
+        [[nodiscard]] virtual std::string describe_data_infos() const noexcept = 0;
+
+        [[nodiscard]] virtual std::string describe_data() const noexcept = 0;
 
         /* <- Get Sizes Methods -> */
     public:

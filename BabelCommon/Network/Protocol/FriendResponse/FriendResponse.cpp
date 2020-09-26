@@ -105,7 +105,7 @@ size_t FriendResponse::getDataSize() const noexcept
     return _dataInfos._loginSize + _dataInfos._friendLoginSize;
 }
 
-std::string FriendResponse::serialize_data_infos() const noexcept
+std::string FriendResponse::describe_data_infos() const noexcept
 {
     return BabelUtils::format(
         "Login Size: %zu | FriendLogin Size: %zu",
@@ -113,10 +113,19 @@ std::string FriendResponse::serialize_data_infos() const noexcept
     );
 }
 
-std::string FriendResponse::serialize_data() const noexcept
+std::string FriendResponse::describe_data() const noexcept
 {
     return BabelUtils::format(
         "Login: %s | FriendLogin: %s",
         _data.login, _data.FriendLogin
     );
+}
+
+std::string FriendResponse::describe_code() const noexcept
+{
+    for (const auto &pair : codeString) {
+        if (getCode() == pair.first)
+            return pair.second;
+    }
+    return "Unknown Call Code";
 }

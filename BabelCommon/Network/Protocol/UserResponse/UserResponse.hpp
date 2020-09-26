@@ -8,6 +8,7 @@
 #ifndef CPP_BABEL_2020_USER_RESPONSE_HPP
 #define CPP_BABEL_2020_USER_RESPONSE_HPP
 
+#include <map>
 #include "AResponse.hpp"
 
 namespace BabelNetwork {
@@ -96,9 +97,11 @@ namespace BabelNetwork {
     public:
         [[nodiscard]] bool isOk() noexcept final;
 
-        [[nodiscard]] std::string serialize_data() const noexcept final;
+        [[nodiscard]] std::string describe_code() const noexcept final;
 
-        [[nodiscard]] std::string serialize_data_infos() const noexcept final;
+        [[nodiscard]] std::string describe_data() const noexcept final;
+
+        [[nodiscard]] std::string describe_data_infos() const noexcept final;
 
         /* <- Getters / Setters -> */
     public:
@@ -123,12 +126,14 @@ namespace BabelNetwork {
             return _description;
         };
 
+        /* <- Attributes -> */
     private:
         const std::string _description = "User Related Request";
         char _data_byte[MaxResponseSize] = {0};
         DataInfos _dataInfos{};
         Data _data{};
 
+        /* <- Formatted Response -> */
     public:
         [[nodiscard]] static std::shared_ptr<AResponse> NewLoginRequest(const std::string &login, const std::string &password);
         [[nodiscard]] static std::shared_ptr<AResponse> AccountCreationRequest(const std::string &login, const std::string &password);
@@ -144,6 +149,27 @@ namespace BabelNetwork {
         [[nodiscard]] static std::shared_ptr<AResponse> AlreadyLog(const std::string &login);
         [[nodiscard]] static std::shared_ptr<AResponse> AccountCreatedOk(const std::string &login);
         [[nodiscard]] static std::shared_ptr<AResponse> RequestedDeletedAccount(const std::string &login);
+
+        /* <- Stringify Code -> */
+    private:
+        const std::map<ResponseCode, std::string> codeString = {
+                {LoggedIn, "Logged In"},
+                {RequestLogin, "Request Login"},
+                {LoggedOut, "Logged Out"},
+                {RequestLogout, "Requesting Logout"},
+
+                {AccountCreated, "Account Created"},
+                {RequestAccountCreation, "Requesting Account Creation"},
+                {AccountDeleted, "Account Deleted"},
+                {RequestAccountDeletion, "Request Account Deletion"},
+
+                {UnknownUserError, "Unknown User Error"},
+                {WrongLogin, "Wrong Login"},
+                {WrongPassword, "Wrong Password"},
+                {LoginAlreadyTaken, "Login Already Taken"},
+                {AlreadyLoggedIn, "Already Logged In"},
+                {RequestedAccountDeleted, "Requested Account Deleted"}
+            };
     };
 }
 

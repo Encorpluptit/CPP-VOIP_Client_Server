@@ -8,6 +8,7 @@
 #ifndef CPP_BABEL_2020_MESSAGE_RESPONSE_HPP
 #define CPP_BABEL_2020_MESSAGE_RESPONSE_HPP
 
+#include <map>
 #include "AResponse.hpp"
 
 namespace BabelNetwork {
@@ -91,9 +92,11 @@ namespace BabelNetwork {
     public:
         [[nodiscard]] bool isOk() noexcept final;
 
-        [[nodiscard]] std::string serialize_data() const noexcept final;
+        [[nodiscard]] std::string describe_code() const noexcept final;
 
-        [[nodiscard]] std::string serialize_data_infos() const noexcept final;
+        [[nodiscard]] std::string describe_data() const noexcept final;
+
+        [[nodiscard]] std::string describe_data_infos() const noexcept final;
 
         /* <- Getters / Setters -> */
     public:
@@ -125,18 +128,30 @@ namespace BabelNetwork {
 
         [[nodiscard]] time_t getTimestamp() const noexcept { return _data.timestamp; };
 
+        /* <- Attributes -> */
     private:
         const std::string _description = "Message Related Request";
         char _data_byte[MaxResponseSize] = {0};
         DataInfos _dataInfos{};
         Data _data{};
 
+        /* <- Formatted Response -> */
     public:
         [[nodiscard]] static std::shared_ptr<AResponse> RequestMessageSend(const std::string &sender, const std::string &receiver, const std::string &messageData);
         [[nodiscard]] static std::shared_ptr<AResponse> OkSendMessage(const std::string &sender, const std::string &receiver);
         [[nodiscard]] static std::shared_ptr<AResponse> MessageReceive(const std::string &sender, const std::string &receiver, const std::string &messageData);
         [[nodiscard]] static std::shared_ptr<AResponse> ReceiveMessageOk(const std::string &sender, const std::string &receiver);
         [[nodiscard]] static std::shared_ptr<AResponse> UserNotFound(const std::shared_ptr<MessageResponse>& response);
+
+        /* <- Stringify Code -> */
+    private:
+        const std::map<ResponseCode, std::string> codeString = {
+            {RequestSendMessage, "Requested Send Message"},
+            {SendMessageOk, "Send Message Ok"},
+            {ReceiveMessage, "Receive Message"},
+            {ReceiveOk, "Receive Ok"},
+            {UnknownUser, "Unknown User"},
+        };
     };
 }
 

@@ -8,6 +8,7 @@
 #ifndef CPP_BABEL_2020_CALL_RESPONSE_HPP
 #define CPP_BABEL_2020_CALL_RESPONSE_HPP
 
+#include <map>
 #include "AResponse.hpp"
 
 namespace BabelNetwork {
@@ -97,9 +98,11 @@ namespace BabelNetwork {
     public:
         [[nodiscard]] bool isOk() noexcept final;
 
-        [[nodiscard]] std::string serialize_data() const noexcept final;
+        [[nodiscard]] std::string describe_code() const noexcept final;
 
-        [[nodiscard]] std::string serialize_data_infos() const noexcept final;
+        [[nodiscard]] std::string describe_data() const noexcept final;
+
+        [[nodiscard]] std::string describe_data_infos() const noexcept final;
 
         /* <- Getters / Setters -> */
     public:
@@ -140,12 +143,14 @@ namespace BabelNetwork {
 
         [[nodiscard]] const char *getPort() const noexcept { return _data.port; };
 
+        /* <- Attributes -> */
     private:
         const std::string _description = "Call Related Request";
         char _data_byte[MaxResponseSize] = {0};
         DataInfos _dataInfos{};
         Data _data{};
 
+        /* <- Formatted Response -> */
     public:
         [[nodiscard]] static std::shared_ptr<AResponse>
         NewCallStarted(const std::string &sender, const std::string &receiver);
@@ -182,6 +187,19 @@ namespace BabelNetwork {
 
         [[nodiscard]] static std::shared_ptr<AResponse>
         DisconnectedUser(const std::string &sender, const std::string &receiver);
+
+        /* <- Stringify Code -> */
+    private:
+        const std::map<ResponseCode, std::string> codeString = {
+            {CallStarted, "Call Started"},
+            {RequestCall, "Call Requested"},
+            {CallLeft, "Call Left"},
+            {RequestEndCall, "End Call Requested"},
+            {IncomingCall, "Incoming Call"},
+            {CallAccepted, "Call Accepted"},
+            {CallRefused, "Call Refused"},
+            {UserDisconnected, "User Disconnected"}
+        };
     };
 }
 

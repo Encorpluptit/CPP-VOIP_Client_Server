@@ -181,7 +181,7 @@ size_t CallResponse::getDataSize() const noexcept
         + _dataInfos._ipSize + _dataInfos._portSize;
 }
 
-std::string CallResponse::serialize_data_infos() const noexcept
+std::string CallResponse::describe_data_infos() const noexcept
 {
     return BabelUtils::format(
         "Sender Size: %zu | Receiver Size: %zu | Timestamp Size : %zu | CallId Size : %zu",
@@ -190,10 +190,19 @@ std::string CallResponse::serialize_data_infos() const noexcept
     );
 }
 
-std::string CallResponse::serialize_data() const noexcept
+std::string CallResponse::describe_data() const noexcept
 {
     return BabelUtils::format(
         "Sender: %s | Receiver: %s | Timestamp : %ld | CallId: %u | Ip: %s | Port: %s",
         _data.sender, _data.receiver, _data.timestamp, _data.callId, _data.ip, _data.port
     );
+}
+
+std::string CallResponse::describe_code() const noexcept
+{
+    for (const auto &pair : codeString) {
+        if (getCode() == pair.first)
+            return pair.second;
+    }
+    return "Unknown Call Code";
 }

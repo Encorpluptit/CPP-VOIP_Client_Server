@@ -173,7 +173,7 @@ void AsioClientSocket::queue_read_response(const boost::system::error_code &erro
 {
     if (!error && _read_msg->decode_data()) {
         _read_queue.push(_read_msg);
-        dbg("Request Received: %s", _read_msg->serialize().c_str())
+        dbg("Request Received: %s", _read_msg->describe().c_str())
         _logger.logThis(_read_msg);
         read_header();
     } else {

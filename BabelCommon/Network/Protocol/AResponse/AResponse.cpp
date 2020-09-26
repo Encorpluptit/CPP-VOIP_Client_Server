@@ -41,26 +41,27 @@ std::shared_ptr<AResponse> AResponse::getResponse(const char *headerBuffer)
     }
 }
 
-std::string AResponse::serialize() const noexcept
+std::string AResponse::describe() const noexcept
 {
     std::string serialised = BabelUtils::format(
+        "%s\n"
         R"({"Code": "%d", "Data Infos Size": "%zu", "Desc": "%s"})"
-        "\n\t" R"({"Data Infos": ")" + serialize_data_infos() + "\"}" +
-            "\n\t" R"({"Data": ")" + serialize_data() + "\"}",
-        getCode(), getDataInfosSize(), getDescription().c_str()
+        "\n\t" R"({"Data Infos": ")" + describe_data_infos() + "\"}" +
+            "\n\t" R"({"Data": ")" + describe_data() + "\"}",
+        describe_code().c_str(), getCode(), getDataInfosSize(), getDescription().c_str()
     );
     return serialised;
 }
 
 std::ostream &BabelNetwork::operator<<(std::ostream &os, const BabelNetwork::AResponse &response)
 {
-    os << response.serialize();
+    os << response.describe();
     return os;
 }
 
 std::ostream &BabelNetwork::operator<<(std::ostream &os, const std::shared_ptr<AResponse> &response)
 {
-    os << response->serialize();
+    os << response->describe();
     return os;
 }
 

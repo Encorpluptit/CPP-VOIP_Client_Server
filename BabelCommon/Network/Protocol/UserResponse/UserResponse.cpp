@@ -107,7 +107,7 @@ size_t UserResponse::getDataSize() const noexcept
     return _dataInfos._loginSize + _dataInfos._passwordSize;
 }
 
-std::string UserResponse::serialize_data_infos() const noexcept
+std::string UserResponse::describe_data_infos() const noexcept
 {
     return BabelUtils::format(
         "Login Size: %zu | Password Size: %zu",
@@ -115,10 +115,19 @@ std::string UserResponse::serialize_data_infos() const noexcept
     );
 }
 
-std::string UserResponse::serialize_data() const noexcept
+std::string UserResponse::describe_data() const noexcept
 {
     return BabelUtils::format(
         "Login: %s | Password: %s",
         _data.login, _data.password
     );
+}
+
+std::string UserResponse::describe_code() const noexcept
+{
+    for (const auto &pair : codeString) {
+        if (getCode() == pair.first)
+            return pair.second;
+    }
+    return "Unknown User Code";
 }

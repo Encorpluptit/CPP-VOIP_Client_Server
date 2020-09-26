@@ -8,6 +8,7 @@
 #ifndef CPP_BABEL_2020_FRIEND_RESPONSE_HPP
 #define CPP_BABEL_2020_FRIEND_RESPONSE_HPP
 
+#include <map>
 #include "AResponse.hpp"
 
 namespace BabelNetwork {
@@ -21,7 +22,7 @@ namespace BabelNetwork {
             AcceptFriendRequest = 303,
             DeclineFriendRequest = 304,
             
-            UnknowUser = 350,
+            UnknownUser = 350,
 
         };
     private:
@@ -88,9 +89,11 @@ namespace BabelNetwork {
     public:
         [[nodiscard]] bool isOk() noexcept final;
 
-        [[nodiscard]] std::string serialize_data() const noexcept final;
+        [[nodiscard]] std::string describe_code() const noexcept final;
 
-        [[nodiscard]] std::string serialize_data_infos() const noexcept final;
+        [[nodiscard]] std::string describe_data() const noexcept final;
+
+        [[nodiscard]] std::string describe_data_infos() const noexcept final;
 
         /* <- Getters / Setters -> */
     public:
@@ -120,6 +123,7 @@ namespace BabelNetwork {
         DataInfos _dataInfos{};
         Data _data{};
 
+        /* <- Formatted Response -> */
     public:
         [[nodiscard]] static std::shared_ptr<AResponse> RequestFriend(const std::string &login, const std::string &friendLogin);
         [[nodiscard]] static std::shared_ptr<AResponse> FriendRequestOk(const std::string &login, const std::string &friendLogin);
@@ -127,6 +131,17 @@ namespace BabelNetwork {
         [[nodiscard]] static std::shared_ptr<AResponse> FriendRequestAccepted(const std::string &login, const std::string &friendLogin);
         [[nodiscard]] static std::shared_ptr<AResponse> FriendRequestDeclined(const std::string &login, const std::string &friendLogin);
         [[nodiscard]] static std::shared_ptr<AResponse> UserNotExist(const std::string &login, const std::string &friendLogin);
+
+        /* <- Stringify Code -> */
+    private:
+        const std::map<ResponseCode, std::string> codeString = {
+            {RequestAddFriend, "Request Add Friend"},
+            {AddFriend, "Add Friend"},
+            {FriendRequest, "Friend Request"},
+            {AcceptFriendRequest, "Friend Request Accepted"},
+            {DeclineFriendRequest, "FriendRequest Declined"},
+            {UnknownUser, "Unknown User"},
+        };
     };
 }
 
