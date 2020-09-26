@@ -157,3 +157,35 @@ BabelNetwork::UserResponse::ResponseCode Database::deleteUser(const std::string 
     unlock();
     return BabelNetwork::UserResponse::AccountDeleted;
 }
+
+
+void createMessage(const int &id, const int &senderid, const int &receiverid, const time_t &timestamp, const std::string &content) {
+    std::string log;
+    auto message =  MessageModel(id,senderid,receiverid,timestamp,content);//UserModel(login, password);
+    lock();
+    auto storage = getDatabase();
+    int id = -1;
+    try {
+        id = storage.insert(message);
+    } catch (const std::system_error &e) {
+        log = BabelUtils::format("Error in create Message with param -> %s", e.what());
+        dbg("%s", log.c_str());
+        _logger.logThis(log);
+        unlock();
+        return;
+        // return BabelNetwork::UserResponse::LoginAlreadyTaken;  je sais po
+    } catch (...) {
+        log = BabelUtils::format("Error in create Message -> unknown exception");
+        dbg("%s", log.c_str());
+        _logger.logThis(log);
+        unlock();
+        return;
+        // return BabelNetwork::UserResponse::UnknownUserError;
+    }
+    unlock();
+    log = BabelUtils::format("Message Created: senderid {%d}, receiverid {%s}, content {%s}", std::to_string(senderid).c_str(), std::to_string(receiverid).c_str(), content.c_str());
+    dbg("%s", log.c_str());
+    _logger.logThis(log);
+    return;
+    //return BabelNetwork::UserResponse::AccountCreated;   
+}

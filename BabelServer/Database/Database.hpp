@@ -34,6 +34,12 @@ namespace BabelServer {
 
         BabelNetwork::UserResponse::ResponseCode deleteUser(const std::string &login);
 
+        void createMessage(const int &id, const int &senderid, const int &receiverid, const time_t &timestamp, const std::string &content);
+
+        // std::shared_ptr<MessageModel> getOneMessage(const int &id);
+
+        // std::shared_ptr<[MessageModel]> GetConv(const int &senderid, const int &receiverid);
+
 //        bool deleteUser(const int id);
 
         /* <- Private Methods -> */
