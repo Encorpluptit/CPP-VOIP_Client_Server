@@ -183,9 +183,29 @@ void createMessage(const int &id, const int &senderid, const int &receiverid, co
         // return BabelNetwork::UserResponse::UnknownUserError;
     }
     unlock();
-    log = BabelUtils::format("Message Created: senderid {%d}, receiverid {%s}, content {%s}", std::to_string(senderid).c_str(), std::to_string(receiverid).c_str(), content.c_str());
+    log = BabelUtils::format("Message Created: senderid {%d}, receiverid {%d}, content {%s}", std::to_string(senderid), std::to_string(receiverid), content.c_str());
     dbg("%s", log.c_str());
     _logger.logThis(log);
     return;
     //return BabelNetwork::UserResponse::AccountCreated;   
+}
+
+std::shared_ptr<MessageModel> getOneMessage(const int &id) {
+    std::string log;
+    std::unique_ptr<MessageModel> message = nullptr;
+    lock();
+    auto storage = getDatabase();
+    try {
+        user = storage.get_pointer<MessageModel>(id);
+    } catch (const std::system_error &e) {
+        log = BabelUtils::format("Error in getOneMessage(id: {%d}): %s", id, e.what());
+        dbg("%s", log.c_str());``
+        _logger.logThis(log);
+    } catch (...) {
+        log = BabelUtils::format("Error in getUser(id: {%d}): unknown exception", id);
+        dbg("%s", log.c_str());
+        _logger.logThis(log);
+    }
+    unlock();
+    return message;
 }

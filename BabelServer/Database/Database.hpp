@@ -36,7 +36,7 @@ namespace BabelServer {
 
         void createMessage(const int &id, const int &senderid, const int &receiverid, const time_t &timestamp, const std::string &content);
 
-        // std::shared_ptr<MessageModel> getOneMessage(const int &id);
+        std::shared_ptr<MessageModel> getOneMessage(const int &id);
 
         // std::shared_ptr<[MessageModel]> GetConv(const int &senderid, const int &receiverid);
 
