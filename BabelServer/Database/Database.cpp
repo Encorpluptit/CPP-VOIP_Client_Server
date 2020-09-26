@@ -196,7 +196,7 @@ std::shared_ptr<MessageModel> getOneMessage(const int &id) {
     lock();
     auto storage = getDatabase();
     try {
-        user = storage.get_pointer<MessageModel>(id);
+        message = storage.get_pointer<MessageModel>(id);
     } catch (const std::system_error &e) {
         log = BabelUtils::format("Error in getOneMessage(id: {%d}): %s", id, e.what());
         dbg("%s", log.c_str());``
@@ -208,4 +208,28 @@ std::shared_ptr<MessageModel> getOneMessage(const int &id) {
     }
     unlock();
     return message;
+}
+
+std::shared_ptr<std::vector<MessageModel>> GetConv(const int &senderid, const int &receiverid){
+    std::string log;
+    std::vector<MessageModel> message = nullptr;
+    lock();
+    auto storage = getDatabase();
+    try {
+        message = storage.get_all<MessageModel>(senderid, receiverid);
+        cout << "ConvSize (" << message.size() << "):" << endl;
+        for(auto &mess : message) {
+            cout << storage.dump(mess) << endl;
+        }
+    } catch (const std::system_error &e) {
+        log = BabelUtils::format("Error in getConv(senderid: {%d}, receiverid: {%d}): %s", senderid, receiverid, e.what());
+        dbg("%s", log.c_str());``
+        _logger.logThis(log);
+    } catch (...) {
+        log = BabelUtils::format("Error in getConv(senderid: {%d}, receiverid: {%d}): unknown exception", senderid, receiverid);
+        dbg("%s", log.c_str());
+        _logger.logThis(log);
+    }
+    unlock();
+    return std::make_shared(message);
 }

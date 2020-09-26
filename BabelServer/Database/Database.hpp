@@ -38,7 +38,7 @@ namespace BabelServer {
 
         std::shared_ptr<MessageModel> getOneMessage(const int &id);
 
-        // std::shared_ptr<[MessageModel]> GetConv(const int &senderid, const int &receiverid);
+        std::shared_ptr<[MessageModel]> GetConv(const int &senderid, const int &receiverid);
 
 //        bool deleteUser(const int id);
 
