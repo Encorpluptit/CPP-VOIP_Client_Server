@@ -20,7 +20,8 @@ namespace BabelNetwork {
             ReceiveMessage = 403,
             ReceiveOk = 404,
 
-            UnknownUser = 450
+            UnknownUser = 450,
+            UnknownError = 460
         };
     private:
         enum MaxDataSize {

@@ -14,6 +14,7 @@
 #include "Logger.hpp"
 #include "Models.hpp"
 #include "UserResponse.hpp"
+#include "MessageResponse.hpp"
 
 namespace BabelServer {
 
@@ -34,13 +35,18 @@ namespace BabelServer {
 
         BabelNetwork::UserResponse::ResponseCode deleteUser(const std::string &login);
 
-        void createMessage(const int &id, const int &senderid, const int &receiverid, const time_t &timestamp, const std::string &content);
+        int createMessage(const int &id, const int &senderid, const int &receiverid, const time_t &timestamp,
+            const std::string &content);
 
-        std::shared_ptr<MessageModel> getOneMessage(const int &id);
+        BabelNetwork::MessageResponse::ResponseCode
+        createMessage(const std::string &senderName, const std::string &receiverName, const time_t timestamp,
+            const std::string &content);
 
-        std::shared_ptr<std::vector<MessageModel>> GetConv(const int &senderid, const int &receiverid);
+        std::shared_ptr<MessageModel> getOneMessage(int id);
 
-//        bool deleteUser(const int id);
+        std::vector<MessageModel> GetConv(int senderid, int receiverid);
+
+        std::vector<MessageModel> GetConv(const std::string &senderName, const std::string &receiverName);
 
         /* <- Private Methods -> */
     private:
