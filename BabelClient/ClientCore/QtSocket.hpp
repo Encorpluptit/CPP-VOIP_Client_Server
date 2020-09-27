@@ -5,8 +5,9 @@
 #include <QAbstractSocket>
 #include <QDebug>
 #include "AResponse.hpp"
+#include "ISocket.hpp"
 
-class MyTcpSocket : public QObject
+class MyTcpSocket : public QObject, public ISocket
 {
     Q_OBJECT
 public:

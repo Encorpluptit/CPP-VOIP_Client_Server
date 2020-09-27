@@ -6,184 +6,172 @@
 */
 
 #include <iostream>
-#include "NetworkError.hpp"
 #include "ClientCore.hpp"
-#include "UserResponse.hpp"
-#include "CallResponse.hpp"
-#include "FriendResponse.hpp"
-#include "MessageResponse.hpp"
+#include "mainwindow.hpp"
+#include "NetworkInfos.hpp"
 
 using namespace BabelClient;
 
-ClientCore::ClientCore()
+ClientCore::ClientCore(int ac, char **av)
     : _logger(BabelUtils::Logger::ClientLog)
 {
-    logged = false;
+    BabelNetwork::NetworkInfos nwi(av[1], av[2]);
+
+    initSocket(nwi.getIp(), nwi.getPort());
+    appli = new Application(ac, av);
+    gui = new MainWindow(nullptr, socket);
+    gui->showApp();
+    appli->init();
 }
 
 ClientCore::~ClientCore()
 {
-    stop();
+
 }
 
-bool socketRdy(bool set, bool value) {
-    static bool rdy = false;
+void ClientCore::initSocket(const std::string &ip, int port)
+{
+    socket = new MyTcpSocket();
+    socket->doConnect(ip, port);
+}
 
-    if (set) {
-        rdy = value;
+/*void ClientCore::loop()
+{
+    std::shared_ptr<BabelNetwork::AResponse> response;
+
+    while (1) {
+        if ((response = socket->readResponse()) != nullptr)
+            checkTypeResponse(response);
     }
-    return rdy;
-}
+}*/
 
-void ClientCore::setSocketReady() const {
-    socketRdy(true, true);
-}
-
-void ClientCore::setSocketNotReady() const {
-    socketRdy(true, false);
-}
-
-void ClientCore::getSocketState() const {
-    socketRdy(false, false);
-}
-
-void ClientCore::start()
-{
-    while (!_socket->isReady());
-    std::cout << _socket->describe() << std::endl;
-    //setReady();
-}
-
-
-// TODO: GROSSE MERDE, T'ES MAUVAIS
-// PASSE LES SHARED PTR EN CONST REF
-void ClientCore::LoggedIn(std::shared_ptr<BabelNetwork::UserResponse> response)
-{
-    logged = true;
-    name = response->getLogin();
-}
-
-void ClientCore::LoggedOut(std::shared_ptr<BabelNetwork::UserResponse> response)
-{
-    (void) response;
-    logged = false;
-}
-
-void ClientCore::AccountCreate(std::shared_ptr<BabelNetwork::UserResponse> response)
-{
-    logged = true;
-    name = response->getLogin();
-}
-
-void ClientCore::AccountDelete(std::shared_ptr<BabelNetwork::UserResponse> response)
-{
-    (void) response;
-    logged = false;
-}
-
-void ClientCore::UnknowUserError(std::shared_ptr<BabelNetwork::UserResponse> response)
+void ClientCore::LoggedIn(const std::shared_ptr<BabelNetwork::UserResponse> &response)
 {
     (void) response;
     //FRONT ARTHUR;
 }
 
-void ClientCore::WrongLogin(std::shared_ptr<BabelNetwork::UserResponse> response)
+void ClientCore::LoggedOut(const std::shared_ptr<BabelNetwork::UserResponse> &response)
+{
+    (void) response;
+    //FRONT ARTHUR;
+}
+
+void ClientCore::AccountCreate(const std::shared_ptr<BabelNetwork::UserResponse> &response)
+{
+    (void) response;
+    //FRONT ARTHUR;
+}
+
+void ClientCore::AccountDelete(const std::shared_ptr<BabelNetwork::UserResponse> &response)
+{
+    (void) response;
+    //FRONT ARTHUR;
+}
+
+void ClientCore::UnknowUserError(const std::shared_ptr<BabelNetwork::UserResponse> &response)
+{
+    (void) response;
+    //FRONT ARTHUR;
+}
+
+void ClientCore::WrongLogin(const std::shared_ptr<BabelNetwork::UserResponse> &response)
 {
     (void) response;
     //FRONT ARTHUR
 }
 
-void ClientCore::WrongPassword(std::shared_ptr<BabelNetwork::UserResponse> response)
+void ClientCore::WrongPassword(const std::shared_ptr<BabelNetwork::UserResponse> &response)
 {
     (void) response;
     //FRONT ARTHUR
 }
 
-void ClientCore::LoginAlreadyTaken(std::shared_ptr<BabelNetwork::UserResponse> response)
+void ClientCore::LoginAlreadyTaken(const std::shared_ptr<BabelNetwork::UserResponse> &response)
 {
     (void) response;
     //FRONT ARTHUR
 }
 
-void ClientCore::AlreadyLoggedIn(std::shared_ptr<BabelNetwork::UserResponse> response)
+void ClientCore::AlreadyLoggedIn(const std::shared_ptr<BabelNetwork::UserResponse> &response)
 {
     (void) response;
     //FRONT ARTHUR
 }
 
-void ClientCore::CallStarted(std::shared_ptr<BabelNetwork::CallResponse> response)
+void ClientCore::CallStarted(const std::shared_ptr<BabelNetwork::CallResponse> &response)
 {
     (void) response;
     //FRONT ARTHUR
 }
 
-void ClientCore::CallLeft(std::shared_ptr<BabelNetwork::CallResponse> response)
+void ClientCore::CallLeft(const std::shared_ptr<BabelNetwork::CallResponse> &response)
 {
     (void) response;
     //FRONT ARTHUR
 }
 
-void ClientCore::IncomingCall(std::shared_ptr<BabelNetwork::CallResponse> response)
+void ClientCore::IncomingCall(const std::shared_ptr<BabelNetwork::CallResponse> &response)
 {
     (void) response;
     //FRONT ARTHUR
 }
 
-void ClientCore::CallAccepted(std::shared_ptr<BabelNetwork::CallResponse> response)
+void ClientCore::CallAccepted(const std::shared_ptr<BabelNetwork::CallResponse> &response)
 {
     (void) response;
     //FRONT ARTHUR
 }
 
-void ClientCore::CallRefused(std::shared_ptr<BabelNetwork::CallResponse> response)
+void ClientCore::CallRefused(const std::shared_ptr<BabelNetwork::CallResponse> &response)
 {
     (void) response;
     //FRONT ARTHUR
 }
 
-void ClientCore::UserDisconnected(std::shared_ptr<BabelNetwork::CallResponse> response)
+void ClientCore::UserDisconnected(const std::shared_ptr<BabelNetwork::CallResponse> &response)
 {
     (void) response;
     //FRONT ARTHUR
 }
 
-void ClientCore::AddFriend(std::shared_ptr<BabelNetwork::FriendResponse> response)
+void ClientCore::AddFriend(const std::shared_ptr<BabelNetwork::FriendResponse> &response)
 {
     (void) response;
     //FRONT ARTHUR
 }
 
-void ClientCore::FriendRequest(std::shared_ptr<BabelNetwork::FriendResponse> response)
+void ClientCore::FriendRequest(const std::shared_ptr<BabelNetwork::FriendResponse> &response)
 {
     (void) response;
     //FRONT ARTHUR
 }
 
-void ClientCore::UnknowUser(std::shared_ptr<BabelNetwork::FriendResponse> response)
+void ClientCore::UnknowUser(const std::shared_ptr<BabelNetwork::FriendResponse> &response)
 {
     (void) response;
     //FRONT ARTHUR
 }
 
-void ClientCore::SendMessageOk(std::shared_ptr<BabelNetwork::MessageResponse> response)
+void ClientCore::SendMessageOk(const std::shared_ptr<BabelNetwork::MessageResponse> &response)
 {
     (void) response;
     //FRONT ARTHUR
 }
 
-void ClientCore::ReceiveMessage(std::shared_ptr<BabelNetwork::MessageResponse> response)
+void ClientCore::ReceiveMessage(const std::shared_ptr<BabelNetwork::MessageResponse> &response)
 {
     (void) response;
     //FRONT ARTHUR
 }
 
-void ClientCore::UnknowUserMessage(std::shared_ptr<BabelNetwork::MessageResponse> response)
+void ClientCore::UnknowUserMessage(const std::shared_ptr<BabelNetwork::MessageResponse> &response)
 {
     (void) response;
     //FRONT ARTHUR
 }
 
-void ClientCore::doUserResponse(std::shared_ptr<BabelNetwork::AResponse> response)
+void ClientCore::doUserResponse(const std::shared_ptr<BabelNetwork::AResponse> &response)
 {
     std::shared_ptr<BabelNetwork::UserResponse> ptr = std::dynamic_pointer_cast<BabelNetwork::UserResponse>(response);
     int code = response->getCode();
@@ -193,7 +181,7 @@ void ClientCore::doUserResponse(std::shared_ptr<BabelNetwork::AResponse> respons
             user_ptr[i](this, ptr);
 }
 
-void ClientCore::doCallResponse(std::shared_ptr<BabelNetwork::AResponse> response)
+void ClientCore::doCallResponse(const std::shared_ptr<BabelNetwork::AResponse> &response)
 {
     std::shared_ptr<BabelNetwork::CallResponse> ptr = std::dynamic_pointer_cast<BabelNetwork::CallResponse>(response);
     int code = response->getCode();
@@ -203,7 +191,7 @@ void ClientCore::doCallResponse(std::shared_ptr<BabelNetwork::AResponse> respons
             call_ptr[i](this, ptr);
 }
 
-void ClientCore::doFriendResponse(std::shared_ptr<BabelNetwork::AResponse> response)
+void ClientCore::doFriendResponse(const std::shared_ptr<BabelNetwork::AResponse> &response)
 {
     std::shared_ptr<BabelNetwork::FriendResponse> ptr = std::dynamic_pointer_cast<BabelNetwork::FriendResponse>(
         response);
@@ -214,7 +202,7 @@ void ClientCore::doFriendResponse(std::shared_ptr<BabelNetwork::AResponse> respo
             friend_ptr[i](this, ptr);
 }
 
-void ClientCore::doMessageResponse(std::shared_ptr<BabelNetwork::AResponse> response)
+void ClientCore::doMessageResponse(const std::shared_ptr<BabelNetwork::AResponse> &response)
 {
     std::shared_ptr<BabelNetwork::MessageResponse> ptr = std::dynamic_pointer_cast<BabelNetwork::MessageResponse>(
         response);
@@ -225,41 +213,13 @@ void ClientCore::doMessageResponse(std::shared_ptr<BabelNetwork::AResponse> resp
             message_ptr[i](this, ptr);
 }
 
-void ClientCore::doUnknowTypeResponse(std::shared_ptr<BabelNetwork::AResponse> response)
+void ClientCore::doUnknowTypeResponse(const std::shared_ptr<BabelNetwork::AResponse> &response)
 {
     printf("code : %d\n", response->getCode());
     throw (BabelErrors::BabelError("Unknow Response Type"));
 }
 
-void ClientCore::checkTypeResponse(std::shared_ptr<BabelNetwork::AResponse> response)
+void ClientCore::checkTypeResponse(const std::shared_ptr<BabelNetwork::AResponse> &response)
 {
     dispatch_ptr[response->getResponseType()](this, response);
-}
-
-int BabelClient::ClientCore::run()
-{
-    return (0);
-}
-
-void ClientCore::stop()
-{
-    _socket->stop();
-}
-
-//void ClientCore::init()
-//{
-//
-//}
-
-void ClientCore::initSocket(char **av)
-{
-    std::cout << av[1] << " " << av[2] << std::endl;
-
-    BabelNetwork::NetworkInfos nwi(av[1], av[2]);
-
-    _socket = boost::make_shared<BabelNetwork::AsioClientSocket>(
-        av[1], av[2],
-        _logger,
-        BabelNetwork::AsioClientSocket::SocketHandler::Client);
-    _socket->connect();
 }

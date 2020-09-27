@@ -6,11 +6,10 @@
 */
 
 #include <iostream>
-#include <QApplication>
-#include "NetworkInfos.hpp"
+//#include <QApplication>
 #include "mainwindow.hpp"
 
-int main(int ac, char **av)
+/*int main(int ac, char **av)
 {
     QApplication app(ac, av);
     MainWindow w;
@@ -20,4 +19,15 @@ int main(int ac, char **av)
     w.show();
 
     return app.exec();
+}
+*/
+
+int main(int ac, char **av)
+{
+    if (ac != 3)
+        return (84);
+    ClientCore client(ac, av);
+
+    //client.loop();
+    return (0);
 }

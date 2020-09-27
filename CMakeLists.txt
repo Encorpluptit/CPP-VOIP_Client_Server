@@ -188,9 +188,8 @@ set(CLIENT_DIR BabelClient)
 # Clients Includes
 set(
         CLIENT_INCLUDES
-        ${CLIENT_DIR}/include
         ${CLIENT_DIR}/ClientCore
-        ${CLIENT_DIR}/QtGraphics/
+        #${CLIENT_DIR}/QtGraphics/
 )
 
 
@@ -199,10 +198,8 @@ set(
 set(
         CLIENT_SOURCES
         ${CLIENT_DIR}/ClientCore/ClientCore.cpp
-        ${CLIENT_DIR}/QtGraphics/mainwindow.cpp
-        ${CLIENT_DIR}/QtGraphics/mainwindow.ui
-        ${CLIENT_DIR}/QtGraphics/QtSocket.cpp
-
+        ${CLIENT_DIR}/ClientCore/mainwindow.cpp
+        ${CLIENT_DIR}/ClientCore/QtSocket.cpp
 )
 
 
