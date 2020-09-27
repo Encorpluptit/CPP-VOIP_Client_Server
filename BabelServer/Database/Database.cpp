@@ -159,14 +159,14 @@ BabelNetwork::UserResponse::ResponseCode Database::deleteUser(const std::string 
 }
 
 
-void createMessage(const int &id, const int &senderid, const int &receiverid, const time_t &timestamp, const std::string &content) {
+void Database::createMessage(const int &id, const int &senderid, const int &receiverid, const time_t &timestamp, const std::string &content) {
     std::string log;
-    auto message =  MessageModel(id,senderid,receiverid,timestamp,content);//UserModel(login, password);
+    auto message =  MessageModel(senderid,receiverid,content,timestamp);//UserModel(login, password);
     lock();
     auto storage = getDatabase();
-    int id = -1;
+    int storage_id = -1;
     try {
-        id = storage.insert(message);
+        storage_id = storage.insert(message);
     } catch (const std::system_error &e) {
         log = BabelUtils::format("Error in create Message with param -> %s", e.what());
         dbg("%s", log.c_str());
@@ -190,7 +190,7 @@ void createMessage(const int &id, const int &senderid, const int &receiverid, co
     //return BabelNetwork::UserResponse::AccountCreated;   
 }
 
-std::shared_ptr<MessageModel> getOneMessage(const int &id) {
+std::shared_ptr<MessageModel> Database::getOneMessage(const int &id) {
     std::string log;
     std::unique_ptr<MessageModel> message = nullptr;
     lock();
@@ -199,7 +199,7 @@ std::shared_ptr<MessageModel> getOneMessage(const int &id) {
         message = storage.get_pointer<MessageModel>(id);
     } catch (const std::system_error &e) {
         log = BabelUtils::format("Error in getOneMessage(id: {%d}): %s", id, e.what());
-        dbg("%s", log.c_str());``
+        dbg("%s", log.c_str());
         _logger.logThis(log);
     } catch (...) {
         log = BabelUtils::format("Error in getUser(id: {%d}): unknown exception", id);
@@ -210,20 +210,20 @@ std::shared_ptr<MessageModel> getOneMessage(const int &id) {
     return message;
 }
 
-std::shared_ptr<std::vector<MessageModel>> GetConv(const int &senderid, const int &receiverid){
+std::shared_ptr<std::vector<MessageModel>> Database::GetConv(const int &senderid, const int &receiverid){
     std::string log;
-    std::vector<MessageModel> message = nullptr;
+    std::vector<MessageModel> message;
     lock();
     auto storage = getDatabase();
     try {
-        message = storage.get_all<MessageModel>(senderid, receiverid);
-        cout << "ConvSize (" << message.size() << "):" << endl;
-        for(auto &mess : message) {
-            cout << storage.dump(mess) << endl;
-        }
+        message = storage.get_all<MessageModel>();// message = storage.get_all<MessageModel>(senderid, receiverid);
+        // std::cout << "ConvSize (" << message.size() << "):" << std::endl;
+        // for(auto &mess : message) {
+        //     std::cout << storage.dump(mess) << std::endl;
+        // }
     } catch (const std::system_error &e) {
         log = BabelUtils::format("Error in getConv(senderid: {%d}, receiverid: {%d}): %s", senderid, receiverid, e.what());
-        dbg("%s", log.c_str());``
+        dbg("%s", log.c_str());
         _logger.logThis(log);
     } catch (...) {
         log = BabelUtils::format("Error in getConv(senderid: {%d}, receiverid: {%d}): unknown exception", senderid, receiverid);
@@ -231,5 +231,8 @@ std::shared_ptr<std::vector<MessageModel>> GetConv(const int &senderid, const in
         _logger.logThis(log);
     }
     unlock();
-    return std::make_shared(message);
+    return std::make_shared<std::vector<MessageModel> >(message);
+    // return std::make_shared<std::vector<MessageModel>>(std::initializer_list<MessageModel>{message});
+    // return std::make_shared<message>;
+    // return;
 }
