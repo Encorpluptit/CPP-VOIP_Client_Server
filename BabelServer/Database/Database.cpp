@@ -306,9 +306,9 @@ std::vector<MessageModel> Database::GetConv(const std::string &senderName, const
         message = storage.get_all<MessageModel>(
             where(
                 is_equal(&MessageModel::senderID, sender->id) \
- or is_equal(&MessageModel::receiverID, receiver->id)\
+ and is_equal(&MessageModel::receiverID, receiver->id)\
  or is_equal(&MessageModel::receiverID, sender->id)\
- or is_equal(&MessageModel::senderID, receiver->id)\
+ and is_equal(&MessageModel::senderID, receiver->id)\
 )
         );
     } catch (const std::system_error &e) {
