@@ -204,13 +204,20 @@ BabelNetwork::MessageResponse::ResponseCode Database::createMessage(
 )
 {
     std::string log;
-    lock();
-    auto storage = getDatabase();
     try {
         auto sender = getUser(senderName);
         auto receiver = getUser(receiverName);
-        if (!sender || !receiver)
+        lock();
+        auto storage = getDatabase();
+        if (!sender || !receiver) {
+            log = BabelUtils::format("Error in create Message : User not found -> {%s} or {%s}",
+                senderName.c_str(), receiverName.c_str()
+            );
+            dbg("%s", log.c_str());
+            _logger.logThis(log);
+            unlock();
             return BabelNetwork::MessageResponse::UnknownUser;
+        }
         auto message = MessageModel(sender->id, receiver->id, content, timestamp);
         storage.insert(message);
     } catch (const std::system_error &e) {
@@ -291,20 +298,29 @@ std::vector<MessageModel> Database::GetConv(const std::string &senderName, const
 {
     std::string log;
     std::vector<MessageModel> message;
-    lock();
-    auto storage = getDatabase();
     try {
-        message = storage.get_all<MessageModel>(where(is_equal(&UserModel::login, senderName) and is_equal(&UserModel::login, receiverName)));
+        auto sender = getUser(senderName);
+        auto receiver = getUser(receiverName);
+        lock();
+        auto storage = getDatabase();
+        message = storage.get_all<MessageModel>(
+            where(
+                is_equal(&MessageModel::senderID, sender->id) \
+ or is_equal(&MessageModel::receiverID, receiver->id)\
+ or is_equal(&MessageModel::receiverID, sender->id)\
+ or is_equal(&MessageModel::senderID, receiver->id)\
+)
+        );
     } catch (const std::system_error &e) {
         log = BabelUtils::format(
-            "Error in getConv(sender: {%s}, receiver: {%d}): %s",
+            "Error in getConv(sender: {%s}, receiver: {%s}): %s",
             senderName.c_str(), receiverName.c_str(), e.what()
         );
         dbg("%s", log.c_str());
         _logger.logThis(log);
     } catch (...) {
         log = BabelUtils::format(
-            "Error in getConv(sender: {%s}, receiverid: {%s}): unknown exception",
+            "Error in getConv(sender: {%s}, receiver: {%s}): unknown exception",
             senderName.c_str(), receiverName.c_str()
         );
         dbg("%s", log.c_str());
