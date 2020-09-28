@@ -5,25 +5,26 @@
 #include <QAbstractSocket>
 #include <QDebug>
 #include "AResponse.hpp"
-#include "ISocket.hpp"
+#include "ITcpSocket.hpp"
 
-class MyTcpSocket : public QObject, public ISocket
+class MyTcpSocket : public QObject, virtual public ITcpSocket
 {
     Q_OBJECT
-public:
-    explicit MyTcpSocket(QObject *parent = nullptr);
+    public:
+        MyTcpSocket(QObject *parent = nullptr);
+        ~MyTcpSocket();
+        void doConnect(const std::string &ip, int port);
+        void disconnect();
+        void sendResponse(const std::shared_ptr<BabelNetwork::AResponse> &response);
+        std::shared_ptr<BabelNetwork::AResponse> readResponse();
+
+    signals:
+
+    public slots:
+        void connected();
+        void disconnected();
+        void bytesWritten(const qint64 bytes);
     
-    void doConnect(const std::string &ip, int port);
-    void writeData(const std::shared_ptr<BabelNetwork::AResponse> &response);
-
-    QTcpSocket *socket;
-
-signals:
-
-public slots:
-    void connected();
-    void disconnected();
-    void bytesWritten(const qint64 bytes);
-    std::shared_ptr<BabelNetwork::AResponse> readResponse();
-    
+    private:
+        QTcpSocket *socket;
 };

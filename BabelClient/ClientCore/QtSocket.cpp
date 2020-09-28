@@ -12,18 +12,27 @@ MyTcpSocket::MyTcpSocket(QObject *parent) : QObject(parent)
     socket = new QTcpSocket(this);
 }
 
+MyTcpSocket::~MyTcpSocket()
+{
+    delete socket;
+}
+
 void MyTcpSocket::doConnect(const std::string &ip, int port)
 {
+    qDebug() << "connecting...";
+    socket->connectToHost(ip.c_str(), port);
+    if (!socket->waitForConnected(5000)) {
+        qDebug() << "Error: " << socket->errorString();
+    }
     connect(socket, SIGNAL(connected()),this, SLOT(connected()));
     connect(socket, SIGNAL(disconnected()),this, SLOT(disconnected()));
     connect(socket, SIGNAL(bytesWritten(qint64)),this, SLOT(bytesWritten(qint64)));
     //connect(socket, SIGNAL(readResponse()),this, SLOT(readResponse()));
-    qDebug() << "connecting...";
-    socket->connectToHost(ip.c_str(), port);
-    if(!socket->waitForConnected(5000))
-    {
-        qDebug() << "Error: " << socket->errorString();
-    }
+}
+
+void MyTcpSocket::disconnect()
+{
+    socket->disconnectFromHost();
 }
 
 void MyTcpSocket::connected()
@@ -56,9 +65,8 @@ std::shared_ptr<BabelNetwork::AResponse> MyTcpSocket::readResponse()
     return (resp);
 }
 
-void MyTcpSocket::writeData(const std::shared_ptr<BabelNetwork::AResponse> &response)
+void MyTcpSocket::sendResponse(const std::shared_ptr<BabelNetwork::AResponse> &response)
 {
-    std::cout << "ICI" << std::endl;
     response->encode();
     socket->write(response->getDataByte(), response->getResponseSize());
 }

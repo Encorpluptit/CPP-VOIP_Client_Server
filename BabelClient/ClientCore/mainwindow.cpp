@@ -10,14 +10,11 @@
 #include <iostream>
 #include <QApplication>
 
-MainWindow::MainWindow(QWidget *parent, ISocket *core) : QMainWindow(parent), ui(new Ui::MainWindow)
+MainWindow::MainWindow(QWidget *parent, NetworkClientSocket &network) : QMainWindow(parent), ui(new Ui::MainWindow), client(network)
 {
-    socket = core;
-
     ui->setupUi(this);
 
     ui->VLayout = new QVBoxLayout(ui->ContactArea);
-
 
     QPushButton *button1 = new QPushButton("1", ui->ContactArea);
     QPushButton *button2 = new QPushButton("2", ui->ContactArea);
@@ -54,6 +51,10 @@ MainWindow::MainWindow(QWidget *parent, ISocket *core) : QMainWindow(parent), ui
         connect(mapper, SIGNAL(mapped(const QString &)), this, SLOT(coucou(const QString &)));
     }
     ui->WrongLoginText->hide();
+
+    timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(UpdateClient()));
+    timer->start(100);
 }
 
 MainWindow::~MainWindow()
@@ -66,23 +67,17 @@ MainWindow::~MainWindow()
 void MainWindow::coucou(const QString &name)
 {
     ui->ContactName->setMarkdown(name);
-    //std::cout << "coucou fonction" << std::endl;
 }
 
 void MainWindow::on_ConnectionButton_clicked()
 {
-    /*
-    qDebug()<< ui->UserLine->text();
-    qDebug()<< ui->PassLine->text();
-    */
     std::string user = ui->UserLine->text().toLocal8Bit().constData();
     std::string pass = ui->PassLine->text().toLocal8Bit().constData();
 
-    //ui->gridStackedWidget->setCurrentWidget(ui->CallPage);
     auto response = BabelNetwork::UserResponse::NewLoginRequest(user, pass);
     std::cout << response->getCode() << std::endl;
     std::cout << "PTDR" << std::endl;
-    socket->writeData(response);
+    client.getTcp()->sendResponse(response);
 }
 
 void MainWindow::on_DisconnectButton_clicked()
@@ -126,5 +121,197 @@ void MainWindow::on_RegisterButton_clicked()
     std::string pass = ui->PasswordRegisterLine->text().toLocal8Bit().constData();
 
     auto response = BabelNetwork::UserResponse::AccountCreationRequest(user, pass);
-    socket->writeData(response);
+    client.getTcp()->sendResponse(response);
+}
+
+
+
+
+
+
+void MainWindow::LoggedIn(const std::shared_ptr<BabelNetwork::UserResponse> &response)
+{
+    std::cout << "STP SOIT ICI" << std::endl;
+    (void) response;
+    //FRONT ARTHUR;
+}
+
+void MainWindow::LoggedOut(const std::shared_ptr<BabelNetwork::UserResponse> &response)
+{
+    (void) response;
+    //FRONT ARTHUR;
+}
+
+void MainWindow::AccountCreate(const std::shared_ptr<BabelNetwork::UserResponse> &response)
+{
+    (void) response;
+    //FRONT ARTHUR;
+}
+
+void MainWindow::AccountDelete(const std::shared_ptr<BabelNetwork::UserResponse> &response)
+{
+    (void) response;
+    //FRONT ARTHUR;
+}
+
+void MainWindow::UnknowUserError(const std::shared_ptr<BabelNetwork::UserResponse> &response)
+{
+    (void) response;
+    //FRONT ARTHUR;
+}
+
+void MainWindow::WrongLogin(const std::shared_ptr<BabelNetwork::UserResponse> &response)
+{
+    (void) response;
+    //FRONT ARTHUR
+}
+
+void MainWindow::WrongPassword(const std::shared_ptr<BabelNetwork::UserResponse> &response)
+{
+    (void) response;
+    //FRONT ARTHUR
+}
+
+void MainWindow::LoginAlreadyTaken(const std::shared_ptr<BabelNetwork::UserResponse> &response)
+{
+    (void) response;
+    //FRONT ARTHUR
+}
+
+void MainWindow::AlreadyLoggedIn(const std::shared_ptr<BabelNetwork::UserResponse> &response)
+{
+    (void) response;
+    //FRONT ARTHUR
+}
+
+void MainWindow::CallStarted(const std::shared_ptr<BabelNetwork::CallResponse> &response)
+{
+    (void) response;
+    //FRONT ARTHUR
+}
+
+void MainWindow::CallLeft(const std::shared_ptr<BabelNetwork::CallResponse> &response)
+{
+    (void) response;
+    //FRONT ARTHUR
+}
+
+void MainWindow::IncomingCall(const std::shared_ptr<BabelNetwork::CallResponse> &response)
+{
+    (void) response;
+    //FRONT ARTHUR
+}
+
+void MainWindow::CallAccepted(const std::shared_ptr<BabelNetwork::CallResponse> &response)
+{
+    (void) response;
+    //FRONT ARTHUR
+}
+
+void MainWindow::CallRefused(const std::shared_ptr<BabelNetwork::CallResponse> &response)
+{
+    (void) response;
+    //FRONT ARTHUR
+}
+
+void MainWindow::UserDisconnected(const std::shared_ptr<BabelNetwork::CallResponse> &response)
+{
+    (void) response;
+    //FRONT ARTHUR
+}
+
+void MainWindow::AddFriend(const std::shared_ptr<BabelNetwork::FriendResponse> &response)
+{
+    (void) response;
+    //FRONT ARTHUR
+}
+
+void MainWindow::FriendRequest(const std::shared_ptr<BabelNetwork::FriendResponse> &response)
+{
+    (void) response;
+    //FRONT ARTHUR
+}
+
+void MainWindow::UnknowUser(const std::shared_ptr<BabelNetwork::FriendResponse> &response)
+{
+    (void) response;
+    //FRONT ARTHUR
+}
+
+void MainWindow::SendMessageOk(const std::shared_ptr<BabelNetwork::MessageResponse> &response)
+{
+    (void) response;
+    //FRONT ARTHUR
+}
+
+void MainWindow::ReceiveMessage(const std::shared_ptr<BabelNetwork::MessageResponse> &response)
+{
+    (void) response;
+    //FRONT ARTHUR
+}
+
+void MainWindow::UnknowUserMessage(const std::shared_ptr<BabelNetwork::MessageResponse> &response)
+{
+    (void) response;
+    //FRONT ARTHUR
+}
+
+void MainWindow::doUserResponse(const std::shared_ptr<BabelNetwork::AResponse> &response)
+{
+    std::shared_ptr<BabelNetwork::UserResponse> ptr = std::dynamic_pointer_cast<BabelNetwork::UserResponse>(response);
+    int code = response->getCode();
+
+    for (size_t i = 0; i < userCodeIdx.size(); i++)
+        if (userCodeIdx[i] == code)
+            user_ptr[i](this, ptr);
+}
+
+void MainWindow::doCallResponse(const std::shared_ptr<BabelNetwork::AResponse> &response)
+{
+    std::shared_ptr<BabelNetwork::CallResponse> ptr = std::dynamic_pointer_cast<BabelNetwork::CallResponse>(response);
+    int code = response->getCode();
+
+    for (size_t i = 0; i < callCodeIdx.size(); i++)
+        if (callCodeIdx[i] == code)
+            call_ptr[i](this, ptr);
+}
+
+void MainWindow::doFriendResponse(const std::shared_ptr<BabelNetwork::AResponse> &response)
+{
+    std::shared_ptr<BabelNetwork::FriendResponse> ptr = std::dynamic_pointer_cast<BabelNetwork::FriendResponse>(
+        response);
+    int code = response->getCode();
+
+    for (size_t i = 0; i < friendCodeIdx.size(); i++)
+        if (friendCodeIdx[i] == code)
+            friend_ptr[i](this, ptr);
+}
+
+void MainWindow::doMessageResponse(const std::shared_ptr<BabelNetwork::AResponse> &response)
+{
+    std::shared_ptr<BabelNetwork::MessageResponse> ptr = std::dynamic_pointer_cast<BabelNetwork::MessageResponse>(response);
+    int code = response->getCode();
+
+    for (size_t i = 0; i < messageCodeIdx.size(); i++)
+        if (messageCodeIdx[i] == code)
+            message_ptr[i](this, ptr);
+}
+
+void MainWindow::doUnknowTypeResponse(const std::shared_ptr<BabelNetwork::AResponse> &response)
+{
+    printf("code : %d\n", response->getCode());
+    //throw (BabelErrors::BabelError("Unknow Response Type"));
+}
+
+void MainWindow::checkTypeResponse(const std::shared_ptr<BabelNetwork::AResponse> &response)
+{
+    dispatch_ptr[response->getResponseType()](this, response);
+}
+
+void MainWindow::UpdateClient()
+{
+    std::shared_ptr<BabelNetwork::AResponse> response = nullptr;
+
+    while ((response = client.getTcp()->readResponse()) != nullptr)
+        checkTypeResponse(response);
 }

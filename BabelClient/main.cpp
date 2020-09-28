@@ -6,28 +6,14 @@
 */
 
 #include <iostream>
-//#include <QApplication>
-#include "mainwindow.hpp"
-
-/*int main(int ac, char **av)
-{
-    QApplication app(ac, av);
-    MainWindow w;
-    BabelNetwork::NetworkInfos nwi(av[1], av[2]);
-
-    w.adress(nwi.getIp(), nwi.getPort());
-    w.show();
-
-    return app.exec();
-}
-*/
+#include "ClientCore.hpp"
 
 int main(int ac, char **av)
 {
     if (ac != 3)
         return (84);
-    ClientCore client(ac, av);
-
-    //client.loop();
-    return (0);
+    BabelNetwork::NetworkInfos nwi(av[1], av[2]);
+    NetworkClientSocket network(nwi.getIp(), nwi.getPort());
+    BabelClient::ClientCore client(ac, av, network);
+    return (client.run());
 }
