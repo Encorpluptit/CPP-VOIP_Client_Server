@@ -157,61 +157,17 @@
                                     </property>
                                 </widget>
                             </item>
-                            <item row="4" column="1">
+                            <item row="2" column="1">
                                 <widget class="QPushButton" name="RegisterButton">
                                     <property name="text">
                                         <string>Register</string>
                                     </property>
                                 </widget>
                             </item>
-                            <item row="5" column="1">
+                            <item row="3" column="1">
                                 <widget class="QPushButton" name="BackButtonRegister">
                                     <property name="text">
                                         <string>Back</string>
-                                    </property>
-                                </widget>
-                            </item>
-                            <item row="3" column="1">
-                                <widget class="QTextEdit" name="AlreadyRegisterLine">
-                                    <property name="maximumSize">
-                                        <size>
-                                            <width>170</width>
-                                            <height>30</height>
-                                        </size>
-                                    </property>
-                                    <property name="html">
-                                        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-                                            &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot;
-                                            /&gt;&lt;style type=&quot;text/css&quot;&gt;
-                                            p, li { white-space: pre-wrap; }
-                                            &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans';
-                                            font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-                                            &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px;
-                                            margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span
-                                            style=&quot; color:#aa0000;&quot;&gt;Login already register&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
-                                        </string>
-                                    </property>
-                                </widget>
-                            </item>
-                            <item row="2" column="1">
-                                <widget class="QTextEdit" name="RegisterSuccesLine">
-                                    <property name="maximumSize">
-                                        <size>
-                                            <width>160</width>
-                                            <height>50</height>
-                                        </size>
-                                    </property>
-                                    <property name="html">
-                                        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-                                            &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot;
-                                            /&gt;&lt;style type=&quot;text/css&quot;&gt;
-                                            p, li { white-space: pre-wrap; }
-                                            &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans';
-                                            font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-                                            &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px;
-                                            margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span
-                                            style=&quot; color:#00b100;&quot;&gt;User create successfully&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;
-                                        </string>
                                     </property>
                                 </widget>
                             </item>

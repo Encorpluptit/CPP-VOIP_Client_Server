@@ -3,8 +3,12 @@
 
 #include <string>
 #include <QMainWindow>
-#include "ClientCore.hpp"
-#include "QtSocket.hpp"
+#include <QTimer>
+#include "NetworkClientSocket.hpp"
+#include "UserResponse.hpp"
+#include "CallResponse.hpp"
+#include "FriendResponse.hpp"
+#include "MessageResponse.hpp"
 
 QT_BEGIN_NAMESPACE
 
@@ -14,21 +18,39 @@ namespace Ui {
 
 QT_END_NAMESPACE
 
-using namespace BabelClient;
-
 class MainWindow : public QMainWindow {
 Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = nullptr);
+    MainWindow(QWidget *parent, NetworkClientSocket &client);
 
     ~MainWindow() override;
 
-    void adress(const std::string &ip, uint16_t port) const;
+private slots:
 
-    ClientCore *client;
-    MyTcpSocket *serv;
+    void on_ConnectionButton_clicked();
 
+    void on_DisconnectButton_clicked();
+
+    void coucou(const QString &name);
+
+    void on_ManageFriendButton_clicked();
+
+    void on_AddFriendButton_clicked();
+
+    void on_DeleteFriendButton_clicked();
+
+    void on_BackButton_clicked();
+
+    void on_BackButtonRegister_clicked();
+
+    void on_ToRegisterButton_clicked();
+
+    void on_RegisterButton_clicked();
+
+    void UpdateClient();
+
+public:
     void checkTypeResponse(const std::shared_ptr<BabelNetwork::AResponse> &response);
 
     void doUserResponse(const std::shared_ptr<BabelNetwork::AResponse> &response);
@@ -83,48 +105,30 @@ public:
 
     void UnknowUserMessage(const std::shared_ptr<BabelNetwork::MessageResponse> &response);
 
-
-private slots:
-
-    void on_ConnectionButton_clicked();
-
-    void on_DisconnectButton_clicked();
-
-    void coucou(const QString &name);
-
-    void on_ManageFriendButton_clicked();
-
-    void on_AddFriendButton_clicked();
-
-    void on_DeleteFriendButton_clicked();
-
-    void on_BackButton_clicked();
-
-    void on_BackButtonRegister_clicked();
-
-    void on_ToRegisterButton_clicked();
-
-    void on_RegisterButton_clicked();
-
-    void readyRead();
-
 private:
     Ui::MainWindow *ui;
-    std::vector<std::function<void(MainWindow *, std::shared_ptr<BabelNetwork::AResponse>)>> dispatch_ptr = {
+    NetworkClientSocket &client;
+    QTimer *timer;
+    std::string login;
+    bool logged;
+
+private:
+    std::vector<std::function<void(MainWindow *, const std::shared_ptr<BabelNetwork::AResponse> &)>> dispatch_ptr = {
         &MainWindow::doUnknowTypeResponse, &MainWindow::doUserResponse, &MainWindow::doCallResponse,
         &MainWindow::doFriendResponse, &MainWindow::doMessageResponse};
-    std::vector<std::function<void(MainWindow *, std::shared_ptr<BabelNetwork::UserResponse>)>> user_ptr = {
+    std::vector<std::function<void(MainWindow *, const std::shared_ptr<BabelNetwork::UserResponse> &)>> user_ptr = {
         &MainWindow::LoggedIn, &MainWindow::LoggedOut, &MainWindow::AccountCreate, &MainWindow::AccountDelete,
         &MainWindow::WrongLogin, &MainWindow::WrongPassword, &MainWindow::LoginAlreadyTaken,
-        &MainWindow::AlreadyLoggedIn, &MainWindow::UnknowUserError};
-    std::vector<std::function<void(MainWindow *, std::shared_ptr<BabelNetwork::CallResponse>)>> call_ptr = {
+        &MainWindow::AlreadyLoggedIn};
+    std::vector<std::function<void(MainWindow *, const std::shared_ptr<BabelNetwork::CallResponse> &)>> call_ptr = {
         &MainWindow::CallStarted, &MainWindow::CallLeft, &MainWindow::IncomingCall, &MainWindow::CallAccepted,
         &MainWindow::CallRefused, &MainWindow::IncomingCall};
-    std::vector<std::function<void(MainWindow *, std::shared_ptr<BabelNetwork::FriendResponse>)>> friend_ptr = {
+    std::vector<std::function<void(MainWindow *, const std::shared_ptr<BabelNetwork::FriendResponse> &)>> friend_ptr = {
         &MainWindow::AddFriend, &MainWindow::FriendRequest, &MainWindow::UnknowUser};
-    std::vector<std::function<void(MainWindow *, std::shared_ptr<BabelNetwork::MessageResponse>)>> message_ptr = {
-        &MainWindow::SendMessageOk, &MainWindow::ReceiveMessage, &MainWindow::UnknowUserMessage};
-    std::vector<int> userCodeIdx = {100, 102, 110, 112, 171, 172, 173, 174, 170};
+    std::vector<std::function<void(MainWindow *,
+        const std::shared_ptr<BabelNetwork::MessageResponse> &)>> message_ptr = {&MainWindow::SendMessageOk,
+        &MainWindow::ReceiveMessage, &MainWindow::UnknowUserMessage};
+    std::vector<int> userCodeIdx = {100, 102, 110, 112, 113, 170, 171, 172, 173, 174};
     std::vector<int> callCodeIdx = {200, 202, 204, 205, 270, 271};
     std::vector<int> friendCodeIdx = {301, 302, 350};
     std::vector<int> messageCodeIdx = {402, 403, 450};
