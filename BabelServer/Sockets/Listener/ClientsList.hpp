@@ -27,7 +27,7 @@ namespace BabelServer {
             std::remove(_clients.begin(), _clients.end(), client);
         };
 
-        [[nodiscard]] std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>> getClients() const
+        [[nodiscard]] const std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>> &getClients() const
         {
             return _clients;
         }
