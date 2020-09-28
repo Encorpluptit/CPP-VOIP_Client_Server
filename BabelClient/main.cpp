@@ -6,20 +6,18 @@
 */
 
 #include <iostream>
-#include "ClientCore.hpp"
-#include "NetworkError.hpp"
+#include <QApplication>
+#include "NetworkInfos.hpp"
+#include "mainwindow.hpp"
 
 int main(int ac, char **av)
 {
-    if (ac != 3)
-        return (84);
-    std::cout << "Babel client!" << std::endl;
-    try {
-        BabelClient::ClientCore core(av);
-        core.start();
-        core.run();
-    } catch (const BabelErrors::BabelError &e) {
-        std::cerr << "IN CLIENT MAIN" << e.what() << std::endl;
-    }
-    return 0;
+    QApplication app(ac, av);
+    MainWindow w;
+    BabelNetwork::NetworkInfos nwi(av[1], av[2]);
+
+    w.adress(nwi.getIp(), nwi.getPort());
+    w.show();
+
+    return app.exec();
 }

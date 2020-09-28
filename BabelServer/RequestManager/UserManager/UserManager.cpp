@@ -64,6 +64,7 @@ void UserManager::Login(
         return;
     }
     //TODO: UnHash Password ?
+    std::cout << "RESPONSE : " << response->getPassword() << "USER : " << user->password << std::endl;
     if (response->getPassword() != user->password) {
         clientSocket->sendResponse(BabelNetwork::UserResponse::BadPassword(response->getLogin()));
         return;

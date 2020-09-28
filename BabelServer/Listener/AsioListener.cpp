@@ -70,8 +70,7 @@ void AsioListener::accept()
         _networkInfos.getIp(),
         _networkInfos.getPortStr(),
         _logger,
-        _context,
-        BabelNetwork::AsioClientSocket::SocketHandler::Server
+        _context
     );
 
     _acceptor.async_accept(

@@ -8,7 +8,7 @@
 #ifndef CPP_BABEL_2020_CLIENTCORE_HPP
 #define CPP_BABEL_2020_CLIENTCORE_HPP
 
-#include "AsioClientSocket.hpp"
+#include "ClientSocket.hpp"
 #include "AResponse.hpp"
 #include "boost/shared_ptr.hpp"
 #include "SharedPtr.hpp"
@@ -19,20 +19,20 @@
 
 namespace BabelClient {
 
-    class ClientCore final : virtual public BabelUtils::ARunnable {
+    class ClientCore {
         /* <- Constructor - Destructor -> */
     public:
-        explicit ClientCore(char **av);
+        ClientCore();
 
-        ~ClientCore() final;
+        ~ClientCore();
 
         /* <- Public Methods -> */
     public:
-        void start() final;
+        void start();
 
-        void stop() final;
+        void stop();
 
-        void run();
+        int run();
 
         void checkTypeResponse(std::shared_ptr<BabelNetwork::AResponse> response);
 
@@ -94,15 +94,16 @@ namespace BabelClient {
 
         void getSocketState() const;
 
-        /* <- Private Methods -> */
-    private:
-//        void init();
-
         void initSocket(char **av);
 
-        /* <- Getters / Setters -> */
-//    public:
+        /* <- Private Methods -> */
     private:
+        //        void init();
+
+
+        /* <- Getters / Setters -> */
+    public:
+        //private:
         BabelUtils::Logger _logger;
         BabelUtils::SharedPtr<BabelNetwork::ClientSocket> _socket;
 

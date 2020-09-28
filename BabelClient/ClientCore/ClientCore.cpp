@@ -15,10 +15,9 @@
 
 using namespace BabelClient;
 
-ClientCore::ClientCore(char **av)
+ClientCore::ClientCore()
     : _logger(BabelUtils::Logger::ClientLog)
 {
-    initSocket(av);
     logged = false;
 }
 
@@ -56,7 +55,7 @@ void ClientCore::start()
 {
     while (!_socket->isReady());
     std::cout << _socket->describe() << std::endl;
-    setReady();
+    //setReady();
 }
 
 
@@ -241,43 +240,48 @@ void ClientCore::checkTypeResponse(std::shared_ptr<BabelNetwork::AResponse> resp
     dispatch_ptr[response->getResponseType()](this, response);
 }
 
-void ClientCore::run()
-{
-    std::string data;
-    std::shared_ptr<BabelNetwork::AResponse> response = nullptr;
+//void ClientCore::run()
+//{
+//    std::string data;
+//    std::shared_ptr<BabelNetwork::AResponse> response = nullptr;
+//
+//    while (isReady()) {
+//        std::getline(std::cin, data);
+//        response = _socket->popResponse();
+//        if (data == "1")
+//            response = BabelNetwork::UserResponse::NewLoginRequest("ugo", "lolol");
+//        if (data == "2")
+//            response = BabelNetwork::CallResponse::CallRequest("ugo", "damien");
+//        if (data == "3")
+//            response = BabelNetwork::FriendResponse::FriendRequestAccepted("ugo", "damien");
+//        if (data == "4")
+//            response = BabelNetwork::MessageResponse::MessageReceive("ugo", "damien", "t'es mauvais");
+//        if (data == "5")
+//            response = BabelNetwork::UserResponse::AccountCreationRequest("ugo", "lolol");
+//        if (data == "6")
+//            response = BabelNetwork::UserResponse::AccountDeletionRequest("ugo");
+//        if (data == "7")
+//            response = BabelNetwork::CallResponse::CallRequest("ugo", "dam", _socket->getIp(), _socket->getPort());
+//        if (data == "8")
+//            response = BabelNetwork::CallResponse::RefusedCall("ugo", "dam");
+//        if (data == "9")
+//            response = BabelNetwork::CallResponse::AcceptCall("ugo", "dam");
+//        if (data == "10")
+//            response = BabelNetwork::MessageResponse::RequestMessageSend("dam", "ugo", "coucou");
+//        if (data == "exit" || !_socket->isReady()) {
+//            std::cout << "exit loop" << std::endl;
+//            break;
+//        }
+//        if (response != nullptr) {
+//            checkTypeResponse(response);
+//            _socket->sendResponse(response);
+//        }
+//    }
+//}
 
-    while (isReady()) {
-        std::getline(std::cin, data);
-        response = _socket->popResponse();
-        if (data == "1")
-            response = BabelNetwork::UserResponse::NewLoginRequest("ugo", "lolol");
-        if (data == "2")
-            response = BabelNetwork::CallResponse::CallRequest("ugo", "damien");
-        if (data == "3")
-            response = BabelNetwork::FriendResponse::FriendRequestAccepted("ugo", "damien");
-        if (data == "4")
-            response = BabelNetwork::MessageResponse::MessageReceive("ugo", "damien", "t'es mauvais");
-        if (data == "5")
-            response = BabelNetwork::UserResponse::AccountCreationRequest("ugo", "lolol");
-        if (data == "6")
-            response = BabelNetwork::UserResponse::AccountDeletionRequest("ugo");
-        if (data == "7")
-            response = BabelNetwork::CallResponse::CallRequest("ugo", "dam", _socket->getIp(), _socket->getPort());
-        if (data == "8")
-            response = BabelNetwork::CallResponse::RefusedCall("ugo", "dam");
-        if (data == "9")
-            response = BabelNetwork::CallResponse::AcceptCall("ugo", "dam");
-        if (data == "10")
-            response = BabelNetwork::MessageResponse::RequestMessageSend("dam", "ugo", "coucou");
-        if (data == "exit" || !_socket->isReady()) {
-            std::cout << "exit loop" << std::endl;
-            break;
-        }
-        if (response != nullptr) {
-            checkTypeResponse(response);
-            _socket->sendResponse(response);
-        }
-    }
+int BabelClient::ClientCore::run()
+{
+    return (0);
 }
 
 void ClientCore::stop()
@@ -285,18 +289,15 @@ void ClientCore::stop()
     _socket->stop();
 }
 
-//void ClientCore::init()
-//{
-//
-//}
-
 void ClientCore::initSocket(char **av)
 {
+    std::cout << av[1] << " " << av[2] << std::endl;
+
     BabelNetwork::NetworkInfos nwi(av[1], av[2]);
 
-    _socket = boost::make_shared<BabelNetwork::AsioClientSocket>(
-        av[1], av[2],
-        _logger,
-        BabelNetwork::AsioClientSocket::SocketHandler::Client);
-    _socket->connect();
+//    _socket = boost::make_shared<BabelNetwork::AsioClientSocket>(
+//        av[1], av[2],
+//        _logger,
+//        BabelNetwork::AsioClientSocket::SocketHandler::Client);
+//    _socket->connect();
 }
