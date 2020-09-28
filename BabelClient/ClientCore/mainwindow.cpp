@@ -55,6 +55,7 @@ MainWindow::MainWindow(QWidget *parent, NetworkClientSocket &network) : QMainWin
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(UpdateClient()));
     timer->start(100);
+    logged = false;
 }
 
 MainWindow::~MainWindow()
@@ -75,19 +76,22 @@ void MainWindow::on_ConnectionButton_clicked()
     std::string pass = ui->PassLine->text().toLocal8Bit().constData();
 
     auto response = BabelNetwork::UserResponse::NewLoginRequest(user, pass);
-    std::cout << response->getCode() << std::endl;
-    std::cout << "PTDR" << std::endl;
     client.getTcp()->sendResponse(response);
 }
 
 void MainWindow::on_DisconnectButton_clicked()
 {
+    auto response = BabelNetwork::UserResponse::LogoutRequest(login);
     ui->gridStackedWidget->setCurrentWidget(ui->LoginWidget);
+    client.getTcp()->sendResponse(response);
 }
 
 void MainWindow::on_AddFriendButton_clicked()
 {
+    std::string friendLogin = ui->SearchFriendLine->text().toLocal8Bit().constData();
 
+    auto response = BabelNetwork::FriendResponse::NewFriendRequest(login, friendLogin);
+    client.getTcp()->sendResponse(response);
 }
 
 void MainWindow::on_DeleteFriendButton_clicked()
@@ -102,6 +106,7 @@ void MainWindow::on_ManageFriendButton_clicked()
 
 void MainWindow::on_BackButton_clicked()
 {
+    std::cout << "BACK FRIEND" << std::endl;
     ui->gridStackedWidget->setCurrentWidget(ui->CallPage);
 }
 
@@ -133,20 +138,23 @@ void MainWindow::LoggedIn(const std::shared_ptr<BabelNetwork::UserResponse> &res
 {
     ui->gridStackedWidget->setCurrentWidget(ui->CallPage);
     ui->WrongLoginText->hide();
+    std::cout << "LOGGED IN" << std::endl;
+    login = response->getLogin();
+    logged = true;
     (void) response;
-    //FRONT ARTHUR;
 }
 
 void MainWindow::LoggedOut(const std::shared_ptr<BabelNetwork::UserResponse> &response)
 {
+    logged = false;
     (void) response;
     //FRONT ARTHUR;
 }
 
 void MainWindow::AccountCreate(const std::shared_ptr<BabelNetwork::UserResponse> &response)
 {
+    std::cout << "ACCOUNT CREATE" << std::endl;
     (void) response;
-    //FRONT ARTHUR;
 }
 
 void MainWindow::AccountDelete(const std::shared_ptr<BabelNetwork::UserResponse> &response)
@@ -163,20 +171,22 @@ void MainWindow::UnknowUserError(const std::shared_ptr<BabelNetwork::UserRespons
 
 void MainWindow::WrongLogin(const std::shared_ptr<BabelNetwork::UserResponse> &response)
 {
+    ui->WrongLoginText->show();
+    std::cout << "WRONG LOGIN" << std::endl;
     (void) response;
-    //FRONT ARTHUR
 }
 
 void MainWindow::WrongPassword(const std::shared_ptr<BabelNetwork::UserResponse> &response)
 {
+    ui->WrongLoginText->show(); // METTRE WRONG PASSWORD
+    std::cout << "WRONG PASSWORD" << std::endl;
     (void) response;
-    //FRONT ARTHUR
 }
 
 void MainWindow::LoginAlreadyTaken(const std::shared_ptr<BabelNetwork::UserResponse> &response)
 {
+    std::cout << "LOGIN ALREADY TAKEN" << std::endl;
     (void) response;
-    //FRONT ARTHUR
 }
 
 void MainWindow::AlreadyLoggedIn(const std::shared_ptr<BabelNetwork::UserResponse> &response)

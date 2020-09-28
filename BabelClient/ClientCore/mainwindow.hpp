@@ -76,6 +76,8 @@ class MainWindow : public QMainWindow
         Ui::MainWindow *ui;
         NetworkClientSocket &client;
         QTimer *timer;
+        std::string login;
+        bool logged;
     
     private:
         std::vector<std::function<void(MainWindow*, const std::shared_ptr<BabelNetwork::AResponse> &)>> dispatch_ptr = {&MainWindow::doUnknowTypeResponse, &MainWindow::doUserResponse, &MainWindow::doCallResponse, &MainWindow::doFriendResponse, &MainWindow::doMessageResponse};
