@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include "AsioClientSocket.hpp"
+#include "BoostThread.hpp"
 #include "ClientError.hpp"
 #include "Debug.hpp"
 
@@ -229,3 +230,14 @@ void AsioClientSocket::handle_error(const std::string &msg, const boost::system:
     stop();
     dbg("%s", "lol");
 }
+
+[[nodiscard]] const BabelUtils::SharedPtr<BabelUtils::AThread> &AsioClientSocket::getThread() const
+{
+    return _thread;
+}
+
+void AsioClientSocket::setThread(const BabelUtils::SharedPtr<BabelUtils::AThread> &thread)
+{
+    _thread = thread;
+}
+

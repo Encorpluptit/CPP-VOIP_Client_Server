@@ -24,17 +24,6 @@ const NetworkInfos &ASocket::getNetworkInfos() const
 {
     return _networkInfos;
 }
-
-[[nodiscard]] const BabelUtils::SharedPtr<BabelUtils::AThread> &ASocket::getThread() const
-{
-    return _thread;
-}
-
-void ASocket::setThread(const BabelUtils::SharedPtr<BabelUtils::AThread> &thread)
-{
-    _thread = thread;
-}
-
 bool BabelNetwork::ASocket::operator==(const BabelNetwork::NetworkInfos &other) const
 {
     return this->getNetworkInfos() == other;

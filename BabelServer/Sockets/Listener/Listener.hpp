@@ -9,6 +9,7 @@
 #define CPP_BABEL_2020_LISTENER_HPP
 
 #include "ASocket.hpp"
+#include "AThread.hpp"
 #include "ClientSocket.hpp"
 #include "ClientsList.hpp"
 
@@ -19,17 +20,6 @@ namespace BabelServer {
     public:
         /* <- Public Methods -> */
     public:
-//        ClientsList getClientList()
-//        {
-////            lock();
-////            auto lol = ClientsList(_clientsList);
-////            unlock();
-////            return lol;
-//            _clientsList.lock();
-//            auto list = _clientsList.getClients();
-//            _clientsList.unlock();
-//            return list;
-//        };
         std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>> getClientList()
         {
 //            lock();
@@ -41,6 +31,7 @@ namespace BabelServer {
             _clientsList.unlock();
             return list;
         };
+
 
         /* <- Attributes -> */
     protected:

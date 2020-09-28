@@ -8,7 +8,6 @@
 #ifndef CPP_BABEL_2020_ATHREAD_HPP
 #define CPP_BABEL_2020_ATHREAD_HPP
 
-#include <functional>
 #include "Runnable/ARunnable.hpp"
 
 namespace BabelUtils {

@@ -11,7 +11,6 @@
 #include <queue>
 #include "Logger.hpp"
 #include "ARunnable.hpp"
-#include "BoostThread.hpp"
 #include "SharedPtr.hpp"
 
 namespace BabelNetwork {
@@ -43,10 +42,6 @@ namespace BabelNetwork {
 
         [[nodiscard]] const NetworkInfos &getNetworkInfos() const;
 
-        [[nodiscard]] const BabelUtils::SharedPtr<BabelUtils::AThread> &getThread() const;
-
-        void setThread(const BabelUtils::SharedPtr<BabelUtils::AThread> &thread);
-
         void setIp(const std::string &ip) { _networkInfos.setIp(ip); }
 
         void setPort(const uint16_t port) { _networkInfos.setPort(port); }
@@ -65,7 +60,6 @@ namespace BabelNetwork {
     protected:
         NetworkInfos _networkInfos;
         BabelUtils::Logger &_logger;
-        BabelUtils::SharedPtr<BabelUtils::AThread> _thread;
     };
 
 }

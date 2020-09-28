@@ -46,6 +46,10 @@ namespace BabelServer {
 
         void setSignalsHandeled();
 
+        [[nodiscard]] const BabelUtils::SharedPtr<BabelUtils::AThread> &getThread() const;
+
+        void setThread(const BabelUtils::SharedPtr<BabelUtils::AThread> &thread);
+
         /* <- Getters / Setters -> */
     public:
         [[nodiscard]] const ip::tcp::endpoint &getEndpoint() const;
@@ -66,6 +70,7 @@ namespace BabelServer {
         ip::tcp::endpoint _endpoint;
         boost::asio::ip::tcp::acceptor _acceptor;
         boost::asio::signal_set _signals;
+        BabelUtils::SharedPtr<BabelUtils::AThread> _thread;
     };
 }
 

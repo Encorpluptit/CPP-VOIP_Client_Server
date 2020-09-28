@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include "AsioListener.hpp"
+#include "BoostThread.hpp"
 #include "Debug.hpp"
 #include "ClientError.hpp"
 
@@ -170,3 +171,14 @@ void AsioListener::stopContext()
 {
     return const_cast<io_context &>(_context);
 }
+
+[[nodiscard]] const BabelUtils::SharedPtr<BabelUtils::AThread> &AsioListener::getThread() const
+{
+    return _thread;
+}
+
+void AsioListener::setThread(const BabelUtils::SharedPtr<BabelUtils::AThread> &thread)
+{
+    _thread = thread;
+}
+

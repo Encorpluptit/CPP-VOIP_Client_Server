@@ -9,7 +9,10 @@
 #define CPP_BABEL_2020_ASIOCLIENTSOCKET_HPP
 
 #include <boost/asio.hpp>
+#include <boost/enable_shared_from_this.hpp>
+#include <boost/bind.hpp>
 #include <mutex>
+#include "AThread.hpp"
 #include "ClientSocket.hpp"
 #include "ClientsList.hpp"
 
@@ -71,6 +74,10 @@ namespace BabelServer {
 
         void handle_error(const std::string &msg, const boost::system::error_code &error);
 
+        [[nodiscard]] const BabelUtils::SharedPtr<BabelUtils::AThread> &getThread() const;
+
+        void setThread(const BabelUtils::SharedPtr<BabelUtils::AThread> &thread);
+
 
         /* <- Getters / Setters -> */
     public:
@@ -83,6 +90,7 @@ namespace BabelServer {
     private:
         io_context &_context;
         ip::tcp::socket _socket;
+        BabelUtils::SharedPtr<BabelUtils::AThread> _thread;
         ip::tcp::resolver::results_type _endpoints;
         ClientsList &_clientsList;
     };
