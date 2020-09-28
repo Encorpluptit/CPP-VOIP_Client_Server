@@ -15,14 +15,11 @@ AsioClientSocket::AsioClientSocket(
     const std::string &address,
     const std::string &port,
     BabelUtils::Logger &logger,
-    io_context &context,
-    SocketHandler handlerType
+    io_context &context
 )
     : ClientSocket(address, port, logger),
       _context(context),
-      _socket(_context),
-      _handler(handlerType)
-{}
+      _socket(_context) {}
 
 
 AsioClientSocket::~AsioClientSocket()
@@ -210,23 +207,10 @@ std::string AsioClientSocket::describe()
 
 void AsioClientSocket::handle_error(const std::string &msg, const boost::system::error_code &error)
 {
-    if (getHandler() == SocketHandler::Client) {
-        auto errorMsg = msg + error.message();
-        if (error == boost::asio::error::eof) {
-            errorMsg += " ==> Connection closed by server.";
-            _logger.logThis(errorMsg);
-        } else {
-            errorMsg = "Error : " + errorMsg;
-            _logger.logThis(errorMsg);
-        }
-        stop();
-        throw BabelErrors::ClientError(errorMsg, *this);
-    } else {
-        // TODO: Destroy properly client in Listener and remove from queue
-        auto errorMsg = msg + " (Client Connection Stopped) : " + error.message() + "\n" + describe();
-        _logger.logThis(errorMsg);
-        throw BabelErrors::ClientError(errorMsg, *this);
-    }
+    // TODO: Destroy properly client in Listener and remove from queue
+    auto errorMsg = msg + " ICI: (Client Connection Stopped) : " + error.message() + "\n" + describe();
+    _logger.logThis(errorMsg);
+    throw BabelErrors::ClientError(errorMsg, *this);
 }
 
 std::string AsioClientSocket::getIp()

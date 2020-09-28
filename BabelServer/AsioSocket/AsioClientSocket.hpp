@@ -18,21 +18,13 @@ namespace BabelNetwork {
         : virtual public ClientSocket,
           public boost::enable_shared_from_this<AsioClientSocket> {
 
-        /* <- Class Enum -> */
-    public:
-        enum SocketHandler {
-            Server,
-            Client
-        };
-
         /* <- Constructor - Destructor -> */
     public:
         explicit AsioClientSocket(
             const std::string &address,
             const std::string &port,
             BabelUtils::Logger &logger,
-            io_context &context,
-            SocketHandler handlerType
+            io_context &context
         );
 
         ~AsioClientSocket() final;
@@ -44,8 +36,6 @@ namespace BabelNetwork {
 
         void stop() final
         {
-            if (getHandler() == SocketHandler::Client)
-                _context.stop();
             _socket.close();
             setNotReady();
         };
@@ -82,8 +72,6 @@ namespace BabelNetwork {
     public:
         [[nodiscard]] ip::tcp::socket &getSocket() { return _socket; }
 
-        [[nodiscard]] SocketHandler getHandler() const { return _handler; }
-
         [[nodiscard]] io_context &getContext() const { return const_cast<io_context &>(_context);}
 
         [[nodiscard]] std::string getIp() final;
@@ -96,7 +84,6 @@ namespace BabelNetwork {
         io_context &_context;
         ip::tcp::socket _socket;
         ip::tcp::resolver::results_type _endpoints;
-        SocketHandler _handler;
     };
 
 }
