@@ -27,7 +27,6 @@ namespace BabelNetwork {
 
         /* <- Operators -> */
     public:
-//        friend std::ostream &operator<<(std::ostream &os, const ClientSocket &client) = 0;
 
         /* <- Public Methods -> */
     public:
@@ -48,10 +47,6 @@ namespace BabelNetwork {
 
         /* <- Getters / Setters -> */
     public:
-        [[nodiscard]] virtual std::string getIp() = 0;
-
-        [[nodiscard]] virtual std::string getPort() = 0;
-
         const std::shared_ptr<UserModel> &getUser() const { return _user; }
 
         void setUser(const std::shared_ptr<UserModel> &user) { _user = user; }
@@ -67,8 +62,6 @@ namespace BabelNetwork {
         std::shared_ptr<UserModel> _user = nullptr;
     };
     /* <- Operators -> */
-//    std::ostream &operator<<(std::ostream &os, const AResponse &response);
-
     using ClientList = std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>>;
 }
 

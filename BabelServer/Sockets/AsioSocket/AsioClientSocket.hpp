@@ -11,6 +11,7 @@
 #include <boost/asio.hpp>
 #include <mutex>
 #include "ClientSocket.hpp"
+#include "ClientsList.hpp"
 
 namespace BabelServer {
     using namespace boost::asio;
@@ -26,7 +27,8 @@ namespace BabelServer {
             const std::string &address,
             const std::string &port,
             BabelUtils::Logger &logger,
-            io_context &context
+            io_context &context,
+            ClientsList &clientsList
         );
 
         ~AsioClientSocket() final;
@@ -76,16 +78,13 @@ namespace BabelServer {
 
         [[nodiscard]] io_context &getContext() const { return const_cast<io_context &>(_context); }
 
-        [[nodiscard]] std::string getIp() final;
-
-        [[nodiscard]] std::string getPort() final;
-
 
         /* <- Attributes -> */
     private:
         io_context &_context;
         ip::tcp::socket _socket;
         ip::tcp::resolver::results_type _endpoints;
+        ClientsList &_clientsList;
     };
 }
 

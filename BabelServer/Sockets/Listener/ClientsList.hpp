@@ -9,25 +9,34 @@
 #include "ClientSocket.hpp"
 #include "SharedPtr.hpp"
 
+#include <iostream>
+
 namespace BabelServer {
-class ClientsList : virtual public std::mutex {
-public:
-    ClientsList() = default;
+    class ClientsList : virtual public std::mutex {
+    public:
+        ClientsList() = default;
 
-    ~ClientsList() = default;
+        ~ClientsList() = default;
 
-public:
-    void add_client(const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &client)
+    public:
+        void add_client(const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &client)
     {
         lock();
         _clients.emplace_back(client);
         unlock();
         };
 
-        void remove_client(const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &client)
+        void remove_client(const BabelNetwork::ClientSocket &target)
         {
             lock();
-            std::remove(_clients.begin(), _clients.end(), client);
+            auto end = _clients.end();
+            for (auto it = _clients.begin(); it != end; ++it) {
+                if (**it == target) {
+                    std::cerr << "Client erase" << it->get()->describe() << std::endl;
+                    _clients.erase(it);
+                    break;
+                }
+            }
             unlock();
         };
 

@@ -73,11 +73,13 @@ void AsioListener::accept()
     std::string log("Listener Starting to Accept !");
     _logger.logThis(log);
     dbg("%s", log.c_str());
+
     auto new_session = BabelUtils::makeSharedPtr<AsioClientSocket>(
         _networkInfos.getIp(),
         _networkInfos.getPortStr(),
         _logger,
-        _context
+        _context,
+        _clientsList
     );
 
     _acceptor.async_accept(
@@ -107,7 +109,9 @@ void AsioListener::handle_accept(
             session->getSocket().remote_endpoint().port()
         );
         _logger.logThis(s);
-        dbg("%s", s.c_str())
+        dbg("%s", s.c_str());
+        session->setIp(session->getSocket().remote_endpoint().address().to_string());
+        session->setPort(session->getSocket().remote_endpoint().port());
         try {
             session->start();
         } catch (const BabelErrors::ClientError &e) {

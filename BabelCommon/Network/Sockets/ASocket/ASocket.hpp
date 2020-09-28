@@ -16,7 +16,7 @@
 
 namespace BabelNetwork {
 
-class ASocket : virtual public BabelUtils::ARunnable {
+    class ASocket : virtual public BabelUtils::ARunnable {
         /* <- Class Enum -> */
     public:
         enum SocketType {
@@ -46,6 +46,14 @@ class ASocket : virtual public BabelUtils::ARunnable {
         [[nodiscard]] const BabelUtils::SharedPtr<BabelUtils::AThread> &getThread() const;
 
         void setThread(const BabelUtils::SharedPtr<BabelUtils::AThread> &thread);
+
+        void setIp(const std::string &ip) { _networkInfos.setIp(ip); }
+
+        void setPort(const uint16_t port) { _networkInfos.setPort(port); }
+
+        [[nodiscard]] const std::string &getIp() { return _networkInfos.getIp(); };
+
+        [[nodiscard]] uint16_t getPort() { return _networkInfos.getPort(); }
 
         /* <- Operators -> */
     public:
