@@ -27,14 +27,6 @@ namespace BabelNetwork {
 
         /* <- Constructor - Destructor -> */
     public:
-        #ifdef BABEL_CLIENT_BIN
-        explicit AsioClientSocket(
-            const std::string &address,
-            const std::string &port,
-            BabelUtils::Logger &logger,
-            SocketHandler handlerType
-        );
-        #else
         explicit AsioClientSocket(
             const std::string &address,
             const std::string &port,
@@ -42,7 +34,6 @@ namespace BabelNetwork {
             io_context &context,
             SocketHandler handlerType
         );
-        #endif
 
         ~AsioClientSocket() final;
 
@@ -102,11 +93,7 @@ namespace BabelNetwork {
 
         /* <- Attributes -> */
     private:
-        #ifdef BABEL_CLIENT_BIN
-        io_context _context{};
-        #else
         io_context &_context;
-        #endif
         ip::tcp::socket _socket;
         ip::tcp::resolver::results_type _endpoints;
         SocketHandler _handler;

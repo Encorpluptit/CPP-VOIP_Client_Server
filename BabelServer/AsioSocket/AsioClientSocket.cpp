@@ -11,18 +11,6 @@
 
 using namespace BabelNetwork;
 
-#ifdef BABEL_CLIENT_BIN
-AsioClientSocket::AsioClientSocket(
-    const std::string &address,
-    const std::string &port,
-    BabelUtils::Logger &logger,
-    SocketHandler handlerType
-)
-    : ClientSocket(address, port, logger),
-      _socket(_context),
-      _handler(handlerType)
-{}
-#else
 AsioClientSocket::AsioClientSocket(
     const std::string &address,
     const std::string &port,
@@ -35,7 +23,6 @@ AsioClientSocket::AsioClientSocket(
       _socket(_context),
       _handler(handlerType)
 {}
-#endif
 
 
 AsioClientSocket::~AsioClientSocket()

@@ -80,18 +80,6 @@ namespace BabelServer {
         const CallManager _callManager;
         const FriendManager _friendManager;
         const MessageManager _messageManager;
-//        const std::vector<AResponseTuple> AResponsePtrTab = {
-//            (BabelNetwork::AResponse::ResponseType, ),
-//
-//        };
-//        const std::vector<std::function<UserResponseProt >> UserResponsePtrTab = {
-//        };
-//        const std::vector<std::function<CallResponseProt >> CallResponsePtrTab = {
-//        };
-//        const std::vector<std::function<FriendResponseProt >> FriendResponsePtrTab = {
-//        };
-//        const std::vector<std::function<MessageResponseProt >> MessageResponsePtrTab = {
-//        };
     };
 }
 
