@@ -46,7 +46,8 @@ debug: $(NAME)
 
 ################################################################################
 # SERVER RULES
-server: setup-build-tree
+server:
+	@cmake $(OPTIONS) -B $(BUILD_DIR)
 	@$(MAKE) -j `nproc` --no-print-directory -C $(BUILD_DIR) $(SERVER_BIN)
 
 server_fclean:
@@ -56,7 +57,8 @@ server_fclean:
 
 ################################################################################
 # CLIENTS RULES
-client: setup-build-tree
+client:
+	@cmake $(OPTIONS) -B $(BUILD_DIR)
 	@$(MAKE) -j `nproc` --no-print-directory -C $(BUILD_DIR) $(CLIENT_BIN)
 
 client_fclean:
@@ -84,17 +86,10 @@ setup-build-tree:
 	@cmake $(OPTIONS) -B $(BUILD_DIR)
 
 
-#gh-install:
-#	@mkdir -p $(BUILD_DIR) && cd $(BUILD_DIR) && conan install .. --build=portaudio --build=qt
-
-
 mouli-install: fclean
 	-conan remote add tech-repo https://api.bintray.com/conan/epitech/public-conan
 	-conan remote add public-repo https://api.bintray.com/conan/bincrafters/public-conan
 	@mkdir -p $(BUILD_DIR) && cd $(BUILD_DIR) && conan install .. --build=missing
-#
-#mouli: fclean
-#	@mkdir -p $(BUILD_DIR) && cd $(BUILD_DIR) && conan install .. && echo "lol" && cmake .. && echo "lol2" && cmake –build . && make --no-print-directory
 
 clean:
 	@$(RM) -r $(BUILD_DIR)

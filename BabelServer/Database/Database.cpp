@@ -32,8 +32,8 @@ auto &Database::getDatabase()
             make_column("receiver", &MessageModel::receiverID),
             make_column("timestamp", &MessageModel::timestamp),
             make_column("content", &MessageModel::content),
-            foreign_key(&MessageModel::senderID).references(&UserModel::id),
-            foreign_key(&MessageModel::receiverID).references(&UserModel::id)
+            foreign_key(&MessageModel::senderID).references(&UserModel::id).on_update.cascade().on_delete.cascade(),
+            foreign_key(&MessageModel::receiverID).references(&UserModel::id).on_update.cascade().on_delete.cascade()
         )
     );
     static bool init = true;
@@ -305,10 +305,10 @@ std::vector<MessageModel> Database::GetConv(const std::string &senderName, const
         auto storage = getDatabase();
         message = storage.get_all<MessageModel>(
             where(
-                is_equal(&MessageModel::senderID, sender->id) \
- and is_equal(&MessageModel::receiverID, receiver->id)\
- or is_equal(&MessageModel::receiverID, sender->id)\
- and is_equal(&MessageModel::senderID, receiver->id)\
+                (is_equal(&MessageModel::senderID, sender->id) \
+ and is_equal(&MessageModel::receiverID, receiver->id))\
+ or (is_equal(&MessageModel::receiverID, sender->id)\
+ and is_equal(&MessageModel::senderID, receiver->id))\
 )
         );
     } catch (const std::system_error &e) {
