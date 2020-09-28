@@ -5,8 +5,10 @@
 #include "Debug.hpp"
 #include "Models.hpp"
 #include "UserManager.hpp"
+#include "FriendResponse.hpp"
 
 using namespace BabelServer;
+using namespace BabelNetwork;
 
 const std::vector<UserManager::UserManagerFPtr> &BabelServer::UserManager::getUserResponsePtrTab() const
 {
@@ -14,9 +16,9 @@ const std::vector<UserManager::UserManagerFPtr> &BabelServer::UserManager::getUs
 }
 
 void UserManager::createAccount(
-    const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
-    const std::shared_ptr<BabelNetwork::UserResponse> &response,
-    __attribute__((unused))const BabelNetwork::ClientList &clientList,
+    const BabelUtils::SharedPtr<ClientSocket> &clientSocket,
+    const std::shared_ptr<UserResponse> &response,
+    __attribute__((unused))const ClientList &clientList,
     Database &database
 ) const
 {
@@ -29,22 +31,22 @@ void UserManager::createAccount(
     _logger.logThis(log);
     //TODO: Hash Password ?
     switch (database.createUser(login, response->getPassword())) {
-        case BabelNetwork::UserResponse::LoginAlreadyTaken:
-            clientSocket->sendResponse(BabelNetwork::UserResponse::LoginAlreadyUsed(login));
+        case UserResponse::LoginAlreadyTaken:
+            clientSocket->sendResponse(UserResponse::LoginAlreadyUsed(login));
             return;
-        case BabelNetwork::UserResponse::AccountCreated:
-            clientSocket->sendResponse(BabelNetwork::UserResponse::AccountCreatedOk(login));
+        case UserResponse::AccountCreated:
+            clientSocket->sendResponse(UserResponse::AccountCreatedOk(login));
             return;
         default:
-            clientSocket->sendResponse(BabelNetwork::UserResponse::UnknowError(login));
+            clientSocket->sendResponse(UserResponse::UnknowError(login));
             return;
     }
 }
 
 void UserManager::Login(
-    const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
-    const std::shared_ptr<BabelNetwork::UserResponse> &response,
-    const BabelNetwork::ClientList &clientList,
+    const BabelUtils::SharedPtr<ClientSocket> &clientSocket,
+    const std::shared_ptr<UserResponse> &response,
+    const ClientList &clientList,
     Database &database
 ) const
 {
@@ -55,29 +57,33 @@ void UserManager::Login(
     dbg("%s\n", log.c_str());
     _logger.logThis(log);
     if (clientSocket->getUser()) {
-        clientSocket->sendResponse(BabelNetwork::UserResponse::AlreadyLog(response->getLogin()));
+        clientSocket->sendResponse(UserResponse::AlreadyLog(response->getLogin()));
         return;
     }
     auto user = database.getUser(response->getLogin());
     if (!user) {
-        clientSocket->sendResponse(BabelNetwork::UserResponse::BadLogin(response->getLogin()));
+        clientSocket->sendResponse(UserResponse::BadLogin(response->getLogin()));
         return;
     }
     //TODO: UnHash Password ?
     std::cout << "RESPONSE : " << response->getPassword() << "USER : " << user->password << std::endl;
     if (response->getPassword() != user->password) {
-        clientSocket->sendResponse(BabelNetwork::UserResponse::BadPassword(response->getLogin()));
+        clientSocket->sendResponse(UserResponse::BadPassword(response->getLogin()));
         return;
     }
     clientSocket->setUser(user);
-    clientSocket->sendResponse(BabelNetwork::UserResponse::LoggedInOk(response->getLogin()));
+    clientSocket->sendResponse(UserResponse::LoggedInOk(response->getLogin()));
+    for (const auto &client: clientList) {
+        if (client->getUser())
+            clientSocket->sendResponse(FriendResponse::FriendRequestAccepted(response->getLogin(), user->login));
+    }
     //TODO: Send "Friend connected" to friend list.
 }
 
 void UserManager::Logout(
-    const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
-    const std::shared_ptr<BabelNetwork::UserResponse> &response,
-    const BabelNetwork::ClientList &clientList,
+    const BabelUtils::SharedPtr<ClientSocket> &clientSocket,
+    const std::shared_ptr<UserResponse> &response,
+    const ClientList &clientList,
     Database &database
 ) const
 {
@@ -90,19 +96,19 @@ void UserManager::Logout(
     // TODO: Add Already Logged out Management
     auto user = database.getUser(response->getLogin());
     if (!user) {
-        clientSocket->sendResponse(BabelNetwork::UserResponse::RequestedDeletedAccount(response->getLogin()));
+        clientSocket->sendResponse(UserResponse::RequestedDeletedAccount(response->getLogin()));
         return;
     }
     //TODO: UnHash Password ?
     clientSocket->setUser(nullptr);
-    clientSocket->sendResponse(BabelNetwork::UserResponse::LoggedOutOk(response->getLogin()));
+    clientSocket->sendResponse(UserResponse::LoggedOutOk(response->getLogin()));
     //TODO: Send "Friend disconnected" to friend list.
 }
 
 void UserManager::DeleteAccount(
-    const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
-    const std::shared_ptr<BabelNetwork::UserResponse> &response,
-    const BabelNetwork::ClientList &clientList,
+    const BabelUtils::SharedPtr<ClientSocket> &clientSocket,
+    const std::shared_ptr<UserResponse> &response,
+    const ClientList &clientList,
     Database &database
 ) const
 {
@@ -115,14 +121,14 @@ void UserManager::DeleteAccount(
     dbg("%s\n", log.c_str());
     _logger.logThis(log);
     switch (database.deleteUser(response->getLogin())) {
-        case BabelNetwork::UserResponse::RequestedAccountDeleted:
-            clientSocket->sendResponse(BabelNetwork::UserResponse::RequestedDeletedAccount(login));
+        case UserResponse::RequestedAccountDeleted:
+            clientSocket->sendResponse(UserResponse::RequestedDeletedAccount(login));
             return;
-        case BabelNetwork::UserResponse::AccountDeleted:
-            clientSocket->sendResponse(BabelNetwork::UserResponse::AccountDeletedOk(login));
+        case UserResponse::AccountDeleted:
+            clientSocket->sendResponse(UserResponse::AccountDeletedOk(login));
             return;
         default:
-            clientSocket->sendResponse(BabelNetwork::UserResponse::UnknowError(login));
+            clientSocket->sendResponse(UserResponse::UnknowError(login));
             return;
     }
     //TODO: Send "Delete Friend" to friend list.

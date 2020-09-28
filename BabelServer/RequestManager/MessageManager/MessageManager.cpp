@@ -5,14 +5,16 @@
 #include "MessageManager.hpp"
 
 using namespace BabelServer;
+using namespace BabelNetwork;
 
 void MessageManager::sendMessage(
-    const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
-    const std::shared_ptr<BabelNetwork::MessageResponse> &response,
+    const BabelUtils::SharedPtr<ClientSocket> &clientSocket,
+    const std::shared_ptr<MessageResponse> &response,
     const BabelNetwork::ClientList &clientList,
     Database &database
 ) const
 {
+    // TODO: check for login
     for (const auto &target: clientList) {
         if (target->getUser() && target->getUser()->login == response->getReceiver()) {
             target->sendResponse(response);
@@ -20,10 +22,18 @@ void MessageManager::sendMessage(
             return;
         }
     }
-//    if (!database.saveMessage()) {
-//        clientSocket->sendResponse(BabelNetwork::MessageResponse::UserNotFound(response));
-//        return;
-//    }
-    clientSocket->sendResponse(
-        BabelNetwork::MessageResponse::ReceiveMessageOk(response->getSender(), response->getReceiver()));
+    switch (database.createMessage(response->getSender(), response->getReceiver(), response->getTimestamp(),
+        response->getMessageData())) {
+        case BabelNetwork::MessageResponse::SendMessageOk:
+            clientSocket->sendResponse(
+                BabelNetwork::MessageResponse::OkSendMessage(response->getSender(), response->getReceiver()));
+            return;
+        case BabelNetwork::MessageResponse::UnknownUser:
+            clientSocket->sendResponse(BabelNetwork::MessageResponse::UserNotFound(response));
+            return;
+        case BabelNetwork::MessageResponse::UnknownError:
+            clientSocket->sendResponse(BabelNetwork::MessageResponse::UnknownErrorAppend(response));
+            return;
+    }
+    clientSocket->sendResponse(MessageResponse::ReceiveMessageOk(response->getSender(), response->getReceiver()));
 }

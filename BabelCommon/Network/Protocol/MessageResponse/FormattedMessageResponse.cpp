@@ -46,7 +46,13 @@ std::shared_ptr<AResponse> MessageResponse::ReceiveMessageOk(const std::string &
     return resp;
 }
 
-std::shared_ptr<AResponse> MessageResponse::UserNotFound(const std::shared_ptr<MessageResponse>& response)
+std::shared_ptr<AResponse> MessageResponse::UserNotFound(const std::shared_ptr<MessageResponse> &response)
+{
+    response->setCode(MessageResponse::ResponseCode::UnknownUser);
+    return response;
+}
+
+std::shared_ptr<AResponse> MessageResponse::UnknownErrorAppend(const std::shared_ptr<MessageResponse> &response)
 {
     response->setCode(MessageResponse::ResponseCode::UnknownUser);
     return response;

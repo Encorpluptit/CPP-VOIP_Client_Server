@@ -142,7 +142,10 @@ namespace BabelNetwork {
         [[nodiscard]] static std::shared_ptr<AResponse> OkSendMessage(const std::string &sender, const std::string &receiver);
         [[nodiscard]] static std::shared_ptr<AResponse> MessageReceive(const std::string &sender, const std::string &receiver, const std::string &messageData);
         [[nodiscard]] static std::shared_ptr<AResponse> ReceiveMessageOk(const std::string &sender, const std::string &receiver);
-        [[nodiscard]] static std::shared_ptr<AResponse> UserNotFound(const std::shared_ptr<MessageResponse>& response);
+        [[nodiscard]] static std::shared_ptr<AResponse> UserNotFound(const std::shared_ptr<MessageResponse> &response);
+
+        [[nodiscard]] static std::shared_ptr<AResponse>
+        UnknownErrorAppend(const std::shared_ptr<MessageResponse> &response);
 
         /* <- Stringify Code -> */
     private:
