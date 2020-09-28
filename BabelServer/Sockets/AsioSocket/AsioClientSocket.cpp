@@ -73,7 +73,7 @@ void AsioClientSocket::connect()
 {
     _logger.logThis(_networkInfos, "Trying to connect");
     ip::tcp::resolver resolver(_context);
-    _endpoints = resolver.resolve(_networkInfos.getIp(), _networkInfos.getPortStr());
+    _endpoints = resolver.resolve(_networkInfos.getIp(), std::to_string(_networkInfos.getPort()));
 
     boost::asio::async_connect(
         _socket,
@@ -204,7 +204,6 @@ void AsioClientSocket::handle_write(const boost::system::error_code &error)
             );
         }
     } else {
-        //TODO: close socket.
         handle_error("{ handle write } : ", error);
         _logger.logThis("Error in handle write : " + error.message());
     }
@@ -223,24 +222,10 @@ std::string AsioClientSocket::describe()
 
 void AsioClientSocket::handle_error(const std::string &msg, const boost::system::error_code &error)
 {
-    // TODO: Destroy properly client in Listener and remove from queue
     auto errorMsg = msg + " : (Client Connection Stopped) : " + error.message() + "\n" + describe();
     _logger.logThis(errorMsg);
     dbg("%s", errorMsg.c_str());
-//    _clientsList.lock();
     _clientsList.remove_client(*this);
+    stop();
     dbg("%s", "lol");
-//    _clientsList.unlock();
-//    throw BabelErrors::ClientError(errorMsg, *this);
 }
-
-//std::string AsioClientSocket::getIp()
-//{
-//    return _socket.remote_endpoint().address().to_string();
-//}
-//
-//std::string AsioClientSocket::getPort()
-//{
-//    return std::to_string(_socket.remote_endpoint().port());
-//}
-//
