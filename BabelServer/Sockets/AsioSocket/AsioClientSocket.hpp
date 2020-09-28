@@ -24,7 +24,8 @@ namespace BabelServer {
     public:
         explicit AsioClientSocket(
             const std::string &address,
-            const std::string &port, BabelUtils::Logger &logger,
+            const std::string &port,
+            BabelUtils::Logger &logger,
             io_context &context
         );
 

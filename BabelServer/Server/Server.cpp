@@ -56,18 +56,10 @@ void Server::runListener()
 {
     while (listenerRunning()) {
         std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>> clients;
-        // TODO: Manage User Response server by server ?
         for (const auto &server : _servers) {
-            auto list = server->getClientList();
+            auto list = server->getClientList().getClients();
             if (list.empty())
                 continue;
-//            for (const auto &client : clients) {
-//                if (!client->isReady())
-//                    continue;
-//                auto resp = client->popResponse();
-//                if (!resp)
-//                    continue;
-//                _manager.manage(resp);
             clients.insert(clients.end(), list.begin(), list.end());
         }
         if (clients.empty())
@@ -79,8 +71,6 @@ void Server::runListener()
             if (!resp)
                 continue;
             _manager.manage(client, resp, clients, _database);
-//            _manag TODO: Manager
-            std::cout << "HERE: " << resp << std::endl;
         }
     }
 }

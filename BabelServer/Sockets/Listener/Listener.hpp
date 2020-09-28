@@ -16,20 +16,23 @@ namespace BabelServer {
 
 //    using ClientList = std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>>;
 
-    class Listener : virtual public BabelNetwork::ASocket {
-        /* <- Constructor - Destructor -> */
-    public:
-        /* <- Public Methods -> */
-    public:
-//        virtual std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>> getClientList() = 0;
-
-        virtual BabelNetwork::ClientList getClientList() = 0;
-
-        /* <- Attributes -> */
-    protected:
-        // TODO: Client List here instead of Asio client list in AsioListener ?
-        BabelUtils::SharedPtr<ClientsList> _clientsList;
+class Listener : virtual public BabelNetwork::ASocket, virtual public std::mutex {
+    /* <- Constructor - Destructor -> */
+public:
+    /* <- Public Methods -> */
+public:
+    ClientsList getClientList()
+    {
+        lock();
+        auto lol = ClientsList(_clientsList);
+        unlock();
+        return lol;
     };
+
+    /* <- Attributes -> */
+protected:
+    ClientsList _clientsList;
+};
 }
 
 
