@@ -65,7 +65,6 @@ namespace BabelServer {
         ip::tcp::endpoint _endpoint;
         boost::asio::ip::tcp::acceptor _acceptor;
         boost::asio::signal_set _signals;
-//        std::vector<BabelUtils::SharedPtr<BabelNetwork::AsioClientSocket>> _asioClients;
         AsioClientList _asioClients;
         std::mutex _mtx;
     };

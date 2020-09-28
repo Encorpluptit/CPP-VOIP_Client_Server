@@ -62,17 +62,6 @@ void AsioListener::launch_listener()
 void AsioListener::accept()
 {
     std::cout << "ACCEPT" << std::endl;
-//    _asioClients.emplace_back(
-//        boost::make_shared<BabelNetwork::AsioClientSocket>(
-//            _networkInfos.getIp(),
-//            _networkInfos.getPortStr(),
-//            _logger,
-//            _context,
-//            BabelNetwork::AsioClientSocket::SocketHandler::Server
-//        )
-//    );
-//    auto new_session = _asioClients.back();
-
     auto new_session = boost::make_shared<BabelNetwork::AsioClientSocket>(
         _networkInfos.getIp(),
         _networkInfos.getPortStr(),
@@ -85,19 +74,16 @@ void AsioListener::accept()
         new_session->getSocket(),
         boost::bind(&AsioListener::handle_accept, this, new_session, boost::asio::placeholders::error)
     );
-//    _asioClients.emplace_back(new_session);
 }
 
 std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>> AsioListener::getClientList()
 {
-//    return std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>>();
     if (_asioClients.empty())
         return std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>>();
     _mtx.lock();
     auto lol = std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>>(_asioClients.begin(), _asioClients.end());
     _mtx.unlock();
     return lol;
-//    return std::vector<std::shared_ptr<BabelNetwork::ClientSocket>>(_asioClients.begin(), _asioClients.end());
 }
 
 void AsioListener::stop()
@@ -122,11 +108,12 @@ void AsioListener::handle_accept(
         );
         _logger.logThis(s);
         dbg("%s", s.c_str())
-        std::cout << s << std::endl;
         try {
             session->start();
         } catch (const BabelErrors::ClientError &e) {
-            std::cout << "In Session Execution\n" << e.what() << std::endl;
+            auto log = BabelUtils::format("In Session Execution : %s\n", e.what());
+            _logger.logThis(log);
+            dbg("%s", log.c_str())
         }
     } else {
         std::cerr << error << std::endl;

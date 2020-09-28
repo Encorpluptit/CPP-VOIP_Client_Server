@@ -157,3 +157,175 @@ BabelNetwork::UserResponse::ResponseCode Database::deleteUser(const std::string 
     unlock();
     return BabelNetwork::UserResponse::AccountDeleted;
 }
+
+
+int Database::createMessage(
+    const int &id,
+    const int &senderid,
+    const int &receiverid,
+    const time_t &timestamp,
+    const std::string &content)
+{
+    std::string log;
+    auto message = MessageModel(senderid, receiverid, content, timestamp);
+    lock();
+    auto storage = getDatabase();
+    int storage_id = -1;
+    try {
+        storage_id = storage.insert(message);
+    } catch (const std::system_error &e) {
+        log = BabelUtils::format("Error in create Message with param -> %s", e.what());
+        dbg("%s", log.c_str());
+        _logger.logThis(log);
+        unlock();
+        return storage_id;
+    } catch (...) {
+        log = "Error in create Message -> unknown exception";
+        dbg("%s", log.c_str());
+        _logger.logThis(log);
+        unlock();
+        return storage_id;
+    }
+    unlock();
+    log = BabelUtils::format(
+        "Message Created: senderid {%d}, receiverid {%d}, content {%s}",
+        senderid, receiverid, content.c_str()
+    );
+    dbg("%s", log.c_str());
+    _logger.logThis(log);
+    return storage_id;
+}
+
+BabelNetwork::MessageResponse::ResponseCode Database::createMessage(
+    const std::string &senderName,
+    const std::string &receiverName,
+    const time_t timestamp,
+    const std::string &content
+)
+{
+    std::string log;
+    try {
+        auto sender = getUser(senderName);
+        auto receiver = getUser(receiverName);
+        lock();
+        auto storage = getDatabase();
+        if (!sender || !receiver) {
+            log = BabelUtils::format("Error in create Message : User not found -> {%s} or {%s}",
+                senderName.c_str(), receiverName.c_str()
+            );
+            dbg("%s", log.c_str());
+            _logger.logThis(log);
+            unlock();
+            return BabelNetwork::MessageResponse::UnknownUser;
+        }
+        auto message = MessageModel(sender->id, receiver->id, content, timestamp);
+        storage.insert(message);
+    } catch (const std::system_error &e) {
+        log = BabelUtils::format("Error in create Message with param -> %s", e.what());
+        dbg("%s", log.c_str());
+        _logger.logThis(log);
+        unlock();
+        return BabelNetwork::MessageResponse::UnknownError;
+    } catch (...) {
+        log = "Error in create Message -> unknown exception";
+        dbg("%s", log.c_str());
+        _logger.logThis(log);
+        unlock();
+        return BabelNetwork::MessageResponse::UnknownError;
+    }
+    unlock();
+    log = BabelUtils::format(
+        "Message Created: senderid {%s}, receiverid {%s}, content {%s}",
+        senderName.c_str(), receiverName.c_str(), content.c_str()
+    );
+    dbg("%s", log.c_str());
+    _logger.logThis(log);
+    return BabelNetwork::MessageResponse::SendMessageOk;
+}
+
+std::shared_ptr<MessageModel> Database::getOneMessage(const int id)
+{
+    std::string log;
+    std::unique_ptr<MessageModel> message = nullptr;
+    lock();
+    auto storage = getDatabase();
+    try {
+        message = storage.get_pointer<MessageModel>(id);
+    } catch (const std::system_error &e) {
+        log = BabelUtils::format("Error in getOneMessage(id: {%d}): %s", id, e.what());
+        dbg("%s", log.c_str());
+        _logger.logThis(log);
+    } catch (...) {
+        log = BabelUtils::format("Error in getUser(id: {%d}): unknown exception", id);
+        dbg("%s", log.c_str());
+        _logger.logThis(log);
+    }
+    unlock();
+    return message;
+}
+
+std::vector<MessageModel> Database::GetConv(
+    const int senderid,
+    const int receiverid
+)
+{
+    std::string log;
+    std::vector<MessageModel> message;
+    lock();
+    auto storage = getDatabase();
+    try {
+        message = storage.get_all<MessageModel>();// message = storage.get_all<MessageModel>(senderid, receiverid);
+        // std::cout << "ConvSize (" << message.size() << "):" << std::endl;
+        // for(auto &mess : message) {
+        //     std::cout << storage.dump(mess) << std::endl;
+        // }
+    } catch (const std::system_error &e) {
+        log = BabelUtils::format("Error in getConv(senderid: {%d}, receiverid: {%d}): %s", senderid, receiverid,
+            e.what());
+        dbg("%s", log.c_str());
+        _logger.logThis(log);
+    } catch (...) {
+        log = BabelUtils::format("Error in getConv(senderid: {%d}, receiverid: {%d}): unknown exception", senderid,
+            receiverid);
+        dbg("%s", log.c_str());
+        _logger.logThis(log);
+    }
+    unlock();
+    return message;
+}
+
+std::vector<MessageModel> Database::GetConv(const std::string &senderName, const std::string &receiverName)
+{
+    std::string log;
+    std::vector<MessageModel> message;
+    try {
+        auto sender = getUser(senderName);
+        auto receiver = getUser(receiverName);
+        lock();
+        auto storage = getDatabase();
+        message = storage.get_all<MessageModel>(
+            where(
+                is_equal(&MessageModel::senderID, sender->id) \
+ and is_equal(&MessageModel::receiverID, receiver->id)\
+ or is_equal(&MessageModel::receiverID, sender->id)\
+ and is_equal(&MessageModel::senderID, receiver->id)\
+)
+        );
+    } catch (const std::system_error &e) {
+        log = BabelUtils::format(
+            "Error in getConv(sender: {%s}, receiver: {%s}): %s",
+            senderName.c_str(), receiverName.c_str(), e.what()
+        );
+        dbg("%s", log.c_str());
+        _logger.logThis(log);
+    } catch (...) {
+        log = BabelUtils::format(
+            "Error in getConv(sender: {%s}, receiver: {%s}): unknown exception",
+            senderName.c_str(), receiverName.c_str()
+        );
+        dbg("%s", log.c_str());
+        _logger.logThis(log);
+    }
+    unlock();
+    return message;
+}

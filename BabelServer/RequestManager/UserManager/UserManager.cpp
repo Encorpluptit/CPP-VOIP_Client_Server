@@ -20,10 +20,10 @@ void UserManager::createAccount(
     Database &database
 ) const
 {
-    std::string login = response->getLogin();
-    std::string log(BabelUtils::format(
+    auto login = response->getLogin();
+    auto log = BabelUtils::format(
         "Request for User Creation with login {%s} and password {%s}",
-        response->getLogin(), response->getPassword())
+        response->getLogin(), response->getPassword()
     );
     dbg("%s\n", log.c_str());
     _logger.logThis(log);
