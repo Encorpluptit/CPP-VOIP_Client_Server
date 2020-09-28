@@ -13,6 +13,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Upgrade conan
+        run: pip install conan --upgrade
+
+      - name: Install libs
+        run: make mouli-install
+
       #      - name: Upgrade Gcc
       #        run: sudo apt-get --only-upgrade install gcc
       #
@@ -21,12 +27,6 @@ jobs:
       #
       - name: Build binaries
         run: make re
-
-      - name: Upgrade conan
-        run: pip install conan --upgrade
-
-      - name: Install libs
-        run: make mouli-install
 
       - name: Make
         run: make
