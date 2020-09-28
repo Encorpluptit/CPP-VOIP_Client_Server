@@ -131,7 +131,8 @@ void MainWindow::on_RegisterButton_clicked()
 
 void MainWindow::LoggedIn(const std::shared_ptr<BabelNetwork::UserResponse> &response)
 {
-    std::cout << "STP SOIT ICI" << std::endl;
+    ui->gridStackedWidget->setCurrentWidget(ui->CallPage);
+    ui->WrongLoginText->hide();
     (void) response;
     //FRONT ARTHUR;
 }
