@@ -10,12 +10,12 @@
 #include "ClientError.hpp"
 #include "Debug.hpp"
 
+using namespace BabelServer;
 using namespace BabelNetwork;
 
 AsioClientSocket::AsioClientSocket(
     const std::string &address,
-    const std::string &port,
-    BabelUtils::Logger &logger,
+    const std::string &port, BabelUtils::Logger &logger,
     io_context &context
 )
     : ClientSocket(address, port, logger),
@@ -150,7 +150,7 @@ void AsioClientSocket::read_data(const boost::system::error_code &error)
 {
     if (!error) {
         if (!_read_msg->decode_data_infos()) {
-            _logger.logThis("ERROR IN HANDLE READ DAT INFOS : Decode failed");
+            _logger.logThis("ERROR IN HANDLE READ DATA: Decode data infos failed");
             return;
         }
         boost::asio::async_read(
@@ -218,7 +218,7 @@ std::string AsioClientSocket::describe()
 void AsioClientSocket::handle_error(const std::string &msg, const boost::system::error_code &error)
 {
     // TODO: Destroy properly client in Listener and remove from queue
-    auto errorMsg = msg + " ICI: (Client Connection Stopped) : " + error.message() + "\n" + describe();
+    auto errorMsg = msg + " : (Client Connection Stopped) : " + error.message() + "\n" + describe();
     _logger.logThis(errorMsg);
     throw BabelErrors::ClientError(errorMsg, *this);
 }

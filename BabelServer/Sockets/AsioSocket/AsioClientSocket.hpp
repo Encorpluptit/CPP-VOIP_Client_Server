@@ -9,10 +9,12 @@
 #define CPP_BABEL_2020_ASIOCLIENTSOCKET_HPP
 
 #include <boost/asio.hpp>
+#include <mutex>
 #include "ClientSocket.hpp"
 
-namespace BabelNetwork {
+namespace BabelServer {
     using namespace boost::asio;
+    using namespace BabelNetwork;
 
     class AsioClientSocket final
         : virtual public ClientSocket,
@@ -22,8 +24,7 @@ namespace BabelNetwork {
     public:
         explicit AsioClientSocket(
             const std::string &address,
-            const std::string &port,
-            BabelUtils::Logger &logger,
+            const std::string &port, BabelUtils::Logger &logger,
             io_context &context
         );
 
@@ -72,7 +73,7 @@ namespace BabelNetwork {
     public:
         [[nodiscard]] ip::tcp::socket &getSocket() { return _socket; }
 
-        [[nodiscard]] io_context &getContext() const { return const_cast<io_context &>(_context);}
+        [[nodiscard]] io_context &getContext() const { return const_cast<io_context &>(_context); }
 
         [[nodiscard]] std::string getIp() final;
 
@@ -85,7 +86,6 @@ namespace BabelNetwork {
         ip::tcp::socket _socket;
         ip::tcp::resolver::results_type _endpoints;
     };
-
 }
 
 #endif /* CPP_BABEL_2020_ASIOCLIENTSOCKET_HPP */

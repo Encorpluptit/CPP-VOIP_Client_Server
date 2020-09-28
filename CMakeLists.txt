@@ -138,17 +138,16 @@ set(SERVER_DIR BabelServer)
 set(
         SERVER_INCLUDES
         ${SERVER_DIR}/Server
-        ${SERVER_DIR}/Socket
-        ${SERVER_DIR}/Listener
-        ${SERVER_DIR}/Client
-        ${SERVER_DIR}/Listener
+        ${SERVER_DIR}/Sockets/
+        ${SERVER_DIR}/Sockets/Listener
+        ${SERVER_DIR}/Sockets/Listener/AsioListener
+        ${SERVER_DIR}/Sockets/AsioSocket
         ${SERVER_DIR}/Database
         ${SERVER_DIR}/RequestManager
         ${SERVER_DIR}/RequestManager/UserManager
         ${SERVER_DIR}/RequestManager/CallManager
         ${SERVER_DIR}/RequestManager/FriendManager
         ${SERVER_DIR}/RequestManager/MessageManager
-        ${SERVER_DIR}/AsioSocket
 )
 
 
@@ -157,14 +156,14 @@ set(
 set(
         SERVER_SOURCES
         ${SERVER_DIR}/Server/Server.cpp
-        ${SERVER_DIR}/Listener/AsioListener.cpp
+        ${SERVER_DIR}/Sockets/AsioSocket/AsioClientSocket.cpp
+        ${SERVER_DIR}/Sockets/Listener/AsioListener/AsioListener.cpp
         ${SERVER_DIR}/Database/Database.cpp
         ${SERVER_DIR}/RequestManager/RequestManager.cpp
         ${SERVER_DIR}/RequestManager/UserManager/UserManager.cpp
         ${SERVER_DIR}/RequestManager/CallManager/CallManager.cpp
         ${SERVER_DIR}/RequestManager/FriendManager/FriendManager.cpp
         ${SERVER_DIR}/RequestManager/MessageManager/MessageManager.cpp
-        ${SERVER_DIR}/AsioSocket/AsioClientSocket.cpp
 )
 
 

@@ -10,6 +10,7 @@
 
 #include "ASocket.hpp"
 #include "ClientSocket.hpp"
+#include "ClientsList.hpp"
 
 namespace BabelServer {
 
@@ -27,6 +28,7 @@ namespace BabelServer {
         /* <- Attributes -> */
     protected:
         // TODO: Client List here instead of Asio client list in AsioListener ?
+        BabelUtils::SharedPtr<ClientsList> _clientsList;
     };
 }
 

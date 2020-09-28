@@ -8,6 +8,7 @@
 #ifndef CPP_BABEL_2020_ASIOLISTENER_HPP
 #define CPP_BABEL_2020_ASIOLISTENER_HPP
 
+#include "AsioClientsList.hpp"
 #include "AsioClientSocket.hpp"
 #include "Listener.hpp"
 
@@ -15,7 +16,6 @@ namespace BabelServer {
     using namespace boost::asio;
 
     class AsioListener final : public BabelServer::Listener {
-        using AsioClientList = std::vector<BabelUtils::SharedPtr<BabelNetwork::AsioClientSocket>>;
 
         /* <- Constructor - Destructor -> */
     public:
@@ -37,7 +37,7 @@ namespace BabelServer {
         void accept();
 
         void handle_accept(
-            const BabelUtils::SharedPtr<BabelNetwork::AsioClientSocket> &session,
+            const BabelUtils::SharedPtr<AsioClientSocket> &session,
             const boost::system::error_code &error
         );
 
@@ -65,7 +65,7 @@ namespace BabelServer {
         ip::tcp::endpoint _endpoint;
         boost::asio::ip::tcp::acceptor _acceptor;
         boost::asio::signal_set _signals;
-        AsioClientList _asioClients;
+        AsioClientSocketList _asioClients;
         std::mutex _mtx;
     };
 }
