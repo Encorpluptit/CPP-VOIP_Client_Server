@@ -13,8 +13,8 @@ using namespace BabelServer;
 
 Server::Server(int ac, char **av)
     : _logger(BabelUtils::Logger::LogType::ServerLog),
-    _database(_logger),
-    _manager(_logger)
+      _database(_logger),
+      _manager(_logger)
 {
     _ready = false;
     initServers(ac, av);

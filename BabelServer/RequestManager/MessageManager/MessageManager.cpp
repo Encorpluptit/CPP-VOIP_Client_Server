@@ -24,5 +24,6 @@ void MessageManager::sendMessage(
 //        clientSocket->sendResponse(BabelNetwork::MessageResponse::UserNotFound(response));
 //        return;
 //    }
-    clientSocket->sendResponse(BabelNetwork::MessageResponse::ReceiveMessageOk(response->getSender(), response->getReceiver()));
+    clientSocket->sendResponse(
+        BabelNetwork::MessageResponse::ReceiveMessageOk(response->getSender(), response->getReceiver()));
 }

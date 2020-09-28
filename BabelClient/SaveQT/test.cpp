@@ -26,13 +26,13 @@ Core::Core(const std::string ip, const std::string port)
     socket = new QUdpSocket();
     socket->bind(QHostAddress("81.250.229.32"), std::stoi("8000"));
     if (Pa_Initialize() != paNoError)
-        throw(Exception("Pa_Initialize failed"));
+        throw (Exception("Pa_Initialize failed"));
     encoder = opus_encoder_create(48000, 1, OPUS_APPLICATION_VOIP, &err);
     if (err != OPUS_OK)
-        throw(Exception("Encoder create failed"));
+        throw (Exception("Encoder create failed"));
     decoder = opus_decoder_create(48000, 1, &err);
     if (err != OPUS_OK)
-        throw(Exception("Decoder create failed"));
+        throw (Exception("Decoder create failed"));
     Loop(ip, port);
 }
 
@@ -74,18 +74,20 @@ void Core::Loop(const std::string ip, const std::string port) noexcept
 std::vector<uint16_t> Core::encode(std::vector<uint16_t> voice)
 {
     std::vector<uint16_t> compressed(voice.size());
-    int bytes = opus_encode(encoder, (opus_int16 const *)voice.data(), (int)voice.size(), (unsigned char *)compressed.data(), (int)compressed.size());
+    int bytes = opus_encode(encoder, (opus_int16 const *) voice.data(), (int) voice.size(),
+        (unsigned char *) compressed.data(), (int) compressed.size());
     if (bytes < 0)
-        throw(Exception("Compression error"));
+        throw (Exception("Compression error"));
     return (compressed);
 }
 
 std::vector<uint16_t> Core::decode(std::vector<uint16_t> voice)
 {
     std::vector<uint16_t> decompressed(voice.size());
-    int bytes = opus_decode(decoder, (unsigned char *)voice.data(), (int)voice.size(), (opus_int16 *)decompressed.data(), (int)decompressed.size(), 0);
+    int bytes = opus_decode(decoder, (unsigned char *) voice.data(), (int) voice.size(),
+        (opus_int16 *) decompressed.data(), (int) decompressed.size(), 0);
     if (bytes < 0)
-        throw(Exception("Compression error"));
+        throw (Exception("Compression error"));
     return (decompressed);
 }
 
@@ -95,9 +97,9 @@ std::vector<uint16_t> Core::getVoice()
     std::vector<uint16_t> record(480);
 
     if (len < 0)
-        throw(Exception("getVoice"));
-    if (len < (long)480)
-        Pa_ReadStream(stream, record.data(), (unsigned long)len);
+        throw (Exception("getVoice"));
+    if (len < (long) 480)
+        Pa_ReadStream(stream, record.data(), (unsigned long) len);
     else
         Pa_ReadStream(stream, record.data(), 480);
     return (record);
@@ -106,8 +108,8 @@ std::vector<uint16_t> Core::getVoice()
 void Core::playVoice(std::vector<uint16_t> record)
 {
     long len = 0;
-    while ((len = Pa_GetStreamWriteAvailable(stream)) < (long)record.size());
-    Pa_WriteStream(stream, record.data(), (unsigned long)record.size());
+    while ((len = Pa_GetStreamWriteAvailable(stream)) < (long) record.size());
+    Pa_WriteStream(stream, record.data(), (unsigned long) record.size());
 }
 
 bool Core::connect(std::string ip, std::string port) noexcept
@@ -141,12 +143,12 @@ Core::~Core() noexcept
 int main(int ac, char **av)
 {
     try {
-    (void)av;
-    if (ac != 3)
-        return (84);
-    Core prog(av[1], av[2]);
-    return (0);
-    } catch (Exception& err) {
+        (void) av;
+        if (ac != 3)
+            return (84);
+        Core prog(av[1], av[2]);
+        return (0);
+    } catch (Exception &err) {
         std::cerr << err.what() << std::endl;
         return (84);
     }

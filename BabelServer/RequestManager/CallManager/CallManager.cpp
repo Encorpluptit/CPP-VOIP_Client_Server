@@ -21,13 +21,14 @@ void CallManager::requestCall(
     // TODO: add check if caller call himself
     for (const auto &target: clientList) {
         if (target->getUser() && target->getUser()->login == response->getReceiver()) {
-            target->sendResponse(BabelNetwork::CallResponse::CallIncoming(response,getCallId()));
+            target->sendResponse(BabelNetwork::CallResponse::CallIncoming(response, getCallId()));
             // TODO: Adding Increment (pb with const)
 //            incrementCallId();
             return;
         }
     }
-    clientSocket->sendResponse(BabelNetwork::CallResponse::DisconnectedUser(response->getSender(), response->getReceiver()));
+    clientSocket->sendResponse(
+        BabelNetwork::CallResponse::DisconnectedUser(response->getSender(), response->getReceiver()));
 }
 
 void CallManager::refuseCall(
@@ -43,7 +44,8 @@ void CallManager::refuseCall(
             return;
         }
     }
-    clientSocket->sendResponse(BabelNetwork::CallResponse::DisconnectedUser(response->getSender(), response->getReceiver()));
+    clientSocket->sendResponse(
+        BabelNetwork::CallResponse::DisconnectedUser(response->getSender(), response->getReceiver()));
 }
 
 void CallManager::acceptCall(
@@ -59,5 +61,6 @@ void CallManager::acceptCall(
             return;
         }
     }
-    clientSocket->sendResponse(BabelNetwork::CallResponse::DisconnectedUser(response->getSender(), response->getReceiver()));
+    clientSocket->sendResponse(
+        BabelNetwork::CallResponse::DisconnectedUser(response->getSender(), response->getReceiver()));
 }

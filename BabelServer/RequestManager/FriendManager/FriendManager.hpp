@@ -64,7 +64,7 @@ namespace BabelServer {
         BabelUtils::Logger &_logger;
         const std::vector<std::tuple<BabelNetwork::FriendResponse::ResponseCode, std::function<FriendManagerMethodProt>>> FriendResponsePtrTab = {
             {BabelNetwork::FriendResponse::ResponseCode::RequestAddFriend, nullptr},
-            {BabelNetwork::FriendResponse::ResponseCode::AddFriend, nullptr},
+            {BabelNetwork::FriendResponse::ResponseCode::AddFriend,        nullptr},
         };
 
 
