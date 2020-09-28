@@ -37,7 +37,6 @@ void AsioListener::start()
         _acceptor.local_endpoint().port()
     );
     _logger.logThis(s);
-    std::cout << s << std::endl;
     setThread(
         boost::make_shared<BabelUtils::BoostThread>(
             [this] { this->launch_listener(); }

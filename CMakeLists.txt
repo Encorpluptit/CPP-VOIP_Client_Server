@@ -94,7 +94,6 @@ set(
 
         ${COMMON_DIR}/Network/Sockets/ASocket
         ${COMMON_DIR}/Network/Sockets/ClientSocket
-        ${COMMON_DIR}/Network/Sockets/AsioSocket
 
         ${COMMON_DIR}/Network/Protocol/AResponse
         ${COMMON_DIR}/Network/Protocol/UserResponse
@@ -111,7 +110,6 @@ set(
         ${COMMON_DIR}/Network/NetworkInfos/NetworkInfos.cpp
 
         ${COMMON_DIR}/Network/Sockets/ASocket/ASocket.cpp
-        ${COMMON_DIR}/Network/Sockets/AsioSocket/AsioClientSocket.cpp
 
         ${COMMON_DIR}/Network/Protocol/AResponse/AResponse.cpp
 
@@ -150,6 +148,7 @@ set(
         ${SERVER_DIR}/RequestManager/CallManager
         ${SERVER_DIR}/RequestManager/FriendManager
         ${SERVER_DIR}/RequestManager/MessageManager
+        ${SERVER_DIR}/AsioSocket
 )
 
 
@@ -165,6 +164,7 @@ set(
         ${SERVER_DIR}/RequestManager/CallManager/CallManager.cpp
         ${SERVER_DIR}/RequestManager/FriendManager/FriendManager.cpp
         ${SERVER_DIR}/RequestManager/MessageManager/MessageManager.cpp
+        ${SERVER_DIR}/AsioSocket/AsioClientSocket.cpp
 )
 
 
