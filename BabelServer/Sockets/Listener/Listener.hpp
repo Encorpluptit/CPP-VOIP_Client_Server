@@ -14,17 +14,32 @@
 
 namespace BabelServer {
 
-    class Listener : virtual public BabelNetwork::ASocket, virtual public std::mutex {
+    class Listener : virtual public BabelNetwork::ASocket {
         /* <- Constructor - Destructor -> */
     public:
         /* <- Public Methods -> */
     public:
-        ClientsList getClientList()
+//        ClientsList getClientList()
+//        {
+////            lock();
+////            auto lol = ClientsList(_clientsList);
+////            unlock();
+////            return lol;
+//            _clientsList.lock();
+//            auto list = _clientsList.getClients();
+//            _clientsList.unlock();
+//            return list;
+//        };
+        std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>> getClientList()
         {
-            lock();
-            auto lol = ClientsList(_clientsList);
-            unlock();
-            return lol;
+//            lock();
+//            auto lol = ClientsList(_clientsList);
+//            unlock();
+//            return lol;
+            _clientsList.lock();
+            auto list = _clientsList.getClients();
+            _clientsList.unlock();
+            return list;
         };
 
         /* <- Attributes -> */

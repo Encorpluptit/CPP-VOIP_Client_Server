@@ -57,7 +57,7 @@ void Server::runListener()
     while (listenerRunning()) {
         std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>> clients;
         for (const auto &server : _servers) {
-            auto list = server->getClientList().getClients();
+            auto list = server->getClientList();
             if (list.empty())
                 continue;
             clients.insert(clients.end(), list.begin(), list.end());

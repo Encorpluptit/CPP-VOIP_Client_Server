@@ -8,7 +8,6 @@
 #ifndef CPP_BABEL_2020_ASIOLISTENER_HPP
 #define CPP_BABEL_2020_ASIOLISTENER_HPP
 
-//#include "AsioClientsList.hpp"
 #include "AsioClientSocket.hpp"
 #include "Listener.hpp"
 
@@ -19,7 +18,11 @@ namespace BabelServer {
 
         /* <- Constructor - Destructor -> */
     public:
-        explicit AsioListener(const std::string &address, const std::string &port, BabelUtils::Logger &logger);
+        explicit AsioListener(
+            const std::string &address,
+            const std::string &port,
+            BabelUtils::Logger &logger
+        );
 
         ~AsioListener() final;
 

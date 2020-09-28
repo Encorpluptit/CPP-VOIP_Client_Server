@@ -12,7 +12,11 @@
 
 using namespace BabelServer;
 
-AsioListener::AsioListener(const std::string &address, const std::string &port, BabelUtils::Logger &logger)
+AsioListener::AsioListener(
+    const std::string &address,
+    const std::string &port,
+    BabelUtils::Logger &logger
+)
     : BabelNetwork::ASocket(address, port, logger),
       _endpoint(ip::address::from_string(_networkInfos.getIp()), _networkInfos.getPort()),
       _acceptor(_context, _endpoint),
@@ -114,9 +118,9 @@ void AsioListener::handle_accept(
     } else {
         std::cerr << error << std::endl;
     }
-    lock();
+//    lock();
     _clientsList.add_client(session);
-    unlock();
+//    unlock();
     accept();
 }
 
