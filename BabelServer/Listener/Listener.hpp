@@ -26,6 +26,7 @@ namespace BabelServer {
 
         /* <- Attributes -> */
     protected:
+        // TODO: Client List here instead of Asio client list in AsioListener ?
     };
 }
 
