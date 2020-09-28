@@ -8,22 +8,28 @@ on:
 jobs:
   build:
     runs-on: ubuntu-20.04
-#    container: docker://epitechcontent/epitest-docker
+    container: docker://epitechcontent/epitest-docker
 
     steps:
       - uses: actions/checkout@v2
 
-      - name: Upgrade Gcc
-        run: sudo apt-get --only-upgrade install gcc
-
-      - name: Install Boost
-        run: sudo apt-get install libboost-all-dev
-
+      #      - name: Upgrade Gcc
+      #        run: sudo apt-get --only-upgrade install gcc
+      #
+      #      - name: Install Boost
+      #        run: sudo apt-get install libboost-all-dev
+      #
       - name: Build binaries
         run: make re
 
-#      - name: Upgrade conan
-#        run: pip install conan --upgrade
+      - name: Upgrade conan
+        run: pip install conan --upgrade
+
+      - name: Install libs
+        run: make mouli-install
+
+      - name: Make
+        run: make
 
 #      - name: Add conan repositories.
 #        run: |
