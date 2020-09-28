@@ -18,13 +18,6 @@ Server::Server(int ac, char **av)
 {
     _ready = false;
     initServers(ac, av);
-//    _database.createUser("ugo", "abcd");
-//    _database.createUser("dam", "abcd");
-//    _database.createMessage("ugo", "dam", 0, "lol2");
-    auto list = _database.GetConv("ugo", "dam");
-    for (const auto &mdr: list) {
-        std::cout << mdr.content << std::endl;
-    }
 }
 
 Server::~Server()

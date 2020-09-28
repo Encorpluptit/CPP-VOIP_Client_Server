@@ -26,7 +26,6 @@ std::shared_ptr<AResponse> AResponse::getResponse(const char *headerBuffer)
     ResponseHeader response{};
     memcpy(&response, headerBuffer, HeaderSize);
 
-    //Todo Switch case for returning good ptr
     switch (response._responseType) {
         case User:
             return std::shared_ptr<AResponse>(new UserResponse(response));

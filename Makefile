@@ -35,7 +35,7 @@ CRITERION_BIN			=	unit_tests
 
 all: $(NAME)
 
-$(NAME): server client
+$(NAME): setup-build-tree server client
 
 log: OPTIONS +=-DUSE_LOG=ON
 log: $(NAME)

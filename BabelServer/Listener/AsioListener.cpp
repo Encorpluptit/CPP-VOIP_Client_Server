@@ -48,10 +48,15 @@ void AsioListener::start()
 
 void AsioListener::launch_listener()
 {
+    bool context_launched = false;
+
     while (isReady()) {
         try {
             accept();
-            startContext();
+            if (!context_launched) {
+                startContext();
+                context_launched = true;
+            }
         } catch (const BabelErrors::ClientError &e) {
             std::cerr << "ERROR IN HANDLE READ DATA INFOS (Client Stopped) " << e.what() << std::endl;
             e.getClient().stop();
