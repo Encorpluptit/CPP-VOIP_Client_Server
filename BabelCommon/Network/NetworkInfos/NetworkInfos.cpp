@@ -16,6 +16,8 @@ using namespace BabelNetwork;
 NetworkInfos::NetworkInfos(std::string ip, const std::string &port)
     : _ip(std::move(ip)), _port_str(port), _port(parsePort(port))
 {
+    if (_port < 5000)
+        throw BabelErrors::NetworkError("Port Reserved");
 }
 
 uint16_t NetworkInfos::parsePort(const std::string &port)
