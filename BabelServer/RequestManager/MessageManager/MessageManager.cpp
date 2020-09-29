@@ -25,14 +25,13 @@ void MessageManager::sendMessage(
     switch (database.createMessage(response->getSender(), response->getReceiver(), response->getTimestamp(),
         response->getMessageData())) {
         case BabelNetwork::MessageResponse::SendMessageOk:
-            clientSocket->sendResponse(
-                BabelNetwork::MessageResponse::OkSendMessage(response->getSender(), response->getReceiver()));
+            clientSocket->sendResponse(MessageResponse::OkSendMessage(response->getSender(), response->getReceiver()));
             return;
         case BabelNetwork::MessageResponse::UnknownUser:
-            clientSocket->sendResponse(BabelNetwork::MessageResponse::UserNotFound(response));
+            clientSocket->sendResponse(MessageResponse::UserNotFound(response));
             return;
-        case BabelNetwork::MessageResponse::UnknownError:
-            clientSocket->sendResponse(BabelNetwork::MessageResponse::UnknownErrorAppend(response));
+        default:
+            clientSocket->sendResponse(MessageResponse::UnknownErrorAppend(response));
             return;
     }
     clientSocket->sendResponse(MessageResponse::ReceiveMessageOk(response->getSender(), response->getReceiver()));

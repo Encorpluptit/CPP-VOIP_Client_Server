@@ -35,16 +35,19 @@ namespace BabelServer {
 
         BabelNetwork::UserResponse::ResponseCode deleteUser(const std::string &login);
 
-        int createMessage(const int &id, const int &senderid, const int &receiverid, const time_t &timestamp,
-            const std::string &content);
+//        int createMessage(const int &id, const int &senderid, const int &receiverid, const time_t &timestamp,
+//            const std::string &content);
 
-        BabelNetwork::MessageResponse::ResponseCode
-        createMessage(const std::string &senderName, const std::string &receiverName, const time_t timestamp,
-            const std::string &content);
+        BabelNetwork::MessageResponse::ResponseCode createMessage(
+            const std::string &senderName,
+            const std::string &receiverName,
+            time_t timestamp,
+            const std::string &content
+        );
 
         std::shared_ptr<MessageModel> getOneMessage(int id);
 
-        std::vector<MessageModel> GetConv(int senderid, int receiverid);
+//        std::vector<MessageModel> GetConv(int senderid, int receiverid);
 
         std::vector<MessageModel> GetConv(const std::string &senderName, const std::string &receiverName);
 
@@ -57,7 +60,6 @@ namespace BabelServer {
 
         /* <- Attributes -> */
     private:
-        std::mutex _mtx;
         BabelUtils::Logger &_logger;
     };
 

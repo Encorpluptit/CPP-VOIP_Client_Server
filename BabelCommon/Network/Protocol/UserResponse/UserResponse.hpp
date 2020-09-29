@@ -31,7 +31,8 @@ namespace BabelNetwork {
             WrongPassword = 172,
             LoginAlreadyTaken = 173,
             AlreadyLoggedIn = 174,
-            RequestedAccountDeleted = 175
+            RequestedAccountDeleted = 175,
+            ClientLoggedOut = 176,
         };
     public:
         enum MaxDataSize {
@@ -121,10 +122,7 @@ namespace BabelNetwork {
 
         [[nodiscard]] const char *getPassword() const noexcept { return _data.password; };
 
-        [[nodiscard]] const std::string &getDescription() const noexcept final
-        {
-            return _description;
-        };
+        [[nodiscard]] const std::string &getDescription() const noexcept final { return _description; };
 
         /* <- Attributes -> */
     private:
@@ -135,41 +133,56 @@ namespace BabelNetwork {
 
         /* <- Formatted Response -> */
     public:
-        [[nodiscard]] static std::shared_ptr<AResponse> NewLoginRequest(const std::string &login, const std::string &password);
-        [[nodiscard]] static std::shared_ptr<AResponse> AccountCreationRequest(const std::string &login, const std::string &password);
+        [[nodiscard]] static std::shared_ptr<AResponse>
+        NewLoginRequest(const std::string &login, const std::string &password);
+
+        [[nodiscard]] static std::shared_ptr<AResponse>
+        AccountCreationRequest(const std::string &login, const std::string &password);
+
         [[nodiscard]] static std::shared_ptr<AResponse> LogoutRequest(const std::string &login);
+
         [[nodiscard]] static std::shared_ptr<AResponse> AccountDeletionRequest(const std::string &login);
+
         [[nodiscard]] static std::shared_ptr<AResponse> LoggedInOk(const std::string &login);
+
         [[nodiscard]] static std::shared_ptr<AResponse> LoggedOutOk(const std::string &login);
+
         [[nodiscard]] static std::shared_ptr<AResponse> AccountDeletedOk(const std::string &login);
-        [[nodiscard]] static std::shared_ptr<AResponse> UnknowError(const std::string &login);
+
+        [[nodiscard]] static std::shared_ptr<AResponse> UnknownError(const std::string &login);
+
         [[nodiscard]] static std::shared_ptr<AResponse> BadLogin(const std::string &login);
+
         [[nodiscard]] static std::shared_ptr<AResponse> BadPassword(const std::string &login);
+
         [[nodiscard]] static std::shared_ptr<AResponse> LoginAlreadyUsed(const std::string &login);
+
         [[nodiscard]] static std::shared_ptr<AResponse> AlreadyLog(const std::string &login);
+
         [[nodiscard]] static std::shared_ptr<AResponse> AccountCreatedOk(const std::string &login);
+
         [[nodiscard]] static std::shared_ptr<AResponse> RequestedDeletedAccount(const std::string &login);
+
+        [[nodiscard]] static std::shared_ptr<AResponse> ClientNotLogged();
 
         /* <- Stringify Code -> */
     private:
         const std::map<ResponseCode, std::string> codeString = {
-                {LoggedIn, "Logged In"},
-                {RequestLogin, "Request Login"},
-                {LoggedOut, "Logged Out"},
-                {RequestLogout, "Requesting Logout"},
-
-                {AccountCreated, "Account Created"},
-                {RequestAccountCreation, "Requesting Account Creation"},
-                {AccountDeleted, "Account Deleted"},
-                {RequestAccountDeletion, "Request Account Deletion"},
-
-                {UnknownUserError, "Unknown User Error"},
-                {WrongLogin, "Wrong Login"},
-                {WrongPassword, "Wrong Password"},
-                {LoginAlreadyTaken, "Login Already Taken"},
-                {AlreadyLoggedIn, "Already Logged In"},
-                {RequestedAccountDeleted, "Requested Account Deleted"}
-            };
+            {LoggedIn,                "Logged In"},
+            {RequestLogin,            "Request Login"},
+            {LoggedOut,               "Logged Out"},
+            {RequestLogout,           "Requesting Logout"},
+            {AccountCreated,          "Account Created"},
+            {RequestAccountCreation,  "Requesting Account Creation"},
+            {AccountDeleted,          "Account Deleted"},
+            {RequestAccountDeletion,  "Request Account Deletion"},
+            {UnknownUserError,        "Unknown User Error"},
+            {WrongLogin,              "Wrong Login"},
+            {WrongPassword,           "Wrong Password"},
+            {LoginAlreadyTaken,       "Login Already Taken"},
+            {AlreadyLoggedIn,         "Already Logged In"},
+            {RequestedAccountDeleted, "Requested Account Deleted"}
+        };
     };
 }
 

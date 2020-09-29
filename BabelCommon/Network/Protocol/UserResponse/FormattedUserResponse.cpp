@@ -73,7 +73,7 @@ std::shared_ptr<AResponse> UserResponse::AccountDeletedOk(const std::string &log
     return resp;
 }
 
-std::shared_ptr<AResponse> UserResponse::UnknowError(const std::string &login)
+std::shared_ptr<AResponse> UserResponse::UnknownError(const std::string &login)
 {
     auto resp = std::make_shared<UserResponse>(login, "");
 
@@ -118,5 +118,13 @@ std::shared_ptr<AResponse> UserResponse::RequestedDeletedAccount(const std::stri
     auto resp = std::make_shared<UserResponse>(login, "");
 
     resp->setCode(UserResponse::ResponseCode::RequestedAccountDeleted);
+    return resp;
+}
+
+std::shared_ptr<AResponse> UserResponse::ClientNotLogged()
+{
+    auto resp = std::make_shared<UserResponse>("", "");
+
+    resp->setCode(UserResponse::ResponseCode::ClientLoggedOut);
     return resp;
 }

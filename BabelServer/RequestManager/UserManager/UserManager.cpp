@@ -38,7 +38,7 @@ void UserManager::createAccount(
             clientSocket->sendResponse(UserResponse::AccountCreatedOk(login));
             return;
         default:
-            clientSocket->sendResponse(UserResponse::UnknowError(login));
+            clientSocket->sendResponse(UserResponse::UnknownError(login));
             return;
     }
 }
@@ -94,6 +94,10 @@ void UserManager::Logout(
     dbg("%s\n", log.c_str());
     _logger.logThis(log);
     // TODO: Add Already Logged out Management
+    if (!clientSocket->getUser()) {
+        clientSocket->sendResponse(UserResponse::ClientNotLogged());
+        return;
+    }
     auto user = database.getUser(response->getLogin());
     if (!user) {
         clientSocket->sendResponse(UserResponse::RequestedDeletedAccount(response->getLogin()));
@@ -128,7 +132,7 @@ void UserManager::DeleteAccount(
             clientSocket->sendResponse(UserResponse::AccountDeletedOk(login));
             return;
         default:
-            clientSocket->sendResponse(UserResponse::UnknowError(login));
+            clientSocket->sendResponse(UserResponse::UnknownError(login));
             return;
     }
     //TODO: Send "Delete Friend" to friend list.

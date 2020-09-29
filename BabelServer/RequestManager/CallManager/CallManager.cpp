@@ -15,7 +15,7 @@ void CallManager::requestCall(
     const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
     const std::shared_ptr<BabelNetwork::CallResponse> &response,
     const BabelNetwork::ClientList &clientList,
-    Database &database
+    __attribute__((unused))Database &database
 ) const
 {
     // TODO: add check if caller call himself
@@ -35,7 +35,7 @@ void CallManager::refuseCall(
     const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
     const std::shared_ptr<BabelNetwork::CallResponse> &response,
     const BabelNetwork::ClientList &clientList,
-    Database &database
+    __attribute__((unused))Database &database
 ) const
 {
     for (const auto &target: clientList) {
@@ -52,7 +52,7 @@ void CallManager::acceptCall(
     const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
     const std::shared_ptr<BabelNetwork::CallResponse> &response,
     const BabelNetwork::ClientList &clientList,
-    Database &database
+    __attribute__((unused))Database &database
 ) const
 {
     for (const auto &target: clientList) {

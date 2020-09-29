@@ -5,49 +5,46 @@
 ** [RequestManager.cpp]: Source file for RequestManager feature.
 */
 
-//TODO: REMOVE
-#include <iostream>
-
 #include "RequestManager.hpp"
+#include "UserResponse.hpp"
 
 using namespace BabelServer;
+using namespace BabelNetwork;
 
 bool RequestManager::manage(
-    const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
-    const std::shared_ptr<BabelNetwork::AResponse> &response,
-    const BabelNetwork::ClientList &clientList,
+    const BabelUtils::SharedPtr<ClientSocket> &clientSocket,
+    const std::shared_ptr<AResponse> &response,
+    const ClientList &clientList,
     Database &database
 )
 {
-    // TODO: Remove
-    std::cout << "MANAGE response with code" << response->getCode() << std::endl;
     switch (response->getResponseType()) {
-        case BabelNetwork::AResponse::User:
-            manageUser(clientSocket, std::dynamic_pointer_cast<BabelNetwork::UserResponse>(response), clientList,
+        case AResponse::User:
+            manageUser(clientSocket, std::dynamic_pointer_cast<UserResponse>(response), clientList,
                 database);
             return true;
-        case BabelNetwork::AResponse::Call:
-            manageCall(clientSocket, std::dynamic_pointer_cast<BabelNetwork::CallResponse>(response), clientList,
+        case AResponse::Call:
+            manageCall(clientSocket, std::dynamic_pointer_cast<CallResponse>(response), clientList,
                 database);
             return true;
-        case BabelNetwork::AResponse::Friend:
-            manageFriend(clientSocket, std::dynamic_pointer_cast<BabelNetwork::FriendResponse>(response), clientList,
+        case AResponse::Friend:
+            manageFriend(clientSocket, std::dynamic_pointer_cast<FriendResponse>(response), clientList,
                 database);
             return true;
-        case BabelNetwork::AResponse::Message:
-            manageMessage(clientSocket, std::dynamic_pointer_cast<BabelNetwork::MessageResponse>(response), clientList,
+        case AResponse::Message:
+            manageMessage(clientSocket, std::dynamic_pointer_cast<MessageResponse>(response), clientList,
                 database);
             return true;
-        case BabelNetwork::AResponse::UnknownType:
+        case AResponse::UnknownType:
             break;
     }
     return false;
 }
 
 void RequestManager::manageUser(
-    const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
-    const std::shared_ptr<BabelNetwork::UserResponse> &response,
-    const BabelNetwork::ClientList &clientList,
+    const BabelUtils::SharedPtr<ClientSocket> &clientSocket,
+    const std::shared_ptr<UserResponse> &response,
+    const ClientList &clientList,
     Database &database
 )
 {
@@ -61,12 +58,16 @@ void RequestManager::manageUser(
 }
 
 void RequestManager::manageCall(
-    const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
-    const std::shared_ptr<BabelNetwork::CallResponse> &response,
-    const BabelNetwork::ClientList &clientList,
+    const BabelUtils::SharedPtr<ClientSocket> &clientSocket,
+    const std::shared_ptr<CallResponse> &response,
+    const ClientList &clientList,
     Database &database
 )
 {
+    if (!clientSocket->getUser()) {
+        clientSocket->sendResponse(UserResponse::ClientNotLogged());
+        return;
+    }
     auto code = response->getCode();
     auto callTabPtr = _callManager.getCallResponsePtrTab();
 
@@ -77,12 +78,16 @@ void RequestManager::manageCall(
 }
 
 void RequestManager::manageFriend(
-    const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
-    const std::shared_ptr<BabelNetwork::FriendResponse> &response,
-    const BabelNetwork::ClientList &clientList,
+    const BabelUtils::SharedPtr<ClientSocket> &clientSocket,
+    const std::shared_ptr<FriendResponse> &response,
+    const ClientList &clientList,
     Database &database
 )
 {
+    if (!clientSocket->getUser()) {
+        clientSocket->sendResponse(UserResponse::ClientNotLogged());
+        return;
+    }
     auto code = response->getCode();
     auto friendTabPtr = _friendManager.getFriendResponsePtrTab();
 
@@ -93,12 +98,16 @@ void RequestManager::manageFriend(
 }
 
 void RequestManager::manageMessage(
-    const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
-    const std::shared_ptr<BabelNetwork::MessageResponse> &response,
-    const BabelNetwork::ClientList &clientList,
+    const BabelUtils::SharedPtr<ClientSocket> &clientSocket,
+    const std::shared_ptr<MessageResponse> &response,
+    const ClientList &clientList,
     Database &database
 )
 {
+    if (!clientSocket->getUser()) {
+        clientSocket->sendResponse(UserResponse::ClientNotLogged());
+        return;
+    }
     auto code = response->getCode();
     auto messageTabPtr = _messageManager.getMessageResponsePtrTab();
 
