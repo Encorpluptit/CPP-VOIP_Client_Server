@@ -17,22 +17,20 @@ void MessageManager::sendMessage(
     // TODO: check for login
     for (const auto &target: clientList) {
         if (target->getUser() && target->getUser()->login == response->getReceiver()) {
-            target->sendResponse(response);
-            //TODO: Database -> save message && message delivered;
-            return;
+            switch (database.createMessage(
+                response->getSender(), response->getReceiver(), response->getTimestamp(), response->getMessageData())) {
+                case BabelNetwork::MessageResponse::SendMessageOk:
+                    target->sendResponse(response);
+                    clientSocket->sendResponse(MessageResponse::OkSendMessage(response));
+                    return;
+                case BabelNetwork::MessageResponse::UnknownUser:
+                    clientSocket->sendResponse(MessageResponse::UserNotFound(response));
+                    return;
+                default:
+                    clientSocket->sendResponse(MessageResponse::UnknownErrorAppend(response));
+                    return;
+            }
         }
-    }
-    switch (database.createMessage(response->getSender(), response->getReceiver(), response->getTimestamp(),
-        response->getMessageData())) {
-        case BabelNetwork::MessageResponse::SendMessageOk:
-            clientSocket->sendResponse(MessageResponse::OkSendMessage(response->getSender(), response->getReceiver()));
-            return;
-        case BabelNetwork::MessageResponse::UnknownUser:
-            clientSocket->sendResponse(MessageResponse::UserNotFound(response));
-            return;
-        default:
-            clientSocket->sendResponse(MessageResponse::UnknownErrorAppend(response));
-            return;
     }
     clientSocket->sendResponse(MessageResponse::ReceiveMessageOk(response->getSender(), response->getReceiver()));
 }

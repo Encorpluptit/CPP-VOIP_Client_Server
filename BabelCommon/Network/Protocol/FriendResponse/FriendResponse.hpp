@@ -21,8 +21,9 @@ namespace BabelNetwork {
             FriendRequest = 302,
             AcceptFriendRequest = 303,
             DeclineFriendRequest = 304,
-            
+
             UnknownUser = 350,
+            UnknownErrorOccur = 351,
 
         };
     private:

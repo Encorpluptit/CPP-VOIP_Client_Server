@@ -19,13 +19,10 @@ std::shared_ptr<AResponse> MessageResponse::RequestMessageSend(const std::string
     return resp;
 }
 
-std::shared_ptr<AResponse> MessageResponse::OkSendMessage(const std::string &sender, const std::string &receiver)
+std::shared_ptr<AResponse> MessageResponse::OkSendMessage(const std::shared_ptr<MessageResponse> &response)
 {
-    auto resp = std::make_shared<MessageResponse>(sender, receiver, "");
-    resp->setCode(MessageResponse::ResponseCode::SendMessageOk);
-    if (!resp->setTimestamp())
-        return nullptr;
-    return resp;
+    response->setCode(MessageResponse::ResponseCode::SendMessageOk);
+    return response;
 }
 
 std::shared_ptr<AResponse> MessageResponse::MessageReceive(const std::string &sender, const std::string &receiver, const std::string &messageData)

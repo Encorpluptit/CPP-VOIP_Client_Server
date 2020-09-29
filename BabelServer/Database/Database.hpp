@@ -15,6 +15,7 @@
 #include "Models.hpp"
 #include "UserResponse.hpp"
 #include "MessageResponse.hpp"
+#include "FriendResponse.hpp"
 
 namespace BabelServer {
 
@@ -35,9 +36,6 @@ namespace BabelServer {
 
         BabelNetwork::UserResponse::ResponseCode deleteUser(const std::string &login);
 
-//        int createMessage(const int &id, const int &senderid, const int &receiverid, const time_t &timestamp,
-//            const std::string &content);
-
         BabelNetwork::MessageResponse::ResponseCode createMessage(
             const std::string &senderName,
             const std::string &receiverName,
@@ -47,9 +45,19 @@ namespace BabelServer {
 
         std::shared_ptr<MessageModel> getOneMessage(int id);
 
-//        std::vector<MessageModel> GetConv(int senderid, int receiverid);
-
         std::vector<MessageModel> GetConv(const std::string &senderName, const std::string &receiverName);
+
+        BabelNetwork::FriendResponse::ResponseCode createFriendship(
+            const std::string &senderName,
+            const std::string &receiverName
+        );
+
+        std::vector<FriendModel> getFriendships(
+            const std::string &senderName,
+            const std::string &receiverName
+        );
+
+        std::vector<FriendModel> getFriendships(int user1_id, int user2_id);
 
         /* <- Private Methods -> */
     private:
