@@ -74,8 +74,10 @@ void UserManager::Login(
     clientSocket->setUser(user);
     clientSocket->sendResponse(UserResponse::LoggedInOk(response->getLogin()));
     for (const auto &client: clientList) {
-        if (client->getUser())
-            clientSocket->sendResponse(FriendResponse::FriendRequestAccepted(response->getLogin(), user->login));
+        auto target = client->getUser();
+        if (target && target != user) {
+            clientSocket->sendResponse(FriendResponse::FriendRequestOk(response->getLogin(), user->login));
+        }
     }
     //TODO: Send "Friend connected" to friend list.
 }
