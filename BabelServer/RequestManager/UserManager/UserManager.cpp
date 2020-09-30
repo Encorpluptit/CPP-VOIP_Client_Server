@@ -80,6 +80,18 @@ void UserManager::Login(
         }
     }
     //TODO: Send "Friend connected" to friend list.
+//    auto friends = database.getFriendships(response->getLogin());
+//    for (const auto &client: clientList) {
+//        auto target = client->getUser();
+//        if (target && target != user) {
+//            for (const auto &friendship : friends) {
+//                if (friendship.user1ID == target->id || friendship.user2ID == target->id) {
+//                    clientSocket->sendResponse(FriendResponse::FriendRequestOk(response->getLogin(), user->login));
+//                    client->sendResponse(FriendResponse::FriendRequestOk(response->getLogin(), user->login));
+//                }
+//            }
+//        }
+//    }
 }
 
 void UserManager::Logout(
