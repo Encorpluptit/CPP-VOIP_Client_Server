@@ -22,6 +22,7 @@ namespace BabelNetwork {
             AcceptFriendRequest = 303,
             DeclineFriendRequest = 304,
             FriendDeleted = 305,
+            DeleteFriendRequest = 306,
 
             UnknownUser = 350,
             UnknownErrorOccur = 351,
@@ -132,6 +133,7 @@ namespace BabelNetwork {
         [[nodiscard]] static std::shared_ptr<AResponse> NewFriendRequest(const std::string &login, const std::string &friendLogin);
         [[nodiscard]] static std::shared_ptr<AResponse> FriendRequestAccepted(const std::string &login, const std::string &friendLogin);
         [[nodiscard]] static std::shared_ptr<AResponse> FriendRequestDeclined(const std::string &login, const std::string &friendLogin);
+        [[nodiscard]] static std::shared_ptr<AResponse> RequestDeleteFriend(const std::string &login, const std::string &friendLogin);
 
         [[nodiscard]] static std::shared_ptr<AResponse>
         UserNotExist(const std::string &login, const std::string &friendLogin);
