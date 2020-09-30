@@ -72,6 +72,7 @@ namespace BabelServer {
         const std::vector<std::tuple<BabelNetwork::UserResponse::ResponseCode, std::function<UserManagerMethodProt>>> UserResponsePtrTab = {
             {BabelNetwork::UserResponse::ResponseCode::RequestAccountCreation, &UserManager::createAccount},
             {BabelNetwork::UserResponse::ResponseCode::RequestLogin,           &UserManager::Login},
+            {BabelNetwork::UserResponse::ResponseCode::RequestLogout,          &UserManager::Logout},
             {BabelNetwork::UserResponse::ResponseCode::RequestAccountDeletion, &UserManager::DeleteAccount},
         };
 
