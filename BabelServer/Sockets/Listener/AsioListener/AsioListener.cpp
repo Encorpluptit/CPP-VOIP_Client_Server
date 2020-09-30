@@ -30,7 +30,6 @@ AsioListener::~AsioListener()
 {
     if (_thread)
         _thread->stop();
-//    _asioClients.clear();
 }
 
 void AsioListener::start()
@@ -78,7 +77,6 @@ void AsioListener::accept()
     auto new_session = BabelUtils::makeSharedPtr<AsioClientSocket>(
         _networkInfos.getIp(),
         port,
-//        _networkInfos.getPortStr(),
         _logger,
         _context,
         _clientsList
@@ -124,9 +122,7 @@ void AsioListener::handle_accept(
     } else {
         std::cerr << error << std::endl;
     }
-//    lock();
     _clientsList.add_client(session);
-//    unlock();
     accept();
 }
 

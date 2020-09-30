@@ -83,7 +83,7 @@ void UserManager::Login(
 void UserManager::Logout(
     const BabelUtils::SharedPtr<ClientSocket> &clientSocket,
     const std::shared_ptr<UserResponse> &response,
-    const ClientList &clientList,
+    __attribute__((unused))const ClientList &clientList,
     Database &database
 ) const
 {
@@ -112,7 +112,7 @@ void UserManager::Logout(
 void UserManager::DeleteAccount(
     const BabelUtils::SharedPtr<ClientSocket> &clientSocket,
     const std::shared_ptr<UserResponse> &response,
-    const ClientList &clientList,
+    __attribute__((unused))const ClientList &clientList,
     Database &database
 ) const
 {

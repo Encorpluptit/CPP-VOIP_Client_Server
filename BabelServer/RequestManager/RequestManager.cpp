@@ -61,7 +61,7 @@ void RequestManager::manageCall(
     const BabelUtils::SharedPtr<ClientSocket> &clientSocket,
     const std::shared_ptr<CallResponse> &response,
     const ClientList &clientList,
-    Database &database
+    __attribute__((unused))Database &database
 )
 {
     if (!clientSocket->getUser()) {
@@ -73,7 +73,7 @@ void RequestManager::manageCall(
 
     for (const auto &ptr : callTabPtr) {
         if (std::get<0>(ptr) == code)
-            return std::get<1>(ptr)(&_callManager, clientSocket, response, clientList, database);
+            return std::get<1>(ptr)(&_callManager, clientSocket, response, clientList);
     }
 }
 

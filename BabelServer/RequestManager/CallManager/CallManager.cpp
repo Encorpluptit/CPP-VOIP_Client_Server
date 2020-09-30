@@ -5,6 +5,7 @@
 #include "CallManager.hpp"
 
 using namespace BabelServer;
+using namespace BabelNetwork;
 
 const std::vector<CallManager::CallResponseFPtr> &CallManager::getCallResponsePtrTab() const
 {
@@ -14,28 +15,25 @@ const std::vector<CallManager::CallResponseFPtr> &CallManager::getCallResponsePt
 void CallManager::requestCall(
     const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
     const std::shared_ptr<BabelNetwork::CallResponse> &response,
-    const BabelNetwork::ClientList &clientList,
-    __attribute__((unused))Database &database
+    const BabelNetwork::ClientList &clientList
 ) const
 {
     // TODO: add check if caller call himself
     for (const auto &target: clientList) {
         if (target->getUser() && target->getUser()->login == response->getReceiver()) {
-            target->sendResponse(BabelNetwork::CallResponse::CallIncoming(response, getCallId()));
+            target->sendResponse(CallResponse::CallIncoming(response, getCallId()));
             // TODO: Adding Increment (pb with const)
 //            incrementCallId();
             return;
         }
     }
-    clientSocket->sendResponse(
-        BabelNetwork::CallResponse::DisconnectedUser(response->getSender(), response->getReceiver()));
+    clientSocket->sendResponse(CallResponse::DisconnectedUser(response->getSender(), response->getReceiver()));
 }
 
 void CallManager::refuseCall(
-    const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
-    const std::shared_ptr<BabelNetwork::CallResponse> &response,
-    const BabelNetwork::ClientList &clientList,
-    __attribute__((unused))Database &database
+    const BabelUtils::SharedPtr<ClientSocket> &clientSocket,
+    const std::shared_ptr<CallResponse> &response,
+    const ClientList &clientList
 ) const
 {
     for (const auto &target: clientList) {
@@ -44,15 +42,13 @@ void CallManager::refuseCall(
             return;
         }
     }
-    clientSocket->sendResponse(
-        BabelNetwork::CallResponse::DisconnectedUser(response->getSender(), response->getReceiver()));
+    clientSocket->sendResponse(CallResponse::DisconnectedUser(response->getSender(), response->getReceiver()));
 }
 
 void CallManager::acceptCall(
-    const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
-    const std::shared_ptr<BabelNetwork::CallResponse> &response,
-    const BabelNetwork::ClientList &clientList,
-    __attribute__((unused))Database &database
+    const BabelUtils::SharedPtr<ClientSocket> &clientSocket,
+    const std::shared_ptr<CallResponse> &response,
+    const ClientList &clientList
 ) const
 {
     for (const auto &target: clientList) {
@@ -61,6 +57,5 @@ void CallManager::acceptCall(
             return;
         }
     }
-    clientSocket->sendResponse(
-        BabelNetwork::CallResponse::DisconnectedUser(response->getSender(), response->getReceiver()));
+    clientSocket->sendResponse(CallResponse::DisconnectedUser(response->getSender(), response->getReceiver()));
 }

@@ -17,8 +17,7 @@ namespace BabelServer {
             const CallManager *,
             const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
             const std::shared_ptr<BabelNetwork::CallResponse> &,
-            const BabelNetwork::ClientList &,
-            BabelServer::Database &
+            const BabelNetwork::ClientList &
         );
         using CallResponseFPtr = std::tuple<BabelNetwork::CallResponse::ResponseCode, std::function<CallManagerMethodProt>>;
 
@@ -33,22 +32,18 @@ namespace BabelServer {
         void requestCall(
             const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
             const std::shared_ptr<BabelNetwork::CallResponse> &response,
-            const BabelNetwork::ClientList &clientList,
-            Database &database
-        ) const;
+            const BabelNetwork::ClientList &clientList) const;
 
         void refuseCall(
             const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
             const std::shared_ptr<BabelNetwork::CallResponse> &response,
-            const BabelNetwork::ClientList &clientList,
-            Database &database
+            const BabelNetwork::ClientList &clientList
         ) const;
 
         void acceptCall(
             const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
             const std::shared_ptr<BabelNetwork::CallResponse> &response,
-            const BabelNetwork::ClientList &clientList,
-            Database &database
+            const BabelNetwork::ClientList &clientList
         ) const;
 
         /* <- Private Methods -> */
