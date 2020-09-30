@@ -91,6 +91,9 @@ class MainWindow : public QMainWindow
         QTimer *timer;
         std::string login;
         bool logged;
+        bool called;
+        std::shared_ptr<BabelNetwork::FriendResponse> &friendRequest;
+        std::vector<std::string> friendList;
 
     private:
         std::vector<std::function<void(MainWindow*, const std::shared_ptr<BabelNetwork::AResponse> &)>> dispatch_ptr = {&MainWindow::doUnknowTypeResponse, &MainWindow::doUserResponse, &MainWindow::doCallResponse, &MainWindow::doFriendResponse, &MainWindow::doMessageResponse};

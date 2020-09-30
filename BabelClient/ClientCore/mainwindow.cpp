@@ -134,37 +134,49 @@ void MainWindow::on_RegisterButton_clicked()
 
 void MainWindow::on_DeleteAccount_clicked()
 {
+    //std::string user = ui->UserRegisterLine->text().toLocal8Bit().constData();
+
+    //auto response = BabelNetwork::UserResponse::AccountDeletionRequest(user)
     std::cout << "Delete Account clicked" << std::endl;
 }
 
 void MainWindow::on_RefuseRequestButton_clicked()
 {
-
+    if (friendRequest != nullptr) {
+        auto response = BabelNetwork::FriendResponse::FriendRequestDeclined(login, friendRequest->getFriendLogin());
+        client.getTcp()->sendResponse(response);
+    }
+    friendRequest = nullptr;
 }
 
 void MainWindow::on_AcceptRequestButton_clicked()
 {
-
+        if (friendRequest != nullptr) {
+        auto response = BabelNetwork::FriendResponse::FriendRequestAccepted(login, friendRequest->getFriendLogin());
+        client.getTcp()->sendResponse(response);
+    }
+    friendRequest = nullptr;
 }
 
 void MainWindow::on_AcceptCallButton_clicked()
 {
-
+    call = true;
 }
 
 void MainWindow::on_RefuseCallButton_clicked()
 {
-
+    call = false;
 }
 
 void MainWindow::on_HangOutButton_clicked()
 {
-
+    call = false;
 }
 
 void MainWindow::on_CallButton_clicked()
 {
-
+    if (call != true)
+        call = true;
 }
 
 
@@ -245,18 +257,20 @@ void MainWindow::CallLeft(const std::shared_ptr<BabelNetwork::CallResponse> &res
 
 void MainWindow::IncomingCall(const std::shared_ptr<BabelNetwork::CallResponse> &response)
 {
+    ui->gridStackedWidget->setCurrentWidget(ui->IncomingCall);
     (void) response;
-    //FRONT ARTHUR
 }
 
 void MainWindow::CallAccepted(const std::shared_ptr<BabelNetwork::CallResponse> &response)
 {
+    call = true;
     (void) response;
     //FRONT ARTHUR
 }
 
 void MainWindow::CallRefused(const std::shared_ptr<BabelNetwork::CallResponse> &response)
 {
+    call = false;
     (void) response;
     //FRONT ARTHUR
 }
@@ -269,15 +283,13 @@ void MainWindow::UserDisconnected(const std::shared_ptr<BabelNetwork::CallRespon
 
 void MainWindow::AddFriend(const std::shared_ptr<BabelNetwork::FriendResponse> &response)
 {
-    std::cout << response->getFriendLogin() << std::endl;
-    (void) response;
-    //FRONT ARTHUR
+    friendList.push_back(response->getFriendLogin());
 }
 
 void MainWindow::FriendRequest(const std::shared_ptr<BabelNetwork::FriendResponse> &response)
 {
-    (void) response;
-    //FRONT ARTHUR
+    ui->gridStackedWidget->setCurrentWidget(ui->FriendRequest);
+    friendRequest = response;
 }
 
 void MainWindow::UnknowUser(const std::shared_ptr<BabelNetwork::FriendResponse> &response)
@@ -309,7 +321,6 @@ void MainWindow::doUserResponse(const std::shared_ptr<BabelNetwork::AResponse> &
     std::shared_ptr<BabelNetwork::UserResponse> ptr = std::dynamic_pointer_cast<BabelNetwork::UserResponse>(response);
     int code = response->getCode();
 
-    std::cout << code << std::endl;
     for (size_t i = 0; i < userCodeIdx.size(); i++)
         if (userCodeIdx[i] == code)
             user_ptr[i](this, ptr);
@@ -331,6 +342,7 @@ void MainWindow::doFriendResponse(const std::shared_ptr<BabelNetwork::AResponse>
         response);
     int code = response->getCode();
 
+    std::cout << "CODE" << std::endl;
     for (size_t i = 0; i < friendCodeIdx.size(); i++)
         if (friendCodeIdx[i] == code)
             friend_ptr[i](this, ptr);
@@ -354,6 +366,7 @@ void MainWindow::doUnknowTypeResponse(const std::shared_ptr<BabelNetwork::ARespo
 
 void MainWindow::checkTypeResponse(const std::shared_ptr<BabelNetwork::AResponse> &response)
 {
+    std::cout << response->getCode() << std::endl;
     dispatch_ptr[response->getResponseType()](this, response);
 }
 
