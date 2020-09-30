@@ -10,7 +10,6 @@
 
 #include <vector>
 #include <functional>
-#include <tuple>
 
 #include "ClientSocket.hpp"
 

@@ -7,6 +7,7 @@
 
 #include "Debug.hpp"
 #include "Database.hpp"
+#include "ServerError.hpp"
 
 using namespace BabelServer;
 using namespace BabelNetwork;
@@ -300,6 +301,10 @@ FriendResponse::ResponseCode Database::createFriendship(const std::string &sende
         _logger.logThis(log);
     }
     unlock();
+    log = BabelUtils::format("Friendship Created: user_1: {%s}, user_2: {%s}", senderName.c_str(),
+        receiverName.c_str());
+    dbg("%s", log.c_str());
+    _logger.logThis(log);
     return FriendResponse::AddFriend;
 }
 
@@ -313,25 +318,26 @@ std::vector<FriendModel> Database::getFriendships(const std::string &senderName,
         auto receiver = getUser(receiverName);
         if (!sender || !receiver) {
             log = BabelUtils::format(
-                "Error in create Message : User not found -> {%s} or {%s}",
+                "Error in getFriendship : User not found -> {%s} or {%s}",
                 senderName.c_str(), receiverName.c_str()
             );
             dbg("%s", log.c_str());
             _logger.logThis(log);
             // TODO: THROW DATABASE ERROR ?
-            return friendships;
+//            return friendships;
+            throw ServerError(log);
         }
-        // TODO: check if users already friend HERE
+        // TODO: check if users already friend HERE with getfriendshipFct
         lock();
         auto storage = getDatabase();
         auto friendship = FriendModel(sender->id, receiver->id);
         storage.insert(friendship);
     } catch (const std::system_error &e) {
-        log = BabelUtils::format("Error in createFriendship (name: {%d}): %s", receiverName.c_str(), e.what());
+        log = BabelUtils::format("Error in getFriendship (name: {%d}): %s", receiverName.c_str(), e.what());
         dbg("%s", log.c_str());
         _logger.logThis(log);
     } catch (...) {
-        log = BabelUtils::format("Error in createFriendship (name: {%d}): unknown exception", receiverName.c_str());
+        log = BabelUtils::format("Error in getFriendship (name: {%d}): unknown exception", receiverName.c_str());
         dbg("%s", log.c_str());
         _logger.logThis(log);
     }
@@ -348,21 +354,72 @@ std::vector<FriendModel> Database::getFriendships(const int user1_id, const int 
         lock();
         auto storage = getDatabase();
         friendships = storage.get_all<FriendModel>(
-            where(
-                (is_equal(&FriendModel::user1ID, user1_id) \
- and is_equal(&FriendModel::user2ID, user2_id))\
- or (is_equal(&FriendModel::user2ID, user1_id)\
- and is_equal(&FriendModel::user1ID, user2_id)))
+            where((is_equal(&FriendModel::user1ID, user1_id) and is_equal(&FriendModel::user2ID, user2_id))
+                or (is_equal(&FriendModel::user2ID, user1_id) and is_equal(&FriendModel::user1ID, user2_id)))
         );
     } catch (const std::system_error &e) {
-        log = BabelUtils::format("Error in createFriendship (id: {%d}): %s", user2_id, e.what());
+        log = BabelUtils::format("Error in getFriendship (id: {%d}): %s", user2_id, e.what());
         dbg("%s", log.c_str());
         _logger.logThis(log);
     } catch (...) {
-        log = BabelUtils::format("Error in createFriendship (id: {%d}): unknown exception", user2_id);
+        log = BabelUtils::format("Error in getFriendship (id: {%d}): unknown exception", user2_id);
         dbg("%s", log.c_str());
         _logger.logThis(log);
     }
     unlock();
     return friendships;
+}
+
+FriendResponse::ResponseCode Database::deleteFriendship(
+    const std::string &senderName,
+    const std::string &receiverName
+)
+{
+    std::string log;
+
+    try {
+        auto sender = getUser(senderName);
+        auto receiver = getUser(receiverName);
+        if (!sender || !receiver) {
+            log = BabelUtils::format(
+                "Error in deleteFriendship : User not found -> {%s} or {%s}",
+                senderName.c_str(), receiverName.c_str()
+            );
+            dbg("%s", log.c_str());
+            _logger.logThis(log);
+            return FriendResponse::UnknownUser;
+        }
+        lock();
+        auto storage = getDatabase();
+        auto friendships = storage.get_all<FriendModel>(
+            where((is_equal(&FriendModel::user1ID, sender->id) and is_equal(&FriendModel::user2ID, receiver->id))
+                or (is_equal(&FriendModel::user2ID, sender->id) and is_equal(&FriendModel::user1ID, receiver->id)))
+        );
+        if (friendships.size() != 1) {
+            log = BabelUtils::format(
+                "Too many Friendship found -> {%s} or {%s}",
+                senderName.c_str(), receiverName.c_str()
+            );
+            dbg("%s", log.c_str());
+            _logger.logThis(log);
+            unlock();
+            return FriendResponse::UnknownErrorOccur;
+        }
+        auto friendship = friendships.front();
+        storage.remove<FriendModel>(friendship.id);
+    } catch (const std::system_error &e) {
+        log = BabelUtils::format("Error in deleteFriendship (name: {%d}): %s", receiverName.c_str(), e.what());
+        dbg("%s", log.c_str());
+        _logger.logThis(log);
+    } catch (...) {
+        log = BabelUtils::format("Error in deleteFriendship (name: {%d}): unknown exception", receiverName.c_str());
+        dbg("%s", log.c_str());
+        _logger.logThis(log);
+    }
+    unlock();
+    log = BabelUtils::format("Friendship Deleted: user_1: {%s}, user_2: {%s}", senderName.c_str(),
+        receiverName.c_str());
+    dbg("%s", log.c_str());
+    _logger.logThis(log);
+    return FriendResponse::FriendDeleted;
 }

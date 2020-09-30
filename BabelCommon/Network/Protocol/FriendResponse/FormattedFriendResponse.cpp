@@ -56,3 +56,11 @@ std::shared_ptr<AResponse> FriendResponse::UserNotExist(const std::string &login
     resp->setCode(FriendResponse::ResponseCode::UnknownUser);
     return resp;
 }
+
+std::shared_ptr<AResponse> FriendResponse::DeleteFriendOK(const std::string &login, const std::string &friendLogin)
+{
+    auto resp = std::make_shared<FriendResponse>(login, friendLogin);
+
+    resp->setCode(FriendResponse::ResponseCode::FriendDeleted);
+    return resp;
+}
