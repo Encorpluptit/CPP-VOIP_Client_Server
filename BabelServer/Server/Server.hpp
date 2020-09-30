@@ -58,7 +58,6 @@ namespace BabelServer {
         BabelUtils::SharedPtr<BabelUtils::AThread> _thread;
         Database _database;
         RequestManager _manager;
-        // TODO: Include Db
     };
 
 }

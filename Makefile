@@ -11,6 +11,8 @@ NAME					=	babel
 
 BUILD_DIR				=	.build
 
+CP						=	cp
+
 
 #################################################
 # Client
@@ -49,6 +51,8 @@ debug: $(NAME)
 server:
 	@cmake $(OPTIONS) -B $(BUILD_DIR)
 	@$(MAKE) -j `nproc` --no-print-directory -C $(BUILD_DIR) $(SERVER_BIN)
+	-@$(CP) $(BUILD_DIR)/bin/$(SERVER_BIN) $(BUILD_DIR)
+	-@$(CP) $(BUILD_DIR)/bin/$(SERVER_BIN) .
 
 server_fclean:
 	@$(RM) -r $(SERVER_BIN)
@@ -60,6 +64,8 @@ server_fclean:
 client:
 	@cmake $(OPTIONS) -B $(BUILD_DIR)
 	@$(MAKE) -j `nproc` --no-print-directory -C $(BUILD_DIR) $(CLIENT_BIN)
+	-@$(CP) $(BUILD_DIR)/bin/$(CLIENT_BIN) $(BUILD_DIR)
+	-@$(CP) $(BUILD_DIR)/bin/$(CLIENT_BIN) .
 
 client_fclean:
 	@$(RM) -r $(CLIENT_BIN)

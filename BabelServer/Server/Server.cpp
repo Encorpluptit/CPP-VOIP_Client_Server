@@ -8,6 +8,7 @@
 #include <iostream>
 #include "Server.hpp"
 #include "AsioListener.hpp"
+#include "Debug.hpp"
 
 using namespace BabelServer;
 
@@ -75,7 +76,11 @@ void Server::runListener()
             auto resp = client->popResponse();
             if (!resp)
                 continue;
-            _manager.manage(client, resp, clients, _database);
+            if (!_manager.manage(client, resp, clients, _database)) {
+                std::string log("Unknown Response Type");
+                _logger.logThis(resp, log);
+                dbg("%s", log.c_str());
+            }
         }
     }
 }
