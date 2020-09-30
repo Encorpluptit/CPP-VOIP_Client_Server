@@ -93,7 +93,6 @@ void UserManager::Logout(
     );
     dbg("%s\n", log.c_str());
     _logger.logThis(log);
-    // TODO: Add Already Logged out Management
     if (!clientSocket->getUser()) {
         clientSocket->sendResponse(UserResponse::ClientNotLogged());
         return;
