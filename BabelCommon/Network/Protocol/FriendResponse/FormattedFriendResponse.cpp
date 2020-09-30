@@ -64,3 +64,12 @@ std::shared_ptr<AResponse> FriendResponse::DeleteFriendOK(const std::string &log
     resp->setCode(FriendResponse::ResponseCode::FriendDeleted);
     return resp;
 }
+
+std::shared_ptr<AResponse> FriendResponse::RequestDeleteFriend(const std::string &login, const std::string &friendLogin)
+{
+    auto resp = std::make_shared<FriendResponse>(login, friendLogin);
+
+    resp->setCode(FriendResponse::ResponseCode::DeleteFriendRequest);
+    return resp;
+}
+

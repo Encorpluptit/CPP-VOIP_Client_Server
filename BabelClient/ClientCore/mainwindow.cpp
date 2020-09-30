@@ -10,22 +10,21 @@
 #include <iostream>
 #include <QApplication>
 
-MainWindow::MainWindow(QWidget *parent, NetworkClientSocket &network) : QMainWindow(parent), ui(new Ui::MainWindow),
-                                                                        client(network)
+MainWindow::MainWindow(QWidget *parent, NetworkClientSocket &network) : QMainWindow(parent), ui(new Ui::MainWindow), client(network)
 {
     ui->setupUi(this);
 
     ui->VLayout = new QVBoxLayout(ui->ContactArea);
 
-    QPushButton *button1 = new QPushButton("1", ui->ContactArea);
-    QPushButton *button2 = new QPushButton("2", ui->ContactArea);
-    QPushButton *button3 = new QPushButton("3", ui->ContactArea);
-    QPushButton *button4 = new QPushButton("4", ui->ContactArea);
-    QPushButton *button5 = new QPushButton("5", ui->ContactArea);
-    QPushButton *button6 = new QPushButton("6", ui->ContactArea);
-    QPushButton *button7 = new QPushButton("7", ui->ContactArea);
-    QPushButton *button8 = new QPushButton("8", ui->ContactArea);
-    QPushButton *button9 = new QPushButton("9", ui->ContactArea);
+    QPushButton *button1 = new QPushButton("Contact 1", ui->ContactArea);
+    QPushButton *button2 = new QPushButton("Contact 2", ui->ContactArea);
+    QPushButton *button3 = new QPushButton("Contact 3", ui->ContactArea);
+    QPushButton *button4 = new QPushButton("Contact 4", ui->ContactArea);
+    QPushButton *button5 = new QPushButton("Contact 5", ui->ContactArea);
+    QPushButton *button6 = new QPushButton("Contact 6", ui->ContactArea);
+    QPushButton *button7 = new QPushButton("Contact 7", ui->ContactArea);
+    QPushButton *button8 = new QPushButton("Contact 8", ui->ContactArea);
+    QPushButton *button9 = new QPushButton("Contact 9", ui->ContactArea);
 
 
     ui->VLayout->addWidget(button1);
@@ -82,6 +81,7 @@ void MainWindow::on_ConnectionButton_clicked()
 
 void MainWindow::on_DisconnectButton_clicked()
 {
+    std::cout << "BACK BUTTON" << std::endl;
     auto response = BabelNetwork::UserResponse::LogoutRequest(login);
     ui->gridStackedWidget->setCurrentWidget(ui->LoginWidget);
     client.getTcp()->sendResponse(response);
@@ -97,7 +97,10 @@ void MainWindow::on_AddFriendButton_clicked()
 
 void MainWindow::on_DeleteFriendButton_clicked()
 {
+    std::string friendLogin = ui->SearchFriendLine->text().toLocal8Bit().constData();
 
+    auto response = BabelNetwork::FriendResponse::RequestDeleteFriend(login, friendLogin);
+    client.getTcp()->sendResponse(response);
 }
 
 void MainWindow::on_ManageFriendButton_clicked()
@@ -107,7 +110,6 @@ void MainWindow::on_ManageFriendButton_clicked()
 
 void MainWindow::on_BackButton_clicked()
 {
-    std::cout << "BACK FRIEND" << std::endl;
     ui->gridStackedWidget->setCurrentWidget(ui->CallPage);
 }
 
@@ -130,8 +132,40 @@ void MainWindow::on_RegisterButton_clicked()
     client.getTcp()->sendResponse(response);
 }
 
+void MainWindow::on_DeleteAccount_clicked()
+{
+    std::cout << "Delete Account clicked" << std::endl;
+}
 
+void MainWindow::on_RefuseRequestButton_clicked()
+{
 
+}
+
+void MainWindow::on_AcceptRequestButton_clicked()
+{
+
+}
+
+void MainWindow::on_AcceptCallButton_clicked()
+{
+
+}
+
+void MainWindow::on_RefuseCallButton_clicked()
+{
+
+}
+
+void MainWindow::on_HangOutButton_clicked()
+{
+
+}
+
+void MainWindow::on_CallButton_clicked()
+{
+
+}
 
 
 
@@ -192,6 +226,7 @@ void MainWindow::LoginAlreadyTaken(const std::shared_ptr<BabelNetwork::UserRespo
 
 void MainWindow::AlreadyLoggedIn(const std::shared_ptr<BabelNetwork::UserResponse> &response)
 {
+    std::cout << "ALREADY LOGGED IN" << std::endl;
     (void) response;
     //FRONT ARTHUR
 }
@@ -234,6 +269,7 @@ void MainWindow::UserDisconnected(const std::shared_ptr<BabelNetwork::CallRespon
 
 void MainWindow::AddFriend(const std::shared_ptr<BabelNetwork::FriendResponse> &response)
 {
+    std::cout << response->getFriendLogin() << std::endl;
     (void) response;
     //FRONT ARTHUR
 }
@@ -273,6 +309,7 @@ void MainWindow::doUserResponse(const std::shared_ptr<BabelNetwork::AResponse> &
     std::shared_ptr<BabelNetwork::UserResponse> ptr = std::dynamic_pointer_cast<BabelNetwork::UserResponse>(response);
     int code = response->getCode();
 
+    std::cout << code << std::endl;
     for (size_t i = 0; i < userCodeIdx.size(); i++)
         if (userCodeIdx[i] == code)
             user_ptr[i](this, ptr);
@@ -301,8 +338,7 @@ void MainWindow::doFriendResponse(const std::shared_ptr<BabelNetwork::AResponse>
 
 void MainWindow::doMessageResponse(const std::shared_ptr<BabelNetwork::AResponse> &response)
 {
-    std::shared_ptr<BabelNetwork::MessageResponse> ptr = std::dynamic_pointer_cast<BabelNetwork::MessageResponse>(
-        response);
+    std::shared_ptr<BabelNetwork::MessageResponse> ptr = std::dynamic_pointer_cast<BabelNetwork::MessageResponse>(response);
     int code = response->getCode();
 
     for (size_t i = 0; i < messageCodeIdx.size(); i++)
