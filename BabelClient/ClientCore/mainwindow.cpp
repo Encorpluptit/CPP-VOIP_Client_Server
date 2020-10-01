@@ -99,7 +99,7 @@ void MainWindow::on_DeleteFriendButton_clicked()
 {
     std::string friendLogin = ui->SearchFriendLine->text().toLocal8Bit().constData();
 
-    auto response = BabelNetwork::FriendResponse::RequestDeleteFriend(login, friendLogin);
+    auto response = BabelNetwork::FriendResponse::DeleteFriendRequest(login, friendLogin);
     client.getTcp()->sendResponse(response);
 }
 

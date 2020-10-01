@@ -295,17 +295,21 @@ FriendResponse::ResponseCode Database::createFriendship(const std::string &sende
         log = BabelUtils::format("Error in createFriendship (name: {%d}): %s", receiverName.c_str(), e.what());
         dbg("%s", log.c_str());
         _logger.logThis(log);
+        unlock();
+        return FriendResponse::UnknownErrorOccur;
     } catch (...) {
         log = BabelUtils::format("Error in createFriendship (name: {%d}): unknown exception", receiverName.c_str());
         dbg("%s", log.c_str());
         _logger.logThis(log);
+        unlock();
+        return FriendResponse::UnknownErrorOccur;
     }
     unlock();
     log = BabelUtils::format("Friendship Created: user_1: {%s}, user_2: {%s}", senderName.c_str(),
         receiverName.c_str());
     dbg("%s", log.c_str());
     _logger.logThis(log);
-    return FriendResponse::AddFriend;
+    return FriendResponse::FriendAdded;
 }
 
 std::vector<FriendModel> Database::getFriendships(const std::string &userName)
@@ -390,7 +394,7 @@ FriendResponse::ResponseCode Database::deleteFriendship(
             where((is_equal(&FriendModel::user1ID, sender->id) and is_equal(&FriendModel::user2ID, receiver->id))
                 or (is_equal(&FriendModel::user2ID, sender->id) and is_equal(&FriendModel::user1ID, receiver->id)))
         );
-        if (friendships.size() != 1) {
+        if (friendships.size() > 1) {
             log = BabelUtils::format(
                 "Too many Friendship found -> {%s} or {%s}",
                 senderName.c_str(), receiverName.c_str()
@@ -399,6 +403,16 @@ FriendResponse::ResponseCode Database::deleteFriendship(
             _logger.logThis(log);
             unlock();
             return FriendResponse::UnknownErrorOccur;
+        }
+        if (friendships.empty()) {
+            log = BabelUtils::format(
+                "No Friendship found -> {%s} or {%s}",
+                senderName.c_str(), receiverName.c_str()
+            );
+            dbg("%s", log.c_str());
+            _logger.logThis(log);
+            unlock();
+            return FriendResponse::FriendshipUnknown;
         }
         auto friendship = friendships.front();
         storage.remove<FriendModel>(friendship.id);

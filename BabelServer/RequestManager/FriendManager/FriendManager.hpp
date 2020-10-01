@@ -30,12 +30,19 @@ namespace BabelServer {
 
         /* <- Public Methods -> */
     private:
-//        void createAccount(
-//            const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
-//            const std::shared_ptr<BabelNetwork::UserResponse> &response,
-//            const BabelNetwork::ClientList &clientList,
-//            Database &database
-//        ) const;
+        void addFriend(
+            const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
+            const std::shared_ptr<BabelNetwork::FriendResponse> &response,
+            const BabelNetwork::ClientList &clientList,
+            Database &database
+        ) const;
+
+        void deleteFriend(
+            const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
+            const std::shared_ptr<BabelNetwork::FriendResponse> &response,
+            const BabelNetwork::ClientList &clientList,
+            Database &database
+        ) const;
 //
 //        void Login(
 //            const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
@@ -63,8 +70,8 @@ namespace BabelServer {
     private:
         BabelUtils::Logger &_logger;
         const std::vector<std::tuple<BabelNetwork::FriendResponse::ResponseCode, std::function<FriendManagerMethodProt>>> FriendResponsePtrTab = {
-            {BabelNetwork::FriendResponse::ResponseCode::RequestAddFriend, nullptr},
-            {BabelNetwork::FriendResponse::ResponseCode::AddFriend,        nullptr},
+            {BabelNetwork::FriendResponse::ResponseCode::RequestAddFriend,    &FriendManager::addFriend},
+            {BabelNetwork::FriendResponse::ResponseCode::RequestDeleteFriend, nullptr},
         };
 
 

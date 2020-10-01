@@ -99,8 +99,12 @@ class MainWindow : public QMainWindow
         std::vector<std::function<void(MainWindow*, const std::shared_ptr<BabelNetwork::FriendResponse> &)>> friend_ptr = {&MainWindow::AddFriend, &MainWindow::FriendRequest, &MainWindow::UnknowUser};
         std::vector<std::function<void(MainWindow*, const std::shared_ptr<BabelNetwork::MessageResponse> &)>> message_ptr = {&MainWindow::SendMessageOk, &MainWindow::ReceiveMessage, &MainWindow::UnknowUserMessage};
         std::vector<int> userCodeIdx = {BabelNetwork::UserResponse::LoggedIn, BabelNetwork::UserResponse::LoggedOut, BabelNetwork::UserResponse::AccountCreated, BabelNetwork::UserResponse::AccountDeleted, BabelNetwork::UserResponse::WrongLogin, BabelNetwork::UserResponse::WrongPassword, BabelNetwork::UserResponse::LoginAlreadyTaken, BabelNetwork::UserResponse::AlreadyLoggedIn, BabelNetwork::UserResponse::UnknownUserError};
-        std::vector<int> callCodeIdx = {BabelNetwork::CallResponse::CallStarted, BabelNetwork::CallResponse::CallLeft, BabelNetwork::CallResponse::IncomingCall, BabelNetwork::CallResponse::CallAccepted, BabelNetwork::CallResponse::CallRefused, BabelNetwork::CallResponse::UserDisconnected};
-        std::vector<int> friendCodeIdx = {BabelNetwork::FriendResponse::AddFriend, BabelNetwork::FriendResponse::FriendRequest, BabelNetwork::FriendResponse::UnknownUser};
-        std::vector<int> messageCodeIdx = {BabelNetwork::MessageResponse::SendMessageOk, BabelNetwork::MessageResponse::ReceiveMessage, BabelNetwork::MessageResponse::UnknownUser};
+        std::vector<int> callCodeIdx = {BabelNetwork::CallResponse::CallStarted, BabelNetwork::CallResponse::CallLeft,
+            BabelNetwork::CallResponse::IncomingCall, BabelNetwork::CallResponse::CallAccepted,
+            BabelNetwork::CallResponse::CallRefused, BabelNetwork::CallResponse::UserDisconnected};
+    std::vector<int> friendCodeIdx = {BabelNetwork::FriendResponse::RequestAddFriend,
+        BabelNetwork::FriendResponse::FriendAdded, BabelNetwork::FriendResponse::UnknownUser};
+    std::vector<int> messageCodeIdx = {BabelNetwork::MessageResponse::SendMessageOk,
+        BabelNetwork::MessageResponse::ReceiveMessage, BabelNetwork::MessageResponse::UnknownUser};
 };
 #endif // MAINWINDOW_H

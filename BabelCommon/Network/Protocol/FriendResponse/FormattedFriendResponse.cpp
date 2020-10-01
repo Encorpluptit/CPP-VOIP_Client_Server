@@ -21,7 +21,7 @@ std::shared_ptr<AResponse> FriendResponse::FriendRequestOk(const std::string &lo
 {
     auto resp = std::make_shared<FriendResponse>(login, friendLogin);
 
-    resp->setCode(FriendResponse::ResponseCode::AddFriend);
+    resp->setCode(FriendResponse::ResponseCode::FriendAdded);
     return resp;
 }
 
@@ -29,11 +29,19 @@ std::shared_ptr<AResponse> FriendResponse::NewFriendRequest(const std::string &l
 {
     auto resp = std::make_shared<FriendResponse>(login, friendLogin);
 
-    resp->setCode(FriendResponse::ResponseCode::FriendRequest);
+    resp->setCode(FriendResponse::ResponseCode::NewFriendshipRequested);
     return resp;
 }
 
-std::shared_ptr<AResponse> FriendResponse::FriendRequestAccepted(const std::string &login, const std::string &friendLogin)
+std::shared_ptr<AResponse>
+FriendResponse::NewFriendRequest(const std::shared_ptr<BabelNetwork::FriendResponse> &response)
+{
+    response->setCode(FriendResponse::ResponseCode::NewFriendshipRequested);
+    return response;
+}
+
+std::shared_ptr<AResponse>
+FriendResponse::FriendRequestAccepted(const std::string &login, const std::string &friendLogin)
 {
     auto resp = std::make_shared<FriendResponse>(login, friendLogin);
 
@@ -41,7 +49,8 @@ std::shared_ptr<AResponse> FriendResponse::FriendRequestAccepted(const std::stri
     return resp;
 }
 
-std::shared_ptr<AResponse> FriendResponse::FriendRequestDeclined(const std::string &login, const std::string &friendLogin)
+std::shared_ptr<AResponse>
+FriendResponse::FriendRequestDeclined(const std::string &login, const std::string &friendLogin)
 {
     auto resp = std::make_shared<FriendResponse>(login, friendLogin);
 
@@ -49,12 +58,10 @@ std::shared_ptr<AResponse> FriendResponse::FriendRequestDeclined(const std::stri
     return resp;
 }
 
-std::shared_ptr<AResponse> FriendResponse::UserNotExist(const std::string &login, const std::string &friendLogin)
+std::shared_ptr<AResponse> FriendResponse::UserNotExist(const std::shared_ptr<BabelNetwork::FriendResponse> &response)
 {
-    auto resp = std::make_shared<FriendResponse>(login, friendLogin);
-
-    resp->setCode(FriendResponse::ResponseCode::UnknownUser);
-    return resp;
+    response->setCode(FriendResponse::ResponseCode::UnknownUser);
+    return response;
 }
 
 std::shared_ptr<AResponse> FriendResponse::DeleteFriendOK(const std::string &login, const std::string &friendLogin)
@@ -65,11 +72,38 @@ std::shared_ptr<AResponse> FriendResponse::DeleteFriendOK(const std::string &log
     return resp;
 }
 
-std::shared_ptr<AResponse> FriendResponse::RequestDeleteFriend(const std::string &login, const std::string &friendLogin)
+std::shared_ptr<AResponse> FriendResponse::DeleteFriendOK(const std::shared_ptr<BabelNetwork::FriendResponse> &response)
+{
+    response->setCode(FriendResponse::ResponseCode::FriendDeleted);
+    return response;
+}
+
+std::shared_ptr<AResponse> FriendResponse::DeleteFriendRequest(const std::string &login, const std::string &friendLogin)
 {
     auto resp = std::make_shared<FriendResponse>(login, friendLogin);
 
-    resp->setCode(FriendResponse::ResponseCode::DeleteFriendRequest);
+    resp->setCode(FriendResponse::ResponseCode::RequestDeleteFriend);
     return resp;
+}
+
+std::shared_ptr<AResponse>
+FriendResponse::FriendshipExist(const std::shared_ptr<BabelNetwork::FriendResponse> &response)
+{
+    response->setCode(FriendResponse::ResponseCode::FriendshipAlreadyExist);
+    return response;
+}
+
+std::shared_ptr<AResponse>
+FriendResponse::UnknownFriendship(const std::shared_ptr<BabelNetwork::FriendResponse> &response)
+{
+    response->setCode(FriendResponse::ResponseCode::FriendshipUnknown);
+    return response;
+}
+
+std::shared_ptr<AResponse>
+FriendResponse::UnknownErrorOccured(const std::shared_ptr<BabelNetwork::FriendResponse> &response)
+{
+    response->setCode(FriendResponse::ResponseCode::UnknownErrorOccur);
+    return response;
 }
 
