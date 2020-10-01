@@ -12,7 +12,7 @@ const std::vector<FriendManager::FriendResponseFPtr> &FriendManager::getFriendRe
     return FriendResponsePtrTab;
 }
 
-void FriendManager::addFriend(
+void FriendManager::acceptFriendship(
     const BabelUtils::SharedPtr<ClientSocket> &clientSocket,
     const std::shared_ptr<FriendResponse> &response,
     const ClientList &clientList,
@@ -32,6 +32,40 @@ void FriendManager::addFriend(
             }
         }
         client->sendResponse(FriendResponse::NewFriendRequest(response));
+        return;
+    }
+    clientSocket->sendResponse(FriendResponse::UserNotExist(response));
+}
+
+void FriendManager::friendshipRequest(
+    const BabelUtils::SharedPtr<ClientSocket> &clientSocket,
+    const std::shared_ptr<FriendResponse> &response,
+    const ClientList &clientList,
+    __attribute__((unused))Database &database
+) const
+{
+    for (const auto &client : clientList) {
+        auto user = client->getUser();
+        if (!user || user->login != response->getFriendLogin())
+            continue;
+        client->sendResponse(FriendResponse::NewFriendRequest(response));
+        return;
+    }
+    clientSocket->sendResponse(FriendResponse::UserNotExist(response));
+}
+
+void FriendManager::declineFriendship(
+    const BabelUtils::SharedPtr<ClientSocket> &clientSocket,
+    const std::shared_ptr<FriendResponse> &response,
+    const ClientList &clientList,
+    __attribute__((unused))Database &database
+) const
+{
+    for (const auto &client : clientList) {
+        auto user = client->getUser();
+        if (!user || user->login != response->getFriendLogin())
+            continue;
+        client->sendResponse(FriendResponse::FriendRequestDeclined(response));
         return;
     }
     clientSocket->sendResponse(FriendResponse::UserNotExist(response));

@@ -144,7 +144,7 @@ namespace BabelNetwork {
         FriendRequestAccepted(const std::string &login, const std::string &friendLogin);
 
         [[nodiscard]] static std::shared_ptr<AResponse>
-        FriendRequestDeclined(const std::string &login, const std::string &friendLogin);
+        FriendRequestDeclined(const std::shared_ptr<BabelNetwork::FriendResponse> &response);
 
         [[nodiscard]] static std::shared_ptr<AResponse>
         DeleteFriendRequest(const std::string &login, const std::string &friendLogin);

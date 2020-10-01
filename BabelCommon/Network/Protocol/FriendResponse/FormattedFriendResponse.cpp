@@ -50,12 +50,10 @@ FriendResponse::FriendRequestAccepted(const std::string &login, const std::strin
 }
 
 std::shared_ptr<AResponse>
-FriendResponse::FriendRequestDeclined(const std::string &login, const std::string &friendLogin)
+FriendResponse::FriendRequestDeclined(const std::shared_ptr<BabelNetwork::FriendResponse> &response)
 {
-    auto resp = std::make_shared<FriendResponse>(login, friendLogin);
-
-    resp->setCode(FriendResponse::ResponseCode::DeclineFriendRequest);
-    return resp;
+    response->setCode(FriendResponse::ResponseCode::DeclineFriendRequest);
+    return response;
 }
 
 std::shared_ptr<AResponse> FriendResponse::UserNotExist(const std::shared_ptr<BabelNetwork::FriendResponse> &response)
