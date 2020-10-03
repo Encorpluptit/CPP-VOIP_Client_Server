@@ -160,23 +160,23 @@ void MainWindow::on_AcceptRequestButton_clicked()
 
 void MainWindow::on_AcceptCallButton_clicked()
 {
-    call = true;
+    called = true;
 }
 
 void MainWindow::on_RefuseCallButton_clicked()
 {
-    call = false;
+    called = false;
 }
 
 void MainWindow::on_HangOutButton_clicked()
 {
-    call = false;
+    called = false;
 }
 
 void MainWindow::on_CallButton_clicked()
 {
-    if (call != true)
-        call = true;
+    if (called != true)
+        called = true;
 }
 
 
@@ -263,14 +263,14 @@ void MainWindow::IncomingCall(const std::shared_ptr<BabelNetwork::CallResponse> 
 
 void MainWindow::CallAccepted(const std::shared_ptr<BabelNetwork::CallResponse> &response)
 {
-    call = true;
+    called = true;
     (void) response;
     //FRONT ARTHUR
 }
 
 void MainWindow::CallRefused(const std::shared_ptr<BabelNetwork::CallResponse> &response)
 {
-    call = false;
+    called = false;
     (void) response;
     //FRONT ARTHUR
 }
