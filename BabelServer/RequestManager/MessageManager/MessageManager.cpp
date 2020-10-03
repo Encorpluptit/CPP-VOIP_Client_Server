@@ -14,7 +14,6 @@ void MessageManager::sendMessage(
     Database &database
 ) const
 {
-    // TODO: check for login
     for (const auto &target: clientList) {
         if (target->getUser() && target->getUser()->login == response->getReceiver()) {
             switch (database.createMessage(

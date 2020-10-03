@@ -246,12 +246,10 @@ std::vector<MessageModel> Database::GetConv(const std::string &senderName, const
         auto storage = getDatabase();
         message = storage.get_all<MessageModel>(
             where(
-                (is_equal(&MessageModel::senderID, sender->id) \
- and is_equal(&MessageModel::receiverID, receiver->id))\
- or (is_equal(&MessageModel::receiverID, sender->id)\
- and is_equal(&MessageModel::senderID, receiver->id))\
-)
-        );
+                ((is_equal(&MessageModel::senderID, sender->id) and is_equal(&MessageModel::receiverID, receiver->id)))
+                    or (is_equal(&MessageModel::receiverID, sender->id) and
+                    is_equal(&MessageModel::senderID, receiver->id))
+            ));
     } catch (const std::system_error &e) {
         log = BabelUtils::format(
             "Error in getConv(sender: {%s}, receiver: {%s}): %s",
