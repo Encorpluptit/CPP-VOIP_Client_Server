@@ -170,12 +170,17 @@ namespace BabelNetwork {
         /* <- Stringify Code -> */
     private:
         const std::map<ResponseCode, std::string> codeString = {
-            {RequestAddFriend,     "Request Add Friend"},
-            {FriendAdded,          "Add Friend"},
-            {RequestDeleteFriend,  "Friend Delete Request"},
-            {AcceptFriendRequest,  "Friend Request Accepted"},
-            {DeclineFriendRequest, "RequestDeleteFriend Declined"},
-            {UnknownUser,          "Unknown User"},
+            {RequestAddFriend,       "Request AddFriend"},
+            {FriendAdded,            "Friend Added"},
+            {NewFriendshipRequested, "NewFriendship Requested"},
+            {AcceptFriendRequest,    "AcceptFriend Request"},
+            {DeclineFriendRequest,   "Decline FriendRequest"},
+            {RequestDeleteFriend,    "Request DeleteFriend"},
+            {FriendDeleted,          "Friend Deleted"},
+            {FriendshipAlreadyExist, "Friendship AlreadyExist"},
+            {FriendshipUnknown,      "Friendship Unknown"},
+            {UnknownUser,            "Unknown User"},
+            {UnknownErrorOccur,      "Unknown ErrorOccur"},
         };
     };
 }

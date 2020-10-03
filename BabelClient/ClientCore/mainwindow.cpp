@@ -91,7 +91,7 @@ void MainWindow::on_AddFriendButton_clicked()
 {
     std::string friendLogin = ui->SearchFriendLine->text().toLocal8Bit().constData();
 
-    auto response = BabelNetwork::FriendResponse::NewFriendRequest(login, friendLogin);
+    auto response = BabelNetwork::FriendResponse::RequestFriend(login, friendLogin);
     client.getTcp()->sendResponse(response);
 }
 
