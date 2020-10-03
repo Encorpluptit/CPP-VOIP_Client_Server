@@ -324,7 +324,6 @@ std::vector<FriendModel> Database::getFriendships(const std::string &userName)
                 "Error in getFriendship : User not found -> {%s}", userName.c_str());
             dbg("%s", log.c_str());
             _logger.logThis(log);
-            // TODO: THROW DATABASE ERROR ?
             throw ServerError(log);
         }
         lock();
@@ -336,10 +335,8 @@ std::vector<FriendModel> Database::getFriendships(const std::string &userName)
         log = BabelUtils::format("Error in getFriendship (name: {%d}): %s", userName.c_str(), e.what());
         dbg("%s", log.c_str());
         _logger.logThis(log);
-    } catch (...) {
-        log = BabelUtils::format("Error in getFriendship (name: {%d}): unknown exception", userName.c_str());
-        dbg("%s", log.c_str());
-        _logger.logThis(log);
+        unlock();
+        throw ServerError(log);
     }
     unlock();
     return friendships;
