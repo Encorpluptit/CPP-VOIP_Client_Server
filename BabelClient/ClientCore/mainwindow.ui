@@ -99,12 +99,18 @@
        <widget class="QTextEdit" name="WrongLoginText">
         <property name="maximumSize">
          <size>
-          <width>100</width>
+          <width>170</width>
           <height>30</height>
          </size>
         </property>
         <property name="contextMenuPolicy">
          <enum>Qt::DefaultContextMenu</enum>
+        </property>
+        <property name="verticalScrollBarPolicy">
+         <enum>Qt::ScrollBarAlwaysOff</enum>
+        </property>
+        <property name="horizontalScrollBarPolicy">
+         <enum>Qt::ScrollBarAlwaysOff</enum>
         </property>
         <property name="readOnly">
          <bool>true</bool>
@@ -249,7 +255,7 @@ p, li { white-space: pre-wrap; }
               <x>0</x>
               <y>0</y>
               <width>85</width>
-              <height>188</height>
+              <height>98</height>
              </rect>
             </property>
            </widget>

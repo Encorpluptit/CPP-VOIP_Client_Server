@@ -210,6 +210,7 @@ void MainWindow::UnknowUserError(const std::shared_ptr<BabelNetwork::UserRespons
 
 void MainWindow::WrongLogin(const std::shared_ptr<BabelNetwork::UserResponse> &response)
 {
+    ui->WrongLoginText->setText("Wrong Login");
     ui->WrongLoginText->show();
     std::cout << "WRONG LOGIN" << std::endl;
     (void) response;
@@ -217,6 +218,7 @@ void MainWindow::WrongLogin(const std::shared_ptr<BabelNetwork::UserResponse> &r
 
 void MainWindow::WrongPassword(const std::shared_ptr<BabelNetwork::UserResponse> &response)
 {
+    ui->WrongLoginText->setText("Wrong password");
     ui->WrongLoginText->show(); // METTRE WRONG PASSWORD
     std::cout << "WRONG PASSWORD" << std::endl;
     (void) response;
@@ -225,6 +227,8 @@ void MainWindow::WrongPassword(const std::shared_ptr<BabelNetwork::UserResponse>
 void MainWindow::LoginAlreadyTaken(const std::shared_ptr<BabelNetwork::UserResponse> &response)
 {
     //DISPLAY LOGIN ALREADY TAKEN
+    ui->WrongLoginText->setText("Login already taken");
+    ui->WrongLoginText->show();
     std::cout << "LOGIN ALREADY TAKEN" << std::endl;
     (void) response;
 }
@@ -232,6 +236,8 @@ void MainWindow::LoginAlreadyTaken(const std::shared_ptr<BabelNetwork::UserRespo
 void MainWindow::AlreadyLoggedIn(const std::shared_ptr<BabelNetwork::UserResponse> &response)
 {
     //DISPLAY ALREADY LOGGED IN
+    ui->WrongLoginText->setText("Already logged in");
+    ui->WrongLoginText->show();
     std::cout << "ALREADY LOGGED IN" << std::endl;
     (void) response;
     //FRONT ARTHUR
