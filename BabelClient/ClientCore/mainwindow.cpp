@@ -315,6 +315,7 @@ void MainWindow::AddFriend(const std::shared_ptr<BabelNetwork::FriendResponse> &
 
 void MainWindow::FriendRequest(const std::shared_ptr<BabelNetwork::FriendResponse> &response)
 {
+    std::cout << "coucou" << std::endl;
     ui->gridStackedWidget->setCurrentWidget(ui->FriendRequest);
     friendRequest = response;
 }
@@ -369,7 +370,7 @@ void MainWindow::doFriendResponse(const std::shared_ptr<BabelNetwork::AResponse>
         response);
     int code = response->getCode();
 
-    std::cout << "CODE" << std::endl;
+    std::cout << response->getDescription() << std::endl;
     for (size_t i = 0; i < friendCodeIdx.size(); i++)
         if (friendCodeIdx[i] == code)
             friend_ptr[i](this, ptr);
@@ -393,7 +394,6 @@ void MainWindow::doUnknowTypeResponse(const std::shared_ptr<BabelNetwork::ARespo
 
 void MainWindow::checkTypeResponse(const std::shared_ptr<BabelNetwork::AResponse> &response)
 {
-    std::cout << response->getCode() << std::endl;
     dispatch_ptr[response->getResponseType()](this, response);
 }
 

@@ -109,7 +109,7 @@ class MainWindow : public QMainWindow
             BabelNetwork::CallResponse::IncomingCall, BabelNetwork::CallResponse::CallAccepted,
             BabelNetwork::CallResponse::CallRefused, BabelNetwork::CallResponse::UserDisconnected};
     std::vector<int> friendCodeIdx = {BabelNetwork::FriendResponse::FriendAdded,
-        BabelNetwork::FriendResponse::RequestAddFriend, BabelNetwork::FriendResponse::UnknownUser};
+        BabelNetwork::FriendResponse::NewFriendshipRequested, BabelNetwork::FriendResponse::UnknownUser};
     std::vector<int> messageCodeIdx = {BabelNetwork::MessageResponse::SendMessageOk,
         BabelNetwork::MessageResponse::ReceiveMessage, BabelNetwork::MessageResponse::UnknownUser};
 };
