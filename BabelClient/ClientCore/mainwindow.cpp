@@ -39,7 +39,7 @@ MainWindow::MainWindow(QWidget *parent, NetworkClientSocket &network) : QMainWin
 
 
     //to count all of button in contact area
-    QList<QPushButton *> butts = ui->ContactArea->findChildren<QPushButton *>();
+    butts = ui->ContactArea->findChildren<QPushButton *>();
     qDebug() << butts.size();
 
     qDebug() << butts[0]->text();
@@ -143,10 +143,11 @@ void MainWindow::on_DeleteAccount_clicked()
 void MainWindow::on_RefuseRequestButton_clicked()
 {
     if (friendRequest != nullptr) {
-        auto response = BabelNetwork::FriendResponse::FriendRequestDeclined(login, friendRequest->getFriendLogin());
+        auto response = BabelNetwork::FriendResponse::FriendRequestDeclined(friendRequest);
         client.getTcp()->sendResponse(response);
     }
     friendRequest = nullptr;
+    ui->gridStackedWidget->setCurrentWidget(ui->CallPage);
 }
 
 void MainWindow::on_AcceptRequestButton_clicked()
@@ -156,27 +157,42 @@ void MainWindow::on_AcceptRequestButton_clicked()
         client.getTcp()->sendResponse(response);
     }
     friendRequest = nullptr;
+    ui->gridStackedWidget->setCurrentWidget(ui->CallPage);
 }
 
 void MainWindow::on_AcceptCallButton_clicked()
 {
     called = true;
+    auto response = BabelNetwork::CallResponse::AcceptCall(callInfo->getReceiver, callInfo->getSender());
+    client.getTcp()->sendResponse(response);
+    // SE CONNECTER A LA SOCKET
 }
 
 void MainWindow::on_RefuseCallButton_clicked()
 {
     called = false;
+    auto response = BabelNetwork::CallResponse::RefusedCall(callInfo->getReceiver, callInfo->getSender());
+    client.getTcp()->sendResponse(response);
+    callInfo = nullptr;
 }
 
 void MainWindow::on_HangOutButton_clicked()
 {
     called = false;
+    auto response = BabelNetwork::CallResponse::LeftCall(callInfo->getReceiver, callInfo->getSender());
+    client.getTcp()->sendResponse(response);
+    callInfo = nullptr;
+    // DECONNECTER LA SOCKET
 }
 
 void MainWindow::on_CallButton_clicked()
 {
-    if (called != true)
+    if (called != true) {
         called = true;
+        auto response = BabelNetwork::CallResponse::CallRequest(login, login /* A REMPLACER PAR LE LOGIN DU BOUTON CONTACT ENCLENCHE */)
+        client.getTcp()->sendResponse(response);
+    }
+    //else display already in a call
 }
 
 
@@ -200,20 +216,21 @@ void MainWindow::LoggedOut(const std::shared_ptr<BabelNetwork::UserResponse> &re
 
 void MainWindow::AccountCreate(const std::shared_ptr<BabelNetwork::UserResponse> &response)
 {
+    //DISPLAY COMPTE CREE
     std::cout << "ACCOUNT CREATE" << std::endl;
     (void) response;
 }
 
 void MainWindow::AccountDelete(const std::shared_ptr<BabelNetwork::UserResponse> &response)
 {
+    //DISPLAY COMPTE SUPPRIME
     (void) response;
-    //FRONT ARTHUR;
 }
 
 void MainWindow::UnknowUserError(const std::shared_ptr<BabelNetwork::UserResponse> &response)
 {
+    //THROW ERROR
     (void) response;
-    //FRONT ARTHUR;
 }
 
 void MainWindow::WrongLogin(const std::shared_ptr<BabelNetwork::UserResponse> &response)
@@ -232,12 +249,14 @@ void MainWindow::WrongPassword(const std::shared_ptr<BabelNetwork::UserResponse>
 
 void MainWindow::LoginAlreadyTaken(const std::shared_ptr<BabelNetwork::UserResponse> &response)
 {
+    //DISPLAY LOGIN ALREADY TAKEN
     std::cout << "LOGIN ALREADY TAKEN" << std::endl;
     (void) response;
 }
 
 void MainWindow::AlreadyLoggedIn(const std::shared_ptr<BabelNetwork::UserResponse> &response)
 {
+    //DISPLAY ALREADY LOGGED IN
     std::cout << "ALREADY LOGGED IN" << std::endl;
     (void) response;
     //FRONT ARTHUR
@@ -245,14 +264,16 @@ void MainWindow::AlreadyLoggedIn(const std::shared_ptr<BabelNetwork::UserRespons
 
 void MainWindow::CallStarted(const std::shared_ptr<BabelNetwork::CallResponse> &response)
 {
+    called = true;
     (void) response;
-    //FRONT ARTHUR
+    // OUVRIR SOCKET + SE CONNECTER + CHANGER FRONT
 }
 
 void MainWindow::CallLeft(const std::shared_ptr<BabelNetwork::CallResponse> &response)
 {
+    called = false;
     (void) response;
-    //FRONT ARTHUR
+    // FERMER SOCKET + CHANGER FRONT
 }
 
 void MainWindow::IncomingCall(const std::shared_ptr<BabelNetwork::CallResponse> &response)
@@ -265,25 +286,30 @@ void MainWindow::CallAccepted(const std::shared_ptr<BabelNetwork::CallResponse> 
 {
     called = true;
     (void) response;
-    //FRONT ARTHUR
+    // COMMENCER TIMER QUDPSOCKET
 }
 
 void MainWindow::CallRefused(const std::shared_ptr<BabelNetwork::CallResponse> &response)
 {
     called = false;
     (void) response;
-    //FRONT ARTHUR
+    //FERMER SOCKET + CHANGER FRONT
 }
 
 void MainWindow::UserDisconnected(const std::shared_ptr<BabelNetwork::CallResponse> &response)
 {
     (void) response;
-    //FRONT ARTHUR
+    //FERMER SOCKET + CHANGER FRONT
 }
 
 void MainWindow::AddFriend(const std::shared_ptr<BabelNetwork::FriendResponse> &response)
 {
     friendList.push_back(response->getFriendLogin());
+    for (size_t i = 0; i < friendList.size(); i++) {
+        butts[i]->setText(response->getFriendLogin());
+        if (i >= butts.size())
+            butts.push_back(new QPushButton(response->getFriendLogin(), ui->ContactArea);)
+    }
 }
 
 void MainWindow::FriendRequest(const std::shared_ptr<BabelNetwork::FriendResponse> &response)
@@ -294,8 +320,8 @@ void MainWindow::FriendRequest(const std::shared_ptr<BabelNetwork::FriendRespons
 
 void MainWindow::UnknowUser(const std::shared_ptr<BabelNetwork::FriendResponse> &response)
 {
+    //THROW ERROR
     (void) response;
-    //FRONT ARTHUR
 }
 
 void MainWindow::SendMessageOk(const std::shared_ptr<BabelNetwork::MessageResponse> &response)

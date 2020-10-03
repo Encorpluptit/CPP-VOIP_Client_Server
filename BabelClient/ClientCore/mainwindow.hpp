@@ -4,6 +4,7 @@
 #include <string>
 #include <QMainWindow>
 #include <QTimer>
+#include <QPushButton>
 #include "NetworkClientSocket.hpp"
 #include "UserResponse.hpp"
 #include "CallResponse.hpp"
@@ -92,8 +93,10 @@ class MainWindow : public QMainWindow
         std::string login;
         bool logged;
         bool called;
-        std::shared_ptr<BabelNetwork::FriendResponse> &friendRequest;
+        std::shared_ptr<BabelNetwork::FriendResponse> friendRequest;
+        std::shared_ptr<BabelNetwork::CallResponse> callInfo;
         std::vector<std::string> friendList;
+        QList<QPushButton *> butts;
 
     private:
         std::vector<std::function<void(MainWindow*, const std::shared_ptr<BabelNetwork::AResponse> &)>> dispatch_ptr = {&MainWindow::doUnknowTypeResponse, &MainWindow::doUserResponse, &MainWindow::doCallResponse, &MainWindow::doFriendResponse, &MainWindow::doMessageResponse};
@@ -105,8 +108,8 @@ class MainWindow : public QMainWindow
         std::vector<int> callCodeIdx = {BabelNetwork::CallResponse::CallStarted, BabelNetwork::CallResponse::CallLeft,
             BabelNetwork::CallResponse::IncomingCall, BabelNetwork::CallResponse::CallAccepted,
             BabelNetwork::CallResponse::CallRefused, BabelNetwork::CallResponse::UserDisconnected};
-    std::vector<int> friendCodeIdx = {BabelNetwork::FriendResponse::RequestAddFriend,
-        BabelNetwork::FriendResponse::FriendAdded, BabelNetwork::FriendResponse::UnknownUser};
+    std::vector<int> friendCodeIdx = {BabelNetwork::FriendResponse::FriendAdded,
+        BabelNetwork::FriendResponse::RequestAddFriend, BabelNetwork::FriendResponse::UnknownUser};
     std::vector<int> messageCodeIdx = {BabelNetwork::MessageResponse::SendMessageOk,
         BabelNetwork::MessageResponse::ReceiveMessage, BabelNetwork::MessageResponse::UnknownUser};
 };
