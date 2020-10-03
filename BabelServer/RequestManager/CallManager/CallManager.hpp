@@ -55,13 +55,13 @@ namespace BabelServer {
 
         void incrementCallId() { _call_id += 1; }
 
-        [[nodiscard]] uint64_t getCallId() const { return _call_id; }
+        [[nodiscard]] const uint16_t &getCallId() const { return _call_id; }
 
 
         /* <- Attributes -> */
     private:
         BabelUtils::Logger &_logger;
-        uint16_t _call_id = 0;
+        uint16_t _call_id;
         const std::vector<std::tuple<BabelNetwork::CallResponse::ResponseCode, std::function<CallManagerMethodProt>>> CallResponsePtrTab = {
             {BabelNetwork::CallResponse::ResponseCode::RequestCall,  &CallManager::requestCall},
             {BabelNetwork::CallResponse::ResponseCode::CallRefused,  &CallManager::refuseCall},
