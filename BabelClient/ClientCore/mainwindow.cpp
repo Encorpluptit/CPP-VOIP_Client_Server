@@ -304,6 +304,7 @@ void MainWindow::UserDisconnected(const std::shared_ptr<BabelNetwork::CallRespon
 
 void MainWindow::AddFriend(const std::shared_ptr<BabelNetwork::FriendResponse> &response)
 {
+    std::cout << "LOGIN : " << response->getLogin() << " FRIEND LOGIN : " << response->getFriendLogin() << std::endl;
     friendList.push_back(response->getFriendLogin());
     for (size_t i = 0; i < friendList.size(); i++) {
         butts[i]->setText(response->getFriendLogin());
