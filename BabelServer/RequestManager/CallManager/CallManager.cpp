@@ -19,14 +19,14 @@ void CallManager::requestCall(
 ) const
 {
     // TODO: add check if caller call himself
-    for (const auto &target: clientList) {
-        if (target->getUser() && target->getUser()->login == response->getReceiver()) {
-            target->sendResponse(CallResponse::CallIncoming(response, getCallId()));
-            // TODO: Adding Increment (pb with const)
-//            incrementCallId();
-            return;
-        }
-    }
+//    for (const auto &target: clientList) {
+//        if (target->getUser()->login == response->getReceiver()) {
+//            target->sendResponse(CallResponse::CallIncoming(response, getCallId()));
+//            // TODO: Adding Increment (pb with const)
+////            incrementCallId();
+//            return;
+//        }
+//    }
     clientSocket->sendResponse(CallResponse::DisconnectedUser(response->getSender(), response->getReceiver()));
 }
 

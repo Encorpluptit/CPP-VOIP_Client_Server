@@ -65,8 +65,6 @@ void UserManager::Login(
         clientSocket->sendResponse(UserResponse::BadLogin(response->getLogin()));
         return;
     }
-    //TODO: UnHash Password ?
-    std::cout << "RESPONSE : " << response->getPassword() << "USER : " << user->password << std::endl;
     if (response->getPassword() != user->password) {
         clientSocket->sendResponse(UserResponse::BadPassword(response->getLogin()));
         return;
@@ -81,9 +79,8 @@ void UserManager::Login(
             continue;
         for (const auto &friendship : friends) {
             if (friendship.user1ID == target->id || friendship.user2ID == target->id) {
-                std::cout << target->login << std::endl;
-                clientSocket->sendResponse(FriendResponse::AddFriend(response->getLogin(), user->login));
-                client->sendResponse(FriendResponse::AddFriend(response->getLogin(), user->login));
+                clientSocket->sendResponse(FriendResponse::AddFriend(response->getLogin(), target->login));
+                client->sendResponse(FriendResponse::AddFriend(target->login, response->getLogin()));
             }
         }
     }
@@ -124,7 +121,6 @@ void UserManager::DeleteAccount(
     Database &database
 ) const
 {
-    std::string login(response->getLogin());
     std::string log(BabelUtils::format(
         "Request for Delete Account with login {%s} and password {%s}",
         response->getLogin(), response->getPassword())
@@ -134,13 +130,13 @@ void UserManager::DeleteAccount(
     _logger.logThis(log);
     switch (database.deleteUser(response->getLogin())) {
         case UserResponse::RequestedAccountDeleted:
-            clientSocket->sendResponse(UserResponse::RequestedDeletedAccount(login));
+            clientSocket->sendResponse(UserResponse::RequestedDeletedAccount(response->getLogin()));
             return;
         case UserResponse::AccountDeleted:
-            clientSocket->sendResponse(UserResponse::AccountDeletedOk(login));
+            clientSocket->sendResponse(UserResponse::AccountDeletedOk(response->getLogin()));
             return;
         default:
-            clientSocket->sendResponse(UserResponse::UnknownError(login));
+            clientSocket->sendResponse(UserResponse::UnknownError(response->getLogin()));
             return;
     }
     //TODO: Send "Delete Friend" to friend list.
