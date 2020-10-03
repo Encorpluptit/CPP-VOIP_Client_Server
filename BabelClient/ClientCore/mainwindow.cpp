@@ -163,7 +163,7 @@ void MainWindow::on_AcceptRequestButton_clicked()
 void MainWindow::on_AcceptCallButton_clicked()
 {
     called = true;
-    auto response = BabelNetwork::CallResponse::AcceptCall(callInfo->getReceiver, callInfo->getSender());
+    auto response = BabelNetwork::CallResponse::AcceptCall(callInfo->getReceiver(), callInfo->getSender());
     client.getTcp()->sendResponse(response);
     // SE CONNECTER A LA SOCKET
 }
@@ -171,7 +171,7 @@ void MainWindow::on_AcceptCallButton_clicked()
 void MainWindow::on_RefuseCallButton_clicked()
 {
     called = false;
-    auto response = BabelNetwork::CallResponse::RefusedCall(callInfo->getReceiver, callInfo->getSender());
+    auto response = BabelNetwork::CallResponse::RefusedCall(callInfo->getReceiver(), callInfo->getSender());
     client.getTcp()->sendResponse(response);
     callInfo = nullptr;
 }
@@ -179,7 +179,7 @@ void MainWindow::on_RefuseCallButton_clicked()
 void MainWindow::on_HangOutButton_clicked()
 {
     called = false;
-    auto response = BabelNetwork::CallResponse::LeftCall(callInfo->getReceiver, callInfo->getSender());
+    auto response = BabelNetwork::CallResponse::LeftCall(callInfo->getReceiver(), callInfo->getSender(), callInfo->getCallId());
     client.getTcp()->sendResponse(response);
     callInfo = nullptr;
     // DECONNECTER LA SOCKET
@@ -189,7 +189,7 @@ void MainWindow::on_CallButton_clicked()
 {
     if (called != true) {
         called = true;
-        auto response = BabelNetwork::CallResponse::CallRequest(login, login /* A REMPLACER PAR LE LOGIN DU BOUTON CONTACT ENCLENCHE */)
+        auto response = BabelNetwork::CallResponse::CallRequest(login, login /* A REMPLACER PAR LE LOGIN DU BOUTON CONTACT ENCLENCHE */);
         client.getTcp()->sendResponse(response);
     }
     //else display already in a call
@@ -307,8 +307,8 @@ void MainWindow::AddFriend(const std::shared_ptr<BabelNetwork::FriendResponse> &
     friendList.push_back(response->getFriendLogin());
     for (size_t i = 0; i < friendList.size(); i++) {
         butts[i]->setText(response->getFriendLogin());
-        if (i >= butts.size())
-            butts.push_back(new QPushButton(response->getFriendLogin(), ui->ContactArea);)
+        if ((int)i >= butts.size())
+            butts.push_back(new QPushButton(response->getFriendLogin(), ui->ContactArea));
     }
 }
 
