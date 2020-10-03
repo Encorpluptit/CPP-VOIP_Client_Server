@@ -221,7 +221,6 @@ void AsioClientSocket::handle_error(const std::string &msg, const boost::system:
     dbg("%s", errorMsg.c_str());
     _clientsList.remove_client(*this);
     stop();
-    dbg("%s", "lol");
 }
 
 [[nodiscard]] const BabelUtils::SharedPtr<BabelUtils::AThread> &AsioClientSocket::getThread() const

@@ -6,6 +6,7 @@
 #include "Models.hpp"
 #include "UserManager.hpp"
 #include "FriendResponse.hpp"
+#include "DatabaseError.hpp"
 
 using namespace BabelServer;
 using namespace BabelNetwork;
@@ -60,6 +61,12 @@ void UserManager::Login(
         clientSocket->sendResponse(UserResponse::AlreadyLog(response->getLogin()));
         return;
     }
+    for (const auto &client : clientList) {
+        if (client->getUser() && client->getUser()->login == response->getLogin()) {
+            clientSocket->sendResponse(UserResponse::AlreadyLog(response->getLogin()));
+            return;
+        }
+    }
     auto user = database.getUser(response->getLogin());
     if (!user) {
         clientSocket->sendResponse(UserResponse::BadLogin(response->getLogin()));
@@ -110,8 +117,18 @@ void UserManager::Logout(
     }
     //TODO: UnHash Password ?
     clientSocket->setUser(nullptr);
-    clientSocket->sendResponse(UserResponse::LoggedOutOk(response->getLogin()));
-    //TODO: Send "Friend disconnected" to friend list.
+    clientSocket->sendResponse(UserResponse::LoggedOutOk(user->login));
+    auto friendships = database.getFriendships(user->login);
+    for (const auto &client: clientList) {
+        auto target = client->getUser();
+        if (!target || target == user)
+            continue;
+        for (const auto &friendship : friendships) {
+            if (friendship.user1ID == target->id || friendship.user2ID == target->id) {
+                client->sendResponse(FriendResponse::DeleteFriendOK(target->login, response->getLogin()));
+            }
+        }
+    }
 }
 
 void UserManager::DeleteAccount(
@@ -128,16 +145,28 @@ void UserManager::DeleteAccount(
     //TODO: Check if user requesting account deletion is logged and the owner
     dbg("%s\n", log.c_str());
     _logger.logThis(log);
+    auto friendships = database.getFriendships(clientSocket->getUser()->id);
+
     switch (database.deleteUser(response->getLogin())) {
         case UserResponse::RequestedAccountDeleted:
             clientSocket->sendResponse(UserResponse::RequestedDeletedAccount(response->getLogin()));
             return;
         case UserResponse::AccountDeleted:
+            clientSocket->setUser(nullptr);
             clientSocket->sendResponse(UserResponse::AccountDeletedOk(response->getLogin()));
+            for (const auto &client: clientList) {
+                auto target = client->getUser();
+                if (!target || target->login == response->getLogin())
+                    continue;
+                for (const auto &friendship : friendships) {
+                    if (friendship.user1ID == target->id || friendship.user2ID == target->id) {
+                        client->sendResponse(FriendResponse::DeleteFriendOK(target->login, response->getLogin()));
+                    }
+                }
+            }
             return;
         default:
             clientSocket->sendResponse(UserResponse::UnknownError(response->getLogin()));
             return;
     }
-    //TODO: Send "Delete Friend" to friend list.
 }

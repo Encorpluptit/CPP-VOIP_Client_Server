@@ -324,7 +324,7 @@ std::vector<FriendModel> Database::getFriendships(const std::string &userName)
                 "Error in getFriendship : User not found -> {%s}", userName.c_str());
             dbg("%s", log.c_str());
             _logger.logThis(log);
-            throw ServerError(log);
+            return friendships;
         }
         lock();
         auto storage = getDatabase();
@@ -336,7 +336,7 @@ std::vector<FriendModel> Database::getFriendships(const std::string &userName)
         dbg("%s", log.c_str());
         _logger.logThis(log);
         unlock();
-        throw ServerError(log);
+        return friendships;
     }
     unlock();
     return friendships;

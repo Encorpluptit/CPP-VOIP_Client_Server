@@ -308,7 +308,7 @@ void MainWindow::AddFriend(const std::shared_ptr<BabelNetwork::FriendResponse> &
     std::cout << "LOGIN : " << response->getLogin() << " FRIEND LOGIN : " << response->getFriendLogin() << std::endl;
     friendList.push_back(response->getFriendLogin());
     for (size_t i = 0; i < friendList.size(); i++) {
-        butts[i]->setText(response->getFriendLogin());
+        butts[i]->setText(friendList[i].c_str());
         if ((int)i >= butts.size())
             butts.push_back(new QPushButton(response->getFriendLogin(), ui->ContactArea));
     }
