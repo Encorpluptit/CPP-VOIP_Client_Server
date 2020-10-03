@@ -106,10 +106,10 @@ void MainWindow::on_RegisterButton_clicked()
 
 void MainWindow::on_DeleteAccount_clicked()
 {
-    //std::string user = ui->UserRegisterLine->text().toLocal8Bit().constData();
-
-    //auto response = BabelNetwork::UserResponse::AccountDeletionRequest(user)
+    auto response = BabelNetwork::UserResponse::AccountDeletionRequest(login);
+    client.getTcp()->sendResponse(response);
     std::cout << "Delete Account clicked" << std::endl;
+    LoggedOut(nullptr);
 }
 
 void MainWindow::on_RefuseRequestButton_clicked()
@@ -186,13 +186,11 @@ void MainWindow::LoggedOut(const std::shared_ptr<BabelNetwork::UserResponse> &re
     friendList.clear();
     callInfo = nullptr;
     friendRequest = nullptr;
-    //FRONT ARTHUR;
+    ui->gridStackedWidget->setCurrentWidget(ui->LoginWidget);
 }
 
 void MainWindow::AccountCreate(const std::shared_ptr<BabelNetwork::UserResponse> &response)
 {
-    //DISPLAY COMPTE CREE
-    std::cout << "ACCOUNT CREATE" << std::endl;
     ui->CantFindText->setText("Account Create");
     ui->CantFindText->show();
     (void) response;
@@ -214,35 +212,28 @@ void MainWindow::WrongLogin(const std::shared_ptr<BabelNetwork::UserResponse> &r
 {
     ui->WrongLoginText->setText("Wrong Login");
     ui->WrongLoginText->show();
-    std::cout << "WRONG LOGIN" << std::endl;
     (void) response;
 }
 
 void MainWindow::WrongPassword(const std::shared_ptr<BabelNetwork::UserResponse> &response)
 {
     ui->WrongLoginText->setText("Wrong password");
-    ui->WrongLoginText->show(); // METTRE WRONG PASSWORD
-    std::cout << "WRONG PASSWORD" << std::endl;
+    ui->WrongLoginText->show();
     (void) response;
 }
 
 void MainWindow::LoginAlreadyTaken(const std::shared_ptr<BabelNetwork::UserResponse> &response)
 {
-    //DISPLAY LOGIN ALREADY TAKEN
     ui->CantFindText->setText("Login already taken");
     ui->CantFindText->show();
-    std::cout << "LOGIN ALREADY TAKEN" << std::endl;
     (void) response;
 }
 
 void MainWindow::AlreadyLoggedIn(const std::shared_ptr<BabelNetwork::UserResponse> &response)
 {
-    //DISPLAY ALREADY LOGGED IN
     ui->WrongLoginText->setText("Already logged in");
     ui->WrongLoginText->show();
-    std::cout << "ALREADY LOGGED IN" << std::endl;
     (void) response;
-    //FRONT ARTHUR
 }
 
 void MainWindow::CallStarted(const std::shared_ptr<BabelNetwork::CallResponse> &response)
