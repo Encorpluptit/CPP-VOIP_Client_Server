@@ -193,6 +193,8 @@ void MainWindow::AccountCreate(const std::shared_ptr<BabelNetwork::UserResponse>
 {
     //DISPLAY COMPTE CREE
     std::cout << "ACCOUNT CREATE" << std::endl;
+    ui->CantFindText->setText("Account Create");
+    ui->CantFindText->show();
     (void) response;
 }
 
@@ -227,8 +229,8 @@ void MainWindow::WrongPassword(const std::shared_ptr<BabelNetwork::UserResponse>
 void MainWindow::LoginAlreadyTaken(const std::shared_ptr<BabelNetwork::UserResponse> &response)
 {
     //DISPLAY LOGIN ALREADY TAKEN
-    ui->WrongLoginText->setText("Login already taken");
-    ui->WrongLoginText->show();
+    ui->CantFindText->setText("Login already taken");
+    ui->CantFindText->show();
     std::cout << "LOGIN ALREADY TAKEN" << std::endl;
     (void) response;
 }

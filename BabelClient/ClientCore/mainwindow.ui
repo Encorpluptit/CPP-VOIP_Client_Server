@@ -255,7 +255,7 @@ p, li { white-space: pre-wrap; }
               <x>0</x>
               <y>0</y>
               <width>85</width>
-              <height>98</height>
+              <height>188</height>
              </rect>
             </property>
            </widget>
@@ -313,6 +313,13 @@ p, li { white-space: pre-wrap; }
          </property>
         </widget>
        </item>
+       <item row="7" column="1">
+        <widget class="QPushButton" name="DeleteAccountButton">
+         <property name="text">
+          <string>Delete Account</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
     </widget>
@@ -355,7 +362,7 @@ p, li { white-space: pre-wrap; }
         <widget class="QTextEdit" name="CantFindText">
          <property name="maximumSize">
           <size>
-           <width>120</width>
+           <width>190</width>
            <height>30</height>
           </size>
          </property>
