@@ -82,8 +82,8 @@ void UserManager::Login(
         for (const auto &friendship : friends) {
             if (friendship.user1ID == target->id || friendship.user2ID == target->id) {
                 std::cout << target->login << std::endl;
-                clientSocket->sendResponse(FriendResponse::FriendRequestOk(response->getLogin(), user->login));
-                client->sendResponse(FriendResponse::FriendRequestOk(response->getLogin(), user->login));
+                clientSocket->sendResponse(FriendResponse::AddFriend(response->getLogin(), user->login));
+                client->sendResponse(FriendResponse::AddFriend(response->getLogin(), user->login));
             }
         }
     }

@@ -17,7 +17,7 @@ std::shared_ptr<AResponse> FriendResponse::RequestFriend(const std::string &logi
     return resp;
 }
 
-std::shared_ptr<AResponse> FriendResponse::FriendRequestOk(const std::string &login, const std::string &friendLogin)
+std::shared_ptr<AResponse> FriendResponse::AddFriend(const std::string &login, const std::string &friendLogin)
 {
     auto resp = std::make_shared<FriendResponse>(login, friendLogin);
 

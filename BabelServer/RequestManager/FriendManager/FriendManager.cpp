@@ -19,6 +19,33 @@ void FriendManager::acceptFriendship(
     Database &database
 ) const
 {
+    switch (database.createFriendship(response->getLogin(), response->getFriendLogin())) {
+        case FriendResponse::UnknownUser:
+            clientSocket->sendResponse(FriendResponse::UserNotExist(response));
+            return;
+        case FriendResponse::FriendAdded:
+            for (const auto &client : clientList) {
+                auto user = client->getUser();
+                if (!user || user->login != response->getFriendLogin())
+                    continue;
+                client->sendResponse(FriendResponse::AddFriend(user->login, response->getLogin()));
+                break;
+            }
+            clientSocket->sendResponse(FriendResponse::AddFriend(response->getLogin(), response->getFriendLogin()));
+            return;
+        default:
+            clientSocket->sendResponse(FriendResponse::UnknownErrorOccured(response));
+            return;
+    }
+}
+
+void FriendManager::friendshipRequest(
+    const BabelUtils::SharedPtr<ClientSocket> &clientSocket,
+    const std::shared_ptr<FriendResponse> &response,
+    const ClientList &clientList,
+    __attribute__((unused))Database &database
+) const
+{
     auto friendships = database.getFriendships(clientSocket->getUser()->login);
 
     for (const auto &client : clientList) {
@@ -31,24 +58,9 @@ void FriendManager::acceptFriendship(
                 return;
             }
         }
-        client->sendResponse(FriendResponse::NewFriendRequest(response));
-        return;
-    }
-    clientSocket->sendResponse(FriendResponse::UserNotExist(response));
-}
-
-void FriendManager::friendshipRequest(
-    const BabelUtils::SharedPtr<ClientSocket> &clientSocket,
-    const std::shared_ptr<FriendResponse> &response,
-    const ClientList &clientList,
-    __attribute__((unused))Database &database
-) const
-{
-    for (const auto &client : clientList) {
-        auto user = client->getUser();
-        if (!user || user->login != response->getFriendLogin())
-            continue;
-        client->sendResponse(FriendResponse::NewFriendRequest(response));
+        std::cout << response->getLogin() << "|" << response->getFriendLogin() << std::endl;
+//        client->sendResponse(FriendResponse::NewFriendRequest(response));
+        client->sendResponse(FriendResponse::NewFriendRequest(response->getFriendLogin(), response->getLogin()));
         return;
     }
     clientSocket->sendResponse(FriendResponse::UserNotExist(response));

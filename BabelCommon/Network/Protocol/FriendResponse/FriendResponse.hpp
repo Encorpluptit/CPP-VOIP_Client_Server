@@ -132,7 +132,7 @@ namespace BabelNetwork {
         RequestFriend(const std::string &login, const std::string &friendLogin);
 
         [[nodiscard]] static std::shared_ptr<AResponse>
-        FriendRequestOk(const std::string &login, const std::string &friendLogin);
+        AddFriend(const std::string &login, const std::string &friendLogin);
 
         [[nodiscard]] static std::shared_ptr<AResponse>
         NewFriendRequest(const std::string &login, const std::string &friendLogin);

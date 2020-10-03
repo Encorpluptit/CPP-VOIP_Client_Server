@@ -1,6 +1,7 @@
 #include "mainwindow.hpp"
 #include "UserResponse.hpp"
 #include "./ui_mainwindow.h"
+#include "Debug.hpp"
 
 #include <QtDebug>
 #include <QAbstractButton>
@@ -394,6 +395,7 @@ void MainWindow::doUnknowTypeResponse(const std::shared_ptr<BabelNetwork::ARespo
 
 void MainWindow::checkTypeResponse(const std::shared_ptr<BabelNetwork::AResponse> &response)
 {
+    dbg("Request Received: %s", response->describe().c_str());
     dispatch_ptr[response->getResponseType()](this, response);
 }
 
