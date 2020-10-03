@@ -95,6 +95,7 @@ void RequestManager::manageFriend(
         if (std::get<0>(ptr) == code)
             return std::get<1>(ptr)(&_friendManager, clientSocket, response, clientList, database);
     }
+    std::cerr << "WRONG FRIEND CODE" << std::endl;
 }
 
 void RequestManager::manageMessage(

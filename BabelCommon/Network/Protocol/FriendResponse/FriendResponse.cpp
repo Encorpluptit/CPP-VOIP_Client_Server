@@ -127,5 +127,5 @@ std::string FriendResponse::describe_code() const noexcept
         if (getCode() == pair.first)
             return pair.second;
     }
-    return "Unknown Call Code";
+    return "Unknown Friend Code";
 }
