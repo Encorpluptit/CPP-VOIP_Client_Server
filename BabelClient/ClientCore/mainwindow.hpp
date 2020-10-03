@@ -5,6 +5,7 @@
 #include <QMainWindow>
 #include <QTimer>
 #include <QPushButton>
+#include <QSignalMapper>
 #include "NetworkClientSocket.hpp"
 #include "UserResponse.hpp"
 #include "CallResponse.hpp"
@@ -97,6 +98,7 @@ class MainWindow : public QMainWindow
         std::shared_ptr<BabelNetwork::CallResponse> callInfo;
         std::vector<std::string> friendList;
         QList<QPushButton *> butts;
+        QSignalMapper *mapper;
 
     private:
         std::vector<std::function<void(MainWindow*, const std::shared_ptr<BabelNetwork::AResponse> &)>> dispatch_ptr = {&MainWindow::doUnknowTypeResponse, &MainWindow::doUserResponse, &MainWindow::doCallResponse, &MainWindow::doFriendResponse, &MainWindow::doMessageResponse};

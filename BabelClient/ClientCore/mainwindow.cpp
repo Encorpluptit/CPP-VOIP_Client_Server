@@ -17,39 +17,10 @@ MainWindow::MainWindow(QWidget *parent, NetworkClientSocket &network) : QMainWin
 
     ui->VLayout = new QVBoxLayout(ui->ContactArea);
 
-    QPushButton *button1 = new QPushButton("Contact 1", ui->ContactArea);
-    QPushButton *button2 = new QPushButton("Contact 2", ui->ContactArea);
-    QPushButton *button3 = new QPushButton("Contact 3", ui->ContactArea);
-    QPushButton *button4 = new QPushButton("Contact 4", ui->ContactArea);
-    QPushButton *button5 = new QPushButton("Contact 5", ui->ContactArea);
-    QPushButton *button6 = new QPushButton("Contact 6", ui->ContactArea);
-    QPushButton *button7 = new QPushButton("Contact 7", ui->ContactArea);
-    QPushButton *button8 = new QPushButton("Contact 8", ui->ContactArea);
-    QPushButton *button9 = new QPushButton("Contact 9", ui->ContactArea);
-
-
-    ui->VLayout->addWidget(button1);
-    ui->VLayout->addWidget(button2);
-    ui->VLayout->addWidget(button3);
-    ui->VLayout->addWidget(button4);
-    ui->VLayout->addWidget(button5);
-    ui->VLayout->addWidget(button6);
-    ui->VLayout->addWidget(button7);
-    ui->VLayout->addWidget(button8);
-    ui->VLayout->addWidget(button9);
-
-    //to count all of button in contact area
     butts = ui->ContactArea->findChildren<QPushButton *>();
-    qDebug() << butts.size();
 
-    qDebug() << butts[0]->text();
-
-    QSignalMapper *mapper = new QSignalMapper();
-    for (auto &button : butts) {
-        connect(button, SIGNAL(clicked()), mapper, SLOT(map()));
-        mapper->setMapping(button, button->text());
-        connect(mapper, SIGNAL(mapped(const QString &)), this, SLOT(coucou(const QString &)));
-    }
+    mapper = new QSignalMapper();
+    
     ui->WrongLoginText->hide();
 
     timer = new QTimer(this);
@@ -212,6 +183,9 @@ void MainWindow::LoggedOut(const std::shared_ptr<BabelNetwork::UserResponse> &re
 {
     logged = false;
     (void) response;
+    friendList.clear();
+    callInfo = nullptr;
+    friendRequest = nullptr;
     //FRONT ARTHUR;
 }
 
@@ -305,12 +279,21 @@ void MainWindow::UserDisconnected(const std::shared_ptr<BabelNetwork::CallRespon
 
 void MainWindow::AddFriend(const std::shared_ptr<BabelNetwork::FriendResponse> &response)
 {
+    QPushButton *button;
+
     std::cout << "LOGIN : " << response->getLogin() << " FRIEND LOGIN : " << response->getFriendLogin() << std::endl;
     friendList.push_back(response->getFriendLogin());
     for (size_t i = 0; i < friendList.size(); i++) {
-        butts[i]->setText(response->getFriendLogin());
-        if ((int)i >= butts.size())
-            butts.push_back(new QPushButton(response->getFriendLogin(), ui->ContactArea));
+        if ((int)i >= butts.size()) {
+            button = new QPushButton(friendList[i].c_str(), ui->ContactArea);
+            ui->VLayout->addWidget(button);
+            connect(button, SIGNAL(clicked()), mapper, SLOT(map()));
+            mapper->setMapping(button, button->text());
+            connect(mapper, SIGNAL(mapped(const QString &)), this, SLOT(coucou(const QString &)));
+            button->setText(friendList[i].c_str());
+            butts.push_back(button);
+        } else
+            butts[i]->setText(friendList[i].c_str());
     }
 }
 
