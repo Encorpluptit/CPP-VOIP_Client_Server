@@ -25,6 +25,7 @@ namespace BabelNetwork {
 
             CallRefused = 470,
             UserDisconnected = 471,
+            UnknownError = 472,
         };
 
     private:
@@ -188,16 +189,19 @@ namespace BabelNetwork {
         [[nodiscard]] static std::shared_ptr<AResponse>
         DisconnectedUser(const std::string &sender, const std::string &receiver);
 
+        [[nodiscard]] static std::shared_ptr<AResponse>
+        UnknownErrorOccured(const std::shared_ptr<BabelNetwork::CallResponse> &response);
+
         /* <- Stringify Code -> */
     private:
         const std::map<ResponseCode, std::string> codeString = {
-            {CallStarted, "Call Started"},
-            {RequestCall, "Call Requested"},
-            {CallLeft, "Call Left"},
-            {RequestEndCall, "End Call Requested"},
-            {IncomingCall, "Incoming Call"},
-            {CallAccepted, "Call Accepted"},
-            {CallRefused, "Call Refused"},
+            {CallStarted,      "Call Started"},
+            {RequestCall,      "Call Requested"},
+            {CallLeft,         "Call Left"},
+            {RequestEndCall,   "End Call Requested"},
+            {IncomingCall,     "Incoming Call"},
+            {CallAccepted,     "Call Accepted"},
+            {CallRefused,      "Call Refused"},
             {UserDisconnected, "User Disconnected"}
         };
     };

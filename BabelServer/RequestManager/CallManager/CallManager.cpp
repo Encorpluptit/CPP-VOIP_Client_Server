@@ -16,14 +16,16 @@ void CallManager::requestCall(
     const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
     const std::shared_ptr<BabelNetwork::CallResponse> &response,
     const BabelNetwork::ClientList &clientList
-) const
+)
 {
-    // TODO: add check if caller call himself
+    if (clientSocket->getUser()->login == response->getReceiver()) {
+        clientSocket->sendResponse(CallResponse::UnknownErrorOccured(response));
+        return;
+    }
     for (const auto &target: clientList) {
         if (target->getUser() && target->getUser()->login == response->getReceiver()) {
             target->sendResponse(CallResponse::CallIncoming(response, getCallId()));
-            // TODO: Adding Increment (pb with const)
-//            incrementCallId();
+            incrementCallId();
             return;
         }
     }

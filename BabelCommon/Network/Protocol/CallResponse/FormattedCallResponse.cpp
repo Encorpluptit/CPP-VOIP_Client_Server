@@ -75,8 +75,6 @@ CallResponse::CallIncoming(const std::string &sender, const std::string &receive
 
 std::shared_ptr <AResponse>
 CallResponse::CallIncoming(const std::shared_ptr<BabelNetwork::CallResponse> &response, const uint16_t call_id) {
-    CallResponse reponse(*response);
-
     response->setCode(CallResponse::ResponseCode::IncomingCall);
     if (!response->setCallId(call_id))
         return nullptr;
@@ -101,11 +99,19 @@ std::shared_ptr <AResponse> CallResponse::RefusedCall(const std::string &sender,
     return resp;
 }
 
-std::shared_ptr <AResponse> CallResponse::DisconnectedUser(const std::string &sender, const std::string &receiver) {
+std::shared_ptr<AResponse> CallResponse::DisconnectedUser(const std::string &sender, const std::string &receiver)
+{
     auto resp = std::make_shared<CallResponse>(sender, receiver);
 
     resp->setCode(CallResponse::ResponseCode::UserDisconnected);
     if (!resp->setTimestamp())
         return nullptr;
     return resp;
+}
+
+std::shared_ptr<AResponse>
+CallResponse::UnknownErrorOccured(const std::shared_ptr<BabelNetwork::CallResponse> &response)
+{
+    response->setCode(CallResponse::ResponseCode::UnknownError);
+    return response;
 }
