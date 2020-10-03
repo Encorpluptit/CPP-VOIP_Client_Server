@@ -38,7 +38,6 @@ MainWindow::MainWindow(QWidget *parent, NetworkClientSocket &network) : QMainWin
     ui->VLayout->addWidget(button8);
     ui->VLayout->addWidget(button9);
 
-
     //to count all of button in contact area
     butts = ui->ContactArea->findChildren<QPushButton *>();
     qDebug() << butts.size();
@@ -57,6 +56,7 @@ MainWindow::MainWindow(QWidget *parent, NetworkClientSocket &network) : QMainWin
     connect(timer, SIGNAL(timeout()), this, SLOT(UpdateClient()));
     timer->start(100);
     logged = false;
+    ui->CantFindText->hide();
 }
 
 MainWindow::~MainWindow()
@@ -205,7 +205,7 @@ void MainWindow::LoggedIn(const std::shared_ptr<BabelNetwork::UserResponse> &res
     std::cout << "LOGGED IN" << std::endl;
     login = response->getLogin();
     logged = true;
-    (void) response;
+    ui->ContactName->setText(login.c_str());
 }
 
 void MainWindow::LoggedOut(const std::shared_ptr<BabelNetwork::UserResponse> &response)
@@ -323,7 +323,7 @@ void MainWindow::FriendRequest(const std::shared_ptr<BabelNetwork::FriendRespons
 
 void MainWindow::UnknowUser(const std::shared_ptr<BabelNetwork::FriendResponse> &response)
 {
-    //THROW ERROR
+    ui->CantFindText->show();
     (void) response;
 }
 
