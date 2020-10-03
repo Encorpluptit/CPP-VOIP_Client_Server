@@ -18,10 +18,11 @@ void CallManager::requestCall(
     const BabelNetwork::ClientList &clientList
 )
 {
-    if (clientSocket->getUser()->login == response->getReceiver()) {
-        clientSocket->sendResponse(CallResponse::UnknownErrorOccured(response));
-        return;
-    }
+    //TODO: implement
+//    if (clientSocket->getUser()->login == response->getReceiver()) {
+//        clientSocket->sendResponse(CallResponse::UnknownErrorOccured(response));
+//        return;
+//    }
     for (const auto &target: clientList) {
         if (target->getUser() && target->getUser()->login == response->getReceiver()) {
             target->sendResponse(CallResponse::CallIncoming(response, getCallId()));
