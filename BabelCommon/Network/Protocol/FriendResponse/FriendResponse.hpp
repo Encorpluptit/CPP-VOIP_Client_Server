@@ -13,21 +13,24 @@
 
 namespace BabelNetwork {
     class FriendResponse final : virtual public AResponse {
+
         /* <- Class Enum -> */
     public:
         enum ResponseCode {
             RequestAddFriend = 300,
-            AddFriend = 301,
-            FriendRequest = 302,
+            FriendAdded = 301,
+            NewFriendshipRequested = 302,
             AcceptFriendRequest = 303,
             DeclineFriendRequest = 304,
-            FriendDeleted = 305,
-            DeleteFriendRequest = 306,
+            RequestDeleteFriend = 305,
+            FriendDeleted = 306,
 
-            UnknownUser = 350,
-            UnknownErrorOccur = 351,
-
+            FriendshipAlreadyExist = 350,
+            FriendshipUnknown = 351,
+            UnknownUser = 352,
+            UnknownErrorOccur = 354,
         };
+
     private:
         enum MaxDataSize {
             Login = 128,
@@ -84,10 +87,6 @@ namespace BabelNetwork {
 
         [[nodiscard]] size_t getDataSize() const noexcept final;
 
-//        [[nodiscard]] size_t getMaxResponseSize() const noexcept final {
-//            return MaxResponseSize;
-//        };
-
         /* <- Request related Methods -> */
     public:
         [[nodiscard]] bool isOk() noexcept final;
@@ -108,7 +107,8 @@ namespace BabelNetwork {
 
         [[nodiscard]] char *getDataByteBody() const noexcept final;
 
-        [[nodiscard]] const std::string &getDescription() const noexcept final {
+        [[nodiscard]] const std::string &getDescription() const noexcept final
+        {
             return _description;
         };
 
@@ -128,28 +128,54 @@ namespace BabelNetwork {
 
         /* <- Formatted Response -> */
     public:
-        [[nodiscard]] static std::shared_ptr<AResponse> RequestFriend(const std::string &login, const std::string &friendLogin);
-        [[nodiscard]] static std::shared_ptr<AResponse> FriendRequestOk(const std::string &login, const std::string &friendLogin);
-        [[nodiscard]] static std::shared_ptr<AResponse> NewFriendRequest(const std::string &login, const std::string &friendLogin);
-        [[nodiscard]] static std::shared_ptr<AResponse> FriendRequestAccepted(const std::string &login, const std::string &friendLogin);
-        [[nodiscard]] static std::shared_ptr<AResponse> FriendRequestDeclined(const std::string &login, const std::string &friendLogin);
-        [[nodiscard]] static std::shared_ptr<AResponse> RequestDeleteFriend(const std::string &login, const std::string &friendLogin);
+        [[nodiscard]] static std::shared_ptr<AResponse>
+        RequestFriend(const std::string &login, const std::string &friendLogin);
 
         [[nodiscard]] static std::shared_ptr<AResponse>
-        UserNotExist(const std::string &login, const std::string &friendLogin);
+        FriendRequestOk(const std::string &login, const std::string &friendLogin);
+
+        [[nodiscard]] static std::shared_ptr<AResponse>
+        NewFriendRequest(const std::string &login, const std::string &friendLogin);
+
+        [[nodiscard]] static std::shared_ptr<AResponse>
+        NewFriendRequest(const std::shared_ptr<BabelNetwork::FriendResponse> &response);
+
+        [[nodiscard]] static std::shared_ptr<AResponse>
+        FriendRequestAccepted(const std::string &login, const std::string &friendLogin);
+
+        [[nodiscard]] static std::shared_ptr<AResponse>
+        FriendRequestDeclined(const std::shared_ptr<BabelNetwork::FriendResponse> &response);
+
+        [[nodiscard]] static std::shared_ptr<AResponse>
+        DeleteFriendRequest(const std::string &login, const std::string &friendLogin);
+
+        [[nodiscard]] static std::shared_ptr<AResponse>
+        UserNotExist(const std::shared_ptr<BabelNetwork::FriendResponse> &response);
+
+        [[nodiscard]] static std::shared_ptr<AResponse>
+        DeleteFriendOK(const std::shared_ptr<BabelNetwork::FriendResponse> &response);
 
         [[nodiscard]] static std::shared_ptr<AResponse>
         DeleteFriendOK(const std::string &login, const std::string &friendLogin);
 
+        [[nodiscard]] static std::shared_ptr<AResponse>
+        FriendshipExist(const std::shared_ptr<BabelNetwork::FriendResponse> &response);
+
+        [[nodiscard]] static std::shared_ptr<AResponse>
+        UnknownFriendship(const std::shared_ptr<BabelNetwork::FriendResponse> &response);
+
+        [[nodiscard]] static std::shared_ptr<AResponse>
+        UnknownErrorOccured(const std::shared_ptr<BabelNetwork::FriendResponse> &response);
+
         /* <- Stringify Code -> */
     private:
         const std::map<ResponseCode, std::string> codeString = {
-            {RequestAddFriend, "Request Add Friend"},
-            {AddFriend, "Add Friend"},
-            {FriendRequest, "Friend Request"},
-            {AcceptFriendRequest, "Friend Request Accepted"},
-            {DeclineFriendRequest, "FriendRequest Declined"},
-            {UnknownUser, "Unknown User"},
+            {RequestAddFriend,     "Request Add Friend"},
+            {FriendAdded,          "Add Friend"},
+            {RequestDeleteFriend,  "Friend Delete Request"},
+            {AcceptFriendRequest,  "Friend Request Accepted"},
+            {DeclineFriendRequest, "RequestDeleteFriend Declined"},
+            {UnknownUser,          "Unknown User"},
         };
     };
 }
