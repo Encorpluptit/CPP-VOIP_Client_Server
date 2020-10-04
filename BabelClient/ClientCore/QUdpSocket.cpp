@@ -66,6 +66,6 @@ void MyUdpSocket::sendVoice(std::vector<uint16_t> buf, std::string ip, int port)
 
     addr.setAddress(str);
 
-    QByteArray data = reinterpret_cast<const char*>(buf.data(), buf.size());
+    QByteArray data = reinterpret_cast<char*>(buf.data(), buf.size());
     socket->writeDatagram(data, addr, port);
 }
