@@ -60,11 +60,12 @@ public:
         myUdpPort = port;
     }
 
+    std::string myUdpIp;
+    int myUdpPort;
+    
 private:
     std::shared_ptr<ITcpSocket> _tcp;
     std::shared_ptr<IUdpSocket> _udp;
     std::string serverIp;
     int serverPort;
-    std::string myUdpIp;
-    int myUdpPort;
 };

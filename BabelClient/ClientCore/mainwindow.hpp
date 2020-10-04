@@ -100,6 +100,7 @@ class MainWindow : public QMainWindow
         std::vector<std::string> friendList;
         QList<QPushButton *> butts;
         QSignalMapper *mapper;
+        std::string actualFriend;
 
     private:
         std::vector<std::function<void(MainWindow*, const std::shared_ptr<BabelNetwork::AResponse> &)>> dispatch_ptr = {&MainWindow::doUnknowTypeResponse, &MainWindow::doUserResponse, &MainWindow::doCallResponse, &MainWindow::doFriendResponse, &MainWindow::doMessageResponse};

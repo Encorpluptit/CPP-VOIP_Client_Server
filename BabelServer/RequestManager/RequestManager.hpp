@@ -76,7 +76,7 @@ namespace BabelServer {
     private:
         BabelUtils::Logger &_logger;
         const UserManager _userManager;
-        const CallManager _callManager;
+        CallManager _callManager;
         const FriendManager _friendManager;
         const MessageManager _messageManager;
     };

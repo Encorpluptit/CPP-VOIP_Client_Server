@@ -47,6 +47,11 @@ void AsioClientSocket::start()
 bool AsioClientSocket::sendResponse(const std::shared_ptr<AResponse> &response)
 {
     bool write_in_progress = !_write_queue.empty();
+    if (!response) {
+        _logger.logThis("Trying to send a null response");
+        dbg("%s", "Trying to send a null response");
+        return true;
+    }
 
     _logger.logThis(response, "Queue response :");
     _write_queue.push(response);

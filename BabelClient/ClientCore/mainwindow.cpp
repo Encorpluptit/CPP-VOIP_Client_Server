@@ -37,10 +37,13 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-/*          EVENT FRONT         */
+
+
+
 
 void MainWindow::coucou(const QString &name)
 {
+    actualFriend = name.toLocal8Bit().constData();
     ui->ContactName->setMarkdown(name);
 }
 
@@ -55,7 +58,11 @@ void MainWindow::on_ConnectionButton_clicked()
 
 void MainWindow::on_DisconnectButton_clicked()
 {
-    std::cout << "BACK BUTTON" << std::endl;
+    if (called == true && callInfo != nullptr) {
+        auto CallResponse = BabelNetwork::CallResponse::LeftCall(login, callInfo->getReceiver());
+        client.getTcp()->sendResponse(CallResponse);
+        UserDisconnected(callInfo);
+    }
     auto response = BabelNetwork::UserResponse::LogoutRequest(login);
     ui->gridStackedWidget->setCurrentWidget(ui->LoginWidget);
     client.getTcp()->sendResponse(response);
@@ -136,15 +143,15 @@ void MainWindow::on_AcceptRequestButton_clicked()
 void MainWindow::on_AcceptCallButton_clicked()
 {
     called = true;
-    auto response = BabelNetwork::CallResponse::AcceptCall(callInfo->getReceiver(), callInfo->getSender());
+    // OUVRIR SOCKET
+    auto response = BabelNetwork::CallResponse::AcceptCall(login, callInfo->getSender(), client.myUdpIp, std::to_string(client.myUdpPort));
     client.getTcp()->sendResponse(response);
-    // SE CONNECTER A LA SOCKET
 }
 
 void MainWindow::on_RefuseCallButton_clicked()
 {
     called = false;
-    auto response = BabelNetwork::CallResponse::RefusedCall(callInfo->getReceiver(), callInfo->getSender());
+    auto response = BabelNetwork::CallResponse::RefusedCall(login, callInfo->getSender());
     client.getTcp()->sendResponse(response);
     callInfo = nullptr;
 }
@@ -152,27 +159,30 @@ void MainWindow::on_RefuseCallButton_clicked()
 void MainWindow::on_HangOutButton_clicked()
 {
     called = false;
-    auto response = BabelNetwork::CallResponse::LeftCall(callInfo->getReceiver(), callInfo->getSender(), callInfo->getCallId());
+    auto response = BabelNetwork::CallResponse::LeftCall(login, actualFriend);
     client.getTcp()->sendResponse(response);
     callInfo = nullptr;
-    // DECONNECTER LA SOCKET
+    client.getUdp()->disconnect();
 }
 
 void MainWindow::on_CallButton_clicked()
 {
-    if (called != true) {
+    if (called != true && actualFriend != login) {
         called = true;
-        //OUVRIR SOCKET
-        auto response = BabelNetwork::CallResponse::CallRequest(login, login /* A REMPLACER PAR LE LOGIN DU BOUTON CONTACT ENCLENCHE */);
+        auto response = BabelNetwork::CallResponse::CallRequest(login, actualFriend, client.myUdpIp, std::to_string(client.myUdpPort));
         client.getTcp()->sendResponse(response);
+        //OUVRIR SOCKET
     }
     //else display already in a call
 }
 
 
 
+
+
 void MainWindow::LoggedIn(const std::shared_ptr<BabelNetwork::UserResponse> &response)
 {
+    actualFriend = login;
     ui->gridStackedWidget->setCurrentWidget(ui->CallPage);
     ui->WrongLoginText->hide();
     std::cout << "LOGGED IN" << std::endl;
@@ -242,25 +252,23 @@ void MainWindow::CallStarted(const std::shared_ptr<BabelNetwork::CallResponse> &
 {
     //init_audio();
     called = true;
-    (void) response;
     callInfo = response;
     voiceTimer->start(100);
 }
 
 void MainWindow::CallLeft(const std::shared_ptr<BabelNetwork::CallResponse> &response)
 {
+    voiceTimer->stop();
     //stop_audio();
     called = false;
     (void) response;
     client.getUdp()->disconnect();
     callInfo = nullptr;
-    voiceTimer->stop();
 }
 
 void MainWindow::IncomingCall(const std::shared_ptr<BabelNetwork::CallResponse> &response)
 {
     ui->gridStackedWidget->setCurrentWidget(ui->IncomingCall);
-    (void) response;
     callInfo = response;
 }
 
@@ -274,12 +282,12 @@ void MainWindow::CallRefused(const std::shared_ptr<BabelNetwork::CallResponse> &
 
 void MainWindow::UserDisconnected(const std::shared_ptr<BabelNetwork::CallResponse> &response)
 {
+    voiceTimer->stop();
     //stop_audio();
     called = false;
     (void) response;
     client.getUdp()->disconnect();
     callInfo = nullptr;
-    voiceTimer->stop();
 }
 
 void MainWindow::AddFriend(const std::shared_ptr<BabelNetwork::FriendResponse> &response)
@@ -332,6 +340,10 @@ void MainWindow::UnknowUserMessage(const std::shared_ptr<BabelNetwork::MessageRe
     (void) response;
     //FRONT ARTHUR
 }
+
+
+
+
 
 void MainWindow::doUserResponse(const std::shared_ptr<BabelNetwork::AResponse> &response)
 {

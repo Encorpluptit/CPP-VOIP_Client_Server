@@ -14,7 +14,7 @@ namespace BabelServer {
 
     class CallManager {
         using CallManagerMethodProt = void(
-            const CallManager *,
+            CallManager *,
             const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
             const std::shared_ptr<BabelNetwork::CallResponse> &,
             const BabelNetwork::ClientList &
@@ -32,7 +32,7 @@ namespace BabelServer {
         void requestCall(
             const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
             const std::shared_ptr<BabelNetwork::CallResponse> &response,
-            const BabelNetwork::ClientList &clientList) const;
+            const BabelNetwork::ClientList &clientList);
 
         void refuseCall(
             const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
@@ -42,7 +42,13 @@ namespace BabelServer {
 
         void acceptCall(
             const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
-            const std::shared_ptr<BabelNetwork::CallResponse> &response,
+            const std::shared_ptr<BabelNetwork::CallResponse> &resp,
+            const BabelNetwork::ClientList &clientList
+        ) const;
+
+        void endCall(
+            const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
+            const std::shared_ptr<BabelNetwork::CallResponse> &resp,
             const BabelNetwork::ClientList &clientList
         ) const;
 
@@ -55,17 +61,18 @@ namespace BabelServer {
 
         void incrementCallId() { _call_id += 1; }
 
-        [[nodiscard]] const uint16_t &getCallId() const { return _call_id; }
+        [[nodiscard]] uint16_t getCallId() const { return _call_id; }
 
 
         /* <- Attributes -> */
     private:
         BabelUtils::Logger &_logger;
-        uint16_t _call_id;
+        uint16_t _call_id = 1;
         const std::vector<std::tuple<BabelNetwork::CallResponse::ResponseCode, std::function<CallManagerMethodProt>>> CallResponsePtrTab = {
-            {BabelNetwork::CallResponse::ResponseCode::RequestCall,  &CallManager::requestCall},
-            {BabelNetwork::CallResponse::ResponseCode::CallRefused,  &CallManager::refuseCall},
-            {BabelNetwork::CallResponse::ResponseCode::CallAccepted, &CallManager::acceptCall},
+            {BabelNetwork::CallResponse::ResponseCode::RequestCall,    &CallManager::requestCall},
+            {BabelNetwork::CallResponse::ResponseCode::CallRefused,    &CallManager::refuseCall},
+            {BabelNetwork::CallResponse::ResponseCode::CallAccepted,   &CallManager::acceptCall},
+            {BabelNetwork::CallResponse::ResponseCode::RequestEndCall, &CallManager::endCall},
         };
 
     };

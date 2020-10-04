@@ -45,19 +45,18 @@ void MyUdpSocket::bytesWritten(const qint64 bytes)
 std::vector<uint16_t> MyUdpSocket::readResponse(std::string ip, int port)
 {
     std::vector<uint16_t> voice;
-    QHostAddress addr;
-    quint16 portIncoming;
-    int bytes;
-    char *date_transform;
+    QByteArray data;
+    QHostAddress sender;
+    quint16 senderPort;
 
-    if ((bytes = socket->bytesAvailable()) < 1)
+    if (socket->hasPendingDatagrams() == false)
         return (voice);
-    char data[bytes];
-    socket->readDatagram(data, bytes, &addr, &portIncoming);
-    if (addr.toString() != ip.c_str() || portIncoming != port)
+    data.resize(socket->pendingDatagramSize());
+    socket->readDatagram(data.data(), data.size(), &sender, &senderPort);
+    if (sender.toString().toLocal8Bit().constData() != ip || senderPort != port)
         return (voice);
-    std::vector<uint16_t> voice2(date_transform, sizeof(data));
-    return (voice);
+    std::vector<uint16_t> voice2(data.begin(), data.end());
+    return (voice2);
 }
 
 void MyUdpSocket::sendResponse(std::vector<uint16_t> buf, std::string ip, int port)
