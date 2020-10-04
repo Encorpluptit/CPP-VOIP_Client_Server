@@ -103,8 +103,7 @@ void MainWindow::on_RegisterButton_clicked()
     auto response = BabelNetwork::UserResponse::AccountCreationRequest(user, pass);
     client.getTcp()->sendResponse(response);
 }
-
-void MainWindow::on_DeleteAccount_clicked()
+void MainWindow::on_DeleteAccountButton_clicked()
 {
     auto response = BabelNetwork::UserResponse::AccountDeletionRequest(login);
     client.getTcp()->sendResponse(response);
