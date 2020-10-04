@@ -42,7 +42,7 @@ namespace BabelServer {
 
         void acceptCall(
             const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
-            const std::shared_ptr<BabelNetwork::CallResponse> &response,
+            const std::shared_ptr<BabelNetwork::CallResponse> &resp,
             const BabelNetwork::ClientList &clientList
         ) const;
 

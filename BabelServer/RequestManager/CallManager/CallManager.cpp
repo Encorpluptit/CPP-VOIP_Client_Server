@@ -50,15 +50,16 @@ void CallManager::refuseCall(
 
 void CallManager::acceptCall(
     const BabelUtils::SharedPtr<ClientSocket> &clientSocket,
-    const std::shared_ptr<CallResponse> &response,
+    const std::shared_ptr<CallResponse> &resp,
     const ClientList &clientList
 ) const
 {
     for (const auto &target: clientList) {
-        if (target->getUser() && target->getUser()->login == response->getReceiver()) {
-            target->sendResponse(response);
+        if (target->getUser() && target->getUser()->login == resp->getReceiver()) {
+            target->sendResponse(CallResponse::NewCallStarted(resp, resp->getReceiver(), resp->getSender()));
+            clientSocket->sendResponse(CallResponse::NewCallStarted(resp, resp->getSender(), resp->getReceiver()));
             return;
         }
     }
-    clientSocket->sendResponse(CallResponse::DisconnectedUser(response->getSender(), response->getReceiver()));
+    clientSocket->sendResponse(CallResponse::DisconnectedUser(resp->getSender(), resp->getReceiver()));
 }

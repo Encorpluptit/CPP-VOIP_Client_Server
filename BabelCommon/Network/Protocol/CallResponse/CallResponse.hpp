@@ -154,6 +154,7 @@ namespace BabelNetwork {
         /* <- Formatted Response -> */
     public:
         [[nodiscard]] static std::shared_ptr<AResponse> NewCallStarted(
+            const std::shared_ptr<CallResponse> &resp,
             const std::string &sender,
             const std::string &receiver
         );
