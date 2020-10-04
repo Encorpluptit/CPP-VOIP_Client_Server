@@ -57,12 +57,24 @@ void CallManager::acceptCall(
 {
     for (const auto &target: clientList) {
         if (target->getUser() && target->getUser()->login == resp->getReceiver()) {
-            if (updateConf(resp->getCallId(), resp->getIp(), resp->getPort())) {
-                target->sendResponse(CallResponse::NewCallStarted(resp, resp->getReceiver(), resp->getSender()));
-                clientSocket->sendResponse(
-                    CallResponse::NewCallStarted(resp, resp->getSender(), resp->getReceiver()));
+            auto call_id = resp->getCallId();
+            for (auto &conf: _confs) {
+                if (conf.getCallId() != call_id)
+                    continue;
+                conf.setReceiver(resp->getIp(), resp->getPort());
+                target->sendResponse(CallResponse::NewCallStarted(
+                    resp->getReceiver(), resp->getSender(), conf.getReceiverIp(), conf.getReceiverPort(), call_id));
+                clientSocket->sendResponse(CallResponse::NewCallStarted(
+                    resp->getSender(), resp->getReceiver(), conf.getSenderIp(), conf.getSenderPort(), call_id));
                 return;
             }
+
+//            if (updateConf(resp->getCallId(), resp->getIp(), resp->getPort())) {
+//                target->sendResponse(CallResponse::NewCallStarted(resp, resp->getReceiver(), resp->getSender()));
+//                clientSocket->sendResponse(
+//                    CallResponse::NewCallStarted(resp, resp->getSender(), resp->getReceiver()));
+//                return;
+//            }
             clientSocket->sendResponse(CallResponse::DisconnectedUser(resp->getSender(), resp->getReceiver()));
             return;
         }

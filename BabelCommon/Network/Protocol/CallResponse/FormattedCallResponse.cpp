@@ -11,34 +11,21 @@
 using namespace BabelNetwork;
 
 std::shared_ptr<AResponse> CallResponse::NewCallStarted(
-    const std::shared_ptr<CallResponse> &resp,
-    const std::string &sender,
-    const std::string &receiver
-)
-{
-    auto response = std::make_shared<CallResponse>(
-        sender, receiver, resp->getIp(), resp->getPort()
-    );
-
-    resp->setCode(CallResponse::ResponseCode::CallStarted);
-    if (!response->setCallId(resp->getCallId()))
-        return nullptr;
-    return response;
-}
-
-std::shared_ptr<AResponse> CallResponse::NewCallStarted(
     const std::string &sender,
     const std::string &receiver,
     const std::string &ip,
-    const std::string &port
+    const std::string &port,
+    const uint16_t call_id
 )
 {
-    auto resp = std::make_shared<CallResponse>(sender, receiver, ip, port);
+    auto response = std::make_shared<CallResponse>(
+        sender, receiver, ip, port
+    );
 
-    resp->setCode(CallResponse::ResponseCode::CallStarted);
-    if (!resp->setTimestamp())
+    response->setCode(CallResponse::ResponseCode::CallStarted);
+    if (!response->setCallId(call_id) || !response->setTimestamp())
         return nullptr;
-    return resp;
+    return response;
 }
 
 std::shared_ptr<AResponse> CallResponse::CallRequest(
@@ -87,7 +74,7 @@ std::shared_ptr<AResponse> CallResponse::CallIncoming(
     );
 
     response->setCode(CallResponse::ResponseCode::IncomingCall);
-    if (!response->setCallId(call_id) || !response->setTimestamp())
+    if (!response->setCallId(call_id))
         return nullptr;
     return response;
 }
