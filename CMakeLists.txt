@@ -12,7 +12,7 @@ set(CMAKE_AUTOUIC ON)
 
 ###############################################################################
 # Language Configuration
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 
 
 ###############################################################################
@@ -264,6 +264,10 @@ target_compile_options(unit_tests PRIVATE --coverage)
 target_include_directories(unit_tests PRIVATE tests/criterion_unit_tests/include)
 
 target_link_libraries(unit_tests criterion ${CONAN_LIBS} gcov)
+
+#set_property(TARGET unit_tests PROPERTY CXX_STANDARD 11)
+set_target_properties(unit_tests PROPERTIES CXX_STANDARD 17)
+#set(CMAKE_CXX_STANDARD 17)
 
 
 ##########################
