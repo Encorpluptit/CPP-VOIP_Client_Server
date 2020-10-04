@@ -206,6 +206,7 @@ set(
         ${CLIENT_DIR}/ClientCore/ClientCore.cpp
         ${CLIENT_DIR}/ClientCore/mainwindow.cpp
         ${CLIENT_DIR}/ClientCore/QtSocket.cpp
+        ${CLIENT_DIR}/ClientCore/QUdpSocket.cpp
 )
 
 
