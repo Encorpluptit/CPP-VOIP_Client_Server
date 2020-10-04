@@ -46,6 +46,12 @@ namespace BabelServer {
             const BabelNetwork::ClientList &clientList
         ) const;
 
+        void endCall(
+            const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
+            const std::shared_ptr<BabelNetwork::CallResponse> &resp,
+            const BabelNetwork::ClientList &clientList
+        ) const;
+
         /* <- Private Methods -> */
     private:
 
@@ -63,9 +69,10 @@ namespace BabelServer {
         BabelUtils::Logger &_logger;
         uint16_t _call_id = 1;
         const std::vector<std::tuple<BabelNetwork::CallResponse::ResponseCode, std::function<CallManagerMethodProt>>> CallResponsePtrTab = {
-            {BabelNetwork::CallResponse::ResponseCode::RequestCall,  &CallManager::requestCall},
-            {BabelNetwork::CallResponse::ResponseCode::CallRefused,  &CallManager::refuseCall},
-            {BabelNetwork::CallResponse::ResponseCode::CallAccepted, &CallManager::acceptCall},
+            {BabelNetwork::CallResponse::ResponseCode::RequestCall,    &CallManager::requestCall},
+            {BabelNetwork::CallResponse::ResponseCode::CallRefused,    &CallManager::refuseCall},
+            {BabelNetwork::CallResponse::ResponseCode::CallAccepted,   &CallManager::acceptCall},
+            {BabelNetwork::CallResponse::ResponseCode::RequestEndCall, &CallManager::endCall},
         };
 
     };

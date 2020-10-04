@@ -150,8 +150,8 @@ void MainWindow::on_RefuseCallButton_clicked()
 void MainWindow::on_HangOutButton_clicked()
 {
     called = false;
-    auto response = BabelNetwork::CallResponse::LeftCall(callInfo->getReceiver(), callInfo->getSender(), callInfo->getCallId());
-    client.getTcp()->sendResponse(response);
+//    auto response = BabelNetwork::CallResponse::LeftCall(callInfo->getReceiver(), callInfo->getSender(), callInfo->getCallId());
+//    client.getTcp()->sendResponse(response);
     callInfo = nullptr;
     // DECONNECTER LA SOCKET
 }

@@ -175,8 +175,7 @@ namespace BabelNetwork {
 
         [[nodiscard]] static std::shared_ptr<AResponse> LeftCall(
             const std::string &sender,
-            const std::string &receiver,
-            uint16_t call_id
+            const std::string &receiver
         );
 
         [[nodiscard]] static std::shared_ptr<AResponse> EndCallRequest(

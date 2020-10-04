@@ -63,3 +63,19 @@ void CallManager::acceptCall(
     }
     clientSocket->sendResponse(CallResponse::DisconnectedUser(resp->getSender(), resp->getReceiver()));
 }
+
+void CallManager::endCall(
+    const BabelUtils::SharedPtr<ClientSocket> &clientSocket,
+    const std::shared_ptr<CallResponse> &resp,
+    const ClientList &clientList
+) const
+{
+    for (const auto &target: clientList) {
+        if (target->getUser() && target->getUser()->login == resp->getReceiver()) {
+            target->sendResponse(CallResponse::LeftCall(resp->getReceiver(), resp->getSender()));
+            clientSocket->sendResponse(CallResponse::LeftCall(resp->getSender(), resp->getReceiver()));
+            return;
+        }
+    }
+    clientSocket->sendResponse(CallResponse::DisconnectedUser(resp->getSender(), resp->getReceiver()));
+}

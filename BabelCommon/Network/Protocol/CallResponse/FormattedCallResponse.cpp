@@ -47,32 +47,28 @@ std::shared_ptr<AResponse> CallResponse::CallRequest(
     auto resp = std::make_shared<CallResponse>(sender, receiver, ip, port);
 
     resp->setCode(CallResponse::ResponseCode::RequestCall);
-    if (!resp->setTimestamp())
-        return nullptr;
     return resp;
 }
 
 std::shared_ptr<AResponse> CallResponse::LeftCall(
     const std::string &sender,
-    const std::string &receiver,
-    const uint16_t call_id
+    const std::string &receiver
 )
 {
     auto resp = std::make_shared<CallResponse>(sender, receiver);
 
     resp->setCode(CallResponse::ResponseCode::CallLeft);
-    if (!resp->setCallId(call_id) || !resp->setTimestamp())
-        return nullptr;
     return resp;
 }
 
-std::shared_ptr<AResponse> CallResponse::EndCallRequest(const std::string &sender, const std::string &receiver)
+std::shared_ptr<AResponse> CallResponse::EndCallRequest(
+    const std::string &sender,
+    const std::string &receiver
+)
 {
     auto resp = std::make_shared<CallResponse>(sender, receiver);
 
     resp->setCode(CallResponse::ResponseCode::RequestEndCall);
-    if (!resp->setTimestamp())
-        return nullptr;
     return resp;
 }
 
@@ -97,8 +93,6 @@ std::shared_ptr<AResponse> CallResponse::AcceptCall(
     auto resp = std::make_shared<CallResponse>(sender, receiver, ip, port);
 
     resp->setCode(CallResponse::ResponseCode::CallAccepted);
-    if (!resp->setTimestamp())
-        return nullptr;
     return resp;
 }
 
@@ -107,8 +101,6 @@ std::shared_ptr<AResponse> CallResponse::RefusedCall(const std::string &sender, 
     auto resp = std::make_shared<CallResponse>(sender, receiver);
 
     resp->setCode(CallResponse::ResponseCode::CallRefused);
-    if (!resp->setTimestamp())
-        return nullptr;
     return resp;
 }
 
@@ -120,8 +112,6 @@ std::shared_ptr<AResponse> CallResponse::DisconnectedUser(
     auto resp = std::make_shared<CallResponse>(sender, receiver);
 
     resp->setCode(CallResponse::ResponseCode::UserDisconnected);
-    if (!resp->setTimestamp())
-        return nullptr;
     return resp;
 }
 
