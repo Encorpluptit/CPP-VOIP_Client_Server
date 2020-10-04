@@ -70,7 +70,7 @@ std::shared_ptr<AResponse> CallResponse::CallIncoming(
 )
 {
     auto response = std::make_shared<CallResponse>(
-        resp->getReceiver(), resp->getSender(), resp->getIp(), resp->getPort()
+        resp->getSender(), resp->getReceiver(), resp->getIp(), resp->getPort()
     );
 
     response->setCode(CallResponse::ResponseCode::IncomingCall);
@@ -80,11 +80,12 @@ std::shared_ptr<AResponse> CallResponse::CallIncoming(
 }
 
 std::shared_ptr<AResponse> CallResponse::AcceptCall(
-    const std::shared_ptr<BabelNetwork::CallResponse> &resp
+    const std::shared_ptr<BabelNetwork::CallResponse> &resp,
+    const uint16_t port
 )
 {
     auto response = std::make_shared<CallResponse>(
-        resp->getSender(), resp->getReceiver(), resp->getIp(), resp->getPort()
+        resp->getReceiver(), resp->getSender(), resp->getIp(), std::to_string(port)
     );
 
     response->setCode(CallResponse::ResponseCode::CallAccepted);
