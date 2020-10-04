@@ -196,6 +196,7 @@ set(CLIENT_DIR BabelClient)
 set(
         CLIENT_INCLUDES
         ${CLIENT_DIR}/ClientCore
+        #${CLIENT_DIR}/PortAudio
 )
 
 
@@ -216,6 +217,7 @@ set(
 add_executable(
         babel_client
         ${CLIENT_DIR}/main.cpp
+        #${CLIENT_DIR}/PortAudio/test.cpp
         ${CLIENT_SOURCES}
         ${COMMON_SOURCES}
 )

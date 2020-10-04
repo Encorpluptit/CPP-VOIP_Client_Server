@@ -18,14 +18,14 @@ void CallManager::requestCall(
     const BabelNetwork::ClientList &clientList
 )
 {
-    //TODO: implement
-//    if (clientSocket->getUser()->login == response->getReceiver()) {
-//        clientSocket->sendResponse(CallResponse::UnknownErrorOccured(response));
-//        return;
-//    }
+    if (clientSocket->getUser()->login == response->getReceiver()) {
+        clientSocket->sendResponse(CallResponse::UnknownErrorOccured(response));
+        return;
+    }
     for (const auto &target: clientList) {
         if (target->getUser() && target->getUser()->login == response->getReceiver()) {
             target->sendResponse(CallResponse::CallIncoming(response, getCallId()));
+            _confs.emplace_back(Conference(getCallId(), response->getIp(), response->getPort()));
             incrementCallId();
             return;
         }
@@ -37,10 +37,11 @@ void CallManager::refuseCall(
     const BabelUtils::SharedPtr<ClientSocket> &clientSocket,
     const std::shared_ptr<CallResponse> &response,
     const ClientList &clientList
-) const
+)
 {
     for (const auto &target: clientList) {
         if (target->getUser() && target->getUser()->login == response->getReceiver()) {
+            deleteConf(response->getCallId());
             target->sendResponse(response);
             return;
         }
@@ -52,12 +53,17 @@ void CallManager::acceptCall(
     const BabelUtils::SharedPtr<ClientSocket> &clientSocket,
     const std::shared_ptr<CallResponse> &resp,
     const ClientList &clientList
-) const
+)
 {
     for (const auto &target: clientList) {
         if (target->getUser() && target->getUser()->login == resp->getReceiver()) {
-            target->sendResponse(CallResponse::NewCallStarted(resp, resp->getReceiver(), resp->getSender()));
-            clientSocket->sendResponse(CallResponse::NewCallStarted(resp, resp->getSender(), resp->getReceiver()));
+            if (updateConf(resp->getCallId(), resp->getIp(), resp->getPort())) {
+                target->sendResponse(CallResponse::NewCallStarted(resp, resp->getReceiver(), resp->getSender()));
+                clientSocket->sendResponse(
+                    CallResponse::NewCallStarted(resp, resp->getSender(), resp->getReceiver()));
+                return;
+            }
+            clientSocket->sendResponse(CallResponse::DisconnectedUser(resp->getSender(), resp->getReceiver()));
             return;
         }
     }
@@ -68,14 +74,36 @@ void CallManager::endCall(
     const BabelUtils::SharedPtr<ClientSocket> &clientSocket,
     const std::shared_ptr<CallResponse> &resp,
     const ClientList &clientList
-) const
+)
 {
     for (const auto &target: clientList) {
         if (target->getUser() && target->getUser()->login == resp->getReceiver()) {
+            deleteConf(resp->getCallId());
             target->sendResponse(CallResponse::LeftCall(resp->getReceiver(), resp->getSender()));
             clientSocket->sendResponse(CallResponse::LeftCall(resp->getSender(), resp->getReceiver()));
             return;
         }
     }
     clientSocket->sendResponse(CallResponse::DisconnectedUser(resp->getSender(), resp->getReceiver()));
+}
+
+void CallManager::deleteConf(const uint16_t call_id)
+{
+    for (auto it = _confs.begin(); it != _confs.end(); it++) {
+        if (it->getCallId() == call_id) {
+            _confs.erase(it);
+            return;
+        }
+    }
+}
+
+bool CallManager::updateConf(const uint16_t call_id, const std::string &ip, const std::string &port)
+{
+    for (auto &conf: _confs) {
+        if (conf.getCallId() == call_id) {
+            conf.setReceiver(ip, port);
+            return true;
+        }
+    }
+    return false;
 }

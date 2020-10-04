@@ -146,14 +146,15 @@ void MainWindow::on_AcceptCallButton_clicked()
 {
     called = true;
     client.getUdp()->doConnect(client.myUdpIp, client.myUdpPort);
-    auto response = BabelNetwork::CallResponse::AcceptCall(login, callInfo->getSender(), client.myUdpIp, std::to_string(client.myUdpPort));
+    auto response = BabelNetwork::CallResponse::AcceptCall(login, callInfo->getSender(), client.myUdpIp, std::to_string(client.myUdpPort), callInfo->getCallId());
+    std::cout << std::endl << response << std::endl << std::endl;
     client.getTcp()->sendResponse(response);
 }
 
 void MainWindow::on_RefuseCallButton_clicked()
 {
     called = false;
-    auto response = BabelNetwork::CallResponse::RefusedCall(login, callInfo->getSender());
+    auto response = BabelNetwork::CallResponse::RefusedCall(callInfo);
     client.getTcp()->sendResponse(response);
     callInfo = nullptr;
 }
