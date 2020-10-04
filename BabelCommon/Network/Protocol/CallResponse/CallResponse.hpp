@@ -159,13 +159,6 @@ namespace BabelNetwork {
             const std::string &receiver
         );
 
-        [[nodiscard]] static std::shared_ptr<AResponse> NewCallStarted(
-            const std::string &sender,
-            const std::string &receiver,
-            const std::string &ip,
-            const std::string &port
-        );
-
         [[nodiscard]] static std::shared_ptr<AResponse> CallRequest(
             const std::string &sender,
             const std::string &receiver,
