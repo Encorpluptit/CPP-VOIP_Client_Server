@@ -188,11 +188,7 @@ namespace BabelNetwork {
         );
 
         [[nodiscard]] static std::shared_ptr<AResponse> AcceptCall(
-            const std::string &sender,
-            const std::string &receiver,
-            const std::string &ip,
-            const std::string &port,
-            uint16_t call_id
+            const std::shared_ptr<BabelNetwork::CallResponse> &resp
         );
 
         [[nodiscard]] static std::shared_ptr<AResponse> RefusedCall(
@@ -218,7 +214,7 @@ namespace BabelNetwork {
             {IncomingCall,     "Incoming Call"},
             {CallAccepted,     "Call Accepted"},
             {CallRefused,      "Call Refused"},
-            {UserDisconnected, "User Disconnected"}
+            {UserDisconnected, "[CALL] User Disconnected"}
         };
     };
 }
