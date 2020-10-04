@@ -92,7 +92,7 @@ std::shared_ptr<AResponse> CallResponse::AcceptCall(
         resp->getReceiver(), resp->getSender(), resp->getIp(), resp->getPort()
     );
 
-    response->setCode(CallResponse::ResponseCode::CallRefused);
+    response->setCode(CallResponse::ResponseCode::CallAccepted);
     if (!response->setCallId(resp->getCallId()))
         return nullptr;
     return response;
