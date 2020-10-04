@@ -135,8 +135,8 @@ void MainWindow::on_AcceptRequestButton_clicked()
 void MainWindow::on_AcceptCallButton_clicked()
 {
     called = true;
-    auto response = BabelNetwork::CallResponse::AcceptCall(callInfo->getReceiver(), callInfo->getSender());
-    client.getTcp()->sendResponse(response);
+//    auto response = BabelNetwork::CallResponse::AcceptCall(callInfo->getReceiver(), callInfo->getSender());
+//    client.getTcp()->sendResponse(response);
     // SE CONNECTER A LA SOCKET
 }
 
@@ -161,8 +161,8 @@ void MainWindow::on_CallButton_clicked()
 {
     if (called != true) {
         called = true;
-        auto response = BabelNetwork::CallResponse::CallRequest(login, login /* A REMPLACER PAR LE LOGIN DU BOUTON CONTACT ENCLENCHE */);
-        client.getTcp()->sendResponse(response);
+//        auto response = BabelNetwork::CallResponse::CallRequest(login, login /* A REMPLACER PAR LE LOGIN DU BOUTON CONTACT ENCLENCHE */);
+//        client.getTcp()->sendResponse(response);
     }
     //else display already in a call
 }

@@ -153,12 +153,16 @@ namespace BabelNetwork {
 
         /* <- Formatted Response -> */
     public:
-        [[nodiscard]] static std::shared_ptr<AResponse>
-        NewCallStarted(const std::string &sender, const std::string &receiver);
-
-        [[nodiscard]] static std::shared_ptr<AResponse> CallRequest(
+        [[nodiscard]] static std::shared_ptr<AResponse> NewCallStarted(
             const std::string &sender,
             const std::string &receiver
+        );
+
+        [[nodiscard]] static std::shared_ptr<AResponse> NewCallStarted(
+            const std::string &sender,
+            const std::string &receiver,
+            const std::string &ip,
+            const std::string &port
         );
 
         [[nodiscard]] static std::shared_ptr<AResponse> CallRequest(
@@ -168,29 +172,42 @@ namespace BabelNetwork {
             const std::string &port
         );
 
-        [[nodiscard]] static std::shared_ptr<AResponse>
-        LeftCall(const std::string &sender, const std::string &receiver, uint16_t call_id);
+        [[nodiscard]] static std::shared_ptr<AResponse> LeftCall(
+            const std::string &sender,
+            const std::string &receiver,
+            uint16_t call_id
+        );
 
-        [[nodiscard]] static std::shared_ptr<AResponse>
-        EndCallRequest(const std::string &sender, const std::string &receiver);
+        [[nodiscard]] static std::shared_ptr<AResponse> EndCallRequest(
+            const std::string &sender,
+            const std::string &receiver
+        );
 
-        [[nodiscard]] static std::shared_ptr<AResponse>
-        CallIncoming(const std::string &sender, const std::string &receiver, uint16_t call_id);
+        [[nodiscard]] static std::shared_ptr<AResponse> CallIncoming(
+            const std::shared_ptr<CallResponse> &resp,
+            uint16_t call_id
+        );
 
-        [[nodiscard]] static std::shared_ptr<AResponse>
-        CallIncoming(const std::shared_ptr<BabelNetwork::CallResponse> &response, uint16_t call_id);
+        [[nodiscard]] static std::shared_ptr<AResponse> AcceptCall(
+            const std::string &sender,
+            const std::string &receiver,
+            const std::string &ip,
+            const std::string &port
+        );
 
-        [[nodiscard]] static std::shared_ptr<AResponse>
-        AcceptCall(const std::string &sender, const std::string &receiver);
+        [[nodiscard]] static std::shared_ptr<AResponse> RefusedCall(
+            const std::string &sender,
+            const std::string &receiver
+        );
 
-        [[nodiscard]] static std::shared_ptr<AResponse>
-        RefusedCall(const std::string &sender, const std::string &receiver);
+        [[nodiscard]] static std::shared_ptr<AResponse> DisconnectedUser(
+            const std::string &sender,
+            const std::string &receiver
+        );
 
-        [[nodiscard]] static std::shared_ptr<AResponse>
-        DisconnectedUser(const std::string &sender, const std::string &receiver);
-
-        [[nodiscard]] static std::shared_ptr<AResponse>
-        UnknownErrorOccured(const std::shared_ptr<BabelNetwork::CallResponse> &response);
+        [[nodiscard]] static std::shared_ptr<AResponse> UnknownErrorOccured(
+            const std::shared_ptr<BabelNetwork::CallResponse> &response
+        );
 
         /* <- Stringify Code -> */
     private:

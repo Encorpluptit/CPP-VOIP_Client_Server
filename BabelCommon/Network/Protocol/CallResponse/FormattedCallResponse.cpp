@@ -10,7 +10,11 @@
 
 using namespace BabelNetwork;
 
-std::shared_ptr <AResponse> CallResponse::NewCallStarted(const std::string &sender, const std::string &receiver) {
+std::shared_ptr<AResponse> CallResponse::NewCallStarted(
+    const std::string &sender,
+    const std::string &receiver
+)
+{
     auto resp = std::make_shared<CallResponse>(sender, receiver);
 
     resp->setCode(CallResponse::ResponseCode::CallStarted);
@@ -19,12 +23,28 @@ std::shared_ptr <AResponse> CallResponse::NewCallStarted(const std::string &send
     return resp;
 }
 
-std::shared_ptr <AResponse> CallResponse::CallRequest(
-        const std::string &sender,
-        const std::string &receiver,
-        const std::string &ip,
-        const std::string &port
-) {
+std::shared_ptr<AResponse> CallResponse::NewCallStarted(
+    const std::string &sender,
+    const std::string &receiver,
+    const std::string &ip,
+    const std::string &port
+)
+{
+    auto resp = std::make_shared<CallResponse>(sender, receiver, ip, port);
+
+    resp->setCode(CallResponse::ResponseCode::CallStarted);
+    if (!resp->setTimestamp())
+        return nullptr;
+    return resp;
+}
+
+std::shared_ptr<AResponse> CallResponse::CallRequest(
+    const std::string &sender,
+    const std::string &receiver,
+    const std::string &ip,
+    const std::string &port
+)
+{
     auto resp = std::make_shared<CallResponse>(sender, receiver, ip, port);
 
     resp->setCode(CallResponse::ResponseCode::RequestCall);
@@ -32,20 +52,13 @@ std::shared_ptr <AResponse> CallResponse::CallRequest(
         return nullptr;
     return resp;
 }
-std::shared_ptr <AResponse> CallResponse::CallRequest(
-        const std::string &sender,
-        const std::string &receiver
-) {
-    auto resp = std::make_shared<CallResponse>(sender, receiver);
 
-    resp->setCode(CallResponse::ResponseCode::RequestCall);
-    if (!resp->setTimestamp())
-        return nullptr;
-    return resp;
-}
-
-std::shared_ptr <AResponse>
-CallResponse::LeftCall(const std::string &sender, const std::string &receiver, const uint16_t call_id) {
+std::shared_ptr<AResponse> CallResponse::LeftCall(
+    const std::string &sender,
+    const std::string &receiver,
+    const uint16_t call_id
+)
+{
     auto resp = std::make_shared<CallResponse>(sender, receiver);
 
     resp->setCode(CallResponse::ResponseCode::CallLeft);
@@ -54,7 +67,8 @@ CallResponse::LeftCall(const std::string &sender, const std::string &receiver, c
     return resp;
 }
 
-std::shared_ptr <AResponse> CallResponse::EndCallRequest(const std::string &sender, const std::string &receiver) {
+std::shared_ptr<AResponse> CallResponse::EndCallRequest(const std::string &sender, const std::string &receiver)
+{
     auto resp = std::make_shared<CallResponse>(sender, receiver);
 
     resp->setCode(CallResponse::ResponseCode::RequestEndCall);
@@ -63,25 +77,24 @@ std::shared_ptr <AResponse> CallResponse::EndCallRequest(const std::string &send
     return resp;
 }
 
-std::shared_ptr <AResponse>
-CallResponse::CallIncoming(const std::string &sender, const std::string &receiver, const uint16_t call_id) {
-    auto resp = std::make_shared<CallResponse>(sender, receiver);
-
+std::shared_ptr<AResponse> CallResponse::CallIncoming(
+    const std::shared_ptr<CallResponse> &resp,
+    const uint16_t call_id
+)
+{
     resp->setCode(CallResponse::ResponseCode::IncomingCall);
     if (!resp->setCallId(call_id) || !resp->setTimestamp())
         return nullptr;
     return resp;
 }
 
-std::shared_ptr <AResponse>
-CallResponse::CallIncoming(const std::shared_ptr<BabelNetwork::CallResponse> &response, const uint16_t call_id) {
-    response->setCode(CallResponse::ResponseCode::IncomingCall);
-    if (!response->setCallId(call_id))
-        return nullptr;
-    return response;
-}
-
-std::shared_ptr <AResponse> CallResponse::AcceptCall(const std::string &sender, const std::string &receiver) {
+std::shared_ptr<AResponse> CallResponse::AcceptCall(
+    const std::string &sender,
+    const std::string &receiver,
+    const std::string &ip,
+    const std::string &port
+)
+{
     auto resp = std::make_shared<CallResponse>(sender, receiver);
 
     resp->setCode(CallResponse::ResponseCode::CallAccepted);
@@ -90,7 +103,8 @@ std::shared_ptr <AResponse> CallResponse::AcceptCall(const std::string &sender, 
     return resp;
 }
 
-std::shared_ptr <AResponse> CallResponse::RefusedCall(const std::string &sender, const std::string &receiver) {
+std::shared_ptr<AResponse> CallResponse::RefusedCall(const std::string &sender, const std::string &receiver)
+{
     auto resp = std::make_shared<CallResponse>(sender, receiver);
 
     resp->setCode(CallResponse::ResponseCode::CallRefused);
@@ -99,7 +113,10 @@ std::shared_ptr <AResponse> CallResponse::RefusedCall(const std::string &sender,
     return resp;
 }
 
-std::shared_ptr<AResponse> CallResponse::DisconnectedUser(const std::string &sender, const std::string &receiver)
+std::shared_ptr<AResponse> CallResponse::DisconnectedUser(
+    const std::string &sender,
+    const std::string &receiver
+)
 {
     auto resp = std::make_shared<CallResponse>(sender, receiver);
 
@@ -109,8 +126,9 @@ std::shared_ptr<AResponse> CallResponse::DisconnectedUser(const std::string &sen
     return resp;
 }
 
-std::shared_ptr<AResponse>
-CallResponse::UnknownErrorOccured(const std::shared_ptr<BabelNetwork::CallResponse> &response)
+std::shared_ptr<AResponse> CallResponse::UnknownErrorOccured(
+    const std::shared_ptr<BabelNetwork::CallResponse> &response
+)
 {
     response->setCode(CallResponse::ResponseCode::UnknownError);
     return response;
