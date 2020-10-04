@@ -31,7 +31,6 @@ class MainWindow : public QMainWindow
     private slots:
     //LOGIN
         void on_ConnectionButton_clicked();
-        void on_DeleteAccount_clicked();
         void on_ToRegisterButton_clicked();
     //REGISTER PAGE
         void on_RegisterButton_clicked();
@@ -41,6 +40,7 @@ class MainWindow : public QMainWindow
         void on_HangOutButton_clicked();
         void on_DisconnectButton_clicked();
         void on_ManageFriendButton_clicked();
+        void on_DeleteAccountButton_clicked();
     //MANAGE FRIEND PAGE
         void on_AddFriendButton_clicked();
         void on_DeleteFriendButton_clicked();

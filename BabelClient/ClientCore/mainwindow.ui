@@ -69,7 +69,7 @@
         </property>
        </widget>
       </item>
-      <item row="9" column="0">
+      <item row="8" column="0">
        <widget class="QPushButton" name="QuitButton">
         <property name="text">
          <string>Quit</string>
@@ -99,12 +99,18 @@
        <widget class="QTextEdit" name="WrongLoginText">
         <property name="maximumSize">
          <size>
-          <width>100</width>
+          <width>170</width>
           <height>30</height>
          </size>
         </property>
         <property name="contextMenuPolicy">
          <enum>Qt::DefaultContextMenu</enum>
+        </property>
+        <property name="verticalScrollBarPolicy">
+         <enum>Qt::ScrollBarAlwaysOff</enum>
+        </property>
+        <property name="horizontalScrollBarPolicy">
+         <enum>Qt::ScrollBarAlwaysOff</enum>
         </property>
         <property name="readOnly">
          <bool>true</bool>
@@ -122,13 +128,6 @@ p, li { white-space: pre-wrap; }
        <widget class="QPushButton" name="ToRegisterButton">
         <property name="text">
          <string>Register</string>
-        </property>
-       </widget>
-      </item>
-      <item row="8" column="0">
-       <widget class="QPushButton" name="DeleteAccount">
-        <property name="text">
-         <string>Delete Account</string>
         </property>
        </widget>
       </item>
@@ -307,6 +306,13 @@ p, li { white-space: pre-wrap; }
          </property>
         </widget>
        </item>
+       <item row="7" column="1">
+        <widget class="QPushButton" name="DeleteAccountButton">
+         <property name="text">
+          <string>Delete Account</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
     </widget>
@@ -349,7 +355,7 @@ p, li { white-space: pre-wrap; }
         <widget class="QTextEdit" name="CantFindText">
          <property name="maximumSize">
           <size>
-           <width>120</width>
+           <width>190</width>
            <height>30</height>
           </size>
          </property>
