@@ -46,6 +46,143 @@ Test(Common, CallResponse_02)
     cr_assert_str_eq(test.getIp(), ip.c_str());
     cr_assert_str_eq(test.getPort(), port.c_str());
 }
+
+Test(Common, CallResponse_03)
+{
+    const std::string sender("ugo");
+    const std::string receiver("dam");
+    const std::string ip("127.0.0.1");
+    const std::string port("5555");
+    const uint16_t call_id = 5;
+
+    auto init = CallResponse::CallRequest(sender, receiver, ip, port);
+    auto testInit = std::dynamic_pointer_cast<CallResponse>(init);
+    ASSERT_BOOL(testInit->encode(), true);
+    ASSERT_BOOL(testInit->decode_header(), true);
+    ASSERT_BOOL(testInit->decode_data_infos(), true);
+    ASSERT_BOOL(testInit->decode_data(), true);
+
+    cr_assert_str_eq(testInit->getSender(), sender.c_str());
+    cr_assert_str_eq(testInit->getReceiver(), receiver.c_str());
+    cr_assert_str_eq(testInit->getIp(), ip.c_str());
+    cr_assert_str_eq(testInit->getPort(), port.c_str());
+    auto serv = CallResponse::CallIncoming(std::dynamic_pointer_cast<CallResponse>(init), call_id);
+    testInit = std::dynamic_pointer_cast<CallResponse>(serv);
+    ASSERT_BOOL(testInit->encode(), true);
+    ASSERT_BOOL(testInit->decode_header(), true);
+    ASSERT_BOOL(testInit->decode_data_infos(), true);
+    ASSERT_BOOL(testInit->decode_data(), true);
+
+    cr_assert_str_eq(testInit->getSender(), sender.c_str());
+    cr_assert_str_eq(testInit->getReceiver(), receiver.c_str());
+    cr_assert_str_eq(testInit->getIp(), ip.c_str());
+    cr_assert_str_eq(testInit->getPort(), port.c_str());
+    auto end = CallResponse::RefusedCall(std::dynamic_pointer_cast<CallResponse>(serv));
+
+    auto test = std::dynamic_pointer_cast<CallResponse>(end);
+
+    ASSERT_BOOL(test->encode(), true);
+    ASSERT_BOOL(test->decode_header(), true);
+    ASSERT_BOOL(test->decode_data_infos(), true);
+    ASSERT_BOOL(test->decode_data(), true);
+
+    cr_assert_str_eq(test->getSender(), receiver.c_str());
+    cr_assert_str_eq(test->getReceiver(), sender.c_str());
+    cr_assert_str_eq(test->getIp(), ip.c_str());
+    cr_assert_str_eq(test->getPort(), port.c_str());
+}
+
+Test(Common, CallResponse_04)
+{
+    const std::string sender("ugo");
+    const std::string receiver("dam");
+    const std::string ip("127.0.0.1");
+    const std::string port("5555");
+    const uint16_t call_id = 5;
+
+    auto init = CallResponse::CallRequest(sender, receiver, ip, port);
+    auto testInit = std::dynamic_pointer_cast<CallResponse>(init);
+    ASSERT_BOOL(testInit->encode(), true);
+    ASSERT_BOOL(testInit->decode_header(), true);
+    ASSERT_BOOL(testInit->decode_data_infos(), true);
+    ASSERT_BOOL(testInit->decode_data(), true);
+
+    cr_assert_str_eq(testInit->getSender(), sender.c_str());
+    cr_assert_str_eq(testInit->getReceiver(), receiver.c_str());
+    cr_assert_str_eq(testInit->getIp(), ip.c_str());
+    cr_assert_str_eq(testInit->getPort(), port.c_str());
+
+    auto serv = CallResponse::CallIncoming(std::dynamic_pointer_cast<CallResponse>(init), call_id);
+    testInit = std::dynamic_pointer_cast<CallResponse>(serv);
+    ASSERT_BOOL(testInit->encode(), true);
+    ASSERT_BOOL(testInit->decode_header(), true);
+    ASSERT_BOOL(testInit->decode_data_infos(), true);
+    ASSERT_BOOL(testInit->decode_data(), true);
+
+    cr_assert_str_eq(testInit->getSender(), sender.c_str());
+    cr_assert_str_eq(testInit->getReceiver(), receiver.c_str());
+    cr_assert_str_eq(testInit->getIp(), ip.c_str());
+    cr_assert_str_eq(testInit->getPort(), port.c_str());
+
+    auto end = CallResponse::AcceptCall(std::dynamic_pointer_cast<CallResponse>(serv));
+    auto test = std::dynamic_pointer_cast<CallResponse>(end);
+    ASSERT_BOOL(test->encode(), true);
+    ASSERT_BOOL(test->decode_header(), true);
+    ASSERT_BOOL(test->decode_data_infos(), true);
+    ASSERT_BOOL(test->decode_data(), true);
+
+    cr_assert_str_eq(test->getSender(), receiver.c_str());
+    cr_assert_str_eq(test->getReceiver(), sender.c_str());
+    cr_assert_str_eq(test->getIp(), ip.c_str());
+    cr_assert_str_eq(test->getPort(), port.c_str());
+}
+
+Test(Common, CallResponse_05)
+{
+    const std::string sender("ugo");
+    const std::string receiver("dam");
+    const std::string ip("127.0.0.1");
+    const std::string port("5555");
+    const uint16_t call_id = 5;
+
+    auto init = CallResponse::CallRequest(sender, receiver, ip, port);
+    auto testInit = std::dynamic_pointer_cast<CallResponse>(init);
+    ASSERT_BOOL(testInit->encode(), true);
+    ASSERT_BOOL(testInit->decode_header(), true);
+    ASSERT_BOOL(testInit->decode_data_infos(), true);
+    ASSERT_BOOL(testInit->decode_data(), true);
+
+    cr_assert_str_eq(testInit->getSender(), sender.c_str());
+    cr_assert_str_eq(testInit->getReceiver(), receiver.c_str());
+    cr_assert_str_eq(testInit->getIp(), ip.c_str());
+    cr_assert_str_eq(testInit->getPort(), port.c_str());
+
+    auto serv = CallResponse::CallIncoming(std::dynamic_pointer_cast<CallResponse>(init), call_id);
+    testInit = std::dynamic_pointer_cast<CallResponse>(serv);
+    ASSERT_BOOL(testInit->encode(), true);
+    ASSERT_BOOL(testInit->decode_header(), true);
+    ASSERT_BOOL(testInit->decode_data_infos(), true);
+    ASSERT_BOOL(testInit->decode_data(), true);
+
+    cr_assert_str_eq(testInit->getSender(), sender.c_str());
+    cr_assert_str_eq(testInit->getReceiver(), receiver.c_str());
+    cr_assert_str_eq(testInit->getIp(), ip.c_str());
+    cr_assert_str_eq(testInit->getPort(), port.c_str());
+
+    auto end = CallResponse::NewCallStarted(std::dynamic_pointer_cast<CallResponse>(serv), receiver, sender);
+    auto test = std::dynamic_pointer_cast<CallResponse>(end);
+    ASSERT_BOOL(test->encode(), true);
+    ASSERT_BOOL(test->decode_header(), true);
+    ASSERT_BOOL(test->decode_data_infos(), true);
+    ASSERT_BOOL(test->decode_data(), true);
+
+    cr_assert_str_eq(test->getSender(), receiver.c_str());
+    cr_assert_str_eq(test->getReceiver(), sender.c_str());
+    cr_assert_str_eq(test->getIp(), ip.c_str());
+    cr_assert_str_eq(test->getPort(), port.c_str());
+    ASSERT_INT(test->getCallId(), call_id);
+}
+
 //Test(Common, UserResponse_14)
 //{
 //    const std::string login = std::string(UserResponse::MaxDataSize::Login + 1, '*');

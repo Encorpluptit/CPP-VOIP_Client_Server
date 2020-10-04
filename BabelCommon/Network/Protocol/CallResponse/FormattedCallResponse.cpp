@@ -16,10 +16,14 @@ std::shared_ptr<AResponse> CallResponse::NewCallStarted(
     const std::string &receiver
 )
 {
+    auto response = std::make_shared<CallResponse>(
+        sender, receiver, resp->getIp(), resp->getPort()
+    );
+
     resp->setCode(CallResponse::ResponseCode::CallStarted);
-    if (!resp->setTimestamp() || !resp->setSender(sender) || !resp->setReceiver(receiver))
+    if (!response->setCallId(resp->getCallId()))
         return nullptr;
-    return resp;
+    return response;
 }
 
 std::shared_ptr<AResponse> CallResponse::NewCallStarted(
@@ -81,30 +85,31 @@ std::shared_ptr<AResponse> CallResponse::CallIncoming(
 }
 
 std::shared_ptr<AResponse> CallResponse::AcceptCall(
-    const std::string &sender,
-    const std::string &receiver,
-    const std::string &ip,
-    const std::string &port,
-    const uint16_t call_id
+    const std::shared_ptr<BabelNetwork::CallResponse> &resp
 )
 {
-    auto resp = std::make_shared<CallResponse>(sender, receiver, ip, port);
+    auto response = std::make_shared<CallResponse>(
+        resp->getReceiver(), resp->getSender(), resp->getIp(), resp->getPort()
+    );
 
-    resp->setCode(CallResponse::ResponseCode::CallAccepted);
-    if (!resp->setCallId(call_id))
+    response->setCode(CallResponse::ResponseCode::CallRefused);
+    if (!response->setCallId(resp->getCallId()))
         return nullptr;
-    return resp;
+    return response;
 }
 
 std::shared_ptr<AResponse> CallResponse::RefusedCall(
     const std::shared_ptr<BabelNetwork::CallResponse> &resp
 )
 {
-    auto sender = resp->getSender();
-    if (!resp->setSender(resp->getReceiver()) || !resp->setReceiver(sender))
+    auto response = std::make_shared<CallResponse>(
+        resp->getReceiver(), resp->getSender(), resp->getIp(), resp->getPort()
+    );
+
+    response->setCode(CallResponse::ResponseCode::CallRefused);
+    if (!response->setCallId(resp->getCallId()))
         return nullptr;
-    resp->setCode(CallResponse::ResponseCode::CallRefused);
-    return resp;
+    return response;
 }
 
 std::shared_ptr<AResponse> CallResponse::DisconnectedUser(
