@@ -69,8 +69,12 @@ std::shared_ptr<AResponse> CallResponse::EndCallRequest(
     const std::shared_ptr<BabelNetwork::CallResponse> &resp
 )
 {
-    resp->setCode(CallResponse::ResponseCode::RequestEndCall);
-    return resp;
+    auto response = std::make_shared<CallResponse>(
+        resp->getReceiver(), resp->getSender(), resp->getIp(), resp->getPort()
+    );
+
+    response->setCode(CallResponse::ResponseCode::RequestEndCall);
+    return response;
 }
 
 std::shared_ptr<AResponse> CallResponse::CallIncoming(
@@ -78,10 +82,14 @@ std::shared_ptr<AResponse> CallResponse::CallIncoming(
     const uint16_t call_id
 )
 {
-    resp->setCode(CallResponse::ResponseCode::IncomingCall);
-    if (!resp->setCallId(call_id) || !resp->setTimestamp())
+    auto response = std::make_shared<CallResponse>(
+        resp->getReceiver(), resp->getSender(), resp->getIp(), resp->getPort()
+    );
+
+    response->setCode(CallResponse::ResponseCode::IncomingCall);
+    if (!response->setCallId(call_id) || !response->setTimestamp())
         return nullptr;
-    return resp;
+    return response;
 }
 
 std::shared_ptr<AResponse> CallResponse::AcceptCall(
@@ -124,9 +132,13 @@ std::shared_ptr<AResponse> CallResponse::DisconnectedUser(
 }
 
 std::shared_ptr<AResponse> CallResponse::UnknownErrorOccured(
-    const std::shared_ptr<BabelNetwork::CallResponse> &response
+    const std::shared_ptr<BabelNetwork::CallResponse> &resp
 )
 {
+    auto response = std::make_shared<CallResponse>(
+        resp->getReceiver(), resp->getSender(), resp->getIp(), resp->getPort()
+    );
+
     response->setCode(CallResponse::ResponseCode::UnknownError);
     return response;
 }
