@@ -12,6 +12,45 @@
 
 namespace BabelServer {
 
+    class Conference {
+        /* <- Constructor - Destructor -> */
+    public:
+        explicit Conference(
+            uint16_t id,
+            const std::string &senderIp,
+            const std::string &senderPort
+        ) : _call_id(id), _sender(senderIp, senderPort) {};
+
+        ~Conference() = default;
+
+        /* <- Public Methods -> */
+    public:
+        void setReceiver(
+            const std::string &receiverIp,
+            const std::string &receiverPort
+        )
+        {
+            _receiver.first = receiverIp;
+            _receiver.second = receiverPort;
+        }
+
+        const uint16_t &getCallId() const { return _call_id; }
+
+        const std::string &getSenderIp() const { return _sender.first; }
+
+        const std::string &getSenderPort() const { return _sender.second; }
+
+        const std::string &getReceiverIp() const { return _receiver.first; }
+
+        const std::string &getReceiverPort() const { return _receiver.second; }
+
+        /* <- Attributes -> */
+    private:
+        uint16_t _call_id;
+        std::pair<std::string, std::string> _sender;
+        std::pair<std::string, std::string> _receiver;
+    };
+
     class CallManager {
         using CallManagerMethodProt = void(
             CallManager *,
@@ -27,7 +66,7 @@ namespace BabelServer {
 
         ~CallManager() = default;
 
-        /* <- Public Methods -> */
+        /* <- Private Methods -> */
     private:
         void requestCall(
             const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
@@ -38,19 +77,23 @@ namespace BabelServer {
             const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
             const std::shared_ptr<BabelNetwork::CallResponse> &response,
             const BabelNetwork::ClientList &clientList
-        ) const;
+        );
 
         void acceptCall(
             const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
             const std::shared_ptr<BabelNetwork::CallResponse> &resp,
             const BabelNetwork::ClientList &clientList
-        ) const;
+        );
 
         void endCall(
             const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &clientSocket,
             const std::shared_ptr<BabelNetwork::CallResponse> &resp,
             const BabelNetwork::ClientList &clientList
-        ) const;
+        );
+
+        void deleteConf(uint16_t call_id);
+
+        [[nodiscard]] bool updateConf(uint16_t call_id, const std::string &ip, const std::string &port);
 
         /* <- Private Methods -> */
     private:
@@ -74,7 +117,7 @@ namespace BabelServer {
             {BabelNetwork::CallResponse::ResponseCode::CallAccepted,   &CallManager::acceptCall},
             {BabelNetwork::CallResponse::ResponseCode::RequestEndCall, &CallManager::endCall},
         };
-
+        std::vector<Conference> _confs{};
     };
 
 }

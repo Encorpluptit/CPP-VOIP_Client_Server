@@ -142,7 +142,7 @@ void MainWindow::on_AcceptCallButton_clicked()
 void MainWindow::on_RefuseCallButton_clicked()
 {
     called = false;
-    auto response = BabelNetwork::CallResponse::RefusedCall(callInfo->getReceiver(), callInfo->getSender());
+    auto response = BabelNetwork::CallResponse::RefusedCall(callInfo);
     client.getTcp()->sendResponse(response);
     callInfo = nullptr;
 }
