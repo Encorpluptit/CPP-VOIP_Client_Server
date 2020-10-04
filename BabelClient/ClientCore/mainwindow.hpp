@@ -11,6 +11,8 @@
 #include "CallResponse.hpp"
 #include "FriendResponse.hpp"
 #include "MessageResponse.hpp"
+#include "PortAudio.hpp"
+#include "Opus.hpp"
 
 QT_BEGIN_NAMESPACE
 
@@ -90,6 +92,8 @@ class MainWindow : public QMainWindow
     private:
         Ui::MainWindow *ui;
         NetworkClientSocket &client;
+        std::shared_ptr<IAudio> audio;
+        std::shared_ptr<ICodec> codec;
         QTimer *timer;
         QTimer *voiceTimer;
         std::string login;

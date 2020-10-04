@@ -8,9 +8,9 @@ public:
 
     virtual void disconnect() = 0;
 
-    virtual void sendResponse(std::vector<uint16_t> voice, std::string ip, int port) = 0;
+    virtual void sendVoice(std::vector<uint16_t> voice, std::string ip, int port) = 0;
 
-    virtual std::vector<uint16_t> readResponse(std::string ip, int port) = 0;
+    virtual std::vector<uint16_t> readVoice(std::string ip, int port) = 0;
 
 private:
 };

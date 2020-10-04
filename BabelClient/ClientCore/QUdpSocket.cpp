@@ -42,7 +42,7 @@ void MyUdpSocket::bytesWritten(const qint64 bytes)
     qDebug() << bytes << " bytes written...";
 }
 
-std::vector<uint16_t> MyUdpSocket::readResponse(std::string ip, int port)
+std::vector<uint16_t> MyUdpSocket::readVoice(std::string ip, int port)
 {
     std::vector<uint16_t> voice;
     QByteArray data;
@@ -59,7 +59,7 @@ std::vector<uint16_t> MyUdpSocket::readResponse(std::string ip, int port)
     return (voice2);
 }
 
-void MyUdpSocket::sendResponse(std::vector<uint16_t> buf, std::string ip, int port)
+void MyUdpSocket::sendVoice(std::vector<uint16_t> buf, std::string ip, int port)
 {
     QString str = ip.c_str();
     QHostAddress addr;

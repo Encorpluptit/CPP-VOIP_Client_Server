@@ -18,9 +18,9 @@ public:
 
     void disconnect();
 
-    void sendResponse(std::vector<uint16_t> voice, std::string ip, int port);
+    void sendVoice(std::vector<uint16_t> voice, std::string ip, int port);
 
-    std::vector<uint16_t> readResponse(std::string ip, int port);
+    std::vector<uint16_t> readVoice(std::string ip, int port);
 
 signals:
 

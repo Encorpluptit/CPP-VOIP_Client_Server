@@ -14,7 +14,7 @@ int main(int ac, char **av)
         return (84);
     BabelNetwork::NetworkInfos nwi(av[1], av[2]);
     NetworkClientSocket network(nwi.getIp(), nwi.getPort());
-    if (av[3][0] == '0')
+    if (std::stoi(av[3]) == 0)
         network.setIpPort(9000);
     else
         network.setIpPort(10000);

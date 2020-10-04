@@ -13,6 +13,8 @@
 
 MainWindow::MainWindow(QWidget *parent, NetworkClientSocket &network) : QMainWindow(parent), ui(new Ui::MainWindow), client(network)
 {
+    audio = std::make_shared<PortAudio>();
+    codec = std::make_shared<Opus>();
     ui->setupUi(this);
 
     ui->VLayout = new QVBoxLayout(ui->ContactArea);
@@ -143,7 +145,7 @@ void MainWindow::on_AcceptRequestButton_clicked()
 void MainWindow::on_AcceptCallButton_clicked()
 {
     called = true;
-    // OUVRIR SOCKET
+    client.getUdp()->doConnect(client.myUdpIp, client.myUdpPort);
     auto response = BabelNetwork::CallResponse::AcceptCall(login, callInfo->getSender(), client.myUdpIp, std::to_string(client.myUdpPort));
     client.getTcp()->sendResponse(response);
 }
@@ -169,9 +171,9 @@ void MainWindow::on_CallButton_clicked()
 {
     if (called != true && actualFriend != login) {
         called = true;
+        client.getUdp()->doConnect(client.myUdpIp, client.myUdpPort);
         auto response = BabelNetwork::CallResponse::CallRequest(login, actualFriend, client.myUdpIp, std::to_string(client.myUdpPort));
         client.getTcp()->sendResponse(response);
-        //OUVRIR SOCKET
     }
     //else display already in a call
 }
@@ -250,7 +252,7 @@ void MainWindow::AlreadyLoggedIn(const std::shared_ptr<BabelNetwork::UserRespons
 
 void MainWindow::CallStarted(const std::shared_ptr<BabelNetwork::CallResponse> &response)
 {
-    //init_audio();
+    audio->init_audio();
     called = true;
     callInfo = response;
     voiceTimer->start(100);
@@ -259,7 +261,7 @@ void MainWindow::CallStarted(const std::shared_ptr<BabelNetwork::CallResponse> &
 void MainWindow::CallLeft(const std::shared_ptr<BabelNetwork::CallResponse> &response)
 {
     voiceTimer->stop();
-    //stop_audio();
+    audio->stop_audio();
     called = false;
     (void) response;
     client.getUdp()->disconnect();
@@ -283,7 +285,7 @@ void MainWindow::CallRefused(const std::shared_ptr<BabelNetwork::CallResponse> &
 void MainWindow::UserDisconnected(const std::shared_ptr<BabelNetwork::CallResponse> &response)
 {
     voiceTimer->stop();
-    //stop_audio();
+    audio->stop_audio();
     called = false;
     (void) response;
     client.getUdp()->disconnect();
@@ -294,7 +296,6 @@ void MainWindow::AddFriend(const std::shared_ptr<BabelNetwork::FriendResponse> &
 {
     QPushButton *button;
 
-    std::cout << "LOGIN : " << response->getLogin() << " FRIEND LOGIN : " << response->getFriendLogin() << std::endl;
     friendList.emplace_back(response->getFriendLogin());
     for (size_t i = 0; i < friendList.size(); i++) {
         if ((int) i >= butts.size()) {
@@ -312,7 +313,6 @@ void MainWindow::AddFriend(const std::shared_ptr<BabelNetwork::FriendResponse> &
 
 void MainWindow::FriendRequest(const std::shared_ptr<BabelNetwork::FriendResponse> &response)
 {
-    std::cout << "coucou" << std::endl;
     ui->gridStackedWidget->setCurrentWidget(ui->FriendRequest);
     friendRequest = response;
 }
@@ -409,13 +409,17 @@ void MainWindow::UpdateClient()
 
 void MainWindow::ManageVoice()
 {
-    std::vector<uint16_t> voice;
+    std::vector<uint16_t> send;
+    std::vector<uint16_t> receive;
 
-    //voice = getVoice();
-    //voice = encode(voice);
-    //client.getUdp()->sendVoice(voice, callInfo->ip, callInfo->port); ip + port de l'autre
-    //voice = client.getUdp()->readVoice(callInfo->ip, callInfo->port); ip + port de l'autre
-    //if voice non vide
-    //voice = decode(voice);
-    //playVoice(voice);
+    send = audio->getVoice();
+    send = codec->encode(send);
+    client.getUdp()->sendVoice(send, callInfo->getIp(), std::stoi(callInfo->getPort()));
+    send.clear();
+    receive = client.getUdp()->readVoice(callInfo->getIp(), std::stoi(callInfo->getPort()));
+    if (receive.size() != 0) {
+        receive = codec->decode(receive);
+        audio->playVoice(receive);
+        receive.clear();
+    }
 }
