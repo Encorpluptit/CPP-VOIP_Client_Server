@@ -11,17 +11,19 @@
 using namespace BabelNetwork;
 
 std::shared_ptr<AResponse> CallResponse::NewCallStarted(
-    const std::shared_ptr<CallResponse> &resp,
     const std::string &sender,
-    const std::string &receiver
+    const std::string &receiver,
+    const std::string &ip,
+    const std::string &port,
+    const uint16_t call_id
 )
 {
     auto response = std::make_shared<CallResponse>(
-        sender, receiver, resp->getIp(), resp->getPort()
+        sender, receiver, ip, port
     );
 
-    resp->setCode(CallResponse::ResponseCode::CallStarted);
-    if (!response->setCallId(resp->getCallId()))
+    response->setCode(CallResponse::ResponseCode::CallStarted);
+    if (!response->setCallId(call_id) || !response->setTimestamp())
         return nullptr;
     return response;
 }
@@ -72,7 +74,7 @@ std::shared_ptr<AResponse> CallResponse::CallIncoming(
     );
 
     response->setCode(CallResponse::ResponseCode::IncomingCall);
-    if (!response->setCallId(call_id) || !response->setTimestamp())
+    if (!response->setCallId(call_id))
         return nullptr;
     return response;
 }
