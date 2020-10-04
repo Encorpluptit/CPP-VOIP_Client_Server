@@ -84,7 +84,7 @@ std::shared_ptr<AResponse> CallResponse::AcceptCall(
 )
 {
     auto response = std::make_shared<CallResponse>(
-        resp->getReceiver(), resp->getSender(), resp->getIp(), resp->getPort()
+        resp->getSender(), resp->getReceiver(), resp->getIp(), resp->getPort()
     );
 
     response->setCode(CallResponse::ResponseCode::CallAccepted);
