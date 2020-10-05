@@ -1,6 +1,3 @@
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "cppcoreguidelines-pro-type-member-init"
-#pragma ide diagnostic ignored "cert-err58-cpp"
 //
 // Created by encorpluptit on 9/23/20.
 //
@@ -97,10 +94,11 @@ Test(Common, CallResponse_04)
     const std::string sender("ugo");
     const std::string receiver("dam");
     const std::string ip("127.0.0.1");
-    const std::string port("5555");
+    const std::string portStr("5555");
+    const uint16_t port = 5555;
     const uint16_t call_id = 5;
 
-    auto init = CallResponse::CallRequest(sender, receiver, ip, port);
+    auto init = CallResponse::CallRequest(sender, receiver, ip, portStr);
     auto testInit = std::dynamic_pointer_cast<CallResponse>(init);
     ASSERT_BOOL(testInit->encode(), true);
     ASSERT_BOOL(testInit->decode_header(), true);
@@ -110,7 +108,7 @@ Test(Common, CallResponse_04)
     cr_assert_str_eq(testInit->getSender(), sender.c_str());
     cr_assert_str_eq(testInit->getReceiver(), receiver.c_str());
     cr_assert_str_eq(testInit->getIp(), ip.c_str());
-    cr_assert_str_eq(testInit->getPort(), port.c_str());
+    cr_assert_str_eq(testInit->getPort(), portStr.c_str());
 
     auto serv = CallResponse::CallIncoming(std::dynamic_pointer_cast<CallResponse>(init), call_id);
     testInit = std::dynamic_pointer_cast<CallResponse>(serv);
@@ -122,9 +120,9 @@ Test(Common, CallResponse_04)
     cr_assert_str_eq(testInit->getSender(), sender.c_str());
     cr_assert_str_eq(testInit->getReceiver(), receiver.c_str());
     cr_assert_str_eq(testInit->getIp(), ip.c_str());
-    cr_assert_str_eq(testInit->getPort(), port.c_str());
+    cr_assert_str_eq(testInit->getPort(), portStr.c_str());
 
-    auto end = CallResponse::AcceptCall(std::dynamic_pointer_cast<CallResponse>(serv));
+    auto end = CallResponse::AcceptCall(std::dynamic_pointer_cast<CallResponse>(serv), ip, port);
     auto test = std::dynamic_pointer_cast<CallResponse>(end);
     ASSERT_BOOL(test->encode(), true);
     ASSERT_BOOL(test->decode_header(), true);
@@ -134,7 +132,7 @@ Test(Common, CallResponse_04)
     cr_assert_str_eq(test->getSender(), receiver.c_str());
     cr_assert_str_eq(test->getReceiver(), sender.c_str());
     cr_assert_str_eq(test->getIp(), ip.c_str());
-    cr_assert_str_eq(test->getPort(), port.c_str());
+    cr_assert_str_eq(test->getPort(), portStr.c_str());
 }
 
 Test(Common, CallResponse_05)
@@ -169,7 +167,8 @@ Test(Common, CallResponse_05)
     cr_assert_str_eq(testInit->getIp(), ip.c_str());
     cr_assert_str_eq(testInit->getPort(), port.c_str());
 
-    auto end = CallResponse::NewCallStarted(std::dynamic_pointer_cast<CallResponse>(serv), receiver, sender);
+    auto end = CallResponse::NewCallStarted(testInit->getReceiver(), testInit->getSender(), testInit->getIp(),
+        testInit->getPort(), call_id);
     auto test = std::dynamic_pointer_cast<CallResponse>(end);
     ASSERT_BOOL(test->encode(), true);
     ASSERT_BOOL(test->decode_header(), true);

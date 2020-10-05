@@ -81,11 +81,12 @@ std::shared_ptr<AResponse> CallResponse::CallIncoming(
 
 std::shared_ptr<AResponse> CallResponse::AcceptCall(
     const std::shared_ptr<BabelNetwork::CallResponse> &resp,
+    const std::string &ip,
     const uint16_t port
 )
 {
     auto response = std::make_shared<CallResponse>(
-        resp->getReceiver(), resp->getSender(), resp->getIp(), std::to_string(port)
+        resp->getReceiver(), resp->getSender(), ip, std::to_string(port)
     );
 
     response->setCode(CallResponse::ResponseCode::CallAccepted);

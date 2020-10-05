@@ -184,6 +184,7 @@ namespace BabelNetwork {
 
         [[nodiscard]] static std::shared_ptr<AResponse> AcceptCall(
             const std::shared_ptr<BabelNetwork::CallResponse> &resp,
+            const std::string &ip,
             uint16_t port
         );
 
