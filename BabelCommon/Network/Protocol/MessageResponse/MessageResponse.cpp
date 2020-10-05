@@ -63,31 +63,33 @@ bool MessageResponse::setTimestamp() noexcept
 
 bool MessageResponse::encode() noexcept
 {
-    memcpy(_data_byte, &_header, HeaderSize);
-    memcpy(getDataByteDataInfos(), &_dataInfos, DataInfosSize);
-    memcpy(getDataByteBody(), _data.sender, _dataInfos._senderSize);
-    memcpy(getDataByteBody() + _dataInfos._senderSize, _data.receiver, _dataInfos._receiverSize);
-    memcpy(getDataByteBody() + _dataInfos._senderSize + _dataInfos._receiverSize, &_data.timestamp, _dataInfos._timestampSize);
+    std::memcpy(_data_byte, &_header, HeaderSize);
+    std::memcpy(getDataByteDataInfos(), &_dataInfos, DataInfosSize);
+    std::memcpy(getDataByteBody(), _data.sender, _dataInfos._senderSize);
+    std::memcpy(getDataByteBody() + _dataInfos._senderSize, _data.receiver, _dataInfos._receiverSize);
+    std::memcpy(getDataByteBody() + _dataInfos._senderSize + _dataInfos._receiverSize, &_data.timestamp,
+        _dataInfos._timestampSize);
     return true;
 }
 
 bool MessageResponse::decode_header() noexcept
 {
-    memcpy(&_header, _data_byte, HeaderSize);
+    std::memcpy(&_header, _data_byte, HeaderSize);
     return true;
 }
 
 bool MessageResponse::decode_data_infos() noexcept
 {
-    memcpy(&_dataInfos, _data_byte + HeaderSize, DataInfosSize);
+    std::memcpy(&_dataInfos, _data_byte + HeaderSize, DataInfosSize);
     return true;
 }
 
 bool MessageResponse::decode_data() noexcept
 {
-    memcpy(_data.sender, getDataByteBody(), _dataInfos._senderSize);
-    memcpy(_data.receiver, getDataByteBody() + _dataInfos._senderSize, _dataInfos._receiverSize);
-    memcpy(&_data.timestamp, getDataByteBody() + _dataInfos._senderSize + _dataInfos._receiverSize, _dataInfos._timestampSize);
+    std::memcpy(_data.sender, getDataByteBody(), _dataInfos._senderSize);
+    std::memcpy(_data.receiver, getDataByteBody() + _dataInfos._senderSize, _dataInfos._receiverSize);
+    std::memcpy(&_data.timestamp, getDataByteBody() + _dataInfos._senderSize + _dataInfos._receiverSize,
+        _dataInfos._timestampSize);
     return true;
 }
 

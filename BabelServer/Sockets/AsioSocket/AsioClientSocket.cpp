@@ -131,7 +131,7 @@ void AsioClientSocket::read_data_infos(const boost::system::error_code &error)
     if (!error) {
         if (!_read_msg) {
             AResponse::ResponseHeader _hdr{};
-            memcpy(&_hdr, _headerBuffer, AResponse::HeaderSize);
+            std::memcpy(&_hdr, _headerBuffer, AResponse::HeaderSize);
             std::string log = BabelUtils::format(
                 "Read msg null \ncode : %d, type %d, sz: %u",
                 _hdr._code, _hdr._responseType, _hdr._dataInfosSize

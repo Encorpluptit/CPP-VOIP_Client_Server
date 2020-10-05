@@ -156,11 +156,11 @@ int main(int argc, char *argv[])
 
         char line[chat_message::max_body_length + 1];
         while (std::cin.getline(line, chat_message::max_body_length + 1)) {
-            using namespace std; // For strlen and memcpy.
+            using namespace std; // For strlen and std::memcpy.
             chat_message msg;
 
             msg.body_length(strlen(line));
-            memcpy(msg.body(), line, msg.body_length());
+            std::memcpy(msg.body(), line, msg.body_length());
             msg.encode_header();
             c.write(msg);
         }

@@ -44,29 +44,29 @@ bool UserResponse::setPassword(const std::string &password) noexcept
 
 bool UserResponse::encode() noexcept
 {
-    memcpy(_data_byte, &_header, HeaderSize);
-    memcpy(getDataByteDataInfos(), &_dataInfos, DataInfosSize);
-    memcpy(getDataByteBody(), _data.login, _dataInfos._loginSize);
-    memcpy(getDataByteBody() + _dataInfos._loginSize, _data.password, _dataInfos._passwordSize);
+    std::memcpy(_data_byte, &_header, HeaderSize);
+    std::memcpy(getDataByteDataInfos(), &_dataInfos, DataInfosSize);
+    std::memcpy(getDataByteBody(), _data.login, _dataInfos._loginSize);
+    std::memcpy(getDataByteBody() + _dataInfos._loginSize, _data.password, _dataInfos._passwordSize);
     return true;
 }
 
 bool UserResponse::decode_header() noexcept
 {
-    memcpy(&_header, _data_byte, HeaderSize);
+    std::memcpy(&_header, _data_byte, HeaderSize);
     return true;
 }
 
 bool UserResponse::decode_data_infos() noexcept
 {
-    memcpy(&_dataInfos, getDataByteDataInfos(), DataInfosSize);
+    std::memcpy(&_dataInfos, getDataByteDataInfos(), DataInfosSize);
     return true;
 }
 
 bool UserResponse::decode_data() noexcept
 {
-    memcpy(_data.login, getDataByteBody(), _dataInfos._loginSize);
-    memcpy(_data.password, getDataByteBody() + _dataInfos._loginSize, _dataInfos._passwordSize);
+    std::memcpy(_data.login, getDataByteBody(), _dataInfos._loginSize);
+    std::memcpy(_data.password, getDataByteBody() + _dataInfos._loginSize, _dataInfos._passwordSize);
     return true;
 }
 
