@@ -87,6 +87,8 @@ class Babel(ConanFile):
                 self.warn("Do not know how to install system requirements for {}.".format(tools.os_info.linux_distro))
             # package_tool.install(update=True, packages=" ".join(packages))
             package_tool.install(update=False, packages=" ".join(packages))
+        # if tools.os_info.is_windows and self.settings.os == "Windows":
+        #     print("lol")
 
 
     # def imports(self):

@@ -65,11 +65,11 @@ std::filesystem::path Logger::createLogDirectories()
 
 void Logger::createLogFile(std::filesystem::path filePath)
 {
-    time_t rawtime;
+    std::time_t rawtime;
     struct tm *timeinfo;
     size_t sz = FILENAME_MAX - filePath.string().size();
 
-    if (time(&rawtime) == ((time_t) -1) || !(timeinfo = localtime(&rawtime))
+    if (std::time(&rawtime) == ((time_t) -1) || !(timeinfo = std::localtime(&rawtime))
         || !strftime(_timeBuffer, sz, "%Y-%m-%d_%H-%M-%S.log", timeinfo)) {
         filePath /= std::string("Log_File.log");
         _logFile = std::ofstream(filePath.string());
@@ -81,12 +81,12 @@ void Logger::createLogFile(std::filesystem::path filePath)
 
 void Logger::getTime()
 {
-    time_t rawtime;
+    std::time_t rawtime;
     struct tm *timeinfo;
 
-    if (time(&rawtime) == ((time_t) -1))
+    if (std::time(&rawtime) == ((time_t) -1))
         return;
-    if (!(timeinfo = localtime(&rawtime)))
+    if (!(timeinfo = std::localtime(&rawtime)))
         return;
     if (!strftime(_timeBuffer, FILENAME_MAX, "%H-%M-%S", timeinfo))
         return;

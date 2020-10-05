@@ -23,7 +23,10 @@ option(USE_LOG "Log Execution in a file" OFF)
 
 ###############################################################################
 # Set Compile Options
-add_compile_options(-Wall -Wextra)
+if (UNIX)
+    add_compile_options(-Wall -Wextra)
+endif (UNIX)
+
 
 #add_compile_options(
 #        -Wshadow
