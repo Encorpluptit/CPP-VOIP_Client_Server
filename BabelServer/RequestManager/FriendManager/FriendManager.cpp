@@ -43,7 +43,10 @@ void FriendManager::friendshipRequest(
     const BabelUtils::SharedPtr<ClientSocket> &clientSocket,
     const std::shared_ptr<FriendResponse> &response,
     const ClientList &clientList,
-    __attribute__((unused))Database &database
+    #ifndef _WIN32
+    __attribute__((unused))
+    #endif
+    Database &database
 ) const
 {
     auto friendships = database.getFriendships(clientSocket->getUser()->login);
@@ -70,7 +73,10 @@ void FriendManager::declineFriendship(
     const BabelUtils::SharedPtr<ClientSocket> &clientSocket,
     const std::shared_ptr<FriendResponse> &response,
     const ClientList &clientList,
-    __attribute__((unused))Database &database
+    #ifndef _WIN32
+    __attribute__((unused))
+    #endif
+    Database &database
 ) const
 {
     for (const auto &client : clientList) {

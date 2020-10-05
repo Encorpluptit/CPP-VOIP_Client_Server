@@ -74,7 +74,7 @@ find_package(Qt5Widgets CONFIG REQUIRED)
 #find_package(Boost COMPONENTS thread REQUIRED)
 find_package(Boost REQUIRED)
 if (Boost_FOUND)
-    set(CONAN_LIBS ${CONAN_LIBS} Boost_thread)
+    set(CONAN_LIBS ${CONAN_LIBS} boost_thread)
 endif (Boost_FOUND)
 
 
@@ -189,6 +189,12 @@ target_include_directories(
 if (UNIX)
     target_compile_options(babel_server PRIVATE -Wno-redundant-move)
 endif (UNIX)
+
+#find_package(Boost COMPONENTS thread REQUIRED)
+find_package(Boost REQUIRED)
+if (Boost_FOUND)
+    target_link_libraries(babel_server boost_thread)
+endif (Boost_FOUND)
 
 target_link_libraries(babel_server ${CONAN_LIBS} stdc++fs)
 
