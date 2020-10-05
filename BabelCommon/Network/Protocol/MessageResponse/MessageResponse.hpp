@@ -33,7 +33,7 @@ namespace BabelNetwork {
 
         /* <- Class Structure -> */
     public:
-        using Data = struct __attribute__((packed)) DataStruct {
+        using Data = struct DataStruct {
             char sender[MaxDataSize::Sender];
             char receiver[MaxDataSize::Receiver];
             char messageData[MaxDataSize::MessageData];
@@ -43,7 +43,7 @@ namespace BabelNetwork {
 
         /* <- Class Structure -> */
     public:
-        using DataInfos = struct __attribute__((packed)) DataInfosStruct {
+        using DataInfos = struct DataInfosStruct {
             uint16_t _senderSize;
             uint16_t _receiverSize;
             uint16_t _messageDataSize;

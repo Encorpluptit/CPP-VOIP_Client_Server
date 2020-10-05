@@ -34,7 +34,7 @@ namespace BabelNetwork {
 
         /* <- Class Structure -> */
     public:
-        using ResponseHeader = struct __attribute__((packed)) Response {
+        using ResponseHeader = struct Response {
             uint16_t _code;
             ResponseType _responseType;
             size_t _dataInfosSize;
