@@ -181,19 +181,3 @@ Test(Common, CallResponse_05)
     cr_assert_str_eq(test->getPort(), port.c_str());
     ASSERT_INT(test->getCallId(), call_id);
 }
-
-//Test(Common, UserResponse_14)
-//{
-//    const std::string login = std::string(UserResponse::MaxDataSize::Login + 1, '*');
-//    const std::string pass = std::string(UserResponse::MaxDataSize::Password, '*');
-//
-//    cr_assert_throw(
-//        UserResponse test(login, pass),
-//        BabelErrors::UserResponse
-//    );
-//    try {
-//        UserResponse test(login, pass);
-//    } catch (const BabelErrors::UserResponse &e) {
-//        cr_assert_str_eq(e.what(), "login or password too long");
-//    }
-//}

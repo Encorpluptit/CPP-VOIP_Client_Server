@@ -24,6 +24,7 @@ const NetworkInfos &ASocket::getNetworkInfos() const
 {
     return _networkInfos;
 }
+
 bool BabelNetwork::ASocket::operator==(const BabelNetwork::NetworkInfos &other) const
 {
     return this->getNetworkInfos() == other;

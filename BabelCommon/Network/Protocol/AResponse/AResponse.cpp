@@ -15,11 +15,9 @@
 using namespace BabelNetwork;
 
 AResponse::AResponse(const ResponseHeader &headerResponse)
-    : _header(headerResponse)
-{}
+    : _header(headerResponse) {}
 
-AResponse::AResponse(const AResponse &other) : AResponse(other._header)
-{}
+AResponse::AResponse(const AResponse &other) : AResponse(other._header) {}
 
 std::shared_ptr<AResponse> AResponse::getResponse(const char *headerBuffer)
 {

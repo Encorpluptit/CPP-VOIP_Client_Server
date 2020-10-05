@@ -37,9 +37,9 @@ namespace BabelUtils {
     public:
         void start() final {};
 
-        void waitExecution() final {_thread.join();}
+        void waitExecution() final { _thread.join(); }
 
-        void stop() final {waitExecution();};
+        void stop() final { waitExecution(); };
 
         /* <- Attributes -> */
     private:

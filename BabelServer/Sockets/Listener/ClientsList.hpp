@@ -20,10 +20,10 @@ namespace BabelServer {
 
     public:
         void add_client(const BabelUtils::SharedPtr<BabelNetwork::ClientSocket> &client)
-    {
-        lock();
-        _clients.emplace_back(client);
-        unlock();
+        {
+            lock();
+            _clients.emplace_back(client);
+            unlock();
         };
 
         void remove_client(const BabelNetwork::ClientSocket &target)

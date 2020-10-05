@@ -187,7 +187,7 @@ target_include_directories(
 # TODO: REMOVE WHEN FIX SQLITE_ORM.
 target_compile_options(babel_server PRIVATE -Wno-redundant-move)
 
-target_link_libraries(babel_server ${CONAN_LIBS} stdc++fs )
+target_link_libraries(babel_server ${CONAN_LIBS} stdc++fs)
 
 
 ###############################################################################

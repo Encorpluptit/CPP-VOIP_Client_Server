@@ -1,5 +1,5 @@
 from conans import ConanFile, CMake, tools
-from os import system
+
 
 class Babel(ConanFile):
     settings = {"os": None, "build_type": None, "compiler": None, "arch": ["x86_64"]}
@@ -8,16 +8,16 @@ class Babel(ConanFile):
     options = {"shared": [True, False], "fPIC": [True, False]}
     default_options = "shared=False", "fPIC=True"
     generators = "cmake", "cmake_find_package", "cmake_paths", "gcc"
-    requires = "sqlite_orm/1.5@bincrafters/stable",             \
-        "zlib/1.2.11@conan/stable",                             \
-        "bzip2/1.0.8@conan/stable",                             \
-        "boost/1.71.0@conan/stable",                            \
-        "qt/5.14.2@bincrafters/stable",                         \
-        "sqlite3/3.32.3@_/_",                                   \
-        "portaudio/v190600.20161030@bincrafters/stable",        \
-        "opus/1.3.1@bincrafters/stable"
-    # "qt/5.15.1@bincrafters/stable",                         \
+    requires = "sqlite_orm/1.5@bincrafters/stable", \
+               "zlib/1.2.11@conan/stable", \
+               "bzip2/1.0.8@conan/stable", \
+               "boost/1.71.0@conan/stable", \
+               "qt/5.14.2@bincrafters/stable", \
+               "sqlite3/3.32.3@_/_", \
+               "portaudio/v190600.20161030@bincrafters/stable", \
+               "opus/1.3.1@bincrafters/stable"
 
+    # "qt/5.15.1@bincrafters/stable",                         \
 
     def configure(self):
         self.system_requirements()
@@ -89,7 +89,6 @@ class Babel(ConanFile):
             package_tool.install(update=False, packages=" ".join(packages))
         # if tools.os_info.is_windows and self.settings.os == "Windows":
         #     print("lol")
-
 
     # def imports(self):
     #     self.copy("*.dll", dst="bin", src="bin") # From bin to bin

@@ -53,8 +53,8 @@ bool MessageResponse::setMessageData(const std::string &messageData) noexcept
 
 bool MessageResponse::setTimestamp() noexcept
 {
-    time_t timer;
-    if (time(&timer) == ((time_t) -1))
+    std::time_t timer;
+    if (std::time(&timer) == ((std::time_t) -1))
         return false;
     _data.timestamp = timer;
     _dataInfos._timestampSize = sizeof(_data.timestamp);

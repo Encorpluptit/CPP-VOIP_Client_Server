@@ -12,7 +12,7 @@
 
 namespace BabelUtils {
 
-    class AThread  : virtual public ARunnable {
+    class AThread : virtual public ARunnable {
 
         /* <- Constructor - Destructor -> */
     public:
