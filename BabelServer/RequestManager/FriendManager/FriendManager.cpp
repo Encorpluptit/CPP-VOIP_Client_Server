@@ -95,7 +95,9 @@ void FriendManager::deleteFriend(
             for (const auto &client : clientList) {
                 auto user = client->getUser();
                 if (user && response->getFriendLogin() == user->login) {
-                    client->sendResponse(FriendResponse::DeleteFriendOK(client->getUser()->login, user->login));
+                    client->sendResponse(
+                        FriendResponse::DeleteFriendOK(response->getFriendLogin(), response->getLogin()));
+                    break;
                 }
             }
             clientSocket->sendResponse(FriendResponse::DeleteFriendOK(response));
