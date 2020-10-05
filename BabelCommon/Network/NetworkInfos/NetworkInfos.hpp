@@ -36,7 +36,6 @@ namespace BabelNetwork {
 
         /* <- Private Methods -> */
     private:
-        static uint16_t parsePort(const std::string &port);
 
         /* <- Getters / Setters -> */
     public:
