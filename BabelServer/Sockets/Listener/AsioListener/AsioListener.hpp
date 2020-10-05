@@ -14,7 +14,7 @@
 namespace BabelServer {
     using namespace boost::asio;
 
-    class AsioListener final : virtual public BabelServer::Listener {
+    class AsioListener final : public BabelServer::Listener {
 
         /* <- Constructor - Destructor -> */
     public:

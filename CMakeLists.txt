@@ -74,7 +74,7 @@ find_package(Qt5Widgets CONFIG REQUIRED)
 #find_package(Boost COMPONENTS thread REQUIRED)
 find_package(Boost REQUIRED)
 if (Boost_FOUND)
-    set(CONAN_LIBS ${CONAN_LIBS} boost_thread)
+    set(CONAN_LIBS ${CONAN_LIBS} Boost_thread)
 endif (Boost_FOUND)
 
 
@@ -186,7 +186,9 @@ target_include_directories(
         ${SERVER_INCLUDES}
 )
 # TODO: REMOVE WHEN FIX SQLITE_ORM.
-target_compile_options(babel_server PRIVATE -Wno-redundant-move)
+if (UNIX)
+    target_compile_options(babel_server PRIVATE -Wno-redundant-move)
+endif (UNIX)
 
 target_link_libraries(babel_server ${CONAN_LIBS} stdc++fs)
 
