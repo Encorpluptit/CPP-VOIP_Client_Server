@@ -32,6 +32,7 @@ MainWindow::MainWindow(QWidget *parent, NetworkClientSocket &network) : QMainWin
     timer->start(100);
     logged = false;
     ui->CantFindText->hide();
+    called = false;
 }
 
 MainWindow::~MainWindow()
@@ -146,7 +147,7 @@ void MainWindow::on_AcceptCallButton_clicked()
 {
     called = true;
     client.getUdp()->doConnect(client.myUdpIp, client.myUdpPort);
-    auto response = BabelNetwork::CallResponse::AcceptCall(callInfo);
+    auto response = BabelNetwork::CallResponse::AcceptCall(callInfo, client.myUdpPort);
     std::cout << std::endl << response << std::endl << std::endl;
     client.getTcp()->sendResponse(response);
 }
