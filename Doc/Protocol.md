@@ -146,7 +146,6 @@ this is the structure for the login responsse fill this struct and send it to se
             ```json
             {
               "login":      "damien.bernard@epitech.eu",
-              "password" :  ""
             } 
             ```
     * Error Codes
@@ -157,7 +156,6 @@ this is the structure for the login responsse fill this struct and send it to se
             ```json
             {
               "login":      "damien.bernard@epitech.eu",
-              "password" :  ""
             } 
             ```
         * 112: Account Deleted.
@@ -172,14 +170,12 @@ this is the structure for the login responsse fill this struct and send it to se
             ```json
             {
               "login":      "damien.bernard@epitech.eu",
-              "password" :  ""
             } 
             ```
         * 281: User Already Logged In (??).
             ```json
             {
               "login":      "damien.bernard@epitech.eu",
-              "password" :  ""
             } 
             ```
         * 282: Password too weak. (??)
