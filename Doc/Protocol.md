@@ -97,7 +97,6 @@ this is the structure for the login responsse fill this struct and send it to se
             ```json
             {
               "login":      "damien.bernard@epitech.eu",
-              "password" :  ""
             } 
             ```
     * Error Codes    
@@ -105,35 +104,30 @@ this is the structure for the login responsse fill this struct and send it to se
             ```json
             {
               "login":      "damien.bernard@epitech.eu",
-              "password" :  ""
             } 
             ```
         * 271: Wrong Login.
             ```json
             {
               "login":      "damien.bernard@epitech.eu",
-              "password" :  ""
             } 
             ```
         * 272: Wrong Password.
             ```json
             {
               "login":      "damien.bernard@epitech.eu",
-              "password" :  ""
             } 
             ```
         * 273: Account Deleted.
             ```json
             {
               "login":      "damien.bernard@epitech.eu",
-              "password" :  ""
             } 
             ```
         * 274: User Already Logged In. (???)
             ```json
             {
               "login":      "damien.bernard@epitech.eu",
-              "password" :  ""
             } 
             ```
 
