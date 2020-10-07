@@ -35,13 +35,13 @@ that is the classic header for a responsse
     * 112: Account Deleted.
     * 113: Request Delete Account.
     
-    * 270: Unknown login Error.
-    * 271: Wrong Login.
-    * 272: Wrong Password.
-    * 273: Requested Account Deleted.
-    * 274: User Already Logged In.
-    * 280: Login Already Taken.
-    * 281: User Already Logged In.
+    * 170: Unknown login Error.
+    * 171: Wrong Login.
+    * 172: Wrong Password.
+    * 175: Requested Account Deleted.
+    * 173: Login Already Taken.
+    * 174: User Already Logged In.
+    * 176: Client Logged Out.
 
 
 ### Login (20*|27* Codes)
@@ -100,25 +100,25 @@ this is the structure for the login responsse fill this struct and send it to se
             } 
             ```
     * Error Codes    
-        * 270: Unknown login Error.
+        * 170: Unknown login Error.
             ```json
             {
               "login":      "damien.bernard@epitech.eu",
             } 
             ```
-        * 271: Wrong Login.
+        * 171: Wrong Login.
             ```json
             {
               "login":      "damien.bernard@epitech.eu",
             } 
             ```
-        * 272: Wrong Password.
+        * 172: Wrong Password.
             ```json
             {
               "login":      "damien.bernard@epitech.eu",
             } 
             ```
-        * 273: Account Deleted.
+        * 175: Account Deleted.
             ```json
             {
               "login":      "damien.bernard@epitech.eu",
@@ -142,7 +142,7 @@ this is the structure for the login responsse fill this struct and send it to se
               "password" :  "abcd1234"
             } 
             ```
-        * 213: Request Delete Account.
+        * 113: Request Delete Account.
             ```json
             {
               "login":      "damien.bernard@epitech.eu",
@@ -159,20 +159,19 @@ this is the structure for the login responsse fill this struct and send it to se
             } 
             ```
         * 112: Account Deleted.
-          113``json
+          ```json
             {
               "login":      "damien.bernard@epitech.eu",
-              "password" :  ""
             } 
             ```
     * Error Codes
-        * 280: Login Already Taken.
+        * 173: Login Already Taken.
             ```json
             {
               "login":      "damien.bernard@epitech.eu",
             } 
             ```
-        * 281: User Already Logged In (??).
+        * 174: User Already Logged In (??).
             ```json
             {
               "login":      "damien.bernard@epitech.eu",
