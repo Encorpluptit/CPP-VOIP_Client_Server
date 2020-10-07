@@ -72,10 +72,10 @@ include_directories(${CMAKE_INCLUDE_PATH})
 find_package(Qt5Widgets CONFIG REQUIRED)
 
 #find_package(Boost COMPONENTS thread REQUIRED)
-find_package(Boost REQUIRED)
-if (Boost_FOUND)
-    set(CONAN_LIBS ${CONAN_LIBS} boost_thread)
-endif (Boost_FOUND)
+#find_package(Boost REQUIRED)
+#if (Boost_FOUND)
+#    set(CONAN_LIBS ${CONAN_LIBS} boost_thread)
+#endif (Boost_FOUND)
 
 
 ###############################################################################
