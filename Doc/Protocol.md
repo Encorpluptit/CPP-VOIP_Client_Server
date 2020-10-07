@@ -45,6 +45,18 @@ that is the classic header for a responsse
 
 
 ### Login (20*|27* Codes)
+### Header
+im going to specify the header for every responsse for login part
+
+  * _loginSize = size of the login user
+  * _passwordSize = size of the password user
+
+  ```cpp
+  struct __attribute__((packed)) DataInfosStruct {
+    uint16_t _loginSize;
+    uint16_t _passwordSize;
+  };
+  ```
 
 * [Client -> Server]
     * Success Codes.
