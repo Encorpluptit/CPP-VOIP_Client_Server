@@ -38,9 +38,9 @@ that is the classic header for a responsse
     * 170: Unknown login Error.
     * 171: Wrong Login.
     * 172: Wrong Password.
-    * 175: Requested Account Deleted.
     * 173: Login Already Taken.
     * 174: User Already Logged In.
+    * 175: Request Account Deleted.
     * 176: Client Logged Out.
 
 
@@ -117,13 +117,19 @@ this is the structure for the login responsse fill this struct and send it to se
               "login":      "damien.bernard@epitech.eu",
             } 
             ```
+        * 173: Login Already Taken.
+            ```json
+            {
+              "login":      "damien.bernard@epitech.eu",
+            } 
+            ```
         * 174: User Already Logged In.
             ```json
             {
               "login":      "damien.bernard@epitech.eu",
             } 
             ```
-        * 175: Account Deleted.
+        * 175: Request Account Deleted.
             ```json
             {
               "login":      "damien.bernard@epitech.eu",
