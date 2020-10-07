@@ -16,7 +16,7 @@ that is the classic header for a responsse
   * _datainfosSize = size of the next structure
 
   ```cpp
-  struct __attribute__((packed)) Response {
+  Response {
     uint16_t _code;
     ResponseType _responseType;
     size_t _dataInfosSize;
@@ -53,7 +53,7 @@ you need to send it to specify the size of the next structure
   * _passwordSize = size of the password user
 
   ```cpp
-  struct __attribute__((packed)) DataInfosStruct {
+  DataInfosStruct {
     uint16_t _loginSize;
     uint16_t _passwordSize;
   };
