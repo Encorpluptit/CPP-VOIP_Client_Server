@@ -26,8 +26,8 @@ that is the classic header for a responsse
 ## User (2** Codes)
 ### Summary
 
-    * 200: User Logged In.
-    * 201: Request logging.
+    * 100: User Logged In.
+    * 101: Request logging.
     * 202: User Logged Out.
     * 203: Request Logged out.
     * 210: Account Created.
@@ -46,7 +46,8 @@ that is the classic header for a responsse
 
 ### Login (20*|27* Codes)
 ### Header
-im going to specify the header for every responsse for login part
+im going to specify the header for every responsse for login part 
+you need to send it to specify the size of the next structure
 
   * _loginSize = size of the login user
   * _passwordSize = size of the password user
@@ -57,12 +58,20 @@ im going to specify the header for every responsse for login part
     uint16_t _passwordSize;
   };
   ```
+### Struct of login responsse 
+this is the structure for the login responsse fill this struct and send it to server
 
+```cpp
+  DataStruct {
+    char login[MaxDataSize::Login];
+    char password[MaxDataSize::Password];
+  };
+```
 * [Client -> Server]
     * Success Codes.
-        * 201: Request logging.
+        * 101: Request logging.
             ```json
-            auto {
+            {
               "login":      "damien.bernard@epitech.eu",
               "password" :  "abcd1234"
             }
@@ -71,7 +80,6 @@ im going to specify the header for every responsse for login part
             ```json
             {
               "login":      "damien.bernard@epitech.eu",
-              "password" :  ""
             } 
             ```
         * 275: ??
@@ -79,11 +87,10 @@ im going to specify the header for every responsse for login part
 
 * [Server -> Client]
     * Success Codes.
-        * 200: User Logged In.
+        * 100: User Logged In.
             ```json
             {
               "login":      "damien.bernard@epitech.eu",
-              "password" :  ""
             } 
             ```
         * 202: User Logged Out.
