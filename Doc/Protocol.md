@@ -28,12 +28,12 @@ that is the classic header for a responsse
 
     * 100: User Logged In.
     * 101: Request logging.
-    * 202: User Logged Out.
-    * 203: Request Logged out.
-    * 210: Account Created.
-    * 211: Request Create Account.
-    * 212: Account Deleted.
-    * 213: Request Delete Account.
+    * 102: User Logged Out.
+    * 103: Request Logged out.
+    * 110: Account Created.
+    * 111: Request Create Account.
+    * 112: Account Deleted.
+    * 113: Request Delete Account.
     
     * 270: Unknown login Error.
     * 271: Wrong Login.
@@ -76,7 +76,7 @@ this is the structure for the login responsse fill this struct and send it to se
               "password" :  "abcd1234"
             }
             ```
-        * 203: Request Logged out.
+        * 103: Request Logged out.
             ```json
             {
               "login":      "damien.bernard@epitech.eu",
@@ -93,7 +93,7 @@ this is the structure for the login responsse fill this struct and send it to se
               "login":      "damien.bernard@epitech.eu",
             } 
             ```
-        * 202: User Logged Out.
+        * 102: User Logged Out.
             ```json
             {
               "login":      "damien.bernard@epitech.eu",
@@ -135,7 +135,7 @@ this is the structure for the login responsse fill this struct and send it to se
 
 * [Client -> Server]
     * Success Codes.
-        * 211: Request Create Account.
+        * 111: Request Create Account.
             ```json
             {
               "login":      "damien.bernard@epitech.eu",
@@ -153,15 +153,15 @@ this is the structure for the login responsse fill this struct and send it to se
 
 * [Server -> Client]
     * Success Codes.
-        * 210: Account Created.
+        * 110: Account Created.
             ```json
             {
               "login":      "damien.bernard@epitech.eu",
               "password" :  ""
             } 
             ```
-        * 212: Account Deleted.
-            ```json
+        * 112: Account Deleted.
+          113``json
             {
               "login":      "damien.bernard@epitech.eu",
               "password" :  ""
