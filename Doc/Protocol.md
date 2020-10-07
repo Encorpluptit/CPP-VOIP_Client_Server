@@ -82,7 +82,6 @@ this is the structure for the login responsse fill this struct and send it to se
               "login":      "damien.bernard@epitech.eu",
             } 
             ```
-        * 275: ??
     * Error Codes
 
 * [Server -> Client]
@@ -118,16 +117,21 @@ this is the structure for the login responsse fill this struct and send it to se
               "login":      "damien.bernard@epitech.eu",
             } 
             ```
+        * 174: User Already Logged In.
+            ```json
+            {
+              "login":      "damien.bernard@epitech.eu",
+            } 
+            ```
         * 175: Account Deleted.
             ```json
             {
               "login":      "damien.bernard@epitech.eu",
             } 
             ```
-        * 274: User Already Logged In. (???)
+        * 176: Client Logged Out.
             ```json
             {
-              "login":      "damien.bernard@epitech.eu",
             } 
             ```
 
