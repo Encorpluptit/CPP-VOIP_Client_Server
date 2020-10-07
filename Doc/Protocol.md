@@ -174,20 +174,6 @@ this is the structure for the login responsse fill this struct and send it to se
               "login":      "damien.bernard@epitech.eu",
             } 
             ```
-    * Error Codes
-        * 173: Login Already Taken.
-            ```json
-            {
-              "login":      "damien.bernard@epitech.eu",
-            } 
-            ```
-        * 174: User Already Logged In (??).
-            ```json
-            {
-              "login":      "damien.bernard@epitech.eu",
-            } 
-            ```
-        * 282: Password too weak. (??)
         
 ---
 
