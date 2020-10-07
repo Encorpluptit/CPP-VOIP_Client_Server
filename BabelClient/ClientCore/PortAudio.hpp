@@ -10,7 +10,9 @@ class PortAudio : public IAudio
 
         PortAudio() {
 
-            if (Pa_Initialize() != paNoError)
+            int err = Pa_Initialize();
+            std::cout << "ERROR PORTAUDIO : " << Pa_GetErrorText(err) << std::endl;
+            if (err != paNoError)
                 std::cout << "Pa_Initialize failed" << std::endl; // THROW
         }
 
