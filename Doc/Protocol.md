@@ -8,6 +8,20 @@ Full documentation of server/client protocol.
 
 
 ---
+## AResponse
+that is the classic header for a responsse
+
+  * _code = responsse code
+  * ResponseType = the struct type of response 
+  * _datainfosSize = size of the next structure
+
+  ```cpp
+  struct __attribute__((packed)) Response {
+    uint16_t _code;
+    ResponseType _responseType;
+    size_t _dataInfosSize;
+  };
+  ```
 
 ## User (2** Codes)
 ### Summary
@@ -36,7 +50,7 @@ Full documentation of server/client protocol.
     * Success Codes.
         * 201: Request logging.
             ```json
-            {
+            auto {
               "login":      "damien.bernard@epitech.eu",
               "password" :  "abcd1234"
             }
