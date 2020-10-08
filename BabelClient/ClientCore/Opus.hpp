@@ -36,11 +36,12 @@ class Opus : public ICodec
 
         std::vector<uint16_t> decode(std::vector<uint16_t> voice) {
 
+            std::cout << "VOICE SIZE : " << voice.size() << std::endl;
             std::vector<uint16_t> decompressed(voice.size());
             int bytes = opus_decode(decoder, (unsigned char *) voice.data(), (int) voice.size(),
                 (opus_int16 *) decompressed.data(), (int) decompressed.size(), 0);
             if (bytes < 0)
-                std::cout << "Compression error" << std::endl;  // THROW
+                std::cout << "Decompression error : " << bytes << std::endl;  // THROW
             return (decompressed);
         }
     

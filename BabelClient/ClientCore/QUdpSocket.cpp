@@ -44,18 +44,25 @@ void MyUdpSocket::bytesWritten(const qint64 bytes)
 
 std::vector<uint16_t> MyUdpSocket::readVoice(std::string ip, int port)
 {
-    std::vector<uint16_t> voice;
-    QByteArray data;
-    QHostAddress sender;
-    quint16 senderPort;
+    std::vector<uint16_t> voice{};
+    QByteArray data{};
+    QHostAddress sender{};
+    quint16 senderPort{};
 
-    if (socket->hasPendingDatagrams() == false)
+    if (socket->hasPendingDatagrams() == false) {
+        //std::cout << "DATAGRAM FALSE" << std::endl;
         return (voice);
+    }
     data.resize(socket->pendingDatagramSize());
-    socket->readDatagram(data.data(), data.size(), &sender, &senderPort);
-    if (sender.toString().toLocal8Bit().constData() != ip || senderPort != port)
+    //std::cout << "SIZE DATAGRAM : " << socket->pendingDatagramSize() << std::endl;
+    socket->readDatagram(data.data(), socket->pendingDatagramSize(), &sender, &senderPort);
+    if (sender.toString().toLocal8Bit().constData() != ip || senderPort != port) {
+        std::cout << "IP / PORT FALSE" << std::endl;
         return (voice);
+    }
     std::vector<uint16_t> voice2(data.begin(), data.end());
+    voice2.resize(480);
+    //std::cout << "SIZE PACKET RECEIVE : " << voice2.size() << std::endl;
     return (voice2);
 }
 
@@ -66,6 +73,46 @@ void MyUdpSocket::sendVoice(std::vector<uint16_t> buf, std::string ip, int port)
 
     addr.setAddress(str);
 
+    //std::cout << "SIZE PACKET SEND : " << buf.size() << std::endl;
     QByteArray data = reinterpret_cast<const char *>(buf.data());
     socket->writeDatagram(data, addr, port);
+}
+
+void MyUdpSocket::readData(std::string ip, int port)
+{
+    std::string str = "";
+    QByteArray data;
+    QHostAddress sender;
+    quint16 senderPort;
+
+    if (socket->hasPendingDatagrams() == false)
+        return;
+    data.resize(socket->pendingDatagramSize());
+    socket->readDatagram(data.data(), data.size(), &sender, &senderPort);
+    qDebug() << "MESSAGE : " << data << " SENDER IP :" << sender << " SENDER PORT : " << senderPort;
+}
+
+std::vector<uint16_t> MyUdpSocket::readVoix(std::string ip, int port)
+{
+    std::string str = "";
+    QByteArray data;
+    QHostAddress sender;
+    quint16 senderPort;
+    std::vector<uint16_t> empty;
+
+    if (socket->hasPendingDatagrams() == false)
+        return (empty);
+    data.resize(socket->pendingDatagramSize());
+    socket->readDatagram(data.data(), data.size(), &sender, &senderPort);
+    std::vector<uint16_t> voice(data.begin(), data.end());
+    qDebug() << "MESSAGE : " << data << " SENDER IP :" << sender << " SENDER PORT : " << senderPort;
+    return (voice);
+}
+
+void MyUdpSocket::sendData(std::string data, std::string ip, int port)
+{
+    QHostAddress addr;
+
+    addr.setAddress(ip.c_str());
+    socket->writeDatagram(data.c_str(), addr, port);
 }

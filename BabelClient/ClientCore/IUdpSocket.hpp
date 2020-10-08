@@ -12,5 +12,11 @@ public:
 
     virtual std::vector<uint16_t> readVoice(std::string ip, int port) = 0;
 
+    virtual void readData(std::string ip, int port) = 0;
+
+    virtual void sendData(std::string data, std::string ip, int port) = 0;
+
+    virtual std::vector<uint16_t> readVoix(std::string ip, int port) = 0;
+
 private:
 };

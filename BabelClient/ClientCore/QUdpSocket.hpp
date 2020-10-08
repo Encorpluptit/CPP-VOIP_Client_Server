@@ -22,6 +22,12 @@ public:
 
     std::vector<uint16_t> readVoice(std::string ip, int port);
 
+    void readData(std::string ip, int port);
+
+    void sendData(std::string data, std::string ip, int port);
+
+    std::vector<uint16_t> readVoix(std::string ip, int port);
+
 signals:
 
 public slots:

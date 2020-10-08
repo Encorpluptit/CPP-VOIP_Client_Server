@@ -120,7 +120,6 @@ void MainWindow::on_DeleteAccountButton_clicked()
     auto response = BabelNetwork::UserResponse::AccountDeletionRequest(login);
     client.getTcp()->sendResponse(response);
     std::cout << "Delete Account clicked" << std::endl;
-    LoggedOut(nullptr);
 }
 
 void MainWindow::on_RefuseRequestButton_clicked()
@@ -150,6 +149,7 @@ void MainWindow::on_AcceptCallButton_clicked()
     auto response = BabelNetwork::CallResponse::AcceptCall(callInfo, client.myUdpPort);
     std::cout << std::endl << response << std::endl << std::endl;
     client.getTcp()->sendResponse(response);
+    ui->gridStackedWidget->setCurrentWidget(ui->CallPage);
 }
 
 void MainWindow::on_RefuseCallButton_clicked()
@@ -158,6 +158,7 @@ void MainWindow::on_RefuseCallButton_clicked()
     auto response = BabelNetwork::CallResponse::RefusedCall(callInfo);
     client.getTcp()->sendResponse(response);
     callInfo = nullptr;
+    ui->gridStackedWidget->setCurrentWidget(ui->CallPage);
 }
 
 void MainWindow::on_HangOutButton_clicked()
@@ -197,6 +198,12 @@ void MainWindow::LoggedIn(const std::shared_ptr<BabelNetwork::UserResponse> &res
 
 void MainWindow::LoggedOut(const std::shared_ptr<BabelNetwork::UserResponse> &response)
 {
+    if (called == true) {
+        voiceTimer->stop();
+        audio->stop_audio();
+        called = false;
+        client.getUdp()->disconnect();
+    }
     logged = false;
     (void) response;
     friendList.clear();
@@ -214,8 +221,18 @@ void MainWindow::AccountCreate(const std::shared_ptr<BabelNetwork::UserResponse>
 
 void MainWindow::AccountDelete(const std::shared_ptr<BabelNetwork::UserResponse> &response)
 {
-    //DISPLAY COMPTE SUPPRIME
+    if (called == true) {
+        voiceTimer->stop();
+        audio->stop_audio();
+        called = false;
+        client.getUdp()->disconnect();
+    }
+    logged = false;
     (void) response;
+    friendList.clear();
+    callInfo = nullptr;
+    friendRequest = nullptr;
+    ui->gridStackedWidget->setCurrentWidget(ui->LoginWidget);
 }
 
 void MainWindow::UnknowUserError(const std::shared_ptr<BabelNetwork::UserResponse> &response)
@@ -257,7 +274,7 @@ void MainWindow::CallStarted(const std::shared_ptr<BabelNetwork::CallResponse> &
     audio->init_audio();
     called = true;
     callInfo = response;
-    voiceTimer->start(100);
+    voiceTimer->start(1);
 }
 
 void MainWindow::CallLeft(const std::shared_ptr<BabelNetwork::CallResponse> &response)
@@ -413,15 +430,57 @@ void MainWindow::ManageVoice()
 {
     std::vector<uint16_t> send;
     std::vector<uint16_t> receive;
+    std::vector<uint16_t> save;
 
-    send = audio->getVoice();
-    send = codec->encode(send);
+    /*send = audio->getVoice();
+    std::cout << send.size() << std::endl;
+    if (send.size() != 0)
+        send = codec->encode(send);
+    if (send.size() != 0)
+        receive = codec->decode(send);
+    audio->playVoice(receive);
+    send.clear();
+    receive.clear();*/
+
+
+    if (client.myUdpPort == 9000) {
+        send = audio->getVoice();
+        if (send.size() != 0)
+            send = codec->encode(send);
+        client.getUdp()->sendVoice(send, callInfo->getIp(), std::stoi(callInfo->getPort()));
+        send.clear();
+    } else {
+        receive = client.getUdp()->readVoice(callInfo->getIp(), std::stoi(callInfo->getPort()));
+        for (size_t i = 0; i < receive.size(); i++) {
+            std::cout << receive[i] << std::endl;
+        }
+         if (receive.size() > 0) {
+            std::cout << "ICI" << std::endl;
+            receive = codec->decode(receive);
+            audio->playVoice(receive);
+        }
+        receive.clear();
+    }
+
+
+
+    /*send = audio->getVoice();
+    if (send.size() != 0)
+        send = codec->encode(send);
     client.getUdp()->sendVoice(send, callInfo->getIp(), std::stoi(callInfo->getPort()));
     send.clear();
     receive = client.getUdp()->readVoice(callInfo->getIp(), std::stoi(callInfo->getPort()));
-    if (receive.size() != 0) {
+    //save.insert(save.end(), receive.begin(), receive.end());
+    //std::cout << "SAVE SIZE : " << save.size() << std::endl;
+    if (receive.size() > 0) {
+        std::cout << "ICI" << std::endl;
         receive = codec->decode(receive);
+        //save = codec->decode(save);
         audio->playVoice(receive);
-        receive.clear();
+        //save.clear();
     }
+    receive.clear();*/
+
+    //client.getUdp()->sendData("PTDR", callInfo->getIp(), std::stoi(callInfo->getPort()));
+    //client.getUdp()->readData(callInfo->getIp(), std::stoi(callInfo->getPort()));
 }
