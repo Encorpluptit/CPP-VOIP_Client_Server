@@ -1,4 +1,5 @@
 # Babel Protocol
+
 Full documentation of server/client protocol.
 
 
@@ -202,6 +203,32 @@ this is the structure for the login responsse fill this struct and send it to se
     * 471: Target User is Disconnected.
     * 472: Unknown Error.
     
+### Header
+im going to specify the header for every responsse for Call part 
+you need to send it to specify the size of the next structure
+
+  * _loginSize = size of the login user
+  * _passwordSize = size of the password user
+
+  ```cpp
+    DataInfosStruct {
+      uint16_t _senderSize;
+      uint16_t _receiverSize;
+      uint8_t _timestampSize;
+      uint8_t _callIdSize;
+      uint8_t _ipSize;
+      uint8_t _portSize;
+    };
+  ```
+### Struct of login responsse 
+this is the structure for the login responsse fill this struct and send it to server
+
+```cpp
+  DataStruct {
+    char login[MaxDataSize::Login];
+    char password[MaxDataSize::Password];
+  };
+```
 
 * Call Status
     * [Server -> Client]
