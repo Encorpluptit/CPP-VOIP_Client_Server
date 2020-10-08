@@ -2,17 +2,17 @@
 
 Full documentation of server/client protocol.
 
-
    ![alt text][logo]
 
    [logo]: ./BabelClasses.png "UML diagram image in Doc Folder"
 
-
 ---
+
 ## AResponse
+
 that is the classic header for a responsse
 
-  * _code = responsse code
+* _code = responsse code
   * ResponseType = the struct type of response 
   * _datainfosSize = size of the next structure
 
@@ -25,6 +25,7 @@ that is the classic header for a responsse
   ```
 
 ## User (2** Codes)
+
 ### Summary
 
     * 100: User Logged In.
@@ -53,17 +54,15 @@ that is the classic header for a responsse
     * 471: User Disconected.
     * 472: Unknown Error.
 
-
-
-
-
 ### Login (20*|27* Codes)
+
 ### Header
+
 im going to specify the header for every responsse for login part 
 you need to send it to specify the size of the next structure
 
-  * _loginSize = size of the login user
-  * _passwordSize = size of the password user
+* _loginSize = size of the login user
+* _passwordSize = size of the password user
 
   ```cpp
   DataInfosStruct {
@@ -71,7 +70,9 @@ you need to send it to specify the size of the next structure
     uint16_t _passwordSize;
   };
   ```
+
 ### Struct of login responsse 
+
 this is the structure for the login responsse fill this struct and send it to server
 
 ```cpp
@@ -80,135 +81,168 @@ this is the structure for the login responsse fill this struct and send it to se
     char password[MaxDataSize::Password];
   };
 ```
+
 * [Client -> Server]
-    * Success Codes.
-        * 101: Request logging.
-            ```json
+  * Success Codes.
+  * 101: Request logging.
+
+    ```json
             {
               "login":      "damien.bernard@epitech.eu",
               "password" :  "abcd1234"
             }
-            ```
-        * 103: Request Logged out.
-            ```json
+    ```
+
+  * 103: Request Logged out.
+
+    ```json
             {
               "login":      "damien.bernard@epitech.eu",
-            } 
-            ```
-    * Error Codes
+            }
+    ```
+
+  * Error Codes
 
 * [Server -> Client]
-    * Success Codes.
-        * 100: User Logged In.
-            ```json
+  * Success Codes.
+  * 100: User Logged In.
+
+    ```json
             {
               "login":      "damien.bernard@epitech.eu",
-            } 
-            ```
-        * 102: User Logged Out.
-            ```json
+            }
+      ```
+
+  * 102: User Logged Out.
+
+    ```json
             {
               "login":      "damien.bernard@epitech.eu",
-            } 
-            ```
-    * Error Codes    
-        * 170: Unknown login Error.
-            ```json
+            }
+    ```
+
+  * Error Codes
+
+  * 170: Unknown login Error.
+
+    ```json
             {
               "login":      "damien.bernard@epitech.eu",
-            } 
-            ```
-        * 171: Wrong Login.
-            ```json
+            }
+    ```
+
+  * 171: Wrong Login.
+
+    ```json
             {
               "login":      "damien.bernard@epitech.eu",
-            } 
-            ```
-        * 172: Wrong Password.
-            ```json
+            }
+    ```
+
+  * 172: Wrong Password.
+
+    ```json
             {
               "login":      "damien.bernard@epitech.eu",
-            } 
-            ```
-        * 173: Login Already Taken.
-            ```json
+            }
+    ```
+
+  * 173: Login Already Taken.
+
+    ```json
             {
               "login":      "damien.bernard@epitech.eu",
-            } 
-            ```
-        * 174: User Already Logged In.
-            ```json
+            }
+    ```
+
+  * 174: User Already Logged In.
+
+    ```json
             {
               "login":      "damien.bernard@epitech.eu",
-            } 
-            ```
-        * 175: Request Account Deleted.
-            ```json
+            }
+    ```
+
+  * 175: Request Account Deleted.
+
+    ```json
             {
               "login":      "damien.bernard@epitech.eu",
-            } 
-            ```
-        * 176: Client Logged Out.
-            ```json
+            }
+    ```
+
+  * 176: Client Logged Out.
+
+    ```json
             {
-            } 
-            ```
+            }
+    ```
 
 ### Account Management (21*|28* Codes)
 
 * [Client -> Server]
-    * Success Codes.
-        * 111: Request Create Account.
-            ```json
+
+  * Success Codes.
+  * 111: Request Create Account.
+
+    ```json
             {
               "login":      "damien.bernard@epitech.eu",
               "password" :  "abcd1234"
-            } 
-            ```
-        * 113: Request Delete Account.
-            ```json
+            }
+    ```
+  
+  * 113: Request Delete Account.
+
+    ```json
             {
               "login":      "damien.bernard@epitech.eu",
-            } 
-            ```
-    * Error Codes
+            }
+    ```
+
+  * Error Codes
 
 * [Server -> Client]
-    * Success Codes.
-        * 110: Account Created.
-            ```json
+  * Success Codes.
+  * 110: Account Created.
+
+    ```json
             {
               "login":      "damien.bernard@epitech.eu",
-            } 
-            ```
-        * 112: Account Deleted.
-          ```json
+            }
+    ```
+
+  * 112: Account Deleted.
+
+    ```json
             {
               "login":      "damien.bernard@epitech.eu",
-            } 
-            ```
-        
+            }
+    ```
+
 ---
 
 ### Call (3** Codes)
+
 * Re Summary
-    * 400: Call started.
-    * 401: Request Call.
-    * 402: Call Left Successfully.
-    * 403: Request End Call.
-    * 404: Incoming Call.
-    * 405: Call Accepted.
-    
-    * 470: Requested Call Refused.
-    * 471: Target User is Disconnected.
-    * 472: Unknown Error.
-    
+  * 400: Call started.
+  * 401: Request Call.
+  * 402: Call Left Successfully.
+  * 403: Request End Call.
+  * 404: Incoming Call.
+  * 405: Call Accepted.
+
+  * 470: Requested Call Refused.
+  * 471: Target User is Disconnected.
+  * 472: Unknown Error.
+
 ### Header
+
 im going to specify the header for every responsse for Call part 
 you need to send it to specify the size of the next structure
 
-  * _loginSize = size of the login user
-  * _passwordSize = size of the password user
+* _loginSize = size of the login user
+* _passwordSize = size of the password user
 
   ```cpp
     DataInfosStruct {
@@ -220,7 +254,9 @@ you need to send it to specify the size of the next structure
       uint8_t _portSize;
     };
   ```
+
 ### Struct of login responsse 
+
 this is the structure for the login responsse fill this struct and send it to server
 
 ```cpp
