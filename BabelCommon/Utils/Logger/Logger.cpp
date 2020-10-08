@@ -16,9 +16,6 @@ Logger::Logger(Logger::LogType type)
 {
     initLogType();
     try {
-        std::filesystem::path tmpPath = createLogDirectories();
-        createLogFile(tmpPath);
-        _ok = true;
     } catch (const std::exception &e) {
         std::cerr << e.what() << std::endl;
     }
@@ -48,36 +45,6 @@ void Logger::initLogType()
             _description = "Unknown";
             break;
     }
-}
-
-std::filesystem::path Logger::createLogDirectories()
-{
-    const std::string LogDir("BabelLogs");
-    const std::string TargetLogDir("Babel" + _description + "Log");
-    const std::filesystem::path current_path(std::filesystem::current_path());
-    std::filesystem::path tmpPath(current_path);
-
-    tmpPath /= LogDir;
-    std::filesystem::create_directory(tmpPath);
-    tmpPath /= TargetLogDir;
-    std::filesystem::create_directory(tmpPath);
-    return tmpPath;
-}
-
-void Logger::createLogFile(std::filesystem::path filePath)
-{
-    std::time_t rawtime;
-    struct tm *timeinfo;
-    size_t sz = FILENAME_MAX - filePath.string().size();
-
-    if (std::time(&rawtime) == ((time_t) -1) || !(timeinfo = std::localtime(&rawtime))
-        || !strftime(_timeBuffer, sz, "%Y-%m-%d_%H-%M-%S.log", timeinfo)) {
-        filePath /= std::string("Log_File.log");
-        _logFile = std::ofstream(filePath.string());
-        return;
-    }
-    filePath /= std::string(_timeBuffer);
-    _logFile = std::ofstream(filePath.string());
 }
 
 void Logger::getTime()
