@@ -293,7 +293,7 @@ this is the structure for the Call responsse fill this struct and send it to ser
               }
       ```
 
-    * 304: Incoming Call. ??????????????
+    * 404: Incoming Call. ??????????????
 
       ```json
               {
@@ -305,25 +305,23 @@ this is the structure for the Call responsse fill this struct and send it to ser
       ```
 
     * Error Codes
-    * 370: Requested Call Refused.
+    * 470: Requested Call Refused.
 
       ```json
               {
                 "sender":             "damien.bernard@epitech.eu",
                 "receiver":           "ugo.levi-cescutti@epitech.eu",
                 "timestamp":          "(unix time)",
-                "ConferenceId":       ""
+                "ConferenceId":       "1"
               }
       ```
 
-    * 371: Target is Disconnected.
+    * 471: Target is Disconnected.
 
       ```json
               {
                 "sender":             "damien.bernard@epitech.eu",
                 "receiver":           "ugo.levi-cescutti@epitech.eu",
-                "timestamp":          "(unix time)",
-                "ConferenceId":       ""
               }
       ```
 
