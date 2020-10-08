@@ -326,35 +326,42 @@ this is the structure for the Call responsse fill this struct and send it to ser
       ```
 
     * [Client -> Server]
-        * Success Codes.
-            * 301: Request Start Call.
-                ```json
-                {
-                  "sender":             "damien.bernard@epitech.eu",
-                  "receiver":           "ugo.levi-cescutti@epitech.eu",
-                  "timestamp":          "(unix time)",
-                  "ConferenceId":       ""
-                }
-                ```
-            * 303: Request End Call.
-                ```json
-                {
+
+    * Success Codes.
+    * 401: Request Start Call.
+
+      ```json
+              {
+                "sender":             "damien.bernard@epitech.eu",
+                "receiver":           "ugo.levi-cescutti@epitech.eu",
+                "timestamp":          "(unix time)",
+                "ConferenceId":       "1"
+              }
+        ```
+
+    * 403: Request End Call.
+
+      ```json
+              {
+                "sender":             "damien.bernard@epitech.eu",
+                "receiver":           "ugo.levi-cescutti@epitech.eu",
+                "timestamp":          "(unix time)",
+                "ConferenceId":       "1"
+              }
+      ```
+
+    * 305: Call Accepted.
+
+      ```json
+              {
                   "sender":             "damien.bernard@epitech.eu",
                   "receiver":           "",
-                  "timestamp":          "",
-                  "ConferenceId":       "1"
-                }
-                ```
-            * 305: Call Accepted.
-                ```json
-                {
-                  "sender":             "damien.bernard@epitech.eu",
-                  "receiver":           "",
                   "timestamp":          "(unix time)",
                   "ConferenceId":       "1"
-                }
-                ```
-        * Error Codes
+              }
+      ```
+
+    * Error Codes
 
 * Conference(21* Codes)
 
