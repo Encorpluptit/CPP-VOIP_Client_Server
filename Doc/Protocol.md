@@ -273,7 +273,7 @@ this is the structure for the Call responsse fill this struct and send it to ser
 * Call Status
   * [Server -> Client]
   * Success Codes.
-    * 400: Requested Call started.
+    * 400: Call Started.
 
       ```json
               {
@@ -295,15 +295,15 @@ this is the structure for the Call responsse fill this struct and send it to ser
               }
       ```
 
-    * 404: Incoming Call. ??????????????
+    * 404: Incoming Call.
 
       ```json
               {
                 "sender":             "damien.bernard@epitech.eu",
-                "receiver":           "",
+                "receiver":           "ugo.levi-cescutti@epitech.eu",
                 "timestamp":          "(unix time)",
-                "callId":             "ConvId",
-                "ip":                 "127.0.0.1",
+                "ip":                 "DamienIP",
+                "port":               "damien port",
               }
       ```
 
@@ -344,7 +344,7 @@ this is the structure for the Call responsse fill this struct and send it to ser
                 "ip":                 "damienIp",
                 "port":               "damienPort",
               }
-        ```
+      ```
 
     * 403: Request End Call.
 
@@ -354,8 +354,8 @@ this is the structure for the Call responsse fill this struct and send it to ser
                 "receiver":           "ugo.levi-cescutti@epitech.eu",
                 "timestamp":          "(unix time)",
                 "callId":             "ConvId",
-                "ip":                 "damienIp",
-                "port":               "damienPort",
+                "ip":                 "UgoIP",
+                "port":               "UgoPort",
               }
       ```
 
@@ -367,7 +367,7 @@ this is the structure for the Call responsse fill this struct and send it to ser
                 "receiver":           "ugo.levi-cescutti@epitech.eu",
                 "timestamp":          "(unix time)",
                 "callId":             "ConvId",
-                "ip":                 "damienIp",
+                "ip":                 "Ugo",
                 "port":               "damienPort",
               }
       ```
