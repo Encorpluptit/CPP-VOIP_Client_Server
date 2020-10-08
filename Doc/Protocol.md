@@ -280,7 +280,9 @@ this is the structure for the Call responsse fill this struct and send it to ser
                 "sender":             "damien.bernard@epitech.eu",
                 "receiver":           "ugo.levi-cescutti@epitech.eu",
                 "timestamp":          "(unix time)",
-                "ConferenceId":       "1"
+                "callId":             "ConvId",
+                "ip":                 "damienIP",
+                "port":               "damienPort",
               }
       ```
 
@@ -300,7 +302,8 @@ this is the structure for the Call responsse fill this struct and send it to ser
                 "sender":             "damien.bernard@epitech.eu",
                 "receiver":           "",
                 "timestamp":          "(unix time)",
-                "ConferenceId":       "1"
+                "callId":             "ConvId",
+                "ip":                 "127.0.0.1",
               }
       ```
 
@@ -312,7 +315,9 @@ this is the structure for the Call responsse fill this struct and send it to ser
                 "sender":             "damien.bernard@epitech.eu",
                 "receiver":           "ugo.levi-cescutti@epitech.eu",
                 "timestamp":          "(unix time)",
-                "ConferenceId":       "1"
+                "callId":             "ConvId",
+                "ip":                 "damienIP",
+                "port":               "damienPort",
               }
       ```
 
@@ -335,7 +340,9 @@ this is the structure for the Call responsse fill this struct and send it to ser
                 "sender":             "damien.bernard@epitech.eu",
                 "receiver":           "ugo.levi-cescutti@epitech.eu",
                 "timestamp":          "(unix time)",
-                "ConferenceId":       "1"
+                "callId":             "ConvId",
+                "ip":                 "damienIp",
+                "port":               "damienPort",
               }
         ```
 
@@ -346,19 +353,23 @@ this is the structure for the Call responsse fill this struct and send it to ser
                 "sender":             "damien.bernard@epitech.eu",
                 "receiver":           "ugo.levi-cescutti@epitech.eu",
                 "timestamp":          "(unix time)",
-                "ConferenceId":       "1"
+                "callId":             "ConvId",
+                "ip":                 "damienIp",
+                "port":               "damienPort",
               }
       ```
 
-    * 305: Call Accepted.
+    * 405: Call Accepted.
 
       ```json
               {
                   "sender":             "damien.bernard@epitech.eu",
                   "receiver":           "",
                   "timestamp":          "(unix time)",
-                  "ConferenceId":       "1"
+                  "callId":             "ConvId",
+                  "ip":                 "127.0.0.1",
               }
+
       ```
 
     * Error Codes
