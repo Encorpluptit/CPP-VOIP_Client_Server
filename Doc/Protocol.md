@@ -34,7 +34,6 @@ that is the classic header for a responsse
     * 111: Request Create Account.
     * 112: Account Deleted.
     * 113: Request Delete Account.
-    
     * 170: Unknown login Error.
     * 171: Wrong Login.
     * 172: Wrong Password.
@@ -42,6 +41,19 @@ that is the classic header for a responsse
     * 174: User Already Logged In.
     * 175: Request Account Deleted.
     * 176: Client Logged Out.
+
+    * 400: Call Started.
+    * 401: Request Call.
+    * 402: Call Left.
+    * 403: Request End Call.
+    * 404: Incoming CAll.
+    * 405: Call Accepted.
+    * 470: Call Refused.
+    * 471: User Disconected.
+    * 472: Unknown Error.
+
+
+
 
 
 ### Login (20*|27* Codes)
