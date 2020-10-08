@@ -241,8 +241,11 @@ this is the structure for the login responsse fill this struct and send it to se
 im going to specify the header for every responsse for Call part 
 you need to send it to specify the size of the next structure
 
-* _loginSize = size of the login user
-* _passwordSize = size of the password user
+* _senderSize = size of the login user
+* _receiverSize = size of the login user
+* _timestampSize = size of the timeStamp
+* _ipSize = size of the ip user
+* _portSize = size of the por user
 
   ```cpp
     DataInfosStruct {
