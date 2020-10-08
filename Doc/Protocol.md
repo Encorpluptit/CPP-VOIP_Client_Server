@@ -58,7 +58,7 @@ that is the classic header for a responsse
 
 ### Header
 
-im going to specify the header for every responsse for login part 
+im going to specify the header for every responsse for login part
 you need to send it to specify the size of the next structure
 
 * _loginSize = size of the login user
@@ -71,7 +71,7 @@ you need to send it to specify the size of the next structure
   };
   ```
 
-### Struct of login responsse 
+### Struct of login responsse
 
 this is the structure for the login responsse fill this struct and send it to server
 
@@ -255,66 +255,78 @@ you need to send it to specify the size of the next structure
     };
   ```
 
-### Struct of login responsse 
+### Struct of call responsse
 
-this is the structure for the login responsse fill this struct and send it to server
+this is the structure for the Call responsse fill this struct and send it to server
 
 ```cpp
   DataStruct {
-    char login[MaxDataSize::Login];
-    char password[MaxDataSize::Password];
+    char sender[MaxDataSize::Sender];
+    char receiver[MaxDataSize::Receiver];
+    time_t timestamp;
+    uint16_t callId;
+    char ip[MaxDataSize::Sender];
+    char port[MaxDataSize::Receiver];
   };
 ```
 
 * Call Status
-    * [Server -> Client]
-        * Success Codes.
-            * 300: Requested Call started.
-                ```json
-                {
-                  "sender":             "damien.bernard@epitech.eu",
-                  "receiver":           "ugo.levi-cescutti@epitech.eu",
-                  "timestamp":          "(unix time)",
-                  "ConferenceId":       "1"
-                }
-                ```
-            * 302: Call Left Successfully.
-                ```json
-                {
-                  "sender":             "ugo.levi-cescutti@epitech.eu",
-                  "receiver":           "",
-                  "timestamp":          "(unix time)",
-                  "ConferenceId":       "1"
-                }
-                ```
-            * 304: Incoming Call.
-                ```json
-                {
-                  "sender":             "damien.bernard@epitech.eu",
-                  "receiver":           "",
-                  "timestamp":          "(unix time)",
-                  "ConferenceId":       "1"
-                }
-                ```
-        * Error Codes
-            * 370: Requested Call Refused.
-                ```json
-                {
-                  "sender":             "damien.bernard@epitech.eu",
-                  "receiver":           "ugo.levi-cescutti@epitech.eu",
-                  "timestamp":          "(unix time)",
-                  "ConferenceId":       ""
-                }
-                ```
-            * 371: Target is Disconnected.
-                ```json
-                {
-                  "sender":             "damien.bernard@epitech.eu",
-                  "receiver":           "ugo.levi-cescutti@epitech.eu",
-                  "timestamp":          "(unix time)",
-                  "ConferenceId":       ""
-                }
-                ```
+  * [Server -> Client]
+  * Success Codes.
+    * 400: Requested Call started.
+
+      ```json
+              {
+                "sender":             "damien.bernard@epitech.eu",
+                "receiver":           "ugo.levi-cescutti@epitech.eu",
+                "timestamp":          "(unix time)",
+                "ConferenceId":       "1"
+              }
+      ```
+
+    * 402: Call Left Successfully.
+
+      ```json
+              {
+                "sender":             "ugo.levi-cescutti@epitech.eu",
+                "receiver":           "damien.bernard@epitech.eu",
+              }
+      ```
+
+    * 304: Incoming Call.
+
+      ```json
+              {
+                "sender":             "damien.bernard@epitech.eu",
+                "receiver":           "",
+                "timestamp":          "(unix time)",
+                "ConferenceId":       "1"
+              }
+      ```
+
+    * Error Codes
+    * 370: Requested Call Refused.
+
+      ```json
+              {
+                "sender":             "damien.bernard@epitech.eu",
+                "receiver":           "ugo.levi-cescutti@epitech.eu",
+                "timestamp":          "(unix time)",
+                "ConferenceId":       ""
+              }
+      ```
+
+    * 371: Target is Disconnected.
+
+      ```json
+              {
+                "sender":             "damien.bernard@epitech.eu",
+                "receiver":           "ugo.levi-cescutti@epitech.eu",
+                "timestamp":          "(unix time)",
+                "ConferenceId":       ""
+              }
+      ```
+
     * [Client -> Server]
         * Success Codes.
             * 301: Request Start Call.
