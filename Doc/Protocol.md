@@ -190,16 +190,17 @@ this is the structure for the login responsse fill this struct and send it to se
 ---
 
 ### Call (3** Codes)
-* Summary
-    * 300: Call started.
-    * 301: Request Call.
-    * 302: Call Left Successfully.
-    * 303: Request End Call.
-    * 304: Incoming Call.
-    * 305: Call Accepted.
+* Re Summary
+    * 400: Call started.
+    * 401: Request Call.
+    * 402: Call Left Successfully.
+    * 403: Request End Call.
+    * 404: Incoming Call.
+    * 405: Call Accepted.
     
-    * 370: Requested Call Refused.
-    * 371: Target is Disconnected.
+    * 470: Requested Call Refused.
+    * 471: Target User is Disconnected.
+    * 472: Unknown Error.
     
 
 * Call Status
