@@ -10,10 +10,14 @@
 
 int main(int ac, char **av)
 {
-    if (ac != 3)
+    if (ac != 4)
         return (84);
     BabelNetwork::NetworkInfos nwi(av[1], av[2]);
     NetworkClientSocket network(nwi.getIp(), nwi.getPort());
+    if (std::stoi(av[3]) == 0)
+        network.setIpPort(9000);
+    else
+        network.setIpPort(10000);
     BabelClient::ClientCore client(ac, av, network);
     return (client.run());
 }

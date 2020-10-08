@@ -27,7 +27,6 @@ void MyTcpSocket::doConnect(const std::string &ip, int port)
     connect(socket, SIGNAL(connected()), this, SLOT(connected()));
     connect(socket, SIGNAL(disconnected()), this, SLOT(disconnected()));
     connect(socket, SIGNAL(bytesWritten(qint64)), this, SLOT(bytesWritten(qint64)));
-    //connect(socket, SIGNAL(readResponse()),this, SLOT(readResponse()));
 }
 
 void MyTcpSocket::disconnect()

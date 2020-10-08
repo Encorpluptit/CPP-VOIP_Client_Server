@@ -61,7 +61,7 @@ void Core::Loop(const std::string ip, const std::string port) noexcept
     init_audio();
     std::cout << "Press a key when the two client are running" << std::endl;
     getchar();
-    printf("Connect = %d\n", connect(ip, port));
+    //printf("Connect = %d\n", connect(ip, port));
     while (1) {
         voice = getVoice();
         voice = encode(voice);

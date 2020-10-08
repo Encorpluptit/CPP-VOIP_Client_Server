@@ -208,6 +208,7 @@ set(CLIENT_DIR BabelClient)
 set(
         CLIENT_INCLUDES
         ${CLIENT_DIR}/ClientCore
+        #${CLIENT_DIR}/PortAudio
 )
 
 
@@ -218,6 +219,7 @@ set(
         ${CLIENT_DIR}/ClientCore/ClientCore.cpp
         ${CLIENT_DIR}/ClientCore/mainwindow.cpp
         ${CLIENT_DIR}/ClientCore/QtSocket.cpp
+        ${CLIENT_DIR}/ClientCore/QUdpSocket.cpp
 )
 
 
@@ -227,6 +229,7 @@ set(
 add_executable(
         babel_client
         ${CLIENT_DIR}/main.cpp
+        #${CLIENT_DIR}/PortAudio/test.cpp
         ${CLIENT_SOURCES}
         ${COMMON_SOURCES}
 )
