@@ -49,7 +49,7 @@ std::vector<uint16_t> MyUdpSocket::readVoice(const std::string &ip, int port)
     QHostAddress sender{};
     quint16 senderPort{};
 
-    if (socket->hasPendingDatagrams() == false)
+    if (!socket->hasPendingDatagrams())
         return (voice);
     buf.resize(socket->pendingDatagramSize());
     socket->readDatagram(buf.data(), socket->pendingDatagramSize(), &sender, &senderPort);

@@ -12,15 +12,15 @@ class PortAudio : public IAudio
 
         ~PortAudio();
 
-        bool init_audio();
+        bool init_audio() override;
 
-        bool stop_audio();
+        bool stop_audio() override;
 
-        std::vector<uint16_t> getVoice();
+        std::vector<uint16_t> getVoice() override;
 
-        void playVoice(const std::vector<uint16_t> &record);
+        void playVoice(const std::vector<uint16_t> &record) override;
 
-        PaStreamParameters input;
-        PaStreamParameters output;
-        PaStream *stream;
+        PaStreamParameters input{};
+        PaStreamParameters output{};
+        PaStream *stream{};
 };
