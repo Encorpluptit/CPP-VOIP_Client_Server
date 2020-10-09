@@ -34,6 +34,7 @@ MainWindow::MainWindow(QWidget *parent, NetworkClientSocket &network) : QMainWin
     logged = false;
     ui->CantFindText->hide();
     called = false;
+    ui->textEdit->hide();
 }
 
 MainWindow::~MainWindow()
@@ -196,7 +197,7 @@ void MainWindow::LoggedIn(const std::shared_ptr<BabelNetwork::UserResponse> &res
     std::cout << "LOGGED IN" << std::endl;
     login = response->getLogin();
     logged = true;
-    ui->ContactName->setText(login.c_str());
+    ui->LoginNameEdit->setText(login.c_str());
 }
 
 void MainWindow::LoggedOut(const std::shared_ptr<BabelNetwork::UserResponse> &response)
@@ -217,8 +218,8 @@ void MainWindow::LoggedOut(const std::shared_ptr<BabelNetwork::UserResponse> &re
 
 void MainWindow::AccountCreate(const std::shared_ptr<BabelNetwork::UserResponse> &response)
 {
-    ui->CantFindText->setText("Account Create");
-    ui->CantFindText->show();
+    ui->textEdit->setText("Account Create");
+    ui->textEdit->show();
     (void) response;
 }
 
@@ -259,8 +260,8 @@ void MainWindow::WrongPassword(const std::shared_ptr<BabelNetwork::UserResponse>
 
 void MainWindow::LoginAlreadyTaken(const std::shared_ptr<BabelNetwork::UserResponse> &response)
 {
-    ui->CantFindText->setText("Login already taken");
-    ui->CantFindText->show();
+    ui->textEdit->setText("Login already taken");
+    ui->textEdit->show();
     (void) response;
 }
 
@@ -327,8 +328,23 @@ void MainWindow::AddFriend(const std::shared_ptr<BabelNetwork::FriendResponse> &
             connect(mapper, SIGNAL(mapped(const QString &)), this, SLOT(coucou(const QString &)));
             button->setText(friendList[i].c_str());
             butts.push_back(button);
-        } else
-            butts[i]->setText(friendList[i].c_str());
+        }
+    }
+}
+
+void MainWindow::DeleteFriend(const std::shared_ptr<BabelNetwork::FriendResponse> &response)
+{
+    int i = 0;
+
+    for (auto it = friendList.begin(); it != friendList.end(); it++, i++) {
+        std::cout << "NAME BUTTON : " << butts[i]->text().toLocal8Bit().constData() << " FriendName : " << it->c_str() << std::endl;
+        if (butts[i]->text() == response->getFriendLogin() && butts[i]->isHidden() == false) {
+            std::cout << "COUCOU" << std::endl;
+            butts[i]->hide();
+            butts.removeAt(i);
+            friendList.erase(it);
+            break;
+        }
     }
 }
 

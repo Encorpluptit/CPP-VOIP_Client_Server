@@ -84,6 +84,7 @@ class MainWindow : public QMainWindow
         void AddFriend(const std::shared_ptr<BabelNetwork::FriendResponse> &response);
         void FriendRequest(const std::shared_ptr<BabelNetwork::FriendResponse> &response);
         void UnknowUser(const std::shared_ptr<BabelNetwork::FriendResponse> &response);
+        void DeleteFriend(const std::shared_ptr<BabelNetwork::FriendResponse> &response);
 
         void SendMessageOk(const std::shared_ptr<BabelNetwork::MessageResponse> &response);
         void ReceiveMessage(const std::shared_ptr<BabelNetwork::MessageResponse> &response);
@@ -110,13 +111,13 @@ class MainWindow : public QMainWindow
         std::vector<std::function<void(MainWindow*, const std::shared_ptr<BabelNetwork::AResponse> &)>> dispatch_ptr = {&MainWindow::doUnknowTypeResponse, &MainWindow::doUserResponse, &MainWindow::doCallResponse, &MainWindow::doFriendResponse, &MainWindow::doMessageResponse};
         std::vector<std::function<void(MainWindow*, const std::shared_ptr<BabelNetwork::UserResponse> &)>> user_ptr = {&MainWindow::LoggedIn, &MainWindow::LoggedOut, &MainWindow::AccountCreate, &MainWindow::AccountDelete, &MainWindow::WrongLogin, &MainWindow::WrongPassword, &MainWindow::LoginAlreadyTaken, &MainWindow::AlreadyLoggedIn, &MainWindow::UnknowUserError};
         std::vector<std::function<void(MainWindow*, const std::shared_ptr<BabelNetwork::CallResponse> &)>> call_ptr = {&MainWindow::CallStarted, &MainWindow::CallLeft, &MainWindow::IncomingCall, &MainWindow::CallRefused, &MainWindow::UserDisconnected};
-        std::vector<std::function<void(MainWindow*, const std::shared_ptr<BabelNetwork::FriendResponse> &)>> friend_ptr = {&MainWindow::AddFriend, &MainWindow::FriendRequest, &MainWindow::UnknowUser};
+        std::vector<std::function<void(MainWindow*, const std::shared_ptr<BabelNetwork::FriendResponse> &)>> friend_ptr = {&MainWindow::AddFriend, &MainWindow::FriendRequest, &MainWindow::UnknowUser, &MainWindow::DeleteFriend};
         std::vector<std::function<void(MainWindow*, const std::shared_ptr<BabelNetwork::MessageResponse> &)>> message_ptr = {&MainWindow::SendMessageOk, &MainWindow::ReceiveMessage, &MainWindow::UnknowUserMessage};
         std::vector<int> userCodeIdx = {BabelNetwork::UserResponse::LoggedIn, BabelNetwork::UserResponse::LoggedOut, BabelNetwork::UserResponse::AccountCreated, BabelNetwork::UserResponse::AccountDeleted, BabelNetwork::UserResponse::WrongLogin, BabelNetwork::UserResponse::WrongPassword, BabelNetwork::UserResponse::LoginAlreadyTaken, BabelNetwork::UserResponse::AlreadyLoggedIn, BabelNetwork::UserResponse::UnknownUserError};
         std::vector<int> callCodeIdx = {BabelNetwork::CallResponse::CallStarted, BabelNetwork::CallResponse::CallLeft,
             BabelNetwork::CallResponse::IncomingCall, BabelNetwork::CallResponse::CallRefused, BabelNetwork::CallResponse::UserDisconnected};
     std::vector<int> friendCodeIdx = {BabelNetwork::FriendResponse::FriendAdded,
-        BabelNetwork::FriendResponse::NewFriendshipRequested, BabelNetwork::FriendResponse::UnknownUser};
+        BabelNetwork::FriendResponse::NewFriendshipRequested, BabelNetwork::FriendResponse::UnknownUser, BabelNetwork::FriendResponse::FriendDeleted};
     std::vector<int> messageCodeIdx = {BabelNetwork::MessageResponse::SendMessageOk,
         BabelNetwork::MessageResponse::ReceiveMessage, BabelNetwork::MessageResponse::UnknownUser};
 };
