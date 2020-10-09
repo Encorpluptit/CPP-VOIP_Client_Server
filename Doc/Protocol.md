@@ -1,256 +1,378 @@
 # Babel Protocol
-Full documentation of server/client protocol.
 
+Full documentation of server/client protocol.
 
    ![alt text][logo]
 
    [logo]: ./BabelClasses.png "UML diagram image in Doc Folder"
 
-
 ---
 
+## AResponse
+
+that is the classic header for a responsse
+
+* _code = responsse code
+  * ResponseType = the struct type of response 
+  * _datainfosSize = size of the next structure
+
+  ```cpp
+  Response {
+    uint16_t _code;
+    ResponseType _responseType;
+    size_t _dataInfosSize;
+  };
+  ```
+
 ## User (2** Codes)
+
 ### Summary
 
-    * 200: User Logged In.
-    * 201: Request logging.
-    * 202: User Logged Out.
-    * 203: Request Logged out.
-    * 210: Account Created.
-    * 211: Request Create Account.
-    * 212: Account Deleted.
-    * 213: Request Delete Account.
-    
-    * 270: Unknown login Error.
-    * 271: Wrong Login.
-    * 272: Wrong Password.
-    * 273: Requested Account Deleted.
-    * 274: User Already Logged In.
-    * 280: Login Already Taken.
-    * 281: User Already Logged In.
+    * 100: User Logged In.
+    * 101: Request logging.
+    * 102: User Logged Out.
+    * 103: Request Logged out.
+    * 110: Account Created.
+    * 111: Request Create Account.
+    * 112: Account Deleted.
+    * 113: Request Delete Account.
+    * 170: Unknown login Error.
+    * 171: Wrong Login.
+    * 172: Wrong Password.
+    * 173: Login Already Taken.
+    * 174: User Already Logged In.
+    * 175: Request Account Deleted.
+    * 176: Client Logged Out.
 
+    * 400: Call Started.
+    * 401: Request Call.
+    * 402: Call Left.
+    * 403: Request End Call.
+    * 404: Incoming CAll.
+    * 405: Call Accepted.
+    * 470: Call Refused.
+    * 471: User Disconected.
+    * 472: Unknown Error.
 
 ### Login (20*|27* Codes)
 
+### Header
+
+im going to specify the header for every responsse for login part
+you need to send it to specify the size of the next structure
+
+* _loginSize = size of the login user
+* _passwordSize = size of the password user
+
+  ```cpp
+  DataInfosStruct {
+    uint16_t _loginSize;
+    uint16_t _passwordSize;
+  };
+  ```
+
+### Struct of login responsse
+
+this is the structure for the login responsse fill this struct and send it to server
+
+```cpp
+  DataStruct {
+    char login[MaxDataSize::Login];
+    char password[MaxDataSize::Password];
+  };
+```
+
 * [Client -> Server]
-    * Success Codes.
-        * 201: Request logging.
-            ```json
+  * Success Codes.
+  * 101: Request logging.
+
+    ```json
             {
               "login":      "damien.bernard@epitech.eu",
               "password" :  "abcd1234"
             }
-            ```
-        * 203: Request Logged out.
-            ```json
+    ```
+
+  * 103: Request Logged out.
+
+    ```json
             {
               "login":      "damien.bernard@epitech.eu",
-              "password" :  ""
-            } 
-            ```
-        * 275: ??
-    * Error Codes
+            }
+    ```
+
+  * Error Codes
 
 * [Server -> Client]
-    * Success Codes.
-        * 200: User Logged In.
-            ```json
+  * Success Codes.
+  * 100: User Logged In.
+
+    ```json
             {
               "login":      "damien.bernard@epitech.eu",
-              "password" :  ""
-            } 
-            ```
-        * 202: User Logged Out.
-            ```json
+            }
+      ```
+
+  * 102: User Logged Out.
+
+    ```json
             {
               "login":      "damien.bernard@epitech.eu",
-              "password" :  ""
-            } 
-            ```
-    * Error Codes    
-        * 270: Unknown login Error.
-            ```json
+            }
+    ```
+
+  * Error Codes
+
+  * 170: Unknown login Error.
+
+    ```json
             {
               "login":      "damien.bernard@epitech.eu",
-              "password" :  ""
-            } 
-            ```
-        * 271: Wrong Login.
-            ```json
+            }
+    ```
+
+  * 171: Wrong Login.
+
+    ```json
             {
               "login":      "damien.bernard@epitech.eu",
-              "password" :  ""
-            } 
-            ```
-        * 272: Wrong Password.
-            ```json
+            }
+    ```
+
+  * 172: Wrong Password.
+
+    ```json
             {
               "login":      "damien.bernard@epitech.eu",
-              "password" :  ""
-            } 
-            ```
-        * 273: Account Deleted.
-            ```json
+            }
+    ```
+
+  * 173: Login Already Taken.
+
+    ```json
             {
               "login":      "damien.bernard@epitech.eu",
-              "password" :  ""
-            } 
-            ```
-        * 274: User Already Logged In. (???)
-            ```json
+            }
+    ```
+
+  * 174: User Already Logged In.
+
+    ```json
             {
               "login":      "damien.bernard@epitech.eu",
-              "password" :  ""
-            } 
-            ```
+            }
+    ```
+
+  * 175: Request Account Deleted.
+
+    ```json
+            {
+              "login":      "damien.bernard@epitech.eu",
+            }
+    ```
+
+  * 176: Client Logged Out.
+
+    ```json
+            {
+            }
+    ```
 
 ### Account Management (21*|28* Codes)
 
 * [Client -> Server]
-    * Success Codes.
-        * 211: Request Create Account.
-            ```json
+
+  * Success Codes.
+  * 111: Request Create Account.
+
+    ```json
             {
               "login":      "damien.bernard@epitech.eu",
               "password" :  "abcd1234"
-            } 
-            ```
-        * 213: Request Delete Account.
-            ```json
+            }
+    ```
+  
+  * 113: Request Delete Account.
+
+    ```json
             {
               "login":      "damien.bernard@epitech.eu",
-              "password" :  ""
-            } 
-            ```
-    * Error Codes
+            }
+    ```
+
+  * Error Codes
 
 * [Server -> Client]
-    * Success Codes.
-        * 210: Account Created.
-            ```json
+  * Success Codes.
+  * 110: Account Created.
+
+    ```json
             {
               "login":      "damien.bernard@epitech.eu",
-              "password" :  ""
-            } 
-            ```
-        * 212: Account Deleted.
-            ```json
+            }
+    ```
+
+  * 112: Account Deleted.
+
+    ```json
             {
               "login":      "damien.bernard@epitech.eu",
-              "password" :  ""
-            } 
-            ```
-    * Error Codes
-        * 280: Login Already Taken.
-            ```json
-            {
-              "login":      "damien.bernard@epitech.eu",
-              "password" :  ""
-            } 
-            ```
-        * 281: User Already Logged In (??).
-            ```json
-            {
-              "login":      "damien.bernard@epitech.eu",
-              "password" :  ""
-            } 
-            ```
-        * 282: Password too weak. (??)
-        
+            }
+    ```
+
 ---
 
 ### Call (3** Codes)
-* Summary
-    * 300: Call started.
-    * 301: Request Call.
-    * 302: Call Left Successfully.
-    * 303: Request End Call.
-    * 304: Incoming Call.
-    * 305: Call Accepted.
-    
-    * 370: Requested Call Refused.
-    * 371: Target is Disconnected.
-    
+
+* Re Summary
+  * 400: Call started.
+  * 401: Request Call.
+  * 402: Call Left Successfully.
+  * 403: Request End Call.
+  * 404: Incoming Call.
+  * 405: Call Accepted.
+
+  * 470: Requested Call Refused.
+  * 471: Target User is Disconnected.
+  * 472: Unknown Error.
+
+### Header
+
+im going to specify the header for every responsse for Call part 
+you need to send it to specify the size of the next structure
+
+* _loginSize = size of the login user
+* _passwordSize = size of the password user
+
+  ```cpp
+    DataInfosStruct {
+      uint16_t _senderSize;
+      uint16_t _receiverSize;
+      uint8_t _timestampSize;
+      uint8_t _callIdSize;
+      uint8_t _ipSize;
+      uint8_t _portSize;
+    };
+  ```
+
+### Struct of call responsse
+
+this is the structure for the Call responsse fill this struct and send it to server
+
+```cpp
+  DataStruct {
+    char sender[MaxDataSize::Sender];
+    char receiver[MaxDataSize::Receiver];
+    time_t timestamp;
+    uint16_t callId;
+    char ip[MaxDataSize::Sender];
+    char port[MaxDataSize::Receiver];
+  };
+```
 
 * Call Status
-    * [Server -> Client]
-        * Success Codes.
-            * 300: Requested Call started.
-                ```json
-                {
-                  "sender":             "damien.bernard@epitech.eu",
-                  "receiver":           "ugo.levi-cescutti@epitech.eu",
-                  "timestamp":          "(unix time)",
-                  "ConferenceId":       "1"
-                }
-                ```
-            * 302: Call Left Successfully.
-                ```json
-                {
-                  "sender":             "ugo.levi-cescutti@epitech.eu",
-                  "receiver":           "",
-                  "timestamp":          "(unix time)",
-                  "ConferenceId":       "1"
-                }
-                ```
-            * 304: Incoming Call.
-                ```json
-                {
-                  "sender":             "damien.bernard@epitech.eu",
-                  "receiver":           "",
-                  "timestamp":          "(unix time)",
-                  "ConferenceId":       "1"
-                }
-                ```
-        * Error Codes
-            * 370: Requested Call Refused.
-                ```json
-                {
-                  "sender":             "damien.bernard@epitech.eu",
-                  "receiver":           "ugo.levi-cescutti@epitech.eu",
-                  "timestamp":          "(unix time)",
-                  "ConferenceId":       ""
-                }
-                ```
-            * 371: Target is Disconnected.
-                ```json
-                {
-                  "sender":             "damien.bernard@epitech.eu",
-                  "receiver":           "ugo.levi-cescutti@epitech.eu",
-                  "timestamp":          "(unix time)",
-                  "ConferenceId":       ""
-                }
-                ```
+  * [Server -> Client]
+  * Success Codes.
+    * 400: Call Started.
+
+      ```json
+              {
+                "sender":             "damien.bernard@epitech.eu",
+                "receiver":           "ugo.levi-cescutti@epitech.eu",
+                "timestamp":          "(unix time)",
+                "callId":             "ConvId",
+                "ip":                 "damienIP",
+                "port":               "damienPort",
+              }
+      ```
+
+    * 402: Call Left Successfully.
+
+      ```json
+              {
+                "sender":             "ugo.levi-cescutti@epitech.eu",
+                "receiver":           "damien.bernard@epitech.eu",
+              }
+      ```
+
+    * 404: Incoming Call.
+
+      ```json
+              {
+                "sender":             "damien.bernard@epitech.eu",
+                "receiver":           "ugo.levi-cescutti@epitech.eu",
+                "timestamp":          "(unix time)",
+                "ip":                 "DamienIP",
+                "port":               "damien port",
+              }
+      ```
+
+    * Error Codes
+    * 470: Requested Call Refused.
+
+      ```json
+              {
+                "sender":             "damien.bernard@epitech.eu",
+                "receiver":           "ugo.levi-cescutti@epitech.eu",
+                "timestamp":          "(unix time)",
+                "callId":             "ConvId",
+                "ip":                 "damienIP",
+                "port":               "damienPort",
+              }
+      ```
+
+    * 471: Target is Disconnected.
+
+      ```json
+              {
+                "sender":             "damien.bernard@epitech.eu",
+                "receiver":           "ugo.levi-cescutti@epitech.eu",
+              }
+      ```
+
     * [Client -> Server]
-        * Success Codes.
-            * 301: Request Start Call.
-                ```json
-                {
-                  "sender":             "damien.bernard@epitech.eu",
-                  "receiver":           "ugo.levi-cescutti@epitech.eu",
-                  "timestamp":          "(unix time)",
-                  "ConferenceId":       ""
-                }
-                ```
-            * 303: Request End Call.
-                ```json
-                {
-                  "sender":             "damien.bernard@epitech.eu",
-                  "receiver":           "",
-                  "timestamp":          "",
-                  "ConferenceId":       "1"
-                }
-                ```
-            * 305: Call Accepted.
-                ```json
-                {
-                  "sender":             "damien.bernard@epitech.eu",
-                  "receiver":           "",
-                  "timestamp":          "(unix time)",
-                  "ConferenceId":       "1"
-                }
-                ```
-        * Error Codes
+
+    * Success Codes.
+    * 401: Request Start Call.
+
+      ```json
+              {
+                "sender":             "damien.bernard@epitech.eu",
+                "receiver":           "ugo.levi-cescutti@epitech.eu",
+                "timestamp":          "(unix time)",
+                "callId":             "ConvId",
+                "ip":                 "damienIp",
+                "port":               "damienPort",
+              }
+      ```
+
+    * 403: Request End Call.
+
+      ```json
+              {
+                "sender":             "damien.bernard@epitech.eu",
+                "receiver":           "ugo.levi-cescutti@epitech.eu",
+                "timestamp":          "(unix time)",
+                "callId":             "ConvId",
+                "ip":                 "UgoIP",
+                "port":               "UgoPort",
+              }
+      ```
+
+    * 405: Call Accepted.
+
+      ```json
+              {
+                "sender":             "damien.bernard@epitech.eu",
+                "receiver":           "ugo.levi-cescutti@epitech.eu",
+                "timestamp":          "(unix time)",
+                "callId":             "ConvId",
+                "ip":                 "Ugo",
+                "port":               "damienPort",
+              }
+      ```
+
+    * Error Codes
 
 * Conference(21* Codes)
 

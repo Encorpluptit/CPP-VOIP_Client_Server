@@ -1,11 +1,15 @@
 
 #include "AResponse.hpp"
 #include "QtSocket.hpp"
-#include "IUdpSocket.hpp"
+#include "QUdpSocket.hpp"
 
 class NetworkClientSocket {
 public:
-    NetworkClientSocket(const std::string &ip, const int port) : serverIp(ip), serverPort(port) {}
+    NetworkClientSocket(const std::string &ip, const int port) : serverIp(ip), serverPort(port)
+    {
+        _tcp = nullptr;
+        _udp = nullptr;
+    }
 
     ~NetworkClientSocket()
     {
@@ -13,7 +17,15 @@ public:
         //destroyUdpSocket();
     }
 
-    void createUdpSocket() {}
+    void createUdpSocket()
+    {
+        _udp = std::make_shared<MyUdpSocket>();
+    }
+
+    void destroyUdpSocket()
+    {
+        _udp->disconnect();
+    }
 
     void createTcpSocket()
     {
@@ -25,10 +37,9 @@ public:
         _tcp->disconnect();
     }
 
-    void destroyUdpSocket() {}
-
     void run()
     {
+        createUdpSocket();
         createTcpSocket();
         _tcp->doConnect(serverIp, serverPort);
     }
@@ -43,6 +54,15 @@ public:
         return (_udp);
     }
 
+    void setIpPort(int port)
+    {
+        myUdpIp = "127.0.0.1";
+        myUdpPort = port;
+    }
+
+    std::string myUdpIp;
+    int myUdpPort;
+    
 private:
     std::shared_ptr<ITcpSocket> _tcp;
     std::shared_ptr<IUdpSocket> _udp;
