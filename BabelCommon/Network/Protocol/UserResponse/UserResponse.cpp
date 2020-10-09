@@ -28,7 +28,7 @@ bool UserResponse::setLogin(const std::string &login) noexcept
 {
     if (login.size() > MaxDataSize::Login)
         return false;
-    strcat(_data.login, login.c_str());
+    std::strcat(_data.login, login.c_str());
     _dataInfos._loginSize = login.size();
     return true;
 }
@@ -37,7 +37,7 @@ bool UserResponse::setPassword(const std::string &password) noexcept
 {
     if (password.size() > MaxDataSize::Password)
         return false;
-    strcat(_data.password, password.c_str());
+    std::strcat(_data.password, password.c_str());
     _dataInfos._passwordSize = password.size();
     return true;
 }

@@ -40,7 +40,7 @@ bool CallResponse::setSender(const std::string &sender) noexcept
 {
     if (sender.size() > MaxDataSize::Sender)
         return false;
-    strcat(_data.sender, sender.c_str());
+    std::strcat(_data.sender, sender.c_str());
     _dataInfos._senderSize = sender.size();
     return true;
 }
@@ -49,7 +49,7 @@ bool CallResponse::setReceiver(const std::string &receiver) noexcept
 {
     if (receiver.size() > MaxDataSize::Receiver)
         return false;
-    strcat(_data.receiver, receiver.c_str());
+    std::strcat(_data.receiver, receiver.c_str());
     _dataInfos._receiverSize = receiver.size();
     return true;
 }
@@ -77,7 +77,7 @@ bool CallResponse::setIp(const std::string &ip) noexcept
 {
     if (ip.size() > MaxDataSize::Ip)
         return false;
-    strcat(_data.ip, ip.c_str());
+    std::strcat(_data.ip, ip.c_str());
     _dataInfos._ipSize = ip.size();
     return true;
 }
@@ -86,7 +86,7 @@ bool CallResponse::setPort(const std::string &port) noexcept
 {
     if (port.size() > MaxDataSize::Port)
         return false;
-    strcat(_data.port, port.c_str());
+    std::strcat(_data.port, port.c_str());
     _dataInfos._portSize = port.size();
     return true;
 }

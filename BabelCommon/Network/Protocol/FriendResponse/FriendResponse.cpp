@@ -28,7 +28,7 @@ bool FriendResponse::setLogin(const std::string &login) noexcept
 {
     if (login.size() > MaxDataSize::Login)
         return false;
-    strcat(_data.login, login.c_str());
+    std::strcat(_data.login, login.c_str());
     _dataInfos._loginSize = login.size();
     return true;
 }
@@ -37,7 +37,7 @@ bool FriendResponse::setFriendLogin(const std::string &friendLogin) noexcept
 {
     if (friendLogin.size() > MaxDataSize::FriendLogin)
         return false;
-    strcat(_data.FriendLogin, friendLogin.c_str());
+    std::strcat(_data.FriendLogin, friendLogin.c_str());
     _dataInfos._friendLoginSize = friendLogin.size();
     return true;
 }
