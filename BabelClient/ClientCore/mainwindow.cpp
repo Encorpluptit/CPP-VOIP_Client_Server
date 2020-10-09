@@ -443,7 +443,7 @@ void MainWindow::ManageVoice()
     receive.clear();*/
 
 
-    if (client.myUdpPort == 9000) {
+    /*if (client.myUdpPort == 9000) {
         send = audio->getVoice();
         if (send.size() != 0)
             send = codec->encode(send);
@@ -460,11 +460,11 @@ void MainWindow::ManageVoice()
             audio->playVoice(receive);
         }
         receive.clear();
-    }
+    }*/
 
 
 
-    /*send = audio->getVoice();
+    send = audio->getVoice();
     if (send.size() != 0)
         send = codec->encode(send);
     client.getUdp()->sendVoice(send, callInfo->getIp(), std::stoi(callInfo->getPort()));
@@ -472,6 +472,7 @@ void MainWindow::ManageVoice()
     receive = client.getUdp()->readVoice(callInfo->getIp(), std::stoi(callInfo->getPort()));
     //save.insert(save.end(), receive.begin(), receive.end());
     //std::cout << "SAVE SIZE : " << save.size() << std::endl;
+    std::cout << "RECEIVE SIZE : " << receive.size() << std::endl;
     if (receive.size() > 0) {
         std::cout << "ICI" << std::endl;
         receive = codec->decode(receive);
@@ -479,7 +480,7 @@ void MainWindow::ManageVoice()
         audio->playVoice(receive);
         //save.clear();
     }
-    receive.clear();*/
+    receive.clear();
 
     //client.getUdp()->sendData("PTDR", callInfo->getIp(), std::stoi(callInfo->getPort()));
     //client.getUdp()->readData(callInfo->getIp(), std::stoi(callInfo->getPort()));

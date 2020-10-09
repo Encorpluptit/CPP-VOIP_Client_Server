@@ -46,16 +46,19 @@ class PortAudio : public IAudio
                 std::cout << "getVoice" << std::endl; // THROW
                 return (record);
             }
-            if (len < (long) 480)
+            while ((len = Pa_GetStreamReadAvailable(stream)) < 480);
+            /*if (len < (long) 480)
                 Pa_ReadStream(stream, record.data(), (unsigned long) len);
-            else
-                Pa_ReadStream(stream, record.data(), 480);
+            else*/
+            Pa_ReadStream(stream, record.data(), 480);
             return (record);
         }
 
         void playVoice(std::vector<uint16_t> record) {
 
-            long len = 0;
+            long len = Pa_GetStreamWriteAvailable(stream);
+
+            std::cout << "LEN STREAM : " << len << std::endl;
             while ((len = Pa_GetStreamWriteAvailable(stream)) < (long) record.size());
             Pa_WriteStream(stream, record.data(), record.size());
         }

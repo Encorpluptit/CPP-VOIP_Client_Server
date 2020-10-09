@@ -45,7 +45,7 @@ void MyUdpSocket::bytesWritten(const qint64 bytes)
 std::vector<uint16_t> MyUdpSocket::readVoice(std::string ip, int port)
 {
     std::vector<uint16_t> voice{};
-    QByteArray data{};
+    QByteArray buf{};
     QHostAddress sender{};
     quint16 senderPort{};
 
@@ -53,14 +53,17 @@ std::vector<uint16_t> MyUdpSocket::readVoice(std::string ip, int port)
         //std::cout << "DATAGRAM FALSE" << std::endl;
         return (voice);
     }
-    data.resize(socket->pendingDatagramSize());
+    buf.resize(socket->pendingDatagramSize());
     //std::cout << "SIZE DATAGRAM : " << socket->pendingDatagramSize() << std::endl;
-    socket->readDatagram(data.data(), socket->pendingDatagramSize(), &sender, &senderPort);
+    socket->readDatagram(buf.data(), socket->pendingDatagramSize(), &sender, &senderPort);
     if (sender.toString().toLocal8Bit().constData() != ip || senderPort != port) {
         std::cout << "IP / PORT FALSE" << std::endl;
         return (voice);
     }
-    std::vector<uint16_t> voice2(data.begin(), data.end());
+    void *data = buf.data();
+    uint16_t *tmp = (uint16_t *)data;
+    std::vector<uint16_t> voice2(tmp, tmp + buf.length());
+    std::cout << "VOICE2[0] : " << voice2[0] << " DATA[0] : " << buf[0] << " DATA[1] : " << buf[1] <<std::endl;
     voice2.resize(480);
     //std::cout << "SIZE PACKET RECEIVE : " << voice2.size() << std::endl;
     return (voice2);
