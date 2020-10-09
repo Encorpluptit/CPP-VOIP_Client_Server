@@ -19,11 +19,6 @@ Server::Server(int ac, char **av)
 {
     _ready = false;
     initServers(ac, av);
-//    _database.createUser("ugo", "lol");
-//    _database.createUser("dam", "lol");
-//    _database.createFriendship("dam", "ugo");
-//    _database.deleteFriendship("dam", "");
-//    _database.deleteFriendship("dam", "ugo");
 }
 
 Server::~Server()
@@ -61,6 +56,7 @@ bool Server::listenerRunning()
 void Server::runListener()
 {
     while (listenerRunning()) {
+        std::cout << "ICI LOL CA LOOP" << std::endl;
         std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>> clients;
         for (const auto &server : _servers) {
             auto list = server->getClientList();
