@@ -208,6 +208,8 @@ set(
         ${CLIENT_DIR}/ClientCore/mainwindow.cpp
         ${CLIENT_DIR}/ClientCore/QtSocket.cpp
         ${CLIENT_DIR}/ClientCore/QUdpSocket.cpp
+        ${CLIENT_DIR}/ClientCore/Opus.cpp
+        ${CLIENT_DIR}/ClientCore/PortAudio.cpp
 )
 
 

@@ -18,15 +18,13 @@ public:
 
     void disconnect();
 
-    void sendVoice(std::vector<uint16_t> voice, std::string ip, int port);
+    void sendVoice(const std::vector<uint16_t> &voice, const std::string &ip, int port);
 
-    std::vector<uint16_t> readVoice(std::string ip, int port);
+    std::vector<uint16_t> readVoice(const std::string &ip, int port);
 
-    void readData(std::string ip, int port);
+    /*void readData(std::string ip, int port);
 
-    void sendData(std::string data, std::string ip, int port);
-
-    std::vector<uint16_t> readVoix(std::string ip, int port);
+    void sendData(std::string data, std::string ip, int port);*/
 
 signals:
 

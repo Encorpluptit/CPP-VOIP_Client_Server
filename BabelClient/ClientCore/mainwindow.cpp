@@ -409,7 +409,7 @@ void MainWindow::doMessageResponse(const std::shared_ptr<BabelNetwork::AResponse
 void MainWindow::doUnknowTypeResponse(const std::shared_ptr<BabelNetwork::AResponse> &response)
 {
     printf("code : %d\n", response->getCode());
-    //throw (BabelErrors::BabelError("Unknow Response Type"));
+    //throw (BabelErrors::BabelError("Unknow Response Type")); // THROW ICI
 }
 
 void MainWindow::checkTypeResponse(const std::shared_ptr<BabelNetwork::AResponse> &response)
@@ -430,7 +430,6 @@ void MainWindow::ManageVoice()
 {
     std::vector<uint16_t> send;
     std::vector<uint16_t> receive;
-    std::vector<uint16_t> save;
 
     /*send = audio->getVoice();
     std::cout << send.size() << std::endl;
@@ -442,43 +441,15 @@ void MainWindow::ManageVoice()
     send.clear();
     receive.clear();*/
 
-
-    /*if (client.myUdpPort == 9000) {
-        send = audio->getVoice();
-        if (send.size() != 0)
-            send = codec->encode(send);
-        client.getUdp()->sendVoice(send, callInfo->getIp(), std::stoi(callInfo->getPort()));
-        send.clear();
-    } else {
-        receive = client.getUdp()->readVoice(callInfo->getIp(), std::stoi(callInfo->getPort()));
-        for (size_t i = 0; i < receive.size(); i++) {
-            std::cout << receive[i] << std::endl;
-        }
-         if (receive.size() > 0) {
-            std::cout << "ICI" << std::endl;
-            receive = codec->decode(receive);
-            audio->playVoice(receive);
-        }
-        receive.clear();
-    }*/
-
-
-
     send = audio->getVoice();
     if (send.size() != 0)
         send = codec->encode(send);
     client.getUdp()->sendVoice(send, callInfo->getIp(), std::stoi(callInfo->getPort()));
     send.clear();
     receive = client.getUdp()->readVoice(callInfo->getIp(), std::stoi(callInfo->getPort()));
-    //save.insert(save.end(), receive.begin(), receive.end());
-    //std::cout << "SAVE SIZE : " << save.size() << std::endl;
-    std::cout << "RECEIVE SIZE : " << receive.size() << std::endl;
     if (receive.size() > 0) {
-        std::cout << "ICI" << std::endl;
         receive = codec->decode(receive);
-        //save = codec->decode(save);
         audio->playVoice(receive);
-        //save.clear();
     }
     receive.clear();
 

@@ -12,7 +12,7 @@ class IAudio {
 
         virtual std::vector<uint16_t> getVoice() = 0;
 
-        virtual void playVoice(std::vector<uint16_t> record) = 0;
+        virtual void playVoice(const std::vector<uint16_t> &record) = 0;
 
     private:
 };
