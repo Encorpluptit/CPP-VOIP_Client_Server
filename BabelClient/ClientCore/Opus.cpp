@@ -1,4 +1,5 @@
 #include "Opus.hpp"
+#include "BabelError.hpp"
 
 Opus::Opus()
 {
@@ -7,7 +8,7 @@ Opus::Opus()
     encoder = opus_encoder_create(48000, 1, OPUS_APPLICATION_VOIP, &err);
     decoder = opus_decoder_create(48000, 1, &err);
     if (err != OPUS_OK)
-        std::cout << "Decoder create failed" << std::endl;  // THROW
+        throw (BabelErrors::BabelError("Opus Error on encoder or decoder"));
 }
 
 Opus::~Opus()
@@ -24,7 +25,7 @@ std::vector<uint16_t> Opus::encode(const std::vector<uint16_t> &voice) {
     int bytes = opus_encode(encoder, (opus_int16 const *) voice.data(), (int) voice.size(), (unsigned char *) compressed.data(), (int) compressed.size());
     
     if (bytes < 0)
-        std::cout << "Compression error" << std::endl;  // THROW
+        throw (BabelErrors::BabelError("Opus compression error"));
     return (compressed);
 }
 
@@ -34,6 +35,6 @@ std::vector<uint16_t> Opus::decode(const std::vector<uint16_t> &voice) {
     int bytes = opus_decode(decoder, (unsigned char *) voice.data(), (int) voice.size(), (opus_int16 *) decompressed.data(), (int) decompressed.size(), 0);
     
     if (bytes < 0)
-        std::cout << "Decompression error : " << bytes << std::endl;  // THROW
+        throw (BabelErrors::BabelError("Opus decompression error"));
     return (decompressed);
 }

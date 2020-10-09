@@ -2,6 +2,7 @@
 #include "UserResponse.hpp"
 #include "./ui_mainwindow.h"
 #include "Debug.hpp"
+#include "BabelError.hpp"
 
 #include <QtDebug>
 #include <QAbstractButton>
@@ -37,6 +38,9 @@ MainWindow::MainWindow(QWidget *parent, NetworkClientSocket &network) : QMainWin
 
 MainWindow::~MainWindow()
 {
+    delete mapper;
+    delete timer;
+    delete voiceTimer;
     delete ui;
 }
 
@@ -119,7 +123,6 @@ void MainWindow::on_DeleteAccountButton_clicked()
 {
     auto response = BabelNetwork::UserResponse::AccountDeletionRequest(login);
     client.getTcp()->sendResponse(response);
-    std::cout << "Delete Account clicked" << std::endl;
 }
 
 void MainWindow::on_RefuseRequestButton_clicked()
@@ -237,8 +240,7 @@ void MainWindow::AccountDelete(const std::shared_ptr<BabelNetwork::UserResponse>
 
 void MainWindow::UnknowUserError(const std::shared_ptr<BabelNetwork::UserResponse> &response)
 {
-    //THROW ERROR
-    (void) response;
+    throw (BabelErrors::BabelError("Response code : " + std::to_string(response->getCode())));
 }
 
 void MainWindow::WrongLogin(const std::shared_ptr<BabelNetwork::UserResponse> &response)
@@ -356,8 +358,7 @@ void MainWindow::ReceiveMessage(const std::shared_ptr<BabelNetwork::MessageRespo
 
 void MainWindow::UnknowUserMessage(const std::shared_ptr<BabelNetwork::MessageResponse> &response)
 {
-    (void) response;
-    //FRONT ARTHUR
+    throw (BabelErrors::BabelError("Response code : " + std::to_string(response->getCode())));
 }
 
 
@@ -408,8 +409,7 @@ void MainWindow::doMessageResponse(const std::shared_ptr<BabelNetwork::AResponse
 
 void MainWindow::doUnknowTypeResponse(const std::shared_ptr<BabelNetwork::AResponse> &response)
 {
-    printf("code : %d\n", response->getCode());
-    //throw (BabelErrors::BabelError("Unknow Response Type")); // THROW ICI
+    throw (BabelErrors::BabelError("Response code : " + std::to_string(response->getCode())));
 }
 
 void MainWindow::checkTypeResponse(const std::shared_ptr<BabelNetwork::AResponse> &response)

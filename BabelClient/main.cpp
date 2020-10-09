@@ -10,6 +10,7 @@
 
 int main(int ac, char **av)
 {
+    try {
     if (ac != 4)
         return (84);
     BabelNetwork::NetworkInfos nwi(av[1], av[2]);
@@ -20,4 +21,8 @@ int main(int ac, char **av)
         network.setIpPort(10000);
     BabelClient::ClientCore client(ac, av, network);
     return (client.run());
+    } catch (BabelErrors::BabelError &err) {
+        std::cout << err.what() << std::endl;
+        return (84);
+    }
 }
