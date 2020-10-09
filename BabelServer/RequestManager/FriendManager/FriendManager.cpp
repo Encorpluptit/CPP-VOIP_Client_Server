@@ -49,20 +49,24 @@ void FriendManager::friendshipRequest(
     Database &database
 ) const
 {
-    auto friendships = database.getFriendships(clientSocket->getUser()->login);
+    auto friendships = database.getExistingFriendship(clientSocket->getUser()->login, response->getFriendLogin());
 
     for (const auto &client : clientList) {
         auto user = client->getUser();
         if (!user || user->login != response->getFriendLogin())
             continue;
-        for (const auto &friendship : friendships) {
-            if (user->id == friendship.id) {
-                clientSocket->sendResponse(FriendResponse::FriendshipExist(response));
-                return;
-            }
+//        for (const auto &friendship : friendships) {
+//            std::cout << user->id << "|" << friendship.id << "|" << response->getLogin() << "|" << response->getFriendLogin() << std::endl;
+//            if (user->id == friendship.) {
+//                clientSocket->sendResponse(FriendResponse::FriendshipExist(response));
+//                return;
+//            }
+//        }
+        if (!database.getExistingFriendship(clientSocket->getUser()->login, response->getFriendLogin()).empty()) {
+            clientSocket->sendResponse(FriendResponse::FriendshipExist(response));
+            return;
         }
         std::cout << response->getLogin() << "|" << response->getFriendLogin() << std::endl;
-//        client->sendResponse(FriendResponse::NewFriendRequest(response));
         client->sendResponse(FriendResponse::NewFriendRequest(response->getFriendLogin(), response->getLogin()));
         return;
     }

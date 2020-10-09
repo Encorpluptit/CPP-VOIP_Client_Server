@@ -54,6 +54,8 @@ namespace BabelServer {
 
         std::vector<FriendModel> getFriendships(const std::string &userName);
 
+        std::vector<FriendModel> getExistingFriendship(const std::string &user1_name, const std::string &user2_name);
+
         std::vector<FriendModel> getFriendships(int userid);
 
         BabelNetwork::FriendResponse::ResponseCode deleteFriendship(
