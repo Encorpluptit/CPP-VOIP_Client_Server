@@ -149,7 +149,7 @@ void MainWindow::on_AcceptCallButton_clicked()
 {
     called = true;
     client.getUdp()->doConnect(client.myUdpIp, client.myUdpPort);
-    auto response = BabelNetwork::CallResponse::AcceptCall(callInfo, client.myUdpPort);
+    auto response = BabelNetwork::CallResponse::AcceptCall(callInfo, client.myUdpIp, client.myUdpPort);
     std::cout << std::endl << response << std::endl << std::endl;
     client.getTcp()->sendResponse(response);
     ui->gridStackedWidget->setCurrentWidget(ui->CallPage);
