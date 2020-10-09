@@ -340,6 +340,39 @@ std::vector<FriendModel> Database::getFriendships(const std::string &userName)
     return friendships;
 }
 
+std::vector<FriendModel> Database::getExistingFriendship(const std::string &user1_name, const std::string &user2_name)
+{
+    std::string log;
+    std::vector<FriendModel> friendships;
+
+    try {
+        auto user1 = getUser(user1_name);
+        auto user2 = getUser(user2_name);
+        if (!user1 || !user2) {
+            log = BabelUtils::format(
+                "Error in getFriendship : User not found -> {%s} or {%s}",
+                user1_name.c_str(), user2_name.c_str());
+            dbg("%s", log.c_str());
+            _logger.logThis(log);
+            return friendships;
+        }
+        lock();
+        auto storage = getDatabase();
+        friendships = storage.get_all<FriendModel>(
+            where((is_equal(&FriendModel::user1ID, user1->id) or is_equal(&FriendModel::user2ID, user1->id)) and
+                (is_equal(&FriendModel::user1ID, user2->id) or is_equal(&FriendModel::user2ID, user2->id))
+            ));
+    } catch (const std::system_error &e) {
+        log = BabelUtils::format("Error in getFriendship (name: {%d}): %s", user1_name.c_str(), e.what());
+        dbg("%s", log.c_str());
+        _logger.logThis(log);
+        unlock();
+        return friendships;
+    }
+    unlock();
+    return friendships;
+}
+
 std::vector<FriendModel> Database::getFriendships(const int userid)
 {
     std::string log;
