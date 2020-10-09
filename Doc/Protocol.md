@@ -370,14 +370,14 @@ this is the structure for the Call responsse fill this struct and send it to ser
                 "receiver":           "ugo.levi-cescutti@epitech.eu",
                 "timestamp":          "(unix time)",
                 "callId":             "ConvId",
-                "ip":                 "Ugo",
-                "port":               "damienPort",
+                "ip":                 "UgoIP",
+                "port":               "UgoPort",
               }
       ```
 
     * Error Codes
 
-* Conference(21* Codes)
+<!-- * Conference(21* Codes) -->
 
 <!--
         * Add user to conference (34* Code).
@@ -402,33 +402,41 @@ this is the structure for the Call responsse fill this struct and send it to ser
 ---
 
 ### Friend (4** Code)
+
 * Summary
-    * 400: Request Friendship.
-    * 401: Accept Requested Friendship.
-    * 402: Accept Requested Friendship.
-    * 403: New Friendship.
-    * 404: Friendship.
-    
-    * 470: Target is not a Friend.
-    * 471: Requested Friendship Refused.
+  * 300: Request Friendship.
+  * 301: Look at this Requested Friendship.
+  <!-- * 302:  -->
+  * 303: Requested Friendship was Accepted.
+  * 304: Requested Friendship was Decline.
+  * 306: Delete this Friend.
+
+  * 350: You are already Friend.
+  * 351: Target is not a Friend.
+  * 352: User didn't exist.
+  * 354: MMmm there is a error. (soz we don't what it is)
 
 * Friend Management
-    * [Client -> Server]
-        * Success Codes.
-            * 400: Request Friendship.
-                ```json
-                {
-                  "sender":             "damien.bernard@epitech.eu",
-                  "receiver":           "ugo.levi-cescutti@epitech.eu"
-                }
-                ```
-            * 403: New Friendship.
-                ```json
-                {
-                  "sender":             "damien.bernard@epitech.eu",
-                  "receiver":           "ugo.levi-cescutti@epitech.eu"
-                }
-                ```
+  * [Client -> Server]
+    * Success Codes.
+    * 300: Request Friendship.
+
+      ```json
+              {
+                "sender":             "damien.bernard@epitech.eu",
+                "receiver":           "ugo.levi-cescutti@epitech.eu"
+              }
+      ```
+
+    * 303: Requested Friendship was Accepted.
+
+      ```json
+              {
+                "sender":             "damien.bernard@epitech.eu",
+                "receiver":           "ugo.levi-cescutti@epitech.eu"
+              }
+      ```
+
             * 410: Refuse Requested Friendship.
                 ```json
                 {
