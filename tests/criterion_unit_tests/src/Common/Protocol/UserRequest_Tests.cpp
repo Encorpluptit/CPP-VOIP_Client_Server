@@ -1,6 +1,3 @@
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "cppcoreguidelines-pro-type-member-init"
-#pragma ide diagnostic ignored "cert-err58-cpp"
 /*
 ** EPITECH PROJECT, 2020
 ** CPP_babel_2020 (Copyright (c) ENCORPLUPTIT on 7/10/20).
@@ -11,6 +8,7 @@
 #include "tests_run.hpp"
 #include "UserResponse.hpp"
 #include "ResponseError.hpp"
+
 using namespace BabelNetwork;
 
 Test(Common, UserResponse_01)
@@ -166,7 +164,7 @@ Test(Common, UserResponse_12)
     cr_assert_throw(
         UserResponse test(login, pass),
         BabelErrors::UserResponse
-        );
+    );
     try {
         UserResponse test(login, pass);
     } catch (const BabelErrors::UserResponse &e) {
@@ -193,7 +191,7 @@ Test(Common, UserResponse_14)
     cr_assert_throw(
         UserResponse test(login, pass),
         BabelErrors::UserResponse
-        );
+    );
     try {
         UserResponse test(login, pass);
     } catch (const BabelErrors::UserResponse &e) {

@@ -11,11 +11,12 @@
 namespace BabelErrors {
     class ClientError : public NetworkError {
         /* <- Constructor - Destructor -> */
-        public:
-        explicit ClientError(std::string const &msg, BabelNetwork::ClientSocket &client) : NetworkError(msg), _client(client) {}
+    public:
+        explicit ClientError(std::string const &msg, BabelNetwork::ClientSocket &client) : NetworkError(msg),
+                                                                                           _client(client) {}
         /* <- Method -> */
     public:
-        [[nodiscard]] BabelNetwork::ClientSocket &getClient() const noexcept {return _client;};
+        [[nodiscard]] BabelNetwork::ClientSocket &getClient() const noexcept { return _client; };
     protected:
         BabelNetwork::ClientSocket &_client;
     };

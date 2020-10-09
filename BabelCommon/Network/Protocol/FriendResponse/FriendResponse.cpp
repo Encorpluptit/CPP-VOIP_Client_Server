@@ -44,29 +44,29 @@ bool FriendResponse::setFriendLogin(const std::string &friendLogin) noexcept
 
 bool FriendResponse::encode() noexcept
 {
-    memcpy(_data_byte, &_header, HeaderSize);
-    memcpy(getDataByteDataInfos(), &_dataInfos, DataInfosSize);
-    memcpy(getDataByteBody(), _data.login, _dataInfos._loginSize);
-    memcpy(getDataByteBody() + _dataInfos._loginSize, _data.FriendLogin, _dataInfos._friendLoginSize);
+    std::memcpy(_data_byte, &_header, HeaderSize);
+    std::memcpy(getDataByteDataInfos(), &_dataInfos, DataInfosSize);
+    std::memcpy(getDataByteBody(), _data.login, _dataInfos._loginSize);
+    std::memcpy(getDataByteBody() + _dataInfos._loginSize, _data.FriendLogin, _dataInfos._friendLoginSize);
     return true;
 }
 
 bool FriendResponse::decode_header() noexcept
 {
-    memcpy(&_header, _data_byte, HeaderSize);
+    std::memcpy(&_header, _data_byte, HeaderSize);
     return true;
 }
 
 bool FriendResponse::decode_data_infos() noexcept
 {
-    memcpy(&_dataInfos, _data_byte + HeaderSize, DataInfosSize);
+    std::memcpy(&_dataInfos, _data_byte + HeaderSize, DataInfosSize);
     return true;
 }
 
 bool FriendResponse::decode_data() noexcept
 {
-    memcpy(_data.login, getDataByteBody(), _dataInfos._loginSize);
-    memcpy(_data.FriendLogin, getDataByteBody() + _dataInfos._loginSize, _dataInfos._friendLoginSize);
+    std::memcpy(_data.login, getDataByteBody(), _dataInfos._loginSize);
+    std::memcpy(_data.FriendLogin, getDataByteBody() + _dataInfos._loginSize, _dataInfos._friendLoginSize);
     return true;
 }
 

@@ -101,26 +101,26 @@ bool CallResponse::encode() noexcept
     char *const ip = call_id + _dataInfos._callIdSize;
     char *const port = ip + _dataInfos._ipSize;
 
-    memcpy(_data_byte, &_header, HeaderSize);
-    memcpy(getDataByteDataInfos(), &_dataInfos, DataInfosSize);
-    memcpy(sender, _data.sender, _dataInfos._senderSize);
-    memcpy(receiver, _data.receiver, _dataInfos._receiverSize);
-    memcpy(timestamp, &_data.timestamp, _dataInfos._timestampSize);
-    memcpy(call_id, &_data.callId, _dataInfos._callIdSize);
-    memcpy(ip, _data.ip, _dataInfos._ipSize);
-    memcpy(port, _data.port, _dataInfos._portSize);
+    std::memcpy(_data_byte, &_header, HeaderSize);
+    std::memcpy(getDataByteDataInfos(), &_dataInfos, DataInfosSize);
+    std::memcpy(sender, _data.sender, _dataInfos._senderSize);
+    std::memcpy(receiver, _data.receiver, _dataInfos._receiverSize);
+    std::memcpy(timestamp, &_data.timestamp, _dataInfos._timestampSize);
+    std::memcpy(call_id, &_data.callId, _dataInfos._callIdSize);
+    std::memcpy(ip, _data.ip, _dataInfos._ipSize);
+    std::memcpy(port, _data.port, _dataInfos._portSize);
     return true;
 }
 
 bool CallResponse::decode_header() noexcept
 {
-    memcpy(&_header, _data_byte, HeaderSize);
+    std::memcpy(&_header, _data_byte, HeaderSize);
     return true;
 }
 
 bool CallResponse::decode_data_infos() noexcept
 {
-    memcpy(&_dataInfos, _data_byte + HeaderSize, DataInfosSize);
+    std::memcpy(&_dataInfos, _data_byte + HeaderSize, DataInfosSize);
     return true;
 }
 
@@ -133,12 +133,12 @@ bool CallResponse::decode_data() noexcept
     char *const ip = call_id + _dataInfos._callIdSize;
     char *const port = ip + _dataInfos._ipSize;
 
-    memcpy(_data.sender, sender, _dataInfos._senderSize);
-    memcpy(_data.receiver, receiver, _dataInfos._receiverSize);
-    memcpy(&_data.timestamp, timestamp, _dataInfos._timestampSize);
-    memcpy(&_data.callId, call_id, _dataInfos._callIdSize);
-    memcpy(_data.ip, ip, _dataInfos._ipSize);
-    memcpy(_data.port, port, _dataInfos._portSize);
+    std::memcpy(_data.sender, sender, _dataInfos._senderSize);
+    std::memcpy(_data.receiver, receiver, _dataInfos._receiverSize);
+    std::memcpy(&_data.timestamp, timestamp, _dataInfos._timestampSize);
+    std::memcpy(&_data.callId, call_id, _dataInfos._callIdSize);
+    std::memcpy(_data.ip, ip, _dataInfos._ipSize);
+    std::memcpy(_data.port, port, _dataInfos._portSize);
 
     return true;
 }

@@ -90,10 +90,10 @@ public:
 
     void encode_header()
     {
-        using namespace std; // For sprintf and memcpy.
+        using namespace std; // For sprintf and std::memcpy.
         char header[header_length + 1] = "";
         sprintf(header, "%4d", static_cast<int>(body_length_));
-        memcpy(data_, header, header_length);
+        std::memcpy(data_, header, header_length);
     }
 
 private:

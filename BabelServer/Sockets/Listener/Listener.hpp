@@ -15,17 +15,20 @@
 
 namespace BabelServer {
 
-    class Listener : virtual public BabelNetwork::ASocket {
+    class Listener : public BabelNetwork::ASocket {
         /* <- Constructor - Destructor -> */
     public:
         /* <- Public Methods -> */
     public:
+        explicit Listener(
+            const std::string &address,
+            const std::string &port,
+            BabelUtils::Logger &logger
+        ) : BabelNetwork::ASocket(address, port, logger) {}
+
+
         std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>> getClientList()
         {
-//            lock();
-//            auto lol = ClientsList(_clientsList);
-//            unlock();
-//            return lol;
             _clientsList.lock();
             auto list = _clientsList.getClients();
             _clientsList.unlock();

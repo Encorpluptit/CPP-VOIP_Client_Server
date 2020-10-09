@@ -18,7 +18,7 @@ AsioListener::AsioListener(
     const std::string &port,
     BabelUtils::Logger &logger
 )
-    : BabelNetwork::ASocket(address, port, logger),
+    : Listener(address, port, logger),
       _endpoint(ip::address::from_string(_networkInfos.getIp()), _networkInfos.getPort()),
       _acceptor(_context, _endpoint),
       _signals(_context)
@@ -92,6 +92,8 @@ void AsioListener::stop()
 {
     std::cout << "LISTENER STOPPED" << std::endl;
     setNotReady();
+    for (const auto & client: _clientsList.getClients())
+        client->stop();
     _signals.clear();
     if (_acceptor.is_open())
         _acceptor.close();

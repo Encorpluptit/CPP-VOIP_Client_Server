@@ -8,6 +8,7 @@
 #include <iostream>
 #include <ctime>
 #include "Logger.hpp"
+
 using namespace BabelUtils;
 
 Logger::Logger(Logger::LogType type)
@@ -65,11 +66,11 @@ std::filesystem::path Logger::createLogDirectories()
 
 void Logger::createLogFile(std::filesystem::path filePath)
 {
-    time_t rawtime;
+    std::time_t rawtime;
     struct tm *timeinfo;
     size_t sz = FILENAME_MAX - filePath.string().size();
 
-    if (time(&rawtime) == ((time_t) -1) || !(timeinfo = localtime(&rawtime))
+    if (std::time(&rawtime) == ((time_t) -1) || !(timeinfo = std::localtime(&rawtime))
         || !strftime(_timeBuffer, sz, "%Y-%m-%d_%H-%M-%S.log", timeinfo)) {
         filePath /= std::string("Log_File.log");
         _logFile = std::ofstream(filePath.string());
@@ -81,25 +82,27 @@ void Logger::createLogFile(std::filesystem::path filePath)
 
 void Logger::getTime()
 {
-    time_t rawtime;
+    std::time_t rawtime;
     struct tm *timeinfo;
 
-    if (time(&rawtime) == ((time_t) -1))
+    if (std::time(&rawtime) == ((time_t) -1))
         return;
-    if (!(timeinfo = localtime(&rawtime)))
+    if (!(timeinfo = std::localtime(&rawtime)))
         return;
     if (!strftime(_timeBuffer, FILENAME_MAX, "%H-%M-%S", timeinfo))
         return;
 }
 
-void Logger::logThis(const std::string &msg) {
+void Logger::logThis(const std::string &msg)
+{
     if (!isOk())
         return;
     getTime();
     _logFile << "[ " << _description << " ] - " << _timeBuffer << " ==> " << msg << "\n";
 }
 
-void Logger::logThis(const BabelNetwork::AResponse &response, const std::string &msg) {
+void Logger::logThis(const BabelNetwork::AResponse &response, const std::string &msg)
+{
     if (!isOk())
         return;
     getTime();
@@ -109,7 +112,8 @@ void Logger::logThis(const BabelNetwork::AResponse &response, const std::string 
         _logFile << "[ " << _description << " ] - " << _timeBuffer << " ==> " << msg + "\n" << response << "\n";
 }
 
-void Logger::logThis(const std::shared_ptr<BabelNetwork::AResponse> &response, const std::string &msg) {
+void Logger::logThis(const std::shared_ptr<BabelNetwork::AResponse> &response, const std::string &msg)
+{
     if (!isOk())
         return;
     getTime();
@@ -119,7 +123,8 @@ void Logger::logThis(const std::shared_ptr<BabelNetwork::AResponse> &response, c
         _logFile << "[ " << _description << " ] - " << _timeBuffer << " ==> " << msg + "\n" << response << "\n";
 }
 
-void Logger::logThis(const BabelNetwork::NetworkInfos &infos, const std::string &msg) {
+void Logger::logThis(const BabelNetwork::NetworkInfos &infos, const std::string &msg)
+{
     if (!isOk())
         return;
     getTime();

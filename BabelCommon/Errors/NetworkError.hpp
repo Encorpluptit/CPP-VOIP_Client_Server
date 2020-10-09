@@ -19,5 +19,4 @@ namespace BabelErrors {
 }
 
 
-
 #endif /* CPP_BABEL_2020_NETWORKERROR_HPP */

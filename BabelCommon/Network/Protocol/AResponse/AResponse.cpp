@@ -15,16 +15,14 @@
 using namespace BabelNetwork;
 
 AResponse::AResponse(const ResponseHeader &headerResponse)
-    : _header(headerResponse)
-{}
+    : _header(headerResponse) {}
 
-AResponse::AResponse(const AResponse &other) : AResponse(other._header)
-{}
+AResponse::AResponse(const AResponse &other) : AResponse(other._header) {}
 
 std::shared_ptr<AResponse> AResponse::getResponse(const char *headerBuffer)
 {
     ResponseHeader response{};
-    memcpy(&response, headerBuffer, HeaderSize);
+    std::memcpy(&response, headerBuffer, HeaderSize);
 
     switch (response._responseType) {
         case User:

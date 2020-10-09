@@ -9,6 +9,7 @@
 #define CPP_BABEL_2020_MESSAGE_RESPONSE_HPP
 
 #include <map>
+#include <ctime>
 #include "AResponse.hpp"
 
 namespace BabelNetwork {
@@ -33,17 +34,17 @@ namespace BabelNetwork {
 
         /* <- Class Structure -> */
     public:
-        using Data = struct __attribute__((packed)) DataStruct {
+        using Data = struct DataStruct {
             char sender[MaxDataSize::Sender];
             char receiver[MaxDataSize::Receiver];
             char messageData[MaxDataSize::MessageData];
-            time_t timestamp;
+            std::time_t timestamp;
         };
         static const size_t DataSize = sizeof(Data);
 
         /* <- Class Structure -> */
     public:
-        using DataInfos = struct __attribute__((packed)) DataInfosStruct {
+        using DataInfos = struct DataInfosStruct {
             uint16_t _senderSize;
             uint16_t _receiverSize;
             uint16_t _messageDataSize;
@@ -109,7 +110,8 @@ namespace BabelNetwork {
 
         [[nodiscard]] char *getDataByteBody() const noexcept final;
 
-        [[nodiscard]] const std::string &getDescription() const noexcept final {
+        [[nodiscard]] const std::string &getDescription() const noexcept final
+        {
             return _description;
         };
 
@@ -127,7 +129,7 @@ namespace BabelNetwork {
 
         [[nodiscard]] const char *getMessageData() const noexcept { return _data.messageData; };
 
-        [[nodiscard]] time_t getTimestamp() const noexcept { return _data.timestamp; };
+        [[nodiscard]] const time_t & getTimestamp() const noexcept { return _data.timestamp; };
 
         /* <- Attributes -> */
     private:
@@ -145,7 +147,10 @@ namespace BabelNetwork {
 
         [[nodiscard]] static std::shared_ptr<AResponse>
         MessageReceive(const std::string &sender, const std::string &receiver, const std::string &messageData);
-        [[nodiscard]] static std::shared_ptr<AResponse> ReceiveMessageOk(const std::string &sender, const std::string &receiver);
+
+        [[nodiscard]] static std::shared_ptr<AResponse>
+        ReceiveMessageOk(const std::string &sender, const std::string &receiver);
+
         [[nodiscard]] static std::shared_ptr<AResponse> UserNotFound(const std::shared_ptr<MessageResponse> &response);
 
         [[nodiscard]] static std::shared_ptr<AResponse>
@@ -155,10 +160,10 @@ namespace BabelNetwork {
     private:
         const std::map<ResponseCode, std::string> codeString = {
             {RequestSendMessage, "Requested Send Message"},
-            {SendMessageOk, "Send Message Ok"},
-            {ReceiveMessage, "Receive Message"},
-            {ReceiveOk, "Receive Ok"},
-            {UnknownUser, "Unknown User"},
+            {SendMessageOk,      "Send Message Ok"},
+            {ReceiveMessage,     "Receive Message"},
+            {ReceiveOk,          "Receive Ok"},
+            {UnknownUser,        "Unknown User"},
         };
     };
 }

@@ -10,7 +10,8 @@
 
 using namespace BabelNetwork;
 
-std::shared_ptr<AResponse> MessageResponse::RequestMessageSend(const std::string &sender, const std::string &receiver, const std::string &messageData)
+std::shared_ptr<AResponse> MessageResponse::RequestMessageSend(const std::string &sender, const std::string &receiver,
+    const std::string &messageData)
 {
     auto resp = std::make_shared<MessageResponse>(sender, receiver, messageData);
     resp->setCode(MessageResponse::ResponseCode::RequestSendMessage);
@@ -25,7 +26,8 @@ std::shared_ptr<AResponse> MessageResponse::OkSendMessage(const std::shared_ptr<
     return response;
 }
 
-std::shared_ptr<AResponse> MessageResponse::MessageReceive(const std::string &sender, const std::string &receiver, const std::string &messageData)
+std::shared_ptr<AResponse>
+MessageResponse::MessageReceive(const std::string &sender, const std::string &receiver, const std::string &messageData)
 {
     auto resp = std::make_shared<MessageResponse>(sender, receiver, messageData);
     resp->setCode(MessageResponse::ResponseCode::ReceiveMessage);
