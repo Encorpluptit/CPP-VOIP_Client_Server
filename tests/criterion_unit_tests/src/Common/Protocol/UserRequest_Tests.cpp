@@ -16,6 +16,7 @@ Test(Common, UserResponse_01)
     UserResponse test;
 
     ASSERT_BOOL(test.isOk(), false);
+    ASSERT_BOOL(test.describe_code().empty(), false);
 }
 
 Test(Common, UserResponse_02)
@@ -40,6 +41,9 @@ Test(Common, UserResponse_03)
 
     ASSERT_INT(test.getResponseType(), AResponse::ResponseType::User);
     ASSERT_BOOL(test.getDescription().empty(), false);
+    ASSERT_BOOL(test.describe_code().empty(), false);
+    ASSERT_BOOL(test.describe_data().empty(), false);
+    ASSERT_BOOL(test.describe_data_infos().empty(), false);
 }
 
 Test(Common, UserResponse_04)
