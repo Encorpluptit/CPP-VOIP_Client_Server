@@ -259,7 +259,7 @@ Test(Common, UserResponse_19)
     const std::string pass("tata");
 
     UserResponse test(login, pass);
-    auto ptr = test.get_shared_from_this();
+    auto ptr = std::make_shared<UserResponse>(test);
 
     ASSERT_BOOL(test.encode(), true);
     ASSERT_BOOL(test.decode_header(), true);
@@ -277,7 +277,7 @@ Test(Common, UserResponse_20)
 
     UserResponse test(login, pass);
     test.setCode(UserResponse::ResponseCode::LoggedIn);
-    auto ptr = test.get_shared_from_this();
+    auto ptr = std::make_shared<UserResponse>(test);
 
     ASSERT_BOOL(test.encode(), true);
     ASSERT_BOOL(test.decode_header(), true);
