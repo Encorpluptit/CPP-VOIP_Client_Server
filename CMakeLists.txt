@@ -2,8 +2,6 @@
 # Project Configuration
 cmake_minimum_required(VERSION 3.14)
 project(CPP_babel_2020)
-#set(CMAKE_C_COMPILER_VERSION 10.1)
-#set(CMAKE_CXX_COMPILER_VERSION 10.1)
 
 
 set(CMAKE_AUTOMOC ON)
@@ -54,7 +52,9 @@ if (COVERAGE)
 endif (COVERAGE)
 
 if (USE_DEBUG)
-    add_compile_options(-g3)
+    if (UNIX)
+        add_compile_options(-g3)
+    endif (UNIX)
     add_compile_definitions(_DEBUG_)
 else (USE_DEBUG)
     add_compile_options(-Werror)
@@ -71,12 +71,18 @@ include_directories(${CMAKE_INCLUDE_PATH})
 
 find_package(Qt5Widgets CONFIG REQUIRED)
 
-#find_package(Boost COMPONENTS thread REQUIRED)
-find_package(Boost REQUIRED)
-if (Boost_FOUND)
-#    set(CONAN_LIBS ${CONAN_LIBS} Boost::Thread)
-    set(CONAN_LIBS ${CONAN_LIBS} libboost_thread)
-endif (Boost_FOUND)
+if (UNIX)
+    find_package(Boost COMPONENTS thread REQUIRED)
+    if (Boost_FOUND)
+        set(CONAN_LIBS ${CONAN_LIBS} Boost::Thread)
+    endif (Boost_FOUND)
+else (UNIX)
+    #add_definitions(_WIN32_WINNT=0x00AA00)
+    find_package(Boost REQUIRED)
+    if (Boost_FOUND)
+        set(CONAN_LIBS ${CONAN_LIBS} libboost_thread)
+    endif (Boost_FOUND)
+endif (UNIX)
 
 
 ###############################################################################
@@ -194,13 +200,13 @@ endif (UNIX)
 #find_package(Boost COMPONENTS thread REQUIRED)
 set(BOOST_DEBUG ON)
 find_package(Boost REQUIRED)
-if (Boost_FOUND)
-    if (WIN32)
-        target_link_libraries(babel_server libboost_thread)
-    elseif(UNIX)
-        target_link_libraries(babel_server Boost::Thread)
-    endif ()
-endif (Boost_FOUND)
+#if (Boost_FOUND)
+#    if (WIN32)
+#        target_link_libraries(babel_server libboost_thread)
+#    elseif(UNIX)
+#        target_link_libraries(babel_server Boost::Thread)
+#    endif ()
+#endif (Boost_FOUND)
 #find_package(stdc++fs REQUIRED)
 
 #target_link_libraries(babel_server ${CONAN_LIBS} stdc++fs)
@@ -257,6 +263,7 @@ target_link_libraries(babel_client ${CONAN_LIBS} Qt5::Widgets Qt5::Network)
 ##########################
 # Test Executable
 
+if (UNIX)
 #add_executable(
 #        test_server
 #        tests/server/Chat_Message.hpp
@@ -271,3 +278,4 @@ target_link_libraries(babel_client ${CONAN_LIBS} Qt5::Widgets Qt5::Network)
 #)
 #
 #target_link_libraries(test_client pthread ${CONAN_LIBS})
+endif (UNIX)
