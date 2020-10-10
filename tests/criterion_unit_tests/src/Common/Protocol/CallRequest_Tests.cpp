@@ -440,6 +440,22 @@ Test(Common, CallResponse_call_id_null)
     cr_assert_null(call);
 }
 
+Test(Common, CallResponse_CallIncoming_null)
+{
+    const std::string sender("toto");
+    const std::string receiver("tata");
+    const std::string ip("127.0.0.1");
+    const std::string port("8080");
+    uint16_t call_id = 5;
+
+    auto call = CallResponse::NewCallStarted(sender, receiver, ip, port, call_id);
+    cr_assert_not_null(call);
+    auto test = std::dynamic_pointer_cast<CallResponse>(call);
+    cr_assert_not_null(test);
+    auto tmp = CallResponse::CallIncoming(test, 0);
+    cr_assert_null(tmp);
+}
+
 Test(Common, CallResponse_AcceptCall)
 {
     const std::string sender("toto");
@@ -524,4 +540,29 @@ Test(Common, CallResponse_RefusedCall_null)
     cr_assert_not_null(test);
     auto tmp = CallResponse::RefusedCall(test);
     cr_assert_null(tmp);
+}
+
+Test(Common, CallResponse_DisconnectedUser)
+{
+    const std::string sender("toto");
+    const std::string receiver("tata");
+    const AResponse::ResponseType type = AResponse::ResponseType::Call;
+    const CallResponse::ResponseCode code = CallResponse::ResponseCode::UserDisconnected;
+
+    auto call = CallResponse::DisconnectedUser(sender, receiver);
+    cr_assert_not_null(call);
+    auto test = std::dynamic_pointer_cast<CallResponse>(call);
+    cr_assert_not_null(test);
+
+    ASSERT_BOOL(test->encode(), true);
+    ASSERT_BOOL(test->decode_header(), true);
+    ASSERT_BOOL(test->decode_data_infos(), true);
+    ASSERT_BOOL(test->decode_data(), true);
+
+    EXPECT_INT(test->getResponseType(), type);
+    EXPECT_SIZET(test->getDataInfosSize(), CallResponse::DataInfosSize);
+    EXPECT_INT(test->getCode(), code);
+
+    cr_assert_str_eq(test->getSender(), sender.c_str());
+    cr_assert_str_eq(test->getReceiver(), receiver.c_str());
 }
