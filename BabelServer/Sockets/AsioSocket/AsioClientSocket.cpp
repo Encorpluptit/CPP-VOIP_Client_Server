@@ -62,19 +62,6 @@ bool AsioClientSocket::sendResponse(const std::shared_ptr<AResponse> &response)
     return true;
 }
 
-bool AsioClientSocket::sendResponse(const BabelNetwork::AResponse &response)
-{
-    bool write_in_progress = !_write_queue.empty();
-
-    _logger.logThis(response, "Queue response :");
-    _write_queue.push(response.get_shared_from_this());
-    boost::asio::post(
-        _context,
-        boost::bind(&AsioClientSocket::do_write, shared_from_this(), write_in_progress)
-    );
-    return true;
-}
-
 void AsioClientSocket::connect()
 {
     _logger.logThis(_networkInfos, "Trying to connect");

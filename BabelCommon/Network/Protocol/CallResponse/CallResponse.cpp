@@ -149,11 +149,6 @@ bool BabelNetwork::CallResponse::isOk() noexcept
         && _header._code != CallResponse::ResponseCode::UserDisconnected;
 }
 
-std::shared_ptr<AResponse> CallResponse::get_shared_from_this() const noexcept
-{
-    return std::make_shared<CallResponse>(*this);
-}
-
 char *CallResponse::getDataByte() noexcept
 {
     return _data_byte;

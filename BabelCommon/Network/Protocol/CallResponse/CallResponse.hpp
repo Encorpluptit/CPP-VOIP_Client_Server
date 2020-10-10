@@ -107,8 +107,6 @@ namespace BabelNetwork {
 
         /* <- Getters / Setters -> */
     public:
-        [[nodiscard]] std::shared_ptr<AResponse> get_shared_from_this() const noexcept final;
-
         [[nodiscard]] char *getDataByte() noexcept final;
 
         [[nodiscard]] char *getDataByteDataInfos() const noexcept final;
