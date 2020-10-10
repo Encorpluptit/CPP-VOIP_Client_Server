@@ -39,6 +39,7 @@ Test(Common, UserResponse_03)
     ASSERT_BOOL(test.isOk(), false);
 
     ASSERT_INT(test.getResponseType(), AResponse::ResponseType::User);
+    ASSERT_BOOL(test.getDescription().empty(), false);
 }
 
 Test(Common, UserResponse_04)
@@ -307,4 +308,343 @@ Test(Common, UserResponse_21)
     EXPECT_INT(ptr->getCode(), test.getCode());
 }
 
-#pragma clang diagnostic pop
+Test(Common, UserResponse_NewLoginRequest)
+{
+    const std::string login("toto");
+    const std::string pass("tata");
+    const AResponse::ResponseType type = AResponse::ResponseType::User;
+    const UserResponse::ResponseCode code = UserResponse::ResponseCode::RequestLogin;
+
+    auto user = UserResponse::NewLoginRequest(login, pass);
+    cr_assert_not_null(user);
+    auto test = std::dynamic_pointer_cast<UserResponse>(user);
+    cr_assert_not_null(test);
+    ASSERT_BOOL(test->encode(), true);
+    ASSERT_BOOL(test->decode_header(), true);
+    ASSERT_BOOL(test->decode_data_infos(), true);
+    ASSERT_BOOL(test->decode_data(), true);
+
+    EXPECT_INT(test->getResponseType(), type);
+    EXPECT_SIZET(test->getDataInfosSize(), UserResponse::DataInfosSize);
+    EXPECT_INT(test->getCode(), code);
+    cr_assert_str_eq(test->getLogin(), login.c_str());
+    cr_assert_str_eq(test->getPassword(), pass.c_str());
+}
+
+Test(Common, UserResponse_LogoutRequest)
+{
+    const std::string login("toto");
+    const std::string pass("tata");
+    const AResponse::ResponseType type = AResponse::ResponseType::User;
+    const UserResponse::ResponseCode code = UserResponse::ResponseCode::RequestLogout;
+
+    auto user = UserResponse::LogoutRequest(login);
+    cr_assert_not_null(user);
+    auto test = std::dynamic_pointer_cast<UserResponse>(user);
+    cr_assert_not_null(test);
+    ASSERT_BOOL(test->encode(), true);
+    ASSERT_BOOL(test->decode_header(), true);
+    ASSERT_BOOL(test->decode_data_infos(), true);
+    ASSERT_BOOL(test->decode_data(), true);
+
+    EXPECT_INT(test->getResponseType(), type);
+    EXPECT_SIZET(test->getDataInfosSize(), UserResponse::DataInfosSize);
+    EXPECT_INT(test->getCode(), code);
+    cr_assert_str_eq(test->getLogin(), login.c_str());
+}
+
+Test(Common, UserResponse_AccountCreationRequest)
+{
+    const std::string login("toto");
+    const std::string pass("tata");
+    const AResponse::ResponseType type = AResponse::ResponseType::User;
+    const UserResponse::ResponseCode code = UserResponse::ResponseCode::RequestAccountCreation;
+
+    auto user = UserResponse::AccountCreationRequest(login, pass);
+    cr_assert_not_null(user);
+    auto test = std::dynamic_pointer_cast<UserResponse>(user);
+    cr_assert_not_null(test);
+    ASSERT_BOOL(test->encode(), true);
+    ASSERT_BOOL(test->decode_header(), true);
+    ASSERT_BOOL(test->decode_data_infos(), true);
+    ASSERT_BOOL(test->decode_data(), true);
+
+    EXPECT_INT(test->getResponseType(), type);
+    EXPECT_SIZET(test->getDataInfosSize(), UserResponse::DataInfosSize);
+    EXPECT_INT(test->getCode(), code);
+    cr_assert_str_eq(test->getLogin(), login.c_str());
+    cr_assert_str_eq(test->getPassword(), pass.c_str());
+}
+
+Test(Common, UserResponse_AccountDeletionRequest)
+{
+    const std::string login("toto");
+    const AResponse::ResponseType type = AResponse::ResponseType::User;
+    const UserResponse::ResponseCode code = UserResponse::ResponseCode::RequestAccountDeletion;
+
+    auto user = UserResponse::AccountDeletionRequest(login);
+    cr_assert_not_null(user);
+    auto test = std::dynamic_pointer_cast<UserResponse>(user);
+    cr_assert_not_null(test);
+    ASSERT_BOOL(test->encode(), true);
+    ASSERT_BOOL(test->decode_header(), true);
+    ASSERT_BOOL(test->decode_data_infos(), true);
+    ASSERT_BOOL(test->decode_data(), true);
+
+    EXPECT_INT(test->getResponseType(), type);
+    EXPECT_SIZET(test->getDataInfosSize(), UserResponse::DataInfosSize);
+    EXPECT_INT(test->getCode(), code);
+    cr_assert_str_eq(test->getLogin(), login.c_str());
+    ASSERT_BOOL(std::string(test->getPassword()).empty(), true);
+}
+
+Test(Common, UserResponse_LoggedInOk)
+{
+    const std::string login("toto");
+    const std::string pass("tata");
+    const AResponse::ResponseType type = AResponse::ResponseType::User;
+    const UserResponse::ResponseCode code = UserResponse::ResponseCode::LoggedIn;
+
+    auto user = UserResponse::LoggedInOk(login);
+    cr_assert_not_null(user);
+    auto test = std::dynamic_pointer_cast<UserResponse>(user);
+    cr_assert_not_null(test);
+    ASSERT_BOOL(test->encode(), true);
+    ASSERT_BOOL(test->decode_header(), true);
+    ASSERT_BOOL(test->decode_data_infos(), true);
+    ASSERT_BOOL(test->decode_data(), true);
+
+    EXPECT_INT(test->getResponseType(), type);
+    EXPECT_SIZET(test->getDataInfosSize(), UserResponse::DataInfosSize);
+    EXPECT_INT(test->getCode(), code);
+    cr_assert_str_eq(test->getLogin(), login.c_str());
+    ASSERT_BOOL(std::string(test->getPassword()).empty(), true);
+}
+
+Test(Common, UserResponse_LoggedOutOk)
+{
+    const std::string login("toto");
+    const std::string pass("tata");
+    const AResponse::ResponseType type = AResponse::ResponseType::User;
+    const UserResponse::ResponseCode code = UserResponse::ResponseCode::LoggedOut;
+
+    auto user = UserResponse::LoggedOutOk(login);
+    cr_assert_not_null(user);
+    auto test = std::dynamic_pointer_cast<UserResponse>(user);
+    cr_assert_not_null(test);
+    ASSERT_BOOL(test->encode(), true);
+    ASSERT_BOOL(test->decode_header(), true);
+    ASSERT_BOOL(test->decode_data_infos(), true);
+    ASSERT_BOOL(test->decode_data(), true);
+
+    EXPECT_INT(test->getResponseType(), type);
+    EXPECT_SIZET(test->getDataInfosSize(), UserResponse::DataInfosSize);
+    EXPECT_INT(test->getCode(), code);
+    cr_assert_str_eq(test->getLogin(), login.c_str());
+    ASSERT_BOOL(std::string(test->getPassword()).empty(), true);
+}
+
+Test(Common, UserResponse_AccountCreatedOk)
+{
+    const std::string login("toto");
+    const std::string pass("tata");
+    const AResponse::ResponseType type = AResponse::ResponseType::User;
+    const UserResponse::ResponseCode code = UserResponse::ResponseCode::AccountCreated;
+
+    auto user = UserResponse::AccountCreatedOk(login);
+    cr_assert_not_null(user);
+    auto test = std::dynamic_pointer_cast<UserResponse>(user);
+    cr_assert_not_null(test);
+    ASSERT_BOOL(test->encode(), true);
+    ASSERT_BOOL(test->decode_header(), true);
+    ASSERT_BOOL(test->decode_data_infos(), true);
+    ASSERT_BOOL(test->decode_data(), true);
+
+    EXPECT_INT(test->getResponseType(), type);
+    EXPECT_SIZET(test->getDataInfosSize(), UserResponse::DataInfosSize);
+    EXPECT_INT(test->getCode(), code);
+    cr_assert_str_eq(test->getLogin(), login.c_str());
+    ASSERT_BOOL(std::string(test->getPassword()).empty(), true);
+}
+
+Test(Common, UserResponse_AccountDeletedOk)
+{
+    const std::string login("toto");
+    const std::string pass("tata");
+    const AResponse::ResponseType type = AResponse::ResponseType::User;
+    const UserResponse::ResponseCode code = UserResponse::ResponseCode::AccountDeleted;
+
+    auto user = UserResponse::AccountDeletedOk(login);
+    cr_assert_not_null(user);
+    auto test = std::dynamic_pointer_cast<UserResponse>(user);
+    cr_assert_not_null(test);
+    ASSERT_BOOL(test->encode(), true);
+    ASSERT_BOOL(test->decode_header(), true);
+    ASSERT_BOOL(test->decode_data_infos(), true);
+    ASSERT_BOOL(test->decode_data(), true);
+
+    EXPECT_INT(test->getResponseType(), type);
+    EXPECT_SIZET(test->getDataInfosSize(), UserResponse::DataInfosSize);
+    EXPECT_INT(test->getCode(), code);
+    cr_assert_str_eq(test->getLogin(), login.c_str());
+    ASSERT_BOOL(std::string(test->getPassword()).empty(), true);
+}
+
+Test(Common, UserResponse_UnknownError)
+{
+    const std::string login("toto");
+    const std::string pass("tata");
+    const AResponse::ResponseType type = AResponse::ResponseType::User;
+    const UserResponse::ResponseCode code = UserResponse::ResponseCode::UnknownUserError;
+
+    auto user = UserResponse::UnknownError(login);
+    cr_assert_not_null(user);
+    auto test = std::dynamic_pointer_cast<UserResponse>(user);
+    cr_assert_not_null(test);
+    ASSERT_BOOL(test->encode(), true);
+    ASSERT_BOOL(test->decode_header(), true);
+    ASSERT_BOOL(test->decode_data_infos(), true);
+    ASSERT_BOOL(test->decode_data(), true);
+
+    EXPECT_INT(test->getResponseType(), type);
+    EXPECT_SIZET(test->getDataInfosSize(), UserResponse::DataInfosSize);
+    EXPECT_INT(test->getCode(), code);
+    cr_assert_str_eq(test->getLogin(), login.c_str());
+    ASSERT_BOOL(std::string(test->getPassword()).empty(), true);
+}
+
+Test(Common, UserResponse_BadLogin)
+{
+    const std::string login("toto");
+    const std::string pass("tata");
+    const AResponse::ResponseType type = AResponse::ResponseType::User;
+    const UserResponse::ResponseCode code = UserResponse::ResponseCode::WrongLogin;
+
+    auto user = UserResponse::BadLogin(login);
+    cr_assert_not_null(user);
+    auto test = std::dynamic_pointer_cast<UserResponse>(user);
+    cr_assert_not_null(test);
+    ASSERT_BOOL(test->encode(), true);
+    ASSERT_BOOL(test->decode_header(), true);
+    ASSERT_BOOL(test->decode_data_infos(), true);
+    ASSERT_BOOL(test->decode_data(), true);
+
+    EXPECT_INT(test->getResponseType(), type);
+    EXPECT_SIZET(test->getDataInfosSize(), UserResponse::DataInfosSize);
+    EXPECT_INT(test->getCode(), code);
+    cr_assert_str_eq(test->getLogin(), login.c_str());
+    ASSERT_BOOL(std::string(test->getPassword()).empty(), true);
+}
+
+Test(Common, UserResponse_BadPassword)
+{
+    const std::string login("toto");
+    const std::string pass("tata");
+    const AResponse::ResponseType type = AResponse::ResponseType::User;
+    const UserResponse::ResponseCode code = UserResponse::ResponseCode::WrongPassword;
+
+    auto user = UserResponse::BadPassword(login);
+    cr_assert_not_null(user);
+    auto test = std::dynamic_pointer_cast<UserResponse>(user);
+    cr_assert_not_null(test);
+    ASSERT_BOOL(test->encode(), true);
+    ASSERT_BOOL(test->decode_header(), true);
+    ASSERT_BOOL(test->decode_data_infos(), true);
+    ASSERT_BOOL(test->decode_data(), true);
+
+    EXPECT_INT(test->getResponseType(), type);
+    EXPECT_SIZET(test->getDataInfosSize(), UserResponse::DataInfosSize);
+    EXPECT_INT(test->getCode(), code);
+    cr_assert_str_eq(test->getLogin(), login.c_str());
+    ASSERT_BOOL(std::string(test->getPassword()).empty(), true);
+}
+
+Test(Common, UserResponse_LoginAlreadyUsed)
+{
+    const std::string login("toto");
+    const std::string pass("tata");
+    const AResponse::ResponseType type = AResponse::ResponseType::User;
+    const UserResponse::ResponseCode code = UserResponse::ResponseCode::LoginAlreadyTaken;
+
+    auto user = UserResponse::LoginAlreadyUsed(login);
+    cr_assert_not_null(user);
+    auto test = std::dynamic_pointer_cast<UserResponse>(user);
+    cr_assert_not_null(test);
+    ASSERT_BOOL(test->encode(), true);
+    ASSERT_BOOL(test->decode_header(), true);
+    ASSERT_BOOL(test->decode_data_infos(), true);
+    ASSERT_BOOL(test->decode_data(), true);
+
+    EXPECT_INT(test->getResponseType(), type);
+    EXPECT_SIZET(test->getDataInfosSize(), UserResponse::DataInfosSize);
+    EXPECT_INT(test->getCode(), code);
+    cr_assert_str_eq(test->getLogin(), login.c_str());
+    ASSERT_BOOL(std::string(test->getPassword()).empty(), true);
+}
+
+Test(Common, UserResponse_AlreadyLog)
+{
+    const std::string login("toto");
+    const std::string pass("tata");
+    const AResponse::ResponseType type = AResponse::ResponseType::User;
+    const UserResponse::ResponseCode code = UserResponse::ResponseCode::AlreadyLoggedIn;
+
+    auto user = UserResponse::AlreadyLog(login);
+    cr_assert_not_null(user);
+    auto test = std::dynamic_pointer_cast<UserResponse>(user);
+    cr_assert_not_null(test);
+    ASSERT_BOOL(test->encode(), true);
+    ASSERT_BOOL(test->decode_header(), true);
+    ASSERT_BOOL(test->decode_data_infos(), true);
+    ASSERT_BOOL(test->decode_data(), true);
+
+    EXPECT_INT(test->getResponseType(), type);
+    EXPECT_SIZET(test->getDataInfosSize(), UserResponse::DataInfosSize);
+    EXPECT_INT(test->getCode(), code);
+    cr_assert_str_eq(test->getLogin(), login.c_str());
+    ASSERT_BOOL(std::string(test->getPassword()).empty(), true);
+}
+
+Test(Common, UserResponse_RequestedDeletedAccount)
+{
+    const std::string login("toto");
+    const std::string pass("tata");
+    const AResponse::ResponseType type = AResponse::ResponseType::User;
+    const UserResponse::ResponseCode code = UserResponse::ResponseCode::RequestedAccountDeleted;
+
+    auto user = UserResponse::RequestedDeletedAccount(login);
+    cr_assert_not_null(user);
+    auto test = std::dynamic_pointer_cast<UserResponse>(user);
+    cr_assert_not_null(test);
+    ASSERT_BOOL(test->encode(), true);
+    ASSERT_BOOL(test->decode_header(), true);
+    ASSERT_BOOL(test->decode_data_infos(), true);
+    ASSERT_BOOL(test->decode_data(), true);
+
+    EXPECT_INT(test->getResponseType(), type);
+    EXPECT_SIZET(test->getDataInfosSize(), UserResponse::DataInfosSize);
+    EXPECT_INT(test->getCode(), code);
+    cr_assert_str_eq(test->getLogin(), login.c_str());
+    ASSERT_BOOL(std::string(test->getPassword()).empty(), true);
+}
+
+Test(Common, UserResponse_ClientNotLogged)
+{
+    const AResponse::ResponseType type = AResponse::ResponseType::User;
+    const UserResponse::ResponseCode code = UserResponse::ResponseCode::ClientLoggedOut;
+
+    auto user = UserResponse::ClientNotLogged();
+    cr_assert_not_null(user);
+    auto test = std::dynamic_pointer_cast<UserResponse>(user);
+    cr_assert_not_null(test);
+    ASSERT_BOOL(test->encode(), true);
+    ASSERT_BOOL(test->decode_header(), true);
+    ASSERT_BOOL(test->decode_data_infos(), true);
+    ASSERT_BOOL(test->decode_data(), true);
+
+    EXPECT_INT(test->getResponseType(), type);
+    EXPECT_SIZET(test->getDataInfosSize(), UserResponse::DataInfosSize);
+    EXPECT_INT(test->getCode(), code);
+    ASSERT_BOOL(std::string(test->getLogin()).empty(), true);
+    ASSERT_BOOL(std::string(test->getPassword()).empty(), true);
+}
