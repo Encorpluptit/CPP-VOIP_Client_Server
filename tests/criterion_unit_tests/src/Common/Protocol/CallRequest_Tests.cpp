@@ -566,3 +566,37 @@ Test(Common, CallResponse_DisconnectedUser)
     cr_assert_str_eq(test->getSender(), sender.c_str());
     cr_assert_str_eq(test->getReceiver(), receiver.c_str());
 }
+
+Test(Common, CallResponse_UnknownErrorOccured)
+{
+    const std::string sender("toto");
+    const std::string receiver("tata");
+    const std::string ip("127.0.0.1");
+    const std::string port("8080");
+    uint16_t call_id = 5;
+    const AResponse::ResponseType type = AResponse::ResponseType::Call;
+    const CallResponse::ResponseCode code = CallResponse::ResponseCode::UnknownError;
+
+    auto call = CallResponse::NewCallStarted(sender, receiver, ip, port, call_id);
+    cr_assert_not_null(call);
+    auto test = std::dynamic_pointer_cast<CallResponse>(call);
+    cr_assert_not_null(test);
+    auto tmp = CallResponse::UnknownErrorOccured(test);
+    cr_assert_not_null(tmp);
+    test = std::dynamic_pointer_cast<CallResponse>(tmp);
+    cr_assert_not_null(test);
+
+    ASSERT_BOOL(test->encode(), true);
+    ASSERT_BOOL(test->decode_header(), true);
+    ASSERT_BOOL(test->decode_data_infos(), true);
+    ASSERT_BOOL(test->decode_data(), true);
+
+    EXPECT_INT(test->getResponseType(), type);
+    EXPECT_SIZET(test->getDataInfosSize(), CallResponse::DataInfosSize);
+    EXPECT_INT(test->getCode(), code);
+
+    cr_assert_str_eq(test->getSender(), receiver.c_str());
+    cr_assert_str_eq(test->getReceiver(), sender.c_str());
+    cr_assert_str_eq(test->getIp(), ip.c_str());
+    cr_assert_str_eq(test->getPort(), port.c_str());
+}
