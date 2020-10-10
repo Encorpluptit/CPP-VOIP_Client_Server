@@ -50,12 +50,6 @@ std::string AResponse::describe() const noexcept
     return serialised;
 }
 
-std::ostream &BabelNetwork::operator<<(std::ostream &os, const BabelNetwork::AResponse &response)
-{
-    os << response.describe();
-    return os;
-}
-
 std::ostream &BabelNetwork::operator<<(std::ostream &os, const std::shared_ptr<AResponse> &response)
 {
     os << response->describe();

@@ -31,7 +31,7 @@ namespace BabelNetwork {
             UnknownErrorOccur = 354,
         };
 
-    private:
+    public:
         enum MaxDataSize {
             Login = 128,
             FriendLogin = 128

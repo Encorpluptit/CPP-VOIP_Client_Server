@@ -54,8 +54,6 @@ namespace BabelNetwork {
 
         /* <- Operators -> */
     public:
-        friend std::ostream &operator<<(std::ostream &os, const AResponse &response);
-
         friend std::ostream &operator<<(std::ostream &os, const std::shared_ptr<AResponse> &response);
 
         /* <- Static Methods -> */
@@ -118,7 +116,7 @@ namespace BabelNetwork {
     };
 
     /* <- Operators -> */
-    std::ostream &operator<<(std::ostream &os, const AResponse &response);
+//    std::ostream &operator<<(std::ostream &os, const AResponse &response);
 
     std::ostream &operator<<(std::ostream &os, const std::shared_ptr<AResponse> &response);
 }

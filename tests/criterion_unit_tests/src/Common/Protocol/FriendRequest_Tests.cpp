@@ -55,6 +55,28 @@ Test(Common, FriendResponse_03)
     ASSERT_BOOL(test.describe_data_infos().empty(), false);
 }
 
+Test(Common, FriendResponse_login_too_long)
+{
+    const std::string sender = std::string(FriendResponse::MaxDataSize::Login + 1, '*');
+    const std::string receiver = std::string(FriendResponse::MaxDataSize::FriendLogin, '*');
+
+    cr_assert_throw(
+        FriendResponse test(sender, receiver),
+        BabelErrors::FriendResponse
+    );
+}
+
+Test(Common, FriendResponse_friend_login_too_long)
+{
+    const std::string sender = std::string(FriendResponse::MaxDataSize::Login, '*');
+    const std::string receiver = std::string(FriendResponse::MaxDataSize::FriendLogin + 1, '*');
+
+    cr_assert_throw(
+        FriendResponse test(sender, receiver),
+        BabelErrors::FriendResponse
+    );
+}
+
 Test(Common, FriendResponse_RequestFriend)
 {
     const std::string login("ugo");

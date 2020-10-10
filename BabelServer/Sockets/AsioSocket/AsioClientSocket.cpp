@@ -169,7 +169,7 @@ void AsioClientSocket::queue_read_response(const boost::system::error_code &erro
 void AsioClientSocket::do_write(bool write_in_progress)
 {
     if (!write_in_progress && _write_queue.front()->encode()) {
-        _logger.logThis(*_write_queue.front(), "Sending Response = ");
+        _logger.logThis(_write_queue.front(), "Sending Response = ");
         boost::asio::async_write(
             _socket,
             boost::asio::buffer(_write_queue.front()->getDataByte(), _write_queue.front()->getResponseSize()),

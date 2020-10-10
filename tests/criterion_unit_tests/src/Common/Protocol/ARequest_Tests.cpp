@@ -2,6 +2,7 @@
 // Created by hobbit on 10/10/20.
 //
 
+#include <iostream>
 #include "tests_run.hpp"
 #include "UserResponse.hpp"
 #include "CallResponse.hpp"
@@ -36,6 +37,9 @@ Test(Common, AResponse_02)
     std::memcpy(header, &hdr, sizeof(hdr));
     auto test = AResponse::getResponse(header);
     ASSERT_INT(test->getResponseType(), type);
+    ASSERT_BOOL(test->describe().empty(), false);
+    ASSERT_SIZET(test->getDataInfosSize(), hdr._dataInfosSize);
+    ASSERT_SIZET(test->getResponseHeader()._dataInfosSize, hdr._dataInfosSize);
 }
 
 Test(Common, AResponse_03)
@@ -53,7 +57,7 @@ Test(Common, AResponse_03)
     ASSERT_INT(test->getResponseType(), type);
 }
 
-Test(Common, AResponse_04)
+Test(Common, AResponse_04, .init=redirect_all_std)
 {
     AResponse::ResponseType type = AResponse::ResponseType::Friend;
     const AResponse::ResponseHeader hdr = {
@@ -66,6 +70,7 @@ Test(Common, AResponse_04)
     std::memcpy(header, &hdr, sizeof(hdr));
     auto test = AResponse::getResponse(header);
     ASSERT_INT(test->getResponseType(), type);
+    std::cout << test << std::endl;
 }
 
 Test(Common, AResponse_05)
