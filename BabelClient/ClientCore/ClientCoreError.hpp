@@ -14,7 +14,7 @@ namespace BabelClient {
     class ClientError : public BabelErrors::BabelError {
         /* <- Constructor - Destructor -> */
     public:
-        explicit ClientError(std::string const &msg) : BabelErrors::BabelError(msg) {}
+        explicit ClientError(const std::string &msg) : BabelErrors::BabelError(msg) {}
     };
 }
 

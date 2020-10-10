@@ -5,7 +5,6 @@
 ** [ClientCore.cpp]: Source file for ClientCore feature.
 */
 
-#include <iostream>
 #include "ClientCore.hpp"
 #include "mainwindow.hpp"
 #include "NetworkInfos.hpp"

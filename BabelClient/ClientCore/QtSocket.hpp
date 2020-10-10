@@ -10,17 +10,17 @@
 class MyTcpSocket : public QObject, virtual public ITcpSocket {
 Q_OBJECT
 public:
-    MyTcpSocket(QObject *parent = nullptr);
+    explicit MyTcpSocket(QObject *parent = nullptr);
 
-    ~MyTcpSocket();
+    ~MyTcpSocket() override;
 
-    void doConnect(const std::string &ip, int port);
+    void doConnect(const std::string &ip, int port) override;
 
-    void disconnect();
+    void disconnect() override;
 
-    void sendResponse(const std::shared_ptr<BabelNetwork::AResponse> &response);
+    void sendResponse(const std::shared_ptr<BabelNetwork::AResponse> &response) override;
 
-    std::shared_ptr<BabelNetwork::AResponse> readResponse();
+    std::shared_ptr<BabelNetwork::AResponse> readResponse() override;
 
 signals:
 
@@ -30,7 +30,7 @@ public slots:
 
     void disconnected();
 
-    void bytesWritten(const qint64 bytes);
+    void bytesWritten(qint64 bytes);
 
 private:
     QTcpSocket *socket;

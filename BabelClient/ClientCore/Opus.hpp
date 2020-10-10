@@ -11,7 +11,7 @@ class Opus : public ICodec
 
         ~Opus();
 
-        std::vector<uint16_t> encode(const std::vector<uint16_t> &voice);
+        std::vector<uint16_t> encode(const std::vector<uint16_t> &voice) override;
 
         std::vector<uint16_t> decode(const std::vector<uint16_t> &voice);
     
