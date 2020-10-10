@@ -33,7 +33,7 @@ CallResponse::CallResponse(
 ) : CallResponse(sender, receiver)
 {
     if (!setIp(address) || !setPort(port))
-        throw BabelErrors::CallResponse("sender or receiver too long");
+        throw BabelErrors::CallResponse("ip or port too long");
 }
 
 bool CallResponse::setSender(const std::string &sender) noexcept

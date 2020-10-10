@@ -32,7 +32,7 @@ namespace BabelNetwork {
         enum MaxDataSize {
             Sender = 128,
             Receiver = 128,
-            Ip = 15,
+            Ip = 20,
             Port = 5
         };
 
