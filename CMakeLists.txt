@@ -2,8 +2,6 @@
 # Project Configuration
 cmake_minimum_required(VERSION 3.14)
 project(CPP_babel_2020)
-#set(CMAKE_C_COMPILER_VERSION 10.1)
-#set(CMAKE_CXX_COMPILER_VERSION 10.1)
 
 
 set(CMAKE_AUTOMOC ON)
@@ -54,7 +52,9 @@ if (COVERAGE)
 endif (COVERAGE)
 
 if (USE_DEBUG)
-    add_compile_options(-g3)
+    if (UNIX)
+        add_compile_options(-g3)
+    endif (UNIX)
     add_compile_definitions(_DEBUG_)
 else (USE_DEBUG)
     add_compile_options(-Werror)
@@ -71,11 +71,18 @@ include_directories(${CMAKE_INCLUDE_PATH})
 
 find_package(Qt5Widgets CONFIG REQUIRED)
 
-#find_package(Boost COMPONENTS thread REQUIRED)
-#find_package(Boost REQUIRED)
-#if (Boost_FOUND)
-#    set(CONAN_LIBS ${CONAN_LIBS} boost_thread)
-#endif (Boost_FOUND)
+set(BOOST_DEBUG ON)
+if (UNIX)
+    find_package(Boost COMPONENTS thread REQUIRED)
+    if (BOOST_FOUND)
+        set(CONAN_LIBS ${CONAN_LIBS} Boost::thread)
+    endif (BOOST_FOUND)
+else (UNIX)
+    find_package(Boost REQUIRED)
+    if (Boost_FOUND)
+        set(CONAN_LIBS ${CONAN_LIBS} libboost_thread)
+    endif (Boost_FOUND)
+endif (UNIX)
 
 
 ###############################################################################
@@ -190,13 +197,7 @@ if (UNIX)
     target_compile_options(babel_server PRIVATE -Wno-redundant-move)
 endif (UNIX)
 
-#find_package(Boost COMPONENTS thread REQUIRED)
-find_package(Boost REQUIRED)
-if (Boost_FOUND)
-    target_link_libraries(babel_server boost_thread)
-endif (Boost_FOUND)
-
-target_link_libraries(babel_server ${CONAN_LIBS} stdc++fs)
+target_link_libraries(babel_server ${CONAN_LIBS})
 
 
 ###############################################################################
@@ -244,12 +245,14 @@ target_include_directories(
 target_compile_definitions(babel_client PRIVATE BABEL_CLIENT_BIN)
 
 find_package(Qt5 COMPONENTS Network Widgets REQUIRED)
-target_link_libraries(babel_client ${CONAN_LIBS} stdc++fs Qt5::Widgets Qt5::Network)
+#target_link_libraries(babel_client ${CONAN_LIBS} stdc++fs Qt5::Widgets Qt5::Network)
+target_link_libraries(babel_client ${CONAN_LIBS} Qt5::Widgets Qt5::Network)
 #target_link_libraries(babel_client ${CONAN_LIBS} stdc++fs)
 
 
 ###############################################################################
 # Tests Configuration
+if (UNIX)
 set(
         TESTS_INCLUDES
         ${COMMON_INCLUDES}
@@ -281,25 +284,5 @@ target_include_directories(unit_tests PRIVATE tests/criterion_unit_tests/include
 
 target_link_libraries(unit_tests criterion ${CONAN_LIBS} gcov)
 
-#set_property(TARGET unit_tests PROPERTY CXX_STANDARD 11)
 set_target_properties(unit_tests PROPERTIES CXX_STANDARD 17)
-#set(CMAKE_CXX_STANDARD 17)
-
-
-##########################
-# Test Executable
-
-#add_executable(
-#        test_server
-#        tests/server/Chat_Message.hpp
-#        tests/server/Chat_Server.cpp
-#)
-#target_link_libraries(test_server pthread ${CONAN_LIBS})
-#
-#add_executable(
-#        test_client
-#        tests/server/Chat_Message.hpp
-#        tests/server/Chat_Client.cpp
-#)
-#
-#target_link_libraries(test_client pthread ${CONAN_LIBS})
+endif (UNIX)

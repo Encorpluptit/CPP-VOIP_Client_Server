@@ -9,7 +9,6 @@
 #define CPP_BABEL_2020_LOGGER_HPP
 
 #include <fstream>
-#include <filesystem>
 #include "NetworkInfos.hpp"
 #include "StringFormat.tpp"
 #include "AResponse.hpp"
@@ -55,9 +54,6 @@ namespace BabelUtils {
 
         void initLogType();
 
-        std::filesystem::path createLogDirectories();
-
-        void createLogFile(std::filesystem::path filePath);
 
         /* <- Getters / Setters -> */
     private:

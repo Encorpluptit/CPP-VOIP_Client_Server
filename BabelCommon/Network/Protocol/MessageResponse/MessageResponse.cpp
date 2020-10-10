@@ -28,7 +28,7 @@ bool MessageResponse::setSender(const std::string &sender) noexcept
 {
     if (sender.size() > MaxDataSize::Sender)
         return false;
-    strcat(_data.sender, sender.c_str());
+    std::strcat(_data.sender, sender.c_str());
     _dataInfos._senderSize = sender.size();
     return true;
 }
@@ -37,7 +37,7 @@ bool MessageResponse::setReceiver(const std::string &receiver) noexcept
 {
     if (receiver.size() > MaxDataSize::Receiver)
         return false;
-    strcat(_data.receiver, receiver.c_str());
+    std::strcat(_data.receiver, receiver.c_str());
     _dataInfos._receiverSize = receiver.size();
     return true;
 }
@@ -46,7 +46,7 @@ bool MessageResponse::setMessageData(const std::string &messageData) noexcept
 {
     if (messageData.size() > MaxDataSize::MessageData)
         return false;
-    strcat(_data.messageData, messageData.c_str());
+    std::strcat(_data.messageData, messageData.c_str());
     _dataInfos._messageDataSize = messageData.size();
     return true;
 }
