@@ -44,19 +44,18 @@ that is the classic header for a responsse
     * 175: Request Account Deleted.
     * 176: Client Logged Out.
 
-    * 400: Call Started.
-    * 401: Request Call.
-    * 402: Call Left.
-    * 403: Request End Call.
-    * 404: Incoming CAll.
-    * 405: Call Accepted.
-    * 470: Call Refused.
-    * 471: User Disconected.
-    * 472: Unknown Error.
-    
+    * 200: Call Started.
+    * 201: Request Call.
+    * 202: Call Left.
+    * 203: Request End Call.
+    * 204: Incoming Call.
+    * 205: Call Accepted.
+    * 270: Call Refused.
+    * 271: User Disconected.
+    * 272: Unknown Error.
+
     * 300: Request Friendship.
     * 301: Look at this Requested Friendship.
-    * 302: ??
     * 303: Requested Friendship was Accepted.
     * 304: Requested Friendship was Decline.
     * 306: Delete this Friend.
@@ -250,7 +249,7 @@ this is the structure for the login responsse fill this struct and send it to se
 
 ### Header
 
-im going to specify the header for every responsse for Call part 
+im going to specify the header for every responsse for Call part
 you need to send it to specify the size of the next structure
 
 * _senderSize = size of the login user
@@ -389,28 +388,6 @@ this is the structure for the Call responsse fill this struct and send it to ser
 
     * Error Codes
 
-<!-- * Conference(21* Codes) -->
-
-<!--
-        * Add user to conference (34* Code).
-            * Add someone to ongoing conference.
-            * Success code: 340.
-            * Data: (None).
-            * Errors:
-                * 1340: Unknown add to conference error.
-                * 1341: Unknown add to conference error.
-        
-        
-        * Remove user from conference (35* Code).
-            * Remove someone to ongoing conference.
-            * Success code: 350.
-            * Data: [ USERNAME | TIMESTAMP | CONFERENCE_ID ]
-            * Errors:
-                * 1350: Unknown remove from conference error.
-                * 1351: Unknown remove from conference error.
-
--->
-
 ---
 
 ### Friend (4** Code)
@@ -418,7 +395,6 @@ this is the structure for the Call responsse fill this struct and send it to ser
 * Summary
   * 300: Request Friendship.
   * 301: Look at this Requested Friendship.
-  * 302: ??
   * 303: Requested Friendship was Accepted.
   * 304: Requested Friendship was Decline.
   * 306: Delete this Friend.
@@ -519,8 +495,6 @@ this is the structure for the Call responsse fill this struct and send it to ser
 
       ```json
               {
-                "sender":             "damien.bernard@epitech.eu",
-                "receiver":           "ugo.levi-cescutti@epitech.eu"
               }
       ```
 
@@ -528,8 +502,6 @@ this is the structure for the Call responsse fill this struct and send it to ser
 
       ```json
               {
-                "sender":             "damien.bernard@epitech.eu",
-                "receiver":           "ugo.levi-cescutti@epitech.eu"
               }
       ```
 
@@ -537,7 +509,105 @@ this is the structure for the Call responsse fill this struct and send it to ser
 
       ```json
               {
+              }
+      ```
+
+---
+
+### Message (4** Code)
+
+* Summary
+  * 401: Request send Message.
+  * 402: Send message OK.
+  * 403: Receive Message.
+  * 404: Receive OK.
+  * 450: Unknown User.
+  * 460: Unknown Error.
+
+### Header
+
+im going to specify the header for every responsse for Message part
+you need to send it to specify the size of the next structure
+
+* _senderSize = size of the login user
+* _receiverSize = size of the login user
+* _messageDataSize = size of the message
+* _timestampSize = size of the timestamp message
+
+  ```cpp
+    DataInfosStruct {
+      uint16_t _senderSize;
+      uint16_t _receiverSize;
+      uint16_t _messageDataSize;
+      uint8_t _timestampSize;
+    };
+  ```
+
+### Struct of call responsse
+
+this is the structure for the Call responsse fill this struct and send it to server
+
+  ```cpp
+    DataStruct {
+      char sender[MaxDataSize::Sender];
+      char receiver[MaxDataSize::Receiver];
+      char messageData[MaxDataSize::MessageData];
+      std::time_t timestamp;
+    };  
+  ```
+
+* Message Management
+  * [Client -> Server]
+    * Success Codes.
+    * 401: Request send Message.
+
+      ```json
+              {
                 "sender":             "damien.bernard@epitech.eu",
-                "receiver":           "ugo.levi-cescutti@epitech.eu"
+                "receiver":           "ugo.levi-cescutti@epitech.eu",
+                "messageData":        "damien_message",
+                "time_stamp":         "(unix time)",
+              }
+      ```
+
+    * 403: Receive Message.
+
+      ```json
+              {
+                "sender":             "damien.bernard@epitech.eu",
+                "receiver":           "ugo.levi-cescutti@epitech.eu",
+                "messageData":        "damien_message",
+                "time_stamp":         "(unix time)",
+              }
+      ```
+
+  * [Server -> Client]
+    * Success Codes.
+    * 402: Send message OK.
+
+      ```json
+              {
+              }
+      ```
+
+    * 404: Receive OK.
+
+      ```json
+              {
+              }
+      ```
+
+    * Error Codes
+    * 450: Unknown User.
+
+      ```json
+              {
+              }
+      ```
+
+    * 460: Unknown Error.
+
+      ```json
+              {
               }
       ```
