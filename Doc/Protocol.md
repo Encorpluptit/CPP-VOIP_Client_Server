@@ -620,4 +620,11 @@ this is the structure for the Call responsse fill this struct and send it to ser
               }
       ```
 
+    * 404: Receive OK.
+
+      ```json
+              {
+              }
+      ```
+
     * Error Codes
