@@ -36,6 +36,7 @@ MainWindow::MainWindow(QWidget *parent, NetworkClientSocket &network) : QMainWin
     ui->CantFindText->hide();
     called = false;
     ui->textEdit->hide();
+    ui->gridStackedWidget->setCurrentWidget(ui->LoginWidget);
 }
 
 MainWindow::~MainWindow()
@@ -188,6 +189,17 @@ void MainWindow::on_CallButton_clicked()
     }
 }
 
+void MainWindow::on_sendMessage_clicked()
+{
+    std::string message;
+
+    if (actualFriend != login) {
+        message = ui->NewMessages->text().toLocal8Bit().constData();
+        std::cout << "MESSAGE : " << message << std::endl;
+        auto response = BabelNetwork::MessageResponse::RequestMessageSend(login, actualFriend, message);
+        client.getTcp()->sendResponse(response);
+    }
+}
 
 void MainWindow::LoggedIn(const std::shared_ptr<BabelNetwork::UserResponse> &response)
 {
@@ -368,14 +380,18 @@ void MainWindow::UnknowUser(const std::shared_ptr<BabelNetwork::FriendResponse> 
 
 void MainWindow::SendMessageOk(const std::shared_ptr<BabelNetwork::MessageResponse> &response)
 {
-    (void) response;
-    //FRONT ARTHUR
+    std::string receiver = response->getReceiver();
+    std::string data = response->getMessageData();
+    std::string message = "Message Send to " + receiver + " : " + data + "\n";
+    ui->HistoricMessages->append(message.c_str());
 }
 
 void MainWindow::ReceiveMessage(const std::shared_ptr<BabelNetwork::MessageResponse> &response)
 {
-    (void) response;
-    //FRONT ARTHUR
+    std::string sender = response->getSender();
+    std::string data = response->getMessageData();
+    std::string message = "Message Receive from " + sender + " : " + data + "\n";
+    ui->HistoricMessages->append(message.c_str());
 }
 
 void MainWindow::UnknowUserMessage(const std::shared_ptr<BabelNetwork::MessageResponse> &response)

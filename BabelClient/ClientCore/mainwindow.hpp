@@ -43,6 +43,7 @@ class MainWindow : public QMainWindow
         void on_DisconnectButton_clicked();
         void on_ManageFriendButton_clicked();
         void on_DeleteAccountButton_clicked();
+        void on_sendMessage_clicked();
     //MANAGE FRIEND PAGE
         void on_AddFriendButton_clicked();
         void on_DeleteFriendButton_clicked();
