@@ -10,13 +10,11 @@
 #include "StringFormat.tpp"
 #include "ResponseError.hpp"
 
-using namespace BabelNetwork;
+BabelNetwork::CallResponse::CallResponse(const BabelNetwork::AResponse::ResponseHeader &headerResponse)
+    : BabelNetwork::AResponse(headerResponse) {}
 
-CallResponse::CallResponse(const ResponseHeader &headerResponse)
-    : AResponse(headerResponse) {}
-
-CallResponse::CallResponse(const std::string &sender, const std::string &receiver)
-    : AResponse()
+BabelNetwork::CallResponse::CallResponse(const std::string &sender, const std::string &receiver)
+    : BabelNetwork::AResponse()
 {
     _header._responseType = Call;
     _header._dataInfosSize = DataInfosSize;
@@ -25,7 +23,7 @@ CallResponse::CallResponse(const std::string &sender, const std::string &receive
         throw BabelErrors::CallResponse("sender or receiver too long");
 }
 
-CallResponse::CallResponse(
+BabelNetwork::CallResponse::CallResponse(
     const std::string &sender,
     const std::string &receiver,
     const std::string &address,
@@ -36,25 +34,25 @@ CallResponse::CallResponse(
         throw BabelErrors::CallResponse("ip or port too long");
 }
 
-bool CallResponse::setSender(const std::string &sender) noexcept
+bool BabelNetwork::CallResponse::setSender(const std::string &sender) noexcept
 {
     if (sender.size() > MaxDataSize::Sender)
         return false;
-    strcat(_data.sender, sender.c_str());
+    std::strcat(_data.sender, sender.c_str());
     _dataInfos._senderSize = sender.size();
     return true;
 }
 
-bool CallResponse::setReceiver(const std::string &receiver) noexcept
+bool BabelNetwork::CallResponse::setReceiver(const std::string &receiver) noexcept
 {
     if (receiver.size() > MaxDataSize::Receiver)
         return false;
-    strcat(_data.receiver, receiver.c_str());
+    std::strcat(_data.receiver, receiver.c_str());
     _dataInfos._receiverSize = receiver.size();
     return true;
 }
 
-bool CallResponse::setTimestamp() noexcept
+bool BabelNetwork::CallResponse::setTimestamp() noexcept
 {
     time_t timer;
     if (time(&timer) == ((time_t) -1))
@@ -64,7 +62,7 @@ bool CallResponse::setTimestamp() noexcept
     return true;
 }
 
-bool CallResponse::setCallId(const uint16_t call_id) noexcept
+bool BabelNetwork::CallResponse::setCallId(const uint16_t call_id) noexcept
 {
     if (!call_id)
         return false;
@@ -73,26 +71,26 @@ bool CallResponse::setCallId(const uint16_t call_id) noexcept
     return true;
 }
 
-bool CallResponse::setIp(const std::string &ip) noexcept
+bool BabelNetwork::CallResponse::setIp(const std::string &ip) noexcept
 {
     if (ip.size() > MaxDataSize::Ip)
         return false;
-    strcat(_data.ip, ip.c_str());
+    std::strcat(_data.ip, ip.c_str());
     _dataInfos._ipSize = ip.size();
     return true;
 }
 
-bool CallResponse::setPort(const std::string &port) noexcept
+bool BabelNetwork::CallResponse::setPort(const std::string &port) noexcept
 {
     if (port.size() > MaxDataSize::Port)
         return false;
-    strcat(_data.port, port.c_str());
+    std::strcat(_data.port, port.c_str());
     _dataInfos._portSize = port.size();
     return true;
 }
 
 
-bool CallResponse::encode() noexcept
+bool BabelNetwork::CallResponse::encode() noexcept
 {
     char *const sender = getDataByteBody();
     char *const receiver = sender + _dataInfos._senderSize;
@@ -112,19 +110,19 @@ bool CallResponse::encode() noexcept
     return true;
 }
 
-bool CallResponse::decode_header() noexcept
+bool BabelNetwork::CallResponse::decode_header() noexcept
 {
     std::memcpy(&_header, _data_byte, HeaderSize);
     return true;
 }
 
-bool CallResponse::decode_data_infos() noexcept
+bool BabelNetwork::CallResponse::decode_data_infos() noexcept
 {
     std::memcpy(&_dataInfos, _data_byte + HeaderSize, DataInfosSize);
     return true;
 }
 
-bool CallResponse::decode_data() noexcept
+bool BabelNetwork::CallResponse::decode_data() noexcept
 {
     char *const sender = getDataByteBody();
     char *const receiver = sender + _dataInfos._senderSize;
@@ -145,38 +143,38 @@ bool CallResponse::decode_data() noexcept
 
 bool BabelNetwork::CallResponse::isOk() noexcept
 {
-    return _header._code != CallResponse::ResponseCode::CallRefused
-        && _header._code != CallResponse::ResponseCode::UserDisconnected;
+    return _header._code != BabelNetwork::CallResponse::ResponseCode::CallRefused
+        && _header._code != BabelNetwork::CallResponse::ResponseCode::UserDisconnected;
 }
 
-char *CallResponse::getDataByte() noexcept
+char *BabelNetwork::CallResponse::getDataByte() noexcept
 {
     return _data_byte;
 }
 
-char *CallResponse::getDataByteDataInfos() const noexcept
+char *BabelNetwork::CallResponse::getDataByteDataInfos() const noexcept
 {
     return const_cast<char *>(_data_byte + HeaderSize);
 }
 
-char *CallResponse::getDataByteBody() const noexcept
+char *BabelNetwork::CallResponse::getDataByteBody() const noexcept
 {
     return const_cast<char *>(_data_byte + HeaderSize + DataInfosSize);
 }
 
-size_t CallResponse::getResponseSize() const noexcept
+size_t BabelNetwork::CallResponse::getResponseSize() const noexcept
 {
     return HeaderSize + DataInfosSize + getDataSize();
 }
 
-size_t CallResponse::getDataSize() const noexcept
+size_t BabelNetwork::CallResponse::getDataSize() const noexcept
 {
     return _dataInfos._senderSize + _dataInfos._receiverSize
         + _dataInfos._timestampSize + _dataInfos._callIdSize
         + _dataInfos._ipSize + _dataInfos._portSize;
 }
 
-std::string CallResponse::describe_data_infos() const noexcept
+std::string BabelNetwork::CallResponse::describe_data_infos() const noexcept
 {
     return BabelUtils::format(
         "Sender Size: %zu | Receiver Size: %zu | Timestamp Size : %zu | CallId Size : %zu",
@@ -185,7 +183,7 @@ std::string CallResponse::describe_data_infos() const noexcept
     );
 }
 
-std::string CallResponse::describe_data() const noexcept
+std::string BabelNetwork::CallResponse::describe_data() const noexcept
 {
     return BabelUtils::format(
         "Sender: %s | Receiver: %s | Timestamp : %ld | CallId: %u | Ip: %s | Port: %s",
@@ -193,7 +191,7 @@ std::string CallResponse::describe_data() const noexcept
     );
 }
 
-std::string CallResponse::describe_code() const noexcept
+std::string BabelNetwork::CallResponse::describe_code() const noexcept
 {
     for (const auto &pair : codeString) {
         if (getCode() == pair.first)

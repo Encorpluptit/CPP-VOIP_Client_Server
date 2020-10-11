@@ -15,7 +15,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 ###############################################################################
 # Compilation modes
-option(USE_DEBUG "Enter debug mode" ON)
+option(USE_DEBUG "Enter debug mode" OFF)
 option(USE_LOG "Log Execution in a file" OFF)
 option(GH_TESTS "Github tests for disable port audio" OFF)
 
@@ -24,11 +24,14 @@ option(GH_TESTS "Github tests for disable port audio" OFF)
 # Set Compile Options
 if (UNIX)
     add_compile_options(-Wall -Wextra)
+    add_compile_definitions(LOG_UNIX)
 endif (UNIX)
 
 if (USE_LOG)
-    set(USE_DEBUG ON)
-    add_compile_definitions(_BABEL_LOG_)
+    if (UNIX)
+        add_compile_definitions(LOG_UNIX)
+        add_compile_definitions(_BABEL_LOG_)
+    endif (UNIX)
 endif (USE_LOG)
 
 if (COVERAGE)
@@ -36,10 +39,14 @@ if (COVERAGE)
 endif (COVERAGE)
 
 if (USE_DEBUG)
-    add_compile_options(-g3)
+    if (UNIX)
+        add_compile_options(-g3)
+    endif (UNIX)
     add_compile_definitions(_DEBUG_)
 else (USE_DEBUG)
-    add_compile_options(-Werror)
+    if (UNIX)
+        add_compile_options(-Werror)
+    endif (UNIX)
 endif (USE_DEBUG)
 
 
@@ -52,6 +59,19 @@ conan_basic_setup()
 include_directories(${CMAKE_INCLUDE_PATH})
 
 find_package(Qt5Widgets CONFIG REQUIRED)
+
+set(BOOST_DEBUG ON)
+if (UNIX)
+    find_package(Boost COMPONENTS thread REQUIRED)
+    if (BOOST_FOUND)
+        set(CONAN_LIBS ${CONAN_LIBS} Boost::thread)
+    endif (BOOST_FOUND)
+else (UNIX)
+    find_package(Boost REQUIRED)
+    if (Boost_FOUND)
+        set(CONAN_LIBS ${CONAN_LIBS} libboost_thread)
+    endif (Boost_FOUND)
+endif (UNIX)
 
 
 ###############################################################################
@@ -164,14 +184,10 @@ target_include_directories(
 # TODO: REMOVE WHEN FIX SQLITE_ORM.
 if (UNIX)
     target_compile_options(babel_server PRIVATE -Wno-redundant-move)
+    target_link_libraries(babel_server stdc++fs)
 endif (UNIX)
 
-find_package(Boost REQUIRED)
-if (Boost_FOUND)
-    target_link_libraries(babel_server boost_thread)
-endif (Boost_FOUND)
-
-target_link_libraries(babel_server ${CONAN_LIBS} stdc++fs)
+target_link_libraries(babel_server ${CONAN_LIBS})
 
 
 ###############################################################################
@@ -217,49 +233,54 @@ target_include_directories(
 target_compile_definitions(babel_client PRIVATE BABEL_CLIENT_BIN)
 
 find_package(Qt5 COMPONENTS Network Widgets REQUIRED)
-target_link_libraries(babel_client ${CONAN_LIBS} stdc++fs Qt5::Widgets Qt5::Network)
+target_link_libraries(babel_client ${CONAN_LIBS} Qt5::Widgets Qt5::Network)
+if (UNIX)
+    target_link_libraries(babel_server stdc++fs)
+endif (UNIX)
 
 
 ###############################################################################
 # Tests Configuration
-set(
-        TESTS_INCLUDES
-        ${COMMON_INCLUDES}
-        ${SERVER_INCLUDES}
-        ${CLIENT_INCLUDES}
-        ${CMAKE_INCLUDE_PATH}
-)
+if (UNIX)
+    set(
+            TESTS_INCLUDES
+            ${COMMON_INCLUDES}
+            ${SERVER_INCLUDES}
+            ${CLIENT_INCLUDES}
+            ${CMAKE_INCLUDE_PATH}
+    )
 
-set(
-        TESTS_SOURCES
-        tests/criterion_unit_tests/src/Common/StringFormat_Tests.cpp
-        tests/criterion_unit_tests/src/Common/Protocol/UserRequest_Tests.cpp
-        tests/criterion_unit_tests/src/Common/Protocol/CallRequest_Tests.cpp
-        tests/criterion_unit_tests/src/Common/Protocol/FriendRequest_Tests.cpp
-        tests/criterion_unit_tests/src/Common/Protocol/MessageRequest_Tests.cpp
-        tests/criterion_unit_tests/src/Common/Protocol/ARequest_Tests.cpp
-        tests/criterion_unit_tests/src/Common/NetworkInfos_Tests.cpp
-        tests/criterion_unit_tests/src/Client/Client.cpp
-        ${CLIENT_DIR}/ClientCore/Opus.cpp
-        ${CLIENT_DIR}/ClientCore/PortAudio.cpp
-)
+    set(
+            TESTS_SOURCES
+            tests/criterion_unit_tests/src/Common/StringFormat_Tests.cpp
+            tests/criterion_unit_tests/src/Common/Protocol/UserRequest_Tests.cpp
+            tests/criterion_unit_tests/src/Common/Protocol/CallRequest_Tests.cpp
+            tests/criterion_unit_tests/src/Common/Protocol/FriendRequest_Tests.cpp
+            tests/criterion_unit_tests/src/Common/Protocol/MessageRequest_Tests.cpp
+            tests/criterion_unit_tests/src/Common/Protocol/ARequest_Tests.cpp
+            tests/criterion_unit_tests/src/Common/NetworkInfos_Tests.cpp
+            tests/criterion_unit_tests/src/Client/Client.cpp
+            ${CLIENT_DIR}/ClientCore/Opus.cpp
+            ${CLIENT_DIR}/ClientCore/PortAudio.cpp
+    )
 
-add_executable(
-        unit_tests
-        ${COMMON_SOURCES}
-        ${TESTS_SOURCES}
-)
+    add_executable(
+            unit_tests
+            ${COMMON_SOURCES}
+            ${TESTS_SOURCES}
+    )
 
-target_compile_definitions(unit_tests PRIVATE _UNIT_TESTS_)
+    target_compile_definitions(unit_tests PRIVATE _UNIT_TESTS_)
 
-target_compile_options(unit_tests PRIVATE --coverage)
+    target_compile_options(unit_tests PRIVATE --coverage)
 
-target_include_directories(unit_tests PRIVATE tests/criterion_unit_tests/include
-        ${CLIENT_INCLUDES})
+    target_include_directories(unit_tests PRIVATE tests/criterion_unit_tests/include
+            ${CLIENT_INCLUDES})
 
-target_link_libraries(unit_tests criterion ${CONAN_LIBS} gcov stdc++fs Qt5::Widgets Qt5::Network)
+    target_link_libraries(unit_tests criterion ${CONAN_LIBS} gcov stdc++fs Qt5::Widgets Qt5::Network)
 
-set_target_properties(unit_tests PROPERTIES CXX_STANDARD 17)
+    set_target_properties(unit_tests PROPERTIES CXX_STANDARD 17)
+endif (UNIX)
 
 if (GH_TESTS)
     target_compile_definitions(unit_tests PRIVATE GH_TESTS)

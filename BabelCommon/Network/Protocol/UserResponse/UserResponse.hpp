@@ -12,7 +12,7 @@
 #include "AResponse.hpp"
 
 namespace BabelNetwork {
-    class UserResponse final : virtual public AResponse {
+    class UserResponse final : virtual public BabelNetwork::AResponse {
         /* <- Class Enum -> */
     public:
         enum ResponseCode {
@@ -42,7 +42,7 @@ namespace BabelNetwork {
 
         /* <- Class Structure -> */
     public:
-        using Data = struct DataStruct {
+        struct Data {
             char login[MaxDataSize::Login];
             char password[MaxDataSize::Password];
         };
@@ -62,7 +62,7 @@ namespace BabelNetwork {
 
         /* <- Constructor - Destructor -> */
     public:
-        UserResponse() : AResponse()
+        UserResponse() : BabelNetwork::AResponse()
         {
             _header._responseType = User;
             _header._dataInfosSize = DataInfosSize;
@@ -131,13 +131,13 @@ namespace BabelNetwork {
 
         /* <- Formatted Response -> */
     public:
-        [[nodiscard]] static std::shared_ptr<AResponse>
+        [[nodiscard]] static std::shared_ptr<BabelNetwork::AResponse>
         NewLoginRequest(const std::string &login, const std::string &password);
 
-        [[nodiscard]] static std::shared_ptr<AResponse>
+        [[nodiscard]] static std::shared_ptr<BabelNetwork::AResponse>
         AccountCreationRequest(const std::string &login, const std::string &password);
 
-        [[nodiscard]] static std::shared_ptr<AResponse> LogoutRequest(const std::string &login);
+        [[nodiscard]] static std::shared_ptr<BabelNetwork::AResponse> LogoutRequest(const std::string &login);
 
         [[nodiscard]] static std::shared_ptr<AResponse> AccountDeletionRequest(const std::string &login);
 

@@ -16,9 +16,12 @@ Logger::Logger(Logger::LogType type)
 {
     initLogType();
     try {
-        std::filesystem::path tmpPath = createLogDirectories();
-        createLogFile(tmpPath);
-        _ok = true;
+        #ifdef LOG_UNIX
+            std::filesystem::path tmpPath = createLogDirectories();
+            createLogFile(tmpPath);
+            _ok = true;
+        #else
+        #endif
     } catch (const std::exception &e) {
         std::cerr << e.what() << std::endl;
     }
@@ -50,6 +53,7 @@ void Logger::initLogType()
     }
 }
 
+#ifdef LOG_UNIX
 std::filesystem::path Logger::createLogDirectories()
 {
     const std::string LogDir("BabelLogs");
@@ -79,6 +83,7 @@ void Logger::createLogFile(std::filesystem::path filePath)
     filePath /= std::string(_timeBuffer);
     _logFile = std::ofstream(filePath.string());
 }
+#endif
 
 void Logger::getTime()
 {

@@ -9,13 +9,11 @@
 #include "StringFormat.tpp"
 #include "ResponseError.hpp"
 
-using namespace BabelNetwork;
+BabelNetwork::UserResponse::UserResponse(const ResponseHeader &headerResponse)
+    : BabelNetwork::AResponse(headerResponse) {}
 
-UserResponse::UserResponse(const ResponseHeader &headerResponse)
-    : AResponse(headerResponse) {}
-
-UserResponse::UserResponse(const std::string &login, const std::string &password)
-    : AResponse()
+BabelNetwork::UserResponse::UserResponse(const std::string &login, const std::string &password)
+    : BabelNetwork::AResponse()
 {
     _header._responseType = User;
     _header._dataInfosSize = DataInfosSize;
@@ -24,25 +22,25 @@ UserResponse::UserResponse(const std::string &login, const std::string &password
         throw BabelErrors::UserResponse("login or password too long");
 }
 
-bool UserResponse::setLogin(const std::string &login) noexcept
+bool BabelNetwork::UserResponse::setLogin(const std::string &login) noexcept
 {
     if (login.size() > MaxDataSize::Login)
         return false;
-    strcat(_data.login, login.c_str());
+    std::strcat(_data.login, login.c_str());
     _dataInfos._loginSize = login.size();
     return true;
 }
 
-bool UserResponse::setPassword(const std::string &password) noexcept
+bool BabelNetwork::UserResponse::setPassword(const std::string &password) noexcept
 {
     if (password.size() > MaxDataSize::Password)
         return false;
-    strcat(_data.password, password.c_str());
+    std::strcat(_data.password, password.c_str());
     _dataInfos._passwordSize = password.size();
     return true;
 }
 
-bool UserResponse::encode() noexcept
+bool BabelNetwork::UserResponse::encode() noexcept
 {
     std::memcpy(_data_byte, &_header, HeaderSize);
     std::memcpy(getDataByteDataInfos(), &_dataInfos, DataInfosSize);
@@ -51,19 +49,19 @@ bool UserResponse::encode() noexcept
     return true;
 }
 
-bool UserResponse::decode_header() noexcept
+bool BabelNetwork::UserResponse::decode_header() noexcept
 {
     std::memcpy(&_header, _data_byte, HeaderSize);
     return true;
 }
 
-bool UserResponse::decode_data_infos() noexcept
+bool BabelNetwork::UserResponse::decode_data_infos() noexcept
 {
     std::memcpy(&_dataInfos, getDataByteDataInfos(), DataInfosSize);
     return true;
 }
 
-bool UserResponse::decode_data() noexcept
+bool BabelNetwork::UserResponse::decode_data() noexcept
 {
     std::memcpy(_data.login, getDataByteBody(), _dataInfos._loginSize);
     std::memcpy(_data.password, getDataByteBody() + _dataInfos._loginSize, _dataInfos._passwordSize);
@@ -72,37 +70,37 @@ bool UserResponse::decode_data() noexcept
 
 bool BabelNetwork::UserResponse::isOk() noexcept
 {
-    return _header._code == UserResponse::ResponseCode::LoggedIn
-        || _header._code == UserResponse::ResponseCode::AccountCreated
-        || _header._code == UserResponse::ResponseCode::AccountDeleted;
+    return _header._code == BabelNetwork::UserResponse::ResponseCode::LoggedIn
+        || _header._code == BabelNetwork::UserResponse::ResponseCode::AccountCreated
+        || _header._code == BabelNetwork::UserResponse::ResponseCode::AccountDeleted;
 }
 
-char *UserResponse::getDataByte() noexcept
+char *BabelNetwork::UserResponse::getDataByte() noexcept
 {
     return _data_byte;
 }
 
-char *UserResponse::getDataByteDataInfos() const noexcept
+char *BabelNetwork::UserResponse::getDataByteDataInfos() const noexcept
 {
     return const_cast<char *>(_data_byte + HeaderSize);
 }
 
-char *UserResponse::getDataByteBody() const noexcept
+char *BabelNetwork::UserResponse::getDataByteBody() const noexcept
 {
     return const_cast<char *>(_data_byte + HeaderSize + DataInfosSize);
 }
 
-size_t UserResponse::getResponseSize() const noexcept
+size_t BabelNetwork::UserResponse::getResponseSize() const noexcept
 {
     return HeaderSize + DataInfosSize + getDataSize();
 }
 
-size_t UserResponse::getDataSize() const noexcept
+size_t BabelNetwork::UserResponse::getDataSize() const noexcept
 {
     return _dataInfos._loginSize + _dataInfos._passwordSize;
 }
 
-std::string UserResponse::describe_data_infos() const noexcept
+std::string BabelNetwork::UserResponse::describe_data_infos() const noexcept
 {
     return BabelUtils::format(
         "Login Size: %zu | Password Size: %zu",
@@ -110,7 +108,7 @@ std::string UserResponse::describe_data_infos() const noexcept
     );
 }
 
-std::string UserResponse::describe_data() const noexcept
+std::string BabelNetwork::UserResponse::describe_data() const noexcept
 {
     return BabelUtils::format(
         "Login: %s | Password: %s",
@@ -118,7 +116,7 @@ std::string UserResponse::describe_data() const noexcept
     );
 }
 
-std::string UserResponse::describe_code() const noexcept
+std::string BabelNetwork::UserResponse::describe_code() const noexcept
 {
     for (const auto &pair : codeString) {
         if (getCode() == pair.first)

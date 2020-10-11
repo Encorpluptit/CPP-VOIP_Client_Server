@@ -7,124 +7,124 @@
 
 #include "UserResponse.hpp"
 
-using namespace BabelNetwork;
-
-std::shared_ptr<AResponse> UserResponse::NewLoginRequest(const std::string &login, const std::string &password)
+std::shared_ptr<BabelNetwork::AResponse>
+BabelNetwork::UserResponse::NewLoginRequest(const std::string &login, const std::string &password)
 {
-    auto resp = std::make_shared<UserResponse>(login, password);
+    auto resp = std::make_shared<BabelNetwork::UserResponse>(login, password);
 
-    resp->setCode(UserResponse::ResponseCode::RequestLogin);
+    resp->setCode(BabelNetwork::UserResponse::ResponseCode::RequestLogin);
     return resp;
 }
 
-std::shared_ptr<AResponse> UserResponse::LogoutRequest(const std::string &login)
+std::shared_ptr<BabelNetwork::AResponse> BabelNetwork::UserResponse::LogoutRequest(const std::string &login)
 {
-    auto resp = std::make_shared<UserResponse>(login, "");
+    auto resp = std::make_shared<BabelNetwork::UserResponse>(login, "");
 
-    resp->setCode(UserResponse::ResponseCode::RequestLogout);
+    resp->setCode(BabelNetwork::UserResponse::ResponseCode::RequestLogout);
     return resp;
 }
 
-std::shared_ptr<AResponse> UserResponse::AccountCreationRequest(const std::string &login, const std::string &password)
+std::shared_ptr<BabelNetwork::AResponse>
+BabelNetwork::UserResponse::AccountCreationRequest(const std::string &login, const std::string &password)
 {
-    auto resp = std::make_shared<UserResponse>(login, password);
+    auto resp = std::make_shared<BabelNetwork::UserResponse>(login, password);
 
-    resp->setCode(UserResponse::ResponseCode::RequestAccountCreation);
+    resp->setCode(BabelNetwork::UserResponse::ResponseCode::RequestAccountCreation);
     return resp;
 }
 
-std::shared_ptr<AResponse> UserResponse::AccountDeletionRequest(const std::string &login)
+std::shared_ptr<BabelNetwork::AResponse> BabelNetwork::UserResponse::AccountDeletionRequest(const std::string &login)
 {
-    auto resp = std::make_shared<UserResponse>(login, "");
+    auto resp = std::make_shared<BabelNetwork::UserResponse>(login, "");
 
-    resp->setCode(UserResponse::ResponseCode::RequestAccountDeletion);
+    resp->setCode(BabelNetwork::UserResponse::ResponseCode::RequestAccountDeletion);
     return resp;
 }
 
-std::shared_ptr<AResponse> UserResponse::LoggedInOk(const std::string &login)
+std::shared_ptr<BabelNetwork::AResponse> BabelNetwork::UserResponse::LoggedInOk(const std::string &login)
 {
-    auto resp = std::make_shared<UserResponse>(login, "");
+    auto resp = std::make_shared<BabelNetwork::UserResponse>(login, "");
 
-    resp->setCode(UserResponse::ResponseCode::LoggedIn);
+    resp->setCode(BabelNetwork::UserResponse::ResponseCode::LoggedIn);
     return resp;
 }
 
-std::shared_ptr<AResponse> UserResponse::LoggedOutOk(const std::string &login)
+std::shared_ptr<BabelNetwork::AResponse> BabelNetwork::UserResponse::LoggedOutOk(const std::string &login)
 {
-    auto resp = std::make_shared<UserResponse>(login, "");
+    auto resp = std::make_shared<BabelNetwork::UserResponse>(login, "");
 
-    resp->setCode(UserResponse::ResponseCode::LoggedOut);
+    resp->setCode(BabelNetwork::UserResponse::ResponseCode::LoggedOut);
     return resp;
 }
 
-std::shared_ptr<AResponse> UserResponse::AccountCreatedOk(const std::string &login)
+std::shared_ptr<BabelNetwork::AResponse> BabelNetwork::UserResponse::AccountCreatedOk(const std::string &login)
 {
-    auto resp = std::make_shared<UserResponse>(login, "");
+    auto resp = std::make_shared<BabelNetwork::UserResponse>(login, "");
 
-    resp->setCode(UserResponse::ResponseCode::AccountCreated);
+    resp->setCode(BabelNetwork::UserResponse::ResponseCode::AccountCreated);
     return resp;
 }
 
-std::shared_ptr<AResponse> UserResponse::AccountDeletedOk(const std::string &login)
+std::shared_ptr<BabelNetwork::AResponse> BabelNetwork::UserResponse::AccountDeletedOk(const std::string &login)
 {
-    auto resp = std::make_shared<UserResponse>(login, "");
+    auto resp = std::make_shared<BabelNetwork::UserResponse>(login, "");
 
-    resp->setCode(UserResponse::ResponseCode::AccountDeleted);
+    resp->setCode(BabelNetwork::UserResponse::ResponseCode::AccountDeleted);
     return resp;
 }
 
-std::shared_ptr<AResponse> UserResponse::UnknownError(const std::string &login)
+std::shared_ptr<BabelNetwork::AResponse> BabelNetwork::UserResponse::UnknownError(const std::string &login)
 {
-    auto resp = std::make_shared<UserResponse>(login, "");
+    auto resp = std::make_shared<BabelNetwork::UserResponse>(login, "");
 
-    resp->setCode(UserResponse::ResponseCode::UnknownUserError);
+    resp->setCode(BabelNetwork::UserResponse::ResponseCode::UnknownUserError);
     return resp;
 }
 
-std::shared_ptr<AResponse> UserResponse::BadLogin(const std::string &login)
+std::shared_ptr<BabelNetwork::AResponse> BabelNetwork::UserResponse::BadLogin(const std::string &login)
 {
-    auto resp = std::make_shared<UserResponse>(login, "");
+    auto resp = std::make_shared<BabelNetwork::UserResponse>(login, "");
 
-    resp->setCode(UserResponse::ResponseCode::WrongLogin);
+    resp->setCode(BabelNetwork::UserResponse::ResponseCode::WrongLogin);
     return resp;
 }
 
-std::shared_ptr<AResponse> UserResponse::BadPassword(const std::string &login)
+std::shared_ptr<BabelNetwork::AResponse> BabelNetwork::UserResponse::BadPassword(const std::string &login)
 {
-    auto resp = std::make_shared<UserResponse>(login, "");
+    auto resp = std::make_shared<BabelNetwork::UserResponse>(login, "");
 
-    resp->setCode(UserResponse::ResponseCode::WrongPassword);
+    resp->setCode(BabelNetwork::UserResponse::ResponseCode::WrongPassword);
     return resp;
 }
 
-std::shared_ptr<AResponse> UserResponse::LoginAlreadyUsed(const std::string &login)
+std::shared_ptr<BabelNetwork::AResponse> BabelNetwork::UserResponse::LoginAlreadyUsed(const std::string &login)
 {
-    auto resp = std::make_shared<UserResponse>(login, "");
+    auto resp = std::make_shared<BabelNetwork::UserResponse>(login, "");
 
-    resp->setCode(UserResponse::ResponseCode::LoginAlreadyTaken);
+    resp->setCode(BabelNetwork::UserResponse::ResponseCode::LoginAlreadyTaken);
     return resp;
 }
 
-std::shared_ptr<AResponse> UserResponse::AlreadyLog(const std::string &login)
+std::shared_ptr<BabelNetwork::AResponse> BabelNetwork::UserResponse::AlreadyLog(const std::string &login)
 {
-    auto resp = std::make_shared<UserResponse>(login, "");
+    auto resp = std::make_shared<BabelNetwork::UserResponse>(login, "");
 
-    resp->setCode(UserResponse::ResponseCode::AlreadyLoggedIn);
+    resp->setCode(BabelNetwork::UserResponse::ResponseCode::AlreadyLoggedIn);
     return resp;
 }
 
-std::shared_ptr<AResponse> UserResponse::RequestedDeletedAccount(const std::string &login)
+std::shared_ptr<BabelNetwork::AResponse> BabelNetwork::UserResponse::RequestedDeletedAccount(const std::string &login)
 {
-    auto resp = std::make_shared<UserResponse>(login, "");
+    auto resp = std::make_shared<BabelNetwork::UserResponse>(login, "");
 
-    resp->setCode(UserResponse::ResponseCode::RequestedAccountDeleted);
+    resp->setCode(BabelNetwork::UserResponse::ResponseCode::RequestedAccountDeleted);
     return resp;
 }
 
-std::shared_ptr<AResponse> UserResponse::ClientNotLogged()
+std::shared_ptr<BabelNetwork::AResponse> BabelNetwork::UserResponse::ClientNotLogged()
 {
-    auto resp = std::make_shared<UserResponse>("", "");
+    auto resp = std::make_shared<BabelNetwork::UserResponse>("", "");
 
-    resp->setCode(UserResponse::ResponseCode::ClientLoggedOut);
+    resp->setCode(BabelNetwork::UserResponse::ResponseCode::ClientLoggedOut);
     return resp;
 }
