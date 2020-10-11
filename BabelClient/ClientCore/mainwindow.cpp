@@ -148,9 +148,9 @@ void MainWindow::on_AcceptRequestButton_clicked()
 void MainWindow::on_AcceptCallButton_clicked()
 {
     called = true;
+    client.setIpPort(5000 + std::rand()%15000);
     client.getUdp()->doConnect(client.getMyUdpIp(), client.getMyUdpPort());
     auto response = BabelNetwork::CallResponse::AcceptCall(callInfo, client.getMyUdpIp(), client.getMyUdpPort());
-    std::cout << std::endl << response << std::endl << std::endl;
     client.getTcp()->sendResponse(response);
     ui->gridStackedWidget->setCurrentWidget(ui->CallPage);
 }
@@ -170,19 +170,22 @@ void MainWindow::on_HangOutButton_clicked()
     auto response = BabelNetwork::CallResponse::LeftCall(login, actualFriend);
     client.getTcp()->sendResponse(response);
     callInfo = nullptr;
+    voiceTimer->stop();
+    audio->stop_audio();
     client.getUdp()->disconnect();
 }
 
 void MainWindow::on_CallButton_clicked()
 {
     if (called != true && actualFriend != login) {
+        client.setIpPort(5000 + std::rand()%15000);
+        std::cout << "MY UDP PORT : " << client.getMyUdpPort() << std::endl;
         called = true;
         client.getUdp()->doConnect(client.getMyUdpIp(), client.getMyUdpPort());
         auto response = BabelNetwork::CallResponse::CallRequest(login, actualFriend, client.getMyUdpIp(),
             std::to_string(client.getMyUdpPort()));
         client.getTcp()->sendResponse(response);
     }
-    //else display already in a call
 }
 
 
@@ -289,7 +292,11 @@ void MainWindow::CallLeft(const std::shared_ptr<BabelNetwork::CallResponse> &res
 
 void MainWindow::IncomingCall(const std::shared_ptr<BabelNetwork::CallResponse> &response)
 {
+    std::string str = "Call from ";
+    std::string name = response->getSender();
+    std::string result = str + name;
     ui->gridStackedWidget->setCurrentWidget(ui->IncomingCall);
+    ui->NameCallText->setText(result.c_str());
     callInfo = response;
 }
 
@@ -334,9 +341,7 @@ void MainWindow::DeleteFriend(const std::shared_ptr<BabelNetwork::FriendResponse
     int i = 0;
 
     for (auto it = friendList.begin(); it != friendList.end(); it++, i++) {
-        std::cout << "NAME BUTTON : " << butts[i]->text().toLocal8Bit().constData() << " FriendName : " << it->c_str() << std::endl;
         if (butts[i]->text() == response->getFriendLogin() && butts[i]->isHidden() == false) {
-            std::cout << "COUCOU" << std::endl;
             butts[i]->hide();
             butts.removeAt(i);
             friendList.erase(it);
@@ -347,7 +352,11 @@ void MainWindow::DeleteFriend(const std::shared_ptr<BabelNetwork::FriendResponse
 
 void MainWindow::FriendRequest(const std::shared_ptr<BabelNetwork::FriendResponse> &response)
 {
+    std::string str = "Friend request from ";
+    std::string name = response->getFriendLogin();
+    std::string result = str + name;
     ui->gridStackedWidget->setCurrentWidget(ui->FriendRequest);
+    ui->RequestText->setText(result.c_str());
     friendRequest = response;
 }
 

@@ -24,7 +24,7 @@ void MyUdpSocket::doConnect(const std::string &ip, int port)
 
 void MyUdpSocket::disconnect()
 {
-    socket->disconnect();
+    socket->close();
 }
 
 void MyUdpSocket::connected()
