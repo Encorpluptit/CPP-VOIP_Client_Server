@@ -43,10 +43,6 @@ if (USE_DEBUG)
         add_compile_options(-g3)
     endif (UNIX)
     add_compile_definitions(_DEBUG_)
-else (USE_DEBUG)
-    if (UNIX)
-        add_compile_options(-Werror)
-    endif (UNIX)
 endif (USE_DEBUG)
 
 

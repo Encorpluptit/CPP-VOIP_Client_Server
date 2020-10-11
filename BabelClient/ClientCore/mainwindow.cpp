@@ -393,7 +393,9 @@ void MainWindow::ReceiveMessage(const std::shared_ptr<BabelNetwork::MessageRespo
 
 void MainWindow::UnknowUserMessage(const std::shared_ptr<BabelNetwork::MessageResponse> &response)
 {
+    #ifndef _DEBUG_
     throw (BabelErrors::BabelError("Response code : " + std::to_string(response->getCode())));
+    #endif
 }
 
 
