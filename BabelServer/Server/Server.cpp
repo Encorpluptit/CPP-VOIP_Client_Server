@@ -56,7 +56,6 @@ bool Server::listenerRunning()
 void Server::runListener()
 {
     while (listenerRunning()) {
-        std::cout << "ICI LOL CA LOOP" << std::endl;
         std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>> clients;
         for (const auto &server : _servers) {
             auto list = server->getClientList();
