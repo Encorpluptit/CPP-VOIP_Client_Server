@@ -77,11 +77,6 @@ bool BabelNetwork::UserResponse::isOk() noexcept
         || _header._code == UserResponse::ResponseCode::AccountDeleted;
 }
 
-std::shared_ptr<AResponse> UserResponse::get_shared_from_this() const noexcept
-{
-    return std::make_shared<UserResponse>(*this);
-}
-
 char *UserResponse::getDataByte() noexcept
 {
     return _data_byte;

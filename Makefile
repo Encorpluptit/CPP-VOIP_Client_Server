@@ -79,7 +79,7 @@ tests_run: fclean setup-build-tree
 	-@cp $(BUILD_DIR)/bin/$(CRITERION_BIN) .
 	@./$(CRITERION_BIN)
 	@gcovr -r . -s --exclude='tests|lib' --exclude='BabelCommon/Utils/Runnable|BabelCommon/Utils/Logger|BabelCommon/Network/Sockets'
-	@gcovr -b . -s --exclude='tests|lib'
+	@gcovr -b . -s --exclude='tests|lib' --exclude='BabelCommon/Utils/Runnable|BabelCommon/Utils/Logger|BabelCommon/Network/Sockets'
 
 
 

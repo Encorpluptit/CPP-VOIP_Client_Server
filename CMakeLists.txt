@@ -263,6 +263,8 @@ set(
         tests/criterion_unit_tests/src/Common/StringFormat_Tests.cpp
         tests/criterion_unit_tests/src/Common/Protocol/UserRequest_Tests.cpp
         tests/criterion_unit_tests/src/Common/Protocol/CallRequest_Tests.cpp
+        tests/criterion_unit_tests/src/Common/Protocol/FriendRequest_Tests.cpp
+        tests/criterion_unit_tests/src/Common/Protocol/ARequest_Tests.cpp
         tests/criterion_unit_tests/src/Common/NetworkInfos_Tests.cpp
         tests/criterion_unit_tests/src/Client/Client.cpp
         ${CLIENT_DIR}/ClientCore/Opus.cpp

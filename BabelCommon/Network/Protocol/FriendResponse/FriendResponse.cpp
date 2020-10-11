@@ -75,11 +75,6 @@ bool BabelNetwork::FriendResponse::isOk() noexcept
     return _header._code == FriendResponse::ResponseCode::AcceptFriendRequest;
 }
 
-std::shared_ptr<AResponse> FriendResponse::get_shared_from_this() const noexcept
-{
-    return std::make_shared<FriendResponse>(*this);
-}
-
 char *FriendResponse::getDataByte() noexcept
 {
     return _data_byte;

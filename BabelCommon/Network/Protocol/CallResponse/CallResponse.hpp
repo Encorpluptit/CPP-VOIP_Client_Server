@@ -28,11 +28,11 @@ namespace BabelNetwork {
             UnknownError = 472,
         };
 
-    private:
+    public:
         enum MaxDataSize {
             Sender = 128,
             Receiver = 128,
-            Ip = 15,
+            Ip = 20,
             Port = 5
         };
 
@@ -107,8 +107,6 @@ namespace BabelNetwork {
 
         /* <- Getters / Setters -> */
     public:
-        [[nodiscard]] std::shared_ptr<AResponse> get_shared_from_this() const noexcept final;
-
         [[nodiscard]] char *getDataByte() noexcept final;
 
         [[nodiscard]] char *getDataByteDataInfos() const noexcept final;

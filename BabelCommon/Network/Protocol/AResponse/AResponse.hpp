@@ -54,8 +54,6 @@ namespace BabelNetwork {
 
         /* <- Operators -> */
     public:
-        friend std::ostream &operator<<(std::ostream &os, const AResponse &response);
-
         friend std::ostream &operator<<(std::ostream &os, const std::shared_ptr<AResponse> &response);
 
         /* <- Static Methods -> */
@@ -97,8 +95,6 @@ namespace BabelNetwork {
 
         void setCode(uint16_t code) noexcept;
 
-        [[nodiscard]] virtual std::shared_ptr<AResponse> get_shared_from_this() const = 0;
-
         [[nodiscard]] size_t getDataInfosSize() const noexcept;
 
         [[nodiscard]] ResponseType getResponseType() const;
@@ -120,7 +116,7 @@ namespace BabelNetwork {
     };
 
     /* <- Operators -> */
-    std::ostream &operator<<(std::ostream &os, const AResponse &response);
+//    std::ostream &operator<<(std::ostream &os, const AResponse &response);
 
     std::ostream &operator<<(std::ostream &os, const std::shared_ptr<AResponse> &response);
 }

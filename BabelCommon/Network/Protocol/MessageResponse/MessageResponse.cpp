@@ -98,11 +98,6 @@ bool BabelNetwork::MessageResponse::isOk() noexcept
     return _header._code;
 }
 
-std::shared_ptr<AResponse> MessageResponse::get_shared_from_this() const noexcept
-{
-    return std::make_shared<MessageResponse>(*this);
-}
-
 char *MessageResponse::getDataByte() noexcept
 {
     return _data_byte;

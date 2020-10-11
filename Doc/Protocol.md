@@ -53,6 +53,18 @@ that is the classic header for a responsse
     * 470: Call Refused.
     * 471: User Disconected.
     * 472: Unknown Error.
+    
+    * 300: Request Friendship.
+    * 301: Look at this Requested Friendship.
+    * 302: ??
+    * 303: Requested Friendship was Accepted.
+    * 304: Requested Friendship was Decline.
+    * 306: Delete this Friend.
+
+    * 350: You are already Friend.
+    * 351: Target is not a Friend.
+    * 352: User didn't exist.
+    * 354: MMmm there is a error. (soz we don't what it is)
 
 ### Login (20*|27* Codes)
 
@@ -241,8 +253,11 @@ this is the structure for the login responsse fill this struct and send it to se
 im going to specify the header for every responsse for Call part 
 you need to send it to specify the size of the next structure
 
-* _loginSize = size of the login user
-* _passwordSize = size of the password user
+* _senderSize = size of the login user
+* _receiverSize = size of the login user
+* _timestampSize = size of the timeStamp
+* _ipSize = size of the ip user
+* _portSize = size of the por user
 
   ```cpp
     DataInfosStruct {
@@ -367,14 +382,14 @@ this is the structure for the Call responsse fill this struct and send it to ser
                 "receiver":           "ugo.levi-cescutti@epitech.eu",
                 "timestamp":          "(unix time)",
                 "callId":             "ConvId",
-                "ip":                 "Ugo",
-                "port":               "damienPort",
+                "ip":                 "UgoIP",
+                "port":               "UgoPort",
               }
       ```
 
     * Error Codes
 
-* Conference(21* Codes)
+<!-- * Conference(21* Codes) -->
 
 <!--
         * Add user to conference (34* Code).
@@ -399,70 +414,130 @@ this is the structure for the Call responsse fill this struct and send it to ser
 ---
 
 ### Friend (4** Code)
+
 * Summary
-    * 400: Request Friendship.
-    * 401: Accept Requested Friendship.
-    * 402: Accept Requested Friendship.
-    * 403: New Friendship.
-    * 404: Friendship.
-    
-    * 470: Target is not a Friend.
-    * 471: Requested Friendship Refused.
+  * 300: Request Friendship.
+  * 301: Look at this Requested Friendship.
+  * 302: ??
+  * 303: Requested Friendship was Accepted.
+  * 304: Requested Friendship was Decline.
+  * 306: Delete this Friend.
+
+  * 350: You are already Friend.
+  * 351: Target is not a Friend.
+  * 352: User didn't exist.
+  * 354: MMmm there is a error. (soz we don't what it is)
+
+### Header
+
+im going to specify the header for every responsse for Friend part
+you need to send it to specify the size of the next structure
+
+* _loginSize = size of the login user
+* _friendLoginSize = size of the login user
+
+  ```cpp
+  DataInfosStruct {
+    uint16_t _loginSize;
+    uint16_t _friendLoginSize;
+  };
+  ```
+
+### Struct of call responsse
+
+this is the structure for the Call responsse fill this struct and send it to server
+
+  ```cpp
+    DataStruct {
+      char login[MaxDataSize::Login];
+      char FriendLogin[MaxDataSize::FriendLogin];
+    };
+  ```
 
 * Friend Management
-    * [Client -> Server]
-        * Success Codes.
-            * 400: Request Friendship.
-                ```json
-                {
-                  "sender":             "damien.bernard@epitech.eu",
-                  "receiver":           "ugo.levi-cescutti@epitech.eu"
-                }
-                ```
-            * 403: New Friendship.
-                ```json
-                {
-                  "sender":             "damien.bernard@epitech.eu",
-                  "receiver":           "ugo.levi-cescutti@epitech.eu"
-                }
-                ```
-            * 410: Refuse Requested Friendship.
-                ```json
-                {
-                  "sender":             "damien.bernard@epitech.eu",
-                  "receiver":           "ugo.levi-cescutti@epitech.eu"
-                }
-                ```
-            * 406: Delete Friend Request.
-                ```json
-                {
-                  "sender":             "damien.bernard@epitech.eu",
-                  "receiver":           "ugo.levi-cescutti@epitech.eu"
-                }
-                ```
-        * Error Codes
-    * [Server -> Client]
-        * Success Codes.
-            * 406: Request Friendship.
-                ```json
-                {
-                  "sender":             "damien.bernard@epitech.eu",
-                  "receiver":           "ugo.levi-cescutti@epitech.eu"
-                }
-                ```
-        * Error Codes
-            * 471: Requested Friendship refused.
-                ```json
-                {
-                  "sender":             "damien.bernard@epitech.eu",
-                  "receiver":           "ugo.levi-cescutti@epitech.eu"
-                }
-                ```
+  * [Client -> Server]
+    * Success Codes.
+    * 300: Request Friendship.
 
-* Friend Status
-    * [Server -> Client]
-        * Success Codes.
-        * Error Codes
+      ```json
+              {
+                "sender":             "damien.bernard@epitech.eu",
+                "receiver":           "ugo.levi-cescutti@epitech.eu"
+              }
+      ```
 
+    * 306: Delete this Friend.
 
-### Messages (5** Codes )
+      ```json
+              {
+                "sender":             "damien.bernard@epitech.eu",
+                "receiver":           "ugo.levi-cescutti@epitech.eu"
+              }
+      ```
+
+  * [Server -> Client]
+    * Success Codes.
+
+    * 303: Requested Friendship was Accepted.
+
+      ```json
+              {
+                "sender":             "damien.bernard@epitech.eu",
+                "receiver":           "ugo.levi-cescutti@epitech.eu"
+              }
+      ```
+
+    * 304: Requested Friendship was Decline.
+
+      ```json
+              {
+                "sender":             "damien.bernard@epitech.eu",
+                "receiver":           "ugo.levi-cescutti@epitech.eu"
+              }
+      ```
+
+    * 301: Look at this Requested Friendship.
+  
+      ```json
+              {
+                "sender":             "damien.bernard@epitech.eu",
+                "receiver":           "ugo.levi-cescutti@epitech.eu"
+              }
+      ```
+
+    * Error Codes
+    * 471: Requested Friendship refused.
+
+      ```json
+              {
+                "sender":             "damien.bernard@epitech.eu",
+                "receiver":           "ugo.levi-cescutti@epitech.eu"
+              }
+      ```
+
+    * 350: You are already Friend.
+
+      ```json
+              {
+                "sender":             "damien.bernard@epitech.eu",
+                "receiver":           "ugo.levi-cescutti@epitech.eu"
+              }
+      ```
+
+    * 352: User didn't exist.
+
+      ```json
+              {
+                "sender":             "damien.bernard@epitech.eu",
+                "receiver":           "ugo.levi-cescutti@epitech.eu"
+              }
+      ```
+
+    * 354: MMmm there is a error. (soz we don't what it is)
+
+      ```json
+              {
+                "sender":             "damien.bernard@epitech.eu",
+                "receiver":           "ugo.levi-cescutti@epitech.eu"
+              }
+      ```
