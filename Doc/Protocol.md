@@ -628,3 +628,9 @@ this is the structure for the Call responsse fill this struct and send it to ser
       ```
 
     * Error Codes
+    * 450: Unknown User.
+
+      ```json
+              {
+              }
+      ```
