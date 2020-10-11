@@ -406,7 +406,7 @@ this is the structure for the Call responsse fill this struct and send it to ser
 * Summary
   * 300: Request Friendship.
   * 301: Look at this Requested Friendship.
-  <!-- * 302:  -->
+  * 302: ??
   * 303: Requested Friendship was Accepted.
   * 304: Requested Friendship was Decline.
   * 306: Delete this Friend.
