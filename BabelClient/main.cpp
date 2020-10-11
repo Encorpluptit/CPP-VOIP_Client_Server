@@ -10,12 +10,11 @@
 
 int main(int ac, char **av)
 {
+    std::cout << "ici" << std::endl;
     try {
         if (ac != 4)
             return (84);
-        std::cout << "ici" << std::endl;
         BabelNetwork::NetworkInfos nwi(av[1], av[2]);
-        std::cout << "ici" << std::endl;
         NetworkClientSocket network(nwi.getIp(), nwi.getPort());
         if (std::stoi(av[3]) == 0)
             network.setIpPort(9000);
