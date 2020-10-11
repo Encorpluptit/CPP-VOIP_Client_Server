@@ -47,7 +47,7 @@ namespace BabelServer {
             setNotReady();
         };
 
-        bool sendResponse(const std::shared_ptr<AResponse> &response) final;
+        void sendResponse(const std::shared_ptr<AResponse> &response) final;
 
         void connect() override;
 
