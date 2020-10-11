@@ -67,7 +67,10 @@ bool MessageResponse::encode() noexcept
     std::memcpy(getDataByteDataInfos(), &_dataInfos, DataInfosSize);
     std::memcpy(getDataByteBody(), _data.sender, _dataInfos._senderSize);
     std::memcpy(getDataByteBody() + _dataInfos._senderSize, _data.receiver, _dataInfos._receiverSize);
-    std::memcpy(getDataByteBody() + _dataInfos._senderSize + _dataInfos._receiverSize, &_data.timestamp,
+    std::memcpy(getDataByteBody() + _dataInfos._senderSize + _dataInfos._receiverSize, _data.messageData,
+        _dataInfos._messageDataSize);
+    std::memcpy(getDataByteBody() + _dataInfos._senderSize + _dataInfos._receiverSize + _dataInfos._messageDataSize,
+        &_data.timestamp,
         _dataInfos._timestampSize);
     return true;
 }
@@ -88,7 +91,10 @@ bool MessageResponse::decode_data() noexcept
 {
     std::memcpy(_data.sender, getDataByteBody(), _dataInfos._senderSize);
     std::memcpy(_data.receiver, getDataByteBody() + _dataInfos._senderSize, _dataInfos._receiverSize);
-    std::memcpy(&_data.timestamp, getDataByteBody() + _dataInfos._senderSize + _dataInfos._receiverSize,
+    std::memcpy(_data.messageData, getDataByteBody() + _dataInfos._senderSize + _dataInfos._receiverSize,
+        _dataInfos._messageDataSize);
+    std::memcpy(&_data.timestamp,
+        getDataByteBody() + _dataInfos._senderSize + _dataInfos._receiverSize + _dataInfos._messageDataSize,
         _dataInfos._timestampSize);
     return true;
 }
@@ -120,22 +126,22 @@ size_t MessageResponse::getResponseSize() const noexcept
 
 size_t MessageResponse::getDataSize() const noexcept
 {
-    return _dataInfos._senderSize + _dataInfos._receiverSize;
+    return _dataInfos._senderSize + _dataInfos._receiverSize + _dataInfos._messageDataSize + _dataInfos._timestampSize;
 }
 
 std::string MessageResponse::describe_data_infos() const noexcept
 {
     return BabelUtils::format(
-        "Sender Size: %zu | Receiver Size: %zu",
-        _dataInfos._senderSize, _dataInfos._receiverSize
+        "Sender Size: %zu | Receiver Size: %zu | Msg Size: %zu",
+        _dataInfos._senderSize, _dataInfos._receiverSize, _dataInfos._messageDataSize
     );
 }
 
 std::string MessageResponse::describe_data() const noexcept
 {
     return BabelUtils::format(
-        "Sender: %s | Receiver: %s",
-        _data.sender, _data.receiver
+        "Sender: %s | Receiver: %s | Msg: %s | Timestamp: %d",
+        _data.sender, _data.receiver, _data.messageData, _data.timestamp
     );
 }
 

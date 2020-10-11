@@ -17,6 +17,7 @@ set(CMAKE_CXX_STANDARD 20)
 # Compilation modes
 option(USE_DEBUG "Enter debug mode" ON)
 option(USE_LOG "Log Execution in a file" OFF)
+option(GH_TESTS "Github tests for disable port audio" OFF)
 
 
 ###############################################################################
@@ -24,23 +25,6 @@ option(USE_LOG "Log Execution in a file" OFF)
 if (UNIX)
     add_compile_options(-Wall -Wextra)
 endif (UNIX)
-
-
-#add_compile_options(
-#        -Wshadow
-#        -Wnon-virtual-dtor
-#        -Wcast-align
-#        -Wunused
-#        -Woverloaded-virtual
-#        -Wpedantic
-#        -Wconversion
-#        -Wduplicated-cond
-#        -Wduplicated-branches
-#        -Wlogical-op
-#        -Wnull-dereference
-#        -Wuseless-cast
-#        -Wdouble-promotion
-#)
 
 if (USE_LOG)
     set(USE_DEBUG ON)
@@ -212,7 +196,6 @@ set(CLIENT_DIR BabelClient)
 set(
         CLIENT_INCLUDES
         ${CLIENT_DIR}/ClientCore
-        #${CLIENT_DIR}/PortAudio
 )
 
 
@@ -235,7 +218,6 @@ set(
 add_executable(
         babel_client
         ${CLIENT_DIR}/main.cpp
-        #${CLIENT_DIR}/PortAudio/test.cpp
         ${CLIENT_SOURCES}
         ${COMMON_SOURCES}
 )
@@ -248,22 +230,26 @@ target_include_directories(
 target_compile_definitions(babel_client PRIVATE BABEL_CLIENT_BIN)
 
 find_package(Qt5 COMPONENTS Network Widgets REQUIRED)
+<<<<<<< HEAD
 #target_link_libraries(babel_client ${CONAN_LIBS} stdc++fs Qt5::Widgets Qt5::Network)
 target_link_libraries(babel_client ${CONAN_LIBS} Qt5::Widgets Qt5::Network)
 #target_link_libraries(babel_client ${CONAN_LIBS} stdc++fs)
 if (UNIX)
-    target_link_libraries(babel_server stdc++fs)
+target_link_libraries(babel_server stdc++fs)
 endif (UNIX)
+=======
+target_link_libraries(babel_client ${CONAN_LIBS} stdc++fs Qt5::Widgets Qt5::Network)
+>>>>>>> server
 
 
 ###############################################################################
 # Tests Configuration
 if (UNIX)
 set(
-        TESTS_INCLUDES
-        ${COMMON_INCLUDES}
-        ${SERVER_INCLUDES}
-        ${CLIENT_INCLUDES}
+TESTS_INCLUDES
+${COMMON_INCLUDES}
+${SERVER_INCLUDES}
+${CLIENT_INCLUDES}
         ${CMAKE_INCLUDE_PATH}
 )
 
@@ -292,9 +278,16 @@ target_compile_definitions(unit_tests PRIVATE _UNIT_TESTS_)
 target_compile_options(unit_tests PRIVATE --coverage)
 
 target_include_directories(unit_tests PRIVATE tests/criterion_unit_tests/include
-        ${CLIENT_INCLUDES})
+${CLIENT_INCLUDES})
 
 target_link_libraries(unit_tests criterion ${CONAN_LIBS} gcov stdc++fs Qt5::Widgets Qt5::Network)
 
 set_target_properties(unit_tests PROPERTIES CXX_STANDARD 17)
+<<<<<<< HEAD
 endif (UNIX)
+=======
+
+if (GH_TESTS)
+target_compile_definitions(unit_tests PRIVATE GH_TESTS)
+endif (GH_TESTS)
+>>>>>>> server

@@ -30,7 +30,7 @@ namespace BabelNetwork {
 
         /* <- Public Methods -> */
     public:
-        [[nodiscard]] virtual bool sendResponse(const std::shared_ptr<AResponse> &response) = 0;
+        virtual void sendResponse(const std::shared_ptr<AResponse> &response) = 0;
 
         [[nodiscard]] virtual std::shared_ptr<AResponse> popResponse()
         {

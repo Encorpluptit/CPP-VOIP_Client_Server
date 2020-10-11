@@ -25,11 +25,12 @@ namespace BabelNetwork {
             UnknownUser = 450,
             UnknownError = 460
         };
-    private:
+
+    public:
         enum MaxDataSize {
             Sender = 128,
             Receiver = 128,
-            MessageData = 256
+            MessageData = 512
         };
 
         /* <- Class Structure -> */
@@ -86,9 +87,6 @@ namespace BabelNetwork {
 
         [[nodiscard]] size_t getDataSize() const noexcept final;
 
-//        [[nodiscard]] size_t getMaxResponseSize() const noexcept final {
-//            return MaxResponseSize;
-//        };
 
         /* <- Request related Methods -> */
     public:
@@ -145,6 +143,9 @@ namespace BabelNetwork {
 
         [[nodiscard]] static std::shared_ptr<AResponse>
         MessageReceive(const std::string &sender, const std::string &receiver, const std::string &messageData);
+
+        [[nodiscard]] static std::shared_ptr<AResponse>
+        MessageReceive(const std::shared_ptr<MessageResponse> &response);
 
         [[nodiscard]] static std::shared_ptr<AResponse>
         ReceiveMessageOk(const std::string &sender, const std::string &receiver);

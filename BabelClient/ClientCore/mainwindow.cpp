@@ -66,7 +66,7 @@ void MainWindow::on_ConnectionButton_clicked()
 void MainWindow::on_DisconnectButton_clicked()
 {
     if (called == true && callInfo != nullptr) {
-        auto CallResponse = BabelNetwork::CallResponse::LeftCall(login, callInfo->getReceiver());
+        auto CallResponse = BabelNetwork::CallResponse::EndCallRequest(callInfo);
         client.getTcp()->sendResponse(CallResponse);
         UserDisconnected(callInfo);
     }
@@ -168,7 +168,7 @@ void MainWindow::on_RefuseCallButton_clicked()
 void MainWindow::on_HangOutButton_clicked()
 {
     called = false;
-    auto response = BabelNetwork::CallResponse::LeftCall(login, actualFriend);
+    auto response = BabelNetwork::CallResponse::EndCallRequest(callInfo);
     client.getTcp()->sendResponse(response);
     callInfo = nullptr;
     voiceTimer->stop();

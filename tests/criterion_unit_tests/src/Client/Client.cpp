@@ -1,13 +1,18 @@
+/*
+** EPITECH PROJECT, 2020
+** CPP_babel_2020 (Copyright (c) ENCORPLUPTIT on 7/7/20).
+** File description:
+** [Client.cpp]: Test file for Client.
+*/
 
 #include "tests_run.hpp"
 #include "PortAudio.hpp"
 #include "Opus.hpp"
 #include "BabelError.hpp"
 #include "NetworkClientSocket.hpp"
-#include "QUdpSocket.hpp"
-#include "QtSocket.hpp"
 
-Test(Client, PortAudio_Codec)
+#ifndef GH_TESTS
+Test(Client, PortAudio_Codec, .init=redirect_all_std)
 {
     std::shared_ptr<IAudio> audio = std::make_shared<PortAudio>();
     std::shared_ptr<ICodec> codec = std::make_shared<Opus>();
@@ -16,7 +21,7 @@ Test(Client, PortAudio_Codec)
     cr_assert_not_null(codec);
 }
 
-Test(Client, PortAudio_Codec1)
+Test(Client, PortAudio_Codec1, .init=redirect_all_std)
 {
     std::shared_ptr<IAudio> audio = std::make_shared<PortAudio>();
     std::shared_ptr<ICodec> codec = std::make_shared<Opus>();
@@ -27,7 +32,7 @@ Test(Client, PortAudio_Codec1)
     cr_assert_neq(voice.size(), 0);
 }
 
-Test(Client, PortAudio_Codec2)
+Test(Client, PortAudio_Codec2, .init=redirect_all_std)
 {
     std::shared_ptr<ICodec> codec = std::make_shared<Opus>();
     std::vector<uint16_t> voice;
@@ -38,7 +43,7 @@ Test(Client, PortAudio_Codec2)
     );
 }
 
-Test(Client, PortAudio_Codec3)
+Test(Client, PortAudio_Codec3, .init=redirect_all_std)
 {
     std::shared_ptr<ICodec> codec = std::make_shared<Opus>();
     std::vector<uint16_t> voice{2, 3};
@@ -49,7 +54,7 @@ Test(Client, PortAudio_Codec3)
     );
 }
 
-Test(Client, PortAudio_Codec4)
+Test(Client, PortAudio_Codec4, .init=redirect_all_std)
 {
     std::shared_ptr<IAudio> audio = std::make_shared<PortAudio>();
     std::shared_ptr<ICodec> codec = std::make_shared<Opus>();
@@ -63,3 +68,4 @@ Test(Client, PortAudio_Codec4)
     audio->stop_audio();
     cr_assert_neq(voice.size(), 0);
 }
+#endif /* GH_TESTS */

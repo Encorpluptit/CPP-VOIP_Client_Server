@@ -81,6 +81,12 @@ tests_run: fclean setup-build-tree
 	@gcovr -r . -s --exclude='tests|lib' --exclude='BabelCommon/Utils/Runnable|BabelCommon/Utils/Logger|BabelCommon/Network/Sockets'
 	@gcovr -b . -s --exclude='tests|lib' --exclude='BabelCommon/Utils/Runnable|BabelCommon/Utils/Logger|BabelCommon/Network/Sockets'
 
+gh_tests_run: OPTIONS +=-DGH_TESTS=ON
+gh_tests_run: fclean setup-build-tree
+	@cmake $(OPTIONS) -B $(BUILD_DIR)
+	@$(MAKE) -j `nproc` --no-print-directory -C $(BUILD_DIR) $(CRITERION_BIN)
+	-@cp $(BUILD_DIR)/bin/$(CRITERION_BIN) .
+	@./$(CRITERION_BIN)
 
 
 ################################################################################

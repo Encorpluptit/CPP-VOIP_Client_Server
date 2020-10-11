@@ -15,21 +15,21 @@ void MessageManager::sendMessage(
 ) const
 {
     for (const auto &target: clientList) {
-        if (target->getUser() && target->getUser()->login == response->getReceiver()) {
-            switch (database.createMessage(
-                response->getSender(), response->getReceiver(), response->getTimestamp(), response->getMessageData())) {
-                case BabelNetwork::MessageResponse::SendMessageOk:
-                    target->sendResponse(response);
-                    clientSocket->sendResponse(MessageResponse::OkSendMessage(response));
-                    return;
-                case BabelNetwork::MessageResponse::UnknownUser:
-                    clientSocket->sendResponse(MessageResponse::UserNotFound(response));
-                    return;
-                default:
-                    clientSocket->sendResponse(MessageResponse::UnknownErrorAppend(response));
-                    return;
-            }
+        if (!target->getUser() || target->getUser()->login != response->getReceiver())
+            continue;
+        switch (database.createMessage(
+            response->getSender(), response->getReceiver(), response->getTimestamp(), response->getMessageData())) {
+            case BabelNetwork::MessageResponse::SendMessageOk:
+                target->sendResponse(MessageResponse::MessageReceive(response));
+                clientSocket->sendResponse(MessageResponse::OkSendMessage(response));
+                return;
+            case BabelNetwork::MessageResponse::UnknownUser:
+                clientSocket->sendResponse(MessageResponse::UserNotFound(response));
+                return;
+            default:
+                clientSocket->sendResponse(MessageResponse::UnknownErrorAppend(response));
+                return;
         }
     }
-    clientSocket->sendResponse(MessageResponse::ReceiveMessageOk(response->getSender(), response->getReceiver()));
+    clientSocket->sendResponse(MessageResponse::UserNotFound(response));
 }
