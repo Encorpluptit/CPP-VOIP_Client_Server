@@ -2,8 +2,6 @@
 # Project Configuration
 cmake_minimum_required(VERSION 3.14)
 project(CPP_babel_2020)
-#set(CMAKE_C_COMPILER_VERSION 10.1)
-#set(CMAKE_CXX_COMPILER_VERSION 10.1)
 
 
 set(CMAKE_AUTOMOC ON)
@@ -27,23 +25,6 @@ option(GH_TESTS "Github tests for disable port audio" OFF)
 if (UNIX)
     add_compile_options(-Wall -Wextra)
 endif (UNIX)
-
-
-#add_compile_options(
-#        -Wshadow
-#        -Wnon-virtual-dtor
-#        -Wcast-align
-#        -Wunused
-#        -Woverloaded-virtual
-#        -Wpedantic
-#        -Wconversion
-#        -Wduplicated-cond
-#        -Wduplicated-branches
-#        -Wlogical-op
-#        -Wnull-dereference
-#        -Wuseless-cast
-#        -Wdouble-promotion
-#)
 
 if (USE_LOG)
     set(USE_DEBUG ON)
@@ -71,12 +52,6 @@ conan_basic_setup()
 include_directories(${CMAKE_INCLUDE_PATH})
 
 find_package(Qt5Widgets CONFIG REQUIRED)
-
-#find_package(Boost COMPONENTS thread REQUIRED)
-#find_package(Boost REQUIRED)
-#if (Boost_FOUND)
-#    set(CONAN_LIBS ${CONAN_LIBS} boost_thread)
-#endif (Boost_FOUND)
 
 
 ###############################################################################
@@ -191,7 +166,6 @@ if (UNIX)
     target_compile_options(babel_server PRIVATE -Wno-redundant-move)
 endif (UNIX)
 
-#find_package(Boost COMPONENTS thread REQUIRED)
 find_package(Boost REQUIRED)
 if (Boost_FOUND)
     target_link_libraries(babel_server boost_thread)
@@ -209,7 +183,6 @@ set(CLIENT_DIR BabelClient)
 set(
         CLIENT_INCLUDES
         ${CLIENT_DIR}/ClientCore
-        #${CLIENT_DIR}/PortAudio
 )
 
 
@@ -232,7 +205,6 @@ set(
 add_executable(
         babel_client
         ${CLIENT_DIR}/main.cpp
-        #${CLIENT_DIR}/PortAudio/test.cpp
         ${CLIENT_SOURCES}
         ${COMMON_SOURCES}
 )
@@ -246,7 +218,6 @@ target_compile_definitions(babel_client PRIVATE BABEL_CLIENT_BIN)
 
 find_package(Qt5 COMPONENTS Network Widgets REQUIRED)
 target_link_libraries(babel_client ${CONAN_LIBS} stdc++fs Qt5::Widgets Qt5::Network)
-#target_link_libraries(babel_client ${CONAN_LIBS} stdc++fs)
 
 
 ###############################################################################
@@ -288,29 +259,8 @@ target_include_directories(unit_tests PRIVATE tests/criterion_unit_tests/include
 
 target_link_libraries(unit_tests criterion ${CONAN_LIBS} gcov stdc++fs Qt5::Widgets Qt5::Network)
 
-#set_property(TARGET unit_tests PROPERTY CXX_STANDARD 11)
 set_target_properties(unit_tests PROPERTIES CXX_STANDARD 17)
-#set(CMAKE_CXX_STANDARD 17)
 
 if (GH_TESTS)
     target_compile_definitions(unit_tests PRIVATE GH_TESTS)
 endif (GH_TESTS)
-
-
-##########################
-# Test Executable
-
-#add_executable(
-#        test_server
-#        tests/server/Chat_Message.hpp
-#        tests/server/Chat_Server.cpp
-#)
-#target_link_libraries(test_server pthread ${CONAN_LIBS})
-#
-#add_executable(
-#        test_client
-#        tests/server/Chat_Message.hpp
-#        tests/server/Chat_Client.cpp
-#)
-#
-#target_link_libraries(test_client pthread ${CONAN_LIBS})
