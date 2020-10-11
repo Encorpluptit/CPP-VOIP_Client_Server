@@ -197,6 +197,7 @@ target_include_directories(
 # TODO: REMOVE WHEN FIX SQLITE_ORM.
 if (UNIX)
     target_compile_options(babel_server PRIVATE -Wno-redundant-move)
+    target_link_libraries(babel_server stdc++fs)
 endif (UNIX)
 
 target_link_libraries(babel_server ${CONAN_LIBS})
@@ -250,6 +251,9 @@ find_package(Qt5 COMPONENTS Network Widgets REQUIRED)
 #target_link_libraries(babel_client ${CONAN_LIBS} stdc++fs Qt5::Widgets Qt5::Network)
 target_link_libraries(babel_client ${CONAN_LIBS} Qt5::Widgets Qt5::Network)
 #target_link_libraries(babel_client ${CONAN_LIBS} stdc++fs)
+if (UNIX)
+    target_link_libraries(babel_server stdc++fs)
+endif (UNIX)
 
 
 ###############################################################################

@@ -16,6 +16,12 @@ Logger::Logger(Logger::LogType type)
 {
     initLogType();
     try {
+        #ifdef UNIX
+            std::filesystem::path tmpPath = createLogDirectories();
+            createLogFile(tmpPath);
+            _ok = true;
+        #else
+        #endif
     } catch (const std::exception &e) {
         std::cerr << e.what() << std::endl;
     }
