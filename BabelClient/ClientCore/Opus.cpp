@@ -32,7 +32,8 @@ std::vector<uint16_t> Opus::encode(const std::vector<uint16_t> &voice) {
 std::vector<uint16_t> Opus::decode(const std::vector<uint16_t> &voice) {
 
     std::vector<uint16_t> decompressed(480);
-    int bytes = opus_decode(decoder, (unsigned char *) voice.data(), (int) voice.size(), (opus_int16 *) decompressed.data(), (int) decompressed.size(), 0);
+    int bytes = opus_decode(decoder, (unsigned char *) voice.data(), (int) voice.size(),
+        (opus_int16 *) decompressed.data(), (int) decompressed.size(), 0);
     std::cout << "BYTES : " << bytes << std::endl;
     
     if (bytes < 0)

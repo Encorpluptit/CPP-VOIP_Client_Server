@@ -44,13 +44,13 @@ void AsioClientSocket::start()
     read_header();
 }
 
-bool AsioClientSocket::sendResponse(const std::shared_ptr<AResponse> &response)
+void AsioClientSocket::sendResponse(const std::shared_ptr<AResponse> &response)
 {
     bool write_in_progress = !_write_queue.empty();
     if (!response) {
         _logger.logThis("Trying to send a null response");
         dbg("%s", "Trying to send a null response");
-        return true;
+        return;
     }
 
     _logger.logThis(response, "Queue response :");
@@ -59,7 +59,6 @@ bool AsioClientSocket::sendResponse(const std::shared_ptr<AResponse> &response)
         _context,
         boost::bind(&AsioClientSocket::do_write, shared_from_this(), write_in_progress)
     );
-    return true;
 }
 
 void AsioClientSocket::connect()

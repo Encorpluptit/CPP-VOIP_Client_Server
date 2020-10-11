@@ -66,7 +66,7 @@ void MainWindow::on_ConnectionButton_clicked()
 void MainWindow::on_DisconnectButton_clicked()
 {
     if (called == true && callInfo != nullptr) {
-        auto CallResponse = BabelNetwork::CallResponse::LeftCall(login, callInfo->getReceiver());
+        auto CallResponse = BabelNetwork::CallResponse::EndCallRequest(callInfo);
         client.getTcp()->sendResponse(CallResponse);
         UserDisconnected(callInfo);
     }
@@ -149,7 +149,7 @@ void MainWindow::on_AcceptRequestButton_clicked()
 void MainWindow::on_AcceptCallButton_clicked()
 {
     called = true;
-    client.setIpPort(5000 + std::rand()%15000);
+    client.setIpPort(5000 + std::rand() % 15000);
     client.getUdp()->doConnect(client.getMyUdpIp(), client.getMyUdpPort());
     auto response = BabelNetwork::CallResponse::AcceptCall(callInfo, client.getMyUdpIp(), client.getMyUdpPort());
     client.getTcp()->sendResponse(response);
@@ -168,7 +168,7 @@ void MainWindow::on_RefuseCallButton_clicked()
 void MainWindow::on_HangOutButton_clicked()
 {
     called = false;
-    auto response = BabelNetwork::CallResponse::LeftCall(login, actualFriend);
+    auto response = BabelNetwork::CallResponse::EndCallRequest(callInfo);
     client.getTcp()->sendResponse(response);
     callInfo = nullptr;
     voiceTimer->stop();
@@ -179,7 +179,7 @@ void MainWindow::on_HangOutButton_clicked()
 void MainWindow::on_CallButton_clicked()
 {
     if (called != true && actualFriend != login) {
-        client.setIpPort(5000 + std::rand()%15000);
+        client.setIpPort(5000 + std::rand() % 15000);
         std::cout << "MY UDP PORT : " << client.getMyUdpPort() << std::endl;
         called = true;
         client.getUdp()->doConnect(client.getMyUdpIp(), client.getMyUdpPort());

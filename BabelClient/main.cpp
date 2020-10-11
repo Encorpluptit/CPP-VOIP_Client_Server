@@ -10,18 +10,19 @@
 
 int main(int ac, char **av)
 {
+    std::cout << "ici" << std::endl;
     try {
-    if (ac != 3)
-        return (84);
-    std::srand(std::time(nullptr));
-    BabelNetwork::NetworkInfos nwi(av[1], av[2]);
-    NetworkClientSocket network(nwi.getIp(), nwi.getPort());
-    /*if (std::stoi(av[3]) == 0)
-        network.setIpPort(9000);
-    else
-        network.setIpPort(10000);*/
-    BabelClient::ClientCore client(ac, av, network);
-    return (client.run());
+        if (ac != 3)
+            return (84);
+        std::srand(std::time(nullptr));
+        BabelNetwork::NetworkInfos nwi(av[1], av[2]);
+        NetworkClientSocket network(nwi.getIp(), nwi.getPort());
+        /*if (std::stoi(av[3]) == 0)
+            network.setIpPort(9000);
+        else
+            network.setIpPort(10000);*/
+        BabelClient::ClientCore client(ac, av, network);
+        return (client.run());
     } catch (BabelErrors::BabelError &err) {
         std::cout << err.what() << std::endl;
         return (84);

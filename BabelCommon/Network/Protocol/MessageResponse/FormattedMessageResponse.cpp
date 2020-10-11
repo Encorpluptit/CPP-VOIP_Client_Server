@@ -63,6 +63,6 @@ std::shared_ptr<AResponse> MessageResponse::UserNotFound(const std::shared_ptr<M
 
 std::shared_ptr<AResponse> MessageResponse::UnknownErrorAppend(const std::shared_ptr<MessageResponse> &response)
 {
-    response->setCode(MessageResponse::ResponseCode::UnknownUser);
+    response->setCode(MessageResponse::ResponseCode::UnknownError);
     return response;
 }

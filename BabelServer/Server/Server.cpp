@@ -19,11 +19,6 @@ Server::Server(int ac, char **av)
 {
     _ready = false;
     initServers(ac, av);
-//    _database.createUser("ugo", "lol");
-//    _database.createUser("dam", "lol");
-//    _database.createFriendship("dam", "ugo");
-//    _database.deleteFriendship("dam", "");
-//    _database.deleteFriendship("dam", "ugo");
 }
 
 Server::~Server()
