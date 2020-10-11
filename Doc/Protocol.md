@@ -519,8 +519,6 @@ this is the structure for the Call responsse fill this struct and send it to ser
 
       ```json
               {
-                "sender":             "damien.bernard@epitech.eu",
-                "receiver":           "ugo.levi-cescutti@epitech.eu"
               }
       ```
 
@@ -528,8 +526,6 @@ this is the structure for the Call responsse fill this struct and send it to ser
 
       ```json
               {
-                "sender":             "damien.bernard@epitech.eu",
-                "receiver":           "ugo.levi-cescutti@epitech.eu"
               }
       ```
 
@@ -537,8 +533,6 @@ this is the structure for the Call responsse fill this struct and send it to ser
 
       ```json
               {
-                "sender":             "damien.bernard@epitech.eu",
-                "receiver":           "ugo.levi-cescutti@epitech.eu"
               }
       ```
 
