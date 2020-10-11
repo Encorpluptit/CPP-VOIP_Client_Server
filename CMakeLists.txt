@@ -254,6 +254,7 @@ set(
         TESTS_INCLUDES
         ${COMMON_INCLUDES}
         ${SERVER_INCLUDES}
+        ${CLIENT_INCLUDES}
         ${CMAKE_INCLUDE_PATH}
 )
 
@@ -263,6 +264,9 @@ set(
         tests/criterion_unit_tests/src/Common/Protocol/UserRequest_Tests.cpp
         tests/criterion_unit_tests/src/Common/Protocol/CallRequest_Tests.cpp
         tests/criterion_unit_tests/src/Common/NetworkInfos_Tests.cpp
+        tests/criterion_unit_tests/src/Client/Client.cpp
+        ${CLIENT_DIR}/ClientCore/Opus.cpp
+        ${CLIENT_DIR}/ClientCore/PortAudio.cpp
 )
 
 add_executable(
@@ -275,9 +279,10 @@ target_compile_definitions(unit_tests PRIVATE _UNIT_TESTS_)
 
 target_compile_options(unit_tests PRIVATE --coverage)
 
-target_include_directories(unit_tests PRIVATE tests/criterion_unit_tests/include)
+target_include_directories(unit_tests PRIVATE tests/criterion_unit_tests/include
+${CLIENT_INCLUDES})
 
-target_link_libraries(unit_tests criterion ${CONAN_LIBS} gcov)
+target_link_libraries(unit_tests criterion ${CONAN_LIBS} gcov stdc++fs Qt5::Widgets Qt5::Network)
 
 #set_property(TARGET unit_tests PROPERTY CXX_STANDARD 11)
 set_target_properties(unit_tests PROPERTIES CXX_STANDARD 17)
