@@ -56,7 +56,6 @@ that is the classic header for a responsse
 
     * 300: Request Friendship.
     * 301: Look at this Requested Friendship.
-    * 302: ??
     * 303: Requested Friendship was Accepted.
     * 304: Requested Friendship was Decline.
     * 306: Delete this Friend.
@@ -250,7 +249,7 @@ this is the structure for the login responsse fill this struct and send it to se
 
 ### Header
 
-im going to specify the header for every responsse for Call part 
+im going to specify the header for every responsse for Call part
 you need to send it to specify the size of the next structure
 
 * _senderSize = size of the login user
@@ -389,28 +388,6 @@ this is the structure for the Call responsse fill this struct and send it to ser
 
     * Error Codes
 
-<!-- * Conference(21* Codes) -->
-
-<!--
-        * Add user to conference (34* Code).
-            * Add someone to ongoing conference.
-            * Success code: 340.
-            * Data: (None).
-            * Errors:
-                * 1340: Unknown add to conference error.
-                * 1341: Unknown add to conference error.
-        
-        
-        * Remove user from conference (35* Code).
-            * Remove someone to ongoing conference.
-            * Success code: 350.
-            * Data: [ USERNAME | TIMESTAMP | CONFERENCE_ID ]
-            * Errors:
-                * 1350: Unknown remove from conference error.
-                * 1351: Unknown remove from conference error.
-
--->
-
 ---
 
 ### Friend (4** Code)
@@ -418,7 +395,6 @@ this is the structure for the Call responsse fill this struct and send it to ser
 * Summary
   * 300: Request Friendship.
   * 301: Look at this Requested Friendship.
-  * 302: ??
   * 303: Requested Friendship was Accepted.
   * 304: Requested Friendship was Decline.
   * 306: Delete this Friend.
