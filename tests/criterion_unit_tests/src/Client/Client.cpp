@@ -38,10 +38,10 @@ Test(Client, PortAudio_Codec2)
     );
 }
 
-Test(Client, PortAudio_Codec3, .disabled=true)
+Test(Client, PortAudio_Codec3)
 {
     std::shared_ptr<ICodec> codec = std::make_shared<Opus>();
-    std::vector<uint16_t> voice;
+    std::vector<uint16_t> voice{2, 3};
 
     cr_assert_throw(
         codec->decode(voice),
