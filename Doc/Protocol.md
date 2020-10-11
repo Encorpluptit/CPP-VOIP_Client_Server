@@ -634,3 +634,10 @@ this is the structure for the Call responsse fill this struct and send it to ser
               {
               }
       ```
+
+    * 460: Unknown Error.
+
+      ```json
+              {
+              }
+      ```
