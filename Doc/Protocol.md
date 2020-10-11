@@ -586,7 +586,6 @@ this is the structure for the Call responsse fill this struct and send it to ser
     };  
   ```
 
-
 * Message Management
   * [Client -> Server]
     * Success Codes.
@@ -596,22 +595,28 @@ this is the structure for the Call responsse fill this struct and send it to ser
               {
                 "sender":             "damien.bernard@epitech.eu",
                 "receiver":           "ugo.levi-cescutti@epitech.eu",
-                "messageData":        "hello_world",
+                "messageData":        "damien_message",
+                "time_stamp":         "(unix time)",
+              }
+      ```
+
+    * 403: Receive Message.
+
+      ```json
+              {
+                "sender":             "damien.bernard@epitech.eu",
+                "receiver":           "ugo.levi-cescutti@epitech.eu",
+                "messageData":        "damien_message",
                 "time_stamp":         "(unix time)",
               }
       ```
 
   * [Server -> Client]
     * Success Codes.
-
-    * 401: Request send Message.
+    * 402: Send message OK.
 
       ```json
               {
-                "sender":             "damien.bernard@epitech.eu",
-                "receiver":           "ugo.levi-cescutti@epitech.eu",
-                "messageData":        "hello_world",
-                "time_stamp":         "(unix time)",
               }
       ```
 
