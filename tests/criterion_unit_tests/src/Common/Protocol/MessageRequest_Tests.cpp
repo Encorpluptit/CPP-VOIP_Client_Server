@@ -8,16 +8,30 @@
 
 Test(Common, MessageResponse_00)
 {
-    const AResponse::ResponseHeader hdr = {
-        ._code = FriendResponse::ResponseCode::FriendAdded,
-        ._responseType = AResponse::ResponseType::Message,
+    const BabelNetwork::AResponse::ResponseHeader hdr = {
+        ._code = BabelNetwork::MessageResponse::ResponseCode::RequestSendMessage,
+        ._responseType = BabelNetwork::AResponse::ResponseType::Message,
         ._dataInfosSize = 0
     };
-    FriendResponse test(hdr);
+    BabelNetwork::MessageResponse test(hdr);
 
-    ASSERT_BOOL(test.isOk(), false);
+    ASSERT_INT(test.getResponseType(), BabelNetwork::AResponse::ResponseType::Message);
+    ASSERT_BOOL(test.getDescription().empty(), false);
+    ASSERT_BOOL(test.describe_code().empty(), false);
+    ASSERT_BOOL(test.describe_data().empty(), false);
+    ASSERT_BOOL(test.describe_data_infos().empty(), false);
+}
 
-    ASSERT_INT(test.getResponseType(), AResponse::ResponseType::Friend);
+Test(Common, MessageResponse_001)
+{
+    const BabelNetwork::AResponse::ResponseHeader hdr = {
+        ._code = 500,
+        ._responseType = BabelNetwork::AResponse::ResponseType::Message,
+        ._dataInfosSize = 0
+    };
+    BabelNetwork::MessageResponse test(hdr);
+
+    ASSERT_INT(test.getResponseType(), BabelNetwork::AResponse::ResponseType::Message);
     ASSERT_BOOL(test.getDescription().empty(), false);
     ASSERT_BOOL(test.describe_code().empty(), false);
     ASSERT_BOOL(test.describe_data().empty(), false);
@@ -71,6 +85,8 @@ Test(Common, MessageResponse_02)
     cr_assert_str_eq(ptr2->getSender(), user_1.c_str());
     cr_assert_str_eq(ptr2->getReceiver(), user_2.c_str());
     cr_assert_str_eq(ptr2->getMessageData(), msg.c_str());
+    EXPECT_SIZET(ptr->getResponseSize(), test.getResponseSize());
+    EXPECT_BOOL(ptr->isOk(), false);
 }
 
 Test(Common, MessageResponse_03)
@@ -178,6 +194,65 @@ Test(Common, MessageResponse_OkSendMessage)
     auto lol = BabelNetwork::MessageResponse::MessageReceive(sender, receiver, msg);
     auto lol2 = std::dynamic_pointer_cast<BabelNetwork::MessageResponse>(lol);
     auto ptr = BabelNetwork::MessageResponse::OkSendMessage(lol2);
+    EXPECT_INT(ptr->getResponseType(), BabelNetwork::AResponse::ResponseType::Message);
+    EXPECT_SIZET(ptr->getDataInfosSize(), BabelNetwork::MessageResponse::DataInfosSize);
+    EXPECT_INT(ptr->getCode(), code);
+
+    auto ptr2 = std::dynamic_pointer_cast<BabelNetwork::MessageResponse>(ptr);
+    cr_assert_not_null(ptr2);
+    cr_assert_str_eq(ptr2->getSender(), sender.c_str());
+    cr_assert_str_eq(ptr2->getReceiver(), receiver.c_str());
+    cr_assert_str_eq(ptr2->getMessageData(), msg.c_str());
+}
+
+Test(Common, MessageResponse_ReceiveMessageOk)
+{
+    const std::string sender("dam");
+    const std::string receiver("ugo");
+    BabelNetwork::MessageResponse::ResponseCode code = BabelNetwork::MessageResponse::ResponseCode::ReceiveOk;
+
+    auto ptr = BabelNetwork::MessageResponse::ReceiveMessageOk(sender, receiver);
+    EXPECT_INT(ptr->getResponseType(), BabelNetwork::AResponse::ResponseType::Message);
+    EXPECT_SIZET(ptr->getDataInfosSize(), BabelNetwork::MessageResponse::DataInfosSize);
+    EXPECT_INT(ptr->getCode(), code);
+
+    auto ptr2 = std::dynamic_pointer_cast<BabelNetwork::MessageResponse>(ptr);
+    cr_assert_not_null(ptr2);
+    cr_assert_str_eq(ptr2->getSender(), sender.c_str());
+    cr_assert_str_eq(ptr2->getReceiver(), receiver.c_str());
+}
+
+Test(Common, MessageResponse_UserNotFound)
+{
+    const std::string sender("dam");
+    const std::string receiver("ugo");
+    const std::string msg("Coucou !");
+    BabelNetwork::MessageResponse::ResponseCode code = BabelNetwork::MessageResponse::ResponseCode::UnknownUser;
+
+    auto lol = BabelNetwork::MessageResponse::MessageReceive(sender, receiver, msg);
+    auto lol2 = std::dynamic_pointer_cast<BabelNetwork::MessageResponse>(lol);
+    auto ptr = BabelNetwork::MessageResponse::UserNotFound(lol2);
+    EXPECT_INT(ptr->getResponseType(), BabelNetwork::AResponse::ResponseType::Message);
+    EXPECT_SIZET(ptr->getDataInfosSize(), BabelNetwork::MessageResponse::DataInfosSize);
+    EXPECT_INT(ptr->getCode(), code);
+
+    auto ptr2 = std::dynamic_pointer_cast<BabelNetwork::MessageResponse>(ptr);
+    cr_assert_not_null(ptr2);
+    cr_assert_str_eq(ptr2->getSender(), sender.c_str());
+    cr_assert_str_eq(ptr2->getReceiver(), receiver.c_str());
+    cr_assert_str_eq(ptr2->getMessageData(), msg.c_str());
+}
+
+Test(Common, MessageResponse_UnknownErrorAppend)
+{
+    const std::string sender("dam");
+    const std::string receiver("ugo");
+    const std::string msg("Coucou !");
+    BabelNetwork::MessageResponse::ResponseCode code = BabelNetwork::MessageResponse::ResponseCode::UnknownError;
+
+    auto lol = BabelNetwork::MessageResponse::MessageReceive(sender, receiver, msg);
+    auto lol2 = std::dynamic_pointer_cast<BabelNetwork::MessageResponse>(lol);
+    auto ptr = BabelNetwork::MessageResponse::UnknownErrorAppend(lol2);
     EXPECT_INT(ptr->getResponseType(), BabelNetwork::AResponse::ResponseType::Message);
     EXPECT_SIZET(ptr->getDataInfosSize(), BabelNetwork::MessageResponse::DataInfosSize);
     EXPECT_INT(ptr->getCode(), code);
