@@ -16,16 +16,16 @@ namespace BabelNetwork {
         /* <- Class Enum -> */
     public:
         enum ResponseCode {
-            CallStarted = 400,
-            RequestCall = 401,
-            CallLeft = 402,
-            RequestEndCall = 403,
-            IncomingCall = 404,
-            CallAccepted = 405,
+            CallStarted = 200,
+            RequestCall = 201,
+            CallLeft = 202,
+            RequestEndCall = 203,
+            IncomingCall = 204,
+            CallAccepted = 205,
 
-            CallRefused = 470,
-            UserDisconnected = 471,
-            UnknownError = 472,
+            CallRefused = 270,
+            UserDisconnected = 271,
+            UnknownError = 272,
         };
 
     public:
