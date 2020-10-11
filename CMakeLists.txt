@@ -230,64 +230,55 @@ target_include_directories(
 target_compile_definitions(babel_client PRIVATE BABEL_CLIENT_BIN)
 
 find_package(Qt5 COMPONENTS Network Widgets REQUIRED)
-<<<<<<< HEAD
-#target_link_libraries(babel_client ${CONAN_LIBS} stdc++fs Qt5::Widgets Qt5::Network)
 target_link_libraries(babel_client ${CONAN_LIBS} Qt5::Widgets Qt5::Network)
-#target_link_libraries(babel_client ${CONAN_LIBS} stdc++fs)
 if (UNIX)
-target_link_libraries(babel_server stdc++fs)
+    target_link_libraries(babel_server stdc++fs)
 endif (UNIX)
-=======
-target_link_libraries(babel_client ${CONAN_LIBS} stdc++fs Qt5::Widgets Qt5::Network)
->>>>>>> server
 
 
 ###############################################################################
 # Tests Configuration
 if (UNIX)
-set(
-TESTS_INCLUDES
-${COMMON_INCLUDES}
-${SERVER_INCLUDES}
-${CLIENT_INCLUDES}
-        ${CMAKE_INCLUDE_PATH}
-)
+    set(
+            TESTS_INCLUDES
+            ${COMMON_INCLUDES}
+            ${SERVER_INCLUDES}
+            ${CLIENT_INCLUDES}
+            ${CMAKE_INCLUDE_PATH}
+    )
 
-set(
-        TESTS_SOURCES
-        tests/criterion_unit_tests/src/Common/StringFormat_Tests.cpp
-        tests/criterion_unit_tests/src/Common/Protocol/UserRequest_Tests.cpp
-        tests/criterion_unit_tests/src/Common/Protocol/CallRequest_Tests.cpp
-        tests/criterion_unit_tests/src/Common/Protocol/FriendRequest_Tests.cpp
-        tests/criterion_unit_tests/src/Common/Protocol/MessageRequest_Tests.cpp
-        tests/criterion_unit_tests/src/Common/Protocol/ARequest_Tests.cpp
-        tests/criterion_unit_tests/src/Common/NetworkInfos_Tests.cpp
-        tests/criterion_unit_tests/src/Client/Client.cpp
-        ${CLIENT_DIR}/ClientCore/Opus.cpp
-        ${CLIENT_DIR}/ClientCore/PortAudio.cpp
-)
+    set(
+            TESTS_SOURCES
+            tests/criterion_unit_tests/src/Common/StringFormat_Tests.cpp
+            tests/criterion_unit_tests/src/Common/Protocol/UserRequest_Tests.cpp
+            tests/criterion_unit_tests/src/Common/Protocol/CallRequest_Tests.cpp
+            tests/criterion_unit_tests/src/Common/Protocol/FriendRequest_Tests.cpp
+            tests/criterion_unit_tests/src/Common/Protocol/MessageRequest_Tests.cpp
+            tests/criterion_unit_tests/src/Common/Protocol/ARequest_Tests.cpp
+            tests/criterion_unit_tests/src/Common/NetworkInfos_Tests.cpp
+            tests/criterion_unit_tests/src/Client/Client.cpp
+            ${CLIENT_DIR}/ClientCore/Opus.cpp
+            ${CLIENT_DIR}/ClientCore/PortAudio.cpp
+    )
 
-add_executable(
-        unit_tests
-        ${COMMON_SOURCES}
-        ${TESTS_SOURCES}
-)
+    add_executable(
+            unit_tests
+            ${COMMON_SOURCES}
+            ${TESTS_SOURCES}
+    )
 
-target_compile_definitions(unit_tests PRIVATE _UNIT_TESTS_)
+    target_compile_definitions(unit_tests PRIVATE _UNIT_TESTS_)
 
-target_compile_options(unit_tests PRIVATE --coverage)
+    target_compile_options(unit_tests PRIVATE --coverage)
 
-target_include_directories(unit_tests PRIVATE tests/criterion_unit_tests/include
-${CLIENT_INCLUDES})
+    target_include_directories(unit_tests PRIVATE tests/criterion_unit_tests/include
+            ${CLIENT_INCLUDES})
 
-target_link_libraries(unit_tests criterion ${CONAN_LIBS} gcov stdc++fs Qt5::Widgets Qt5::Network)
+    target_link_libraries(unit_tests criterion ${CONAN_LIBS} gcov stdc++fs Qt5::Widgets Qt5::Network)
 
-set_target_properties(unit_tests PROPERTIES CXX_STANDARD 17)
-<<<<<<< HEAD
+    set_target_properties(unit_tests PROPERTIES CXX_STANDARD 17)
 endif (UNIX)
-=======
 
 if (GH_TESTS)
-target_compile_definitions(unit_tests PRIVATE GH_TESTS)
+    target_compile_definitions(unit_tests PRIVATE GH_TESTS)
 endif (GH_TESTS)
->>>>>>> server
