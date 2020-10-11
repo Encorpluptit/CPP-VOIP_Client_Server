@@ -8,59 +8,19 @@ class PortAudio : public IAudio
 {
     public:
 
-        PortAudio() {
+        PortAudio();
 
-            int err = Pa_Initialize();
-            std::cout << "ERROR PORTAUDIO : " << Pa_GetErrorText(err) << std::endl;
-            if (err != paNoError)
-                std::cout << "Pa_Initialize failed" << std::endl; // THROW
-        }
+        ~PortAudio();
 
-        ~PortAudio() {
+        bool init_audio() override;
 
-            Pa_Terminate();
-        }
+        bool stop_audio() override;
 
-        bool init_audio() {
+        std::vector<uint16_t> getVoice() override;
 
-            if (Pa_OpenDefaultStream(&stream, 1, 1, paInt16, 48000, 480, nullptr, nullptr) != paNoError)
-                Pa_Terminate(); // THROW
-            if (Pa_StartStream(stream) != paNoError)
-                Pa_Terminate(); // THROW
-            return (true);
-        }
+        void playVoice(const std::vector<uint16_t> &record) override;
 
-        bool stop_audio() {
-
-            if (Pa_CloseStream(stream) != paNoError)
-                Pa_Terminate(); // THROW
-            return (true);
-        }
-
-        std::vector<uint16_t> getVoice() {
-
-            long len = Pa_GetStreamReadAvailable(stream);
-            std::vector<uint16_t> record(480);
-
-            if (len < 0) {
-                std::cout << "getVoice" << std::endl; // THROW
-                return (record);
-            }
-            if (len < (long) 480)
-                Pa_ReadStream(stream, record.data(), (unsigned long) len);
-            else
-                Pa_ReadStream(stream, record.data(), 480);
-            return (record);
-        }
-
-        void playVoice(std::vector<uint16_t> record) {
-
-            long len = 0;
-            while ((len = Pa_GetStreamWriteAvailable(stream)) < (long) record.size());
-            Pa_WriteStream(stream, record.data(), record.size());
-        }
-
-        PaStreamParameters input;
-        PaStreamParameters output;
-        PaStream *stream;
+        PaStreamParameters input{};
+        PaStreamParameters output{};
+        PaStream *stream{};
 };

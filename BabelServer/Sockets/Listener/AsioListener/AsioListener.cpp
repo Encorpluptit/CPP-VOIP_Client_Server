@@ -92,6 +92,8 @@ void AsioListener::stop()
 {
     std::cout << "LISTENER STOPPED" << std::endl;
     setNotReady();
+    for (const auto & client: _clientsList.getClients())
+        client->stop();
     _signals.clear();
     if (_acceptor.is_open())
         _acceptor.close();

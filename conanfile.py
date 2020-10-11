@@ -70,7 +70,8 @@ class Babel(ConanFile):
                     "xkeyboard-config-devel",
                     "xcb-util-image-devel",
                     "libXxf86vm-devel",
-                    "libXft-devel"
+                    "libXft-devel",
+                    "libfontenc-devel",
                 ]
             elif tools.os_info.with_yum:
                 packages = [

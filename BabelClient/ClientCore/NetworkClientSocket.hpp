@@ -1,11 +1,13 @@
 
+#include <utility>
+
 #include "AResponse.hpp"
 #include "QtSocket.hpp"
 #include "QUdpSocket.hpp"
 
 class NetworkClientSocket {
 public:
-    NetworkClientSocket(const std::string &ip, const int port) : serverIp(ip), serverPort(port)
+    NetworkClientSocket(std::string ip, const int port) : serverIp(std::move(ip)), serverPort(port), myUdpIp(), myUdpPort()
     {
         _tcp = nullptr;
         _udp = nullptr;
@@ -59,13 +61,32 @@ public:
         myUdpIp = "127.0.0.1";
         myUdpPort = port;
     }
+    const std::string &getMyUdpIp() const
+    {
+        return myUdpIp;
+    }
 
-    std::string myUdpIp;
-    int myUdpPort;
-    
+    void setMyUdpIp(const std::string &_myUdpIp)
+    {
+        NetworkClientSocket::myUdpIp = _myUdpIp;
+    }
+
+    int getMyUdpPort() const
+    {
+        return myUdpPort;
+    }
+
+    void setMyUdpPort(int _myUdpPort)
+    {
+        NetworkClientSocket::myUdpPort = _myUdpPort;
+    }
+
+
 private:
     std::shared_ptr<ITcpSocket> _tcp;
     std::shared_ptr<IUdpSocket> _udp;
     std::string serverIp;
     int serverPort;
+    std::string myUdpIp;
+    int myUdpPort;
 };

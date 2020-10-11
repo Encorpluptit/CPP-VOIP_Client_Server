@@ -72,10 +72,10 @@ include_directories(${CMAKE_INCLUDE_PATH})
 find_package(Qt5Widgets CONFIG REQUIRED)
 
 #find_package(Boost COMPONENTS thread REQUIRED)
-find_package(Boost REQUIRED)
-if (Boost_FOUND)
-    set(CONAN_LIBS ${CONAN_LIBS} boost_thread)
-endif (Boost_FOUND)
+#find_package(Boost REQUIRED)
+#if (Boost_FOUND)
+#    set(CONAN_LIBS ${CONAN_LIBS} boost_thread)
+#endif (Boost_FOUND)
 
 
 ###############################################################################
@@ -220,6 +220,8 @@ set(
         ${CLIENT_DIR}/ClientCore/mainwindow.cpp
         ${CLIENT_DIR}/ClientCore/QtSocket.cpp
         ${CLIENT_DIR}/ClientCore/QUdpSocket.cpp
+        ${CLIENT_DIR}/ClientCore/Opus.cpp
+        ${CLIENT_DIR}/ClientCore/PortAudio.cpp
 )
 
 
@@ -260,6 +262,8 @@ set(
         tests/criterion_unit_tests/src/Common/StringFormat_Tests.cpp
         tests/criterion_unit_tests/src/Common/Protocol/UserRequest_Tests.cpp
         tests/criterion_unit_tests/src/Common/Protocol/CallRequest_Tests.cpp
+        tests/criterion_unit_tests/src/Common/Protocol/FriendRequest_Tests.cpp
+        tests/criterion_unit_tests/src/Common/Protocol/ARequest_Tests.cpp
         tests/criterion_unit_tests/src/Common/NetworkInfos_Tests.cpp
 )
 

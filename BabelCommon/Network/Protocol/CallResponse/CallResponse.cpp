@@ -33,7 +33,7 @@ CallResponse::CallResponse(
 ) : CallResponse(sender, receiver)
 {
     if (!setIp(address) || !setPort(port))
-        throw BabelErrors::CallResponse("sender or receiver too long");
+        throw BabelErrors::CallResponse("ip or port too long");
 }
 
 bool CallResponse::setSender(const std::string &sender) noexcept
@@ -147,11 +147,6 @@ bool BabelNetwork::CallResponse::isOk() noexcept
 {
     return _header._code != CallResponse::ResponseCode::CallRefused
         && _header._code != CallResponse::ResponseCode::UserDisconnected;
-}
-
-std::shared_ptr<AResponse> CallResponse::get_shared_from_this() const noexcept
-{
-    return std::make_shared<CallResponse>(*this);
 }
 
 char *CallResponse::getDataByte() noexcept

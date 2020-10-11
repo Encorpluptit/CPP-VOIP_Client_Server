@@ -29,10 +29,6 @@ namespace BabelServer {
 
         std::vector<BabelUtils::SharedPtr<BabelNetwork::ClientSocket>> getClientList()
         {
-//            lock();
-//            auto lol = ClientsList(_clientsList);
-//            unlock();
-//            return lol;
             _clientsList.lock();
             auto list = _clientsList.getClients();
             _clientsList.unlock();

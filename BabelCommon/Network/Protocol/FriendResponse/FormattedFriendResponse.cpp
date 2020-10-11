@@ -33,15 +33,13 @@ std::shared_ptr<AResponse> FriendResponse::NewFriendRequest(const std::string &l
     return resp;
 }
 
-std::shared_ptr<AResponse>
-FriendResponse::NewFriendRequest(const std::shared_ptr<BabelNetwork::FriendResponse> &response)
+std::shared_ptr<AResponse> FriendResponse::NewFriendRequest(const std::shared_ptr<FriendResponse> &response)
 {
     response->setCode(FriendResponse::ResponseCode::NewFriendshipRequested);
     return response;
 }
 
-std::shared_ptr<AResponse>
-FriendResponse::FriendRequestAccepted(const std::string &login, const std::string &friendLogin)
+std::shared_ptr<AResponse> FriendResponse::FriendRequestAccepted(const std::string &login, const std::string &friendLogin)
 {
     auto resp = std::make_shared<FriendResponse>(login, friendLogin);
 
@@ -49,14 +47,13 @@ FriendResponse::FriendRequestAccepted(const std::string &login, const std::strin
     return resp;
 }
 
-std::shared_ptr<AResponse>
-FriendResponse::FriendRequestDeclined(const std::shared_ptr<BabelNetwork::FriendResponse> &response)
+std::shared_ptr<AResponse> FriendResponse::FriendRequestDeclined(const std::shared_ptr<FriendResponse> &response)
 {
     response->setCode(FriendResponse::ResponseCode::DeclineFriendRequest);
     return response;
 }
 
-std::shared_ptr<AResponse> FriendResponse::UserNotExist(const std::shared_ptr<BabelNetwork::FriendResponse> &response)
+std::shared_ptr<AResponse> FriendResponse::UserNotExist(const std::shared_ptr<FriendResponse> &response)
 {
     response->setCode(FriendResponse::ResponseCode::UnknownUser);
     return response;
@@ -70,7 +67,7 @@ std::shared_ptr<AResponse> FriendResponse::DeleteFriendOK(const std::string &log
     return resp;
 }
 
-std::shared_ptr<AResponse> FriendResponse::DeleteFriendOK(const std::shared_ptr<BabelNetwork::FriendResponse> &response)
+std::shared_ptr<AResponse> FriendResponse::DeleteFriendOK(const std::shared_ptr<FriendResponse> &response)
 {
     response->setCode(FriendResponse::ResponseCode::FriendDeleted);
     return response;
@@ -84,22 +81,19 @@ std::shared_ptr<AResponse> FriendResponse::DeleteFriendRequest(const std::string
     return resp;
 }
 
-std::shared_ptr<AResponse>
-FriendResponse::FriendshipExist(const std::shared_ptr<BabelNetwork::FriendResponse> &response)
+std::shared_ptr<AResponse> FriendResponse::FriendshipExist(const std::shared_ptr<FriendResponse> &response)
 {
     response->setCode(FriendResponse::ResponseCode::FriendshipAlreadyExist);
     return response;
 }
 
-std::shared_ptr<AResponse>
-FriendResponse::UnknownFriendship(const std::shared_ptr<BabelNetwork::FriendResponse> &response)
+std::shared_ptr<AResponse> FriendResponse::UnknownFriendship(const std::shared_ptr<FriendResponse> &response)
 {
     response->setCode(FriendResponse::ResponseCode::FriendshipUnknown);
     return response;
 }
 
-std::shared_ptr<AResponse>
-FriendResponse::UnknownErrorOccured(const std::shared_ptr<BabelNetwork::FriendResponse> &response)
+std::shared_ptr<AResponse> FriendResponse::UnknownErrorOccured(const std::shared_ptr<FriendResponse> &response)
 {
     response->setCode(FriendResponse::ResponseCode::UnknownErrorOccur);
     return response;

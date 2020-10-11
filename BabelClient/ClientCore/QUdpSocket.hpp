@@ -10,23 +10,21 @@
 class MyUdpSocket : public QObject, virtual public IUdpSocket {
 Q_OBJECT
 public:
-    MyUdpSocket(QObject *parent = nullptr);
+    explicit MyUdpSocket(QObject *parent = nullptr);
 
-    ~MyUdpSocket();
+    ~MyUdpSocket() override;
 
-    void doConnect(const std::string &ip, int port);
+    void doConnect(const std::string &ip, int port) override;
 
-    void disconnect();
+    void disconnect() override;
 
-    void sendVoice(std::vector<uint16_t> voice, std::string ip, int port);
+    void sendVoice(const std::vector<uint16_t> &voice, const std::string &ip, int port) override;
 
-    std::vector<uint16_t> readVoice(std::string ip, int port);
+    std::vector<uint16_t> readVoice(const std::string &ip, int port) override;
 
-    void readData(std::string ip, int port);
+    /*void readData(std::string ip, int port);
 
-    void sendData(std::string data, std::string ip, int port);
-
-    std::vector<uint16_t> readVoix(std::string ip, int port);
+    void sendData(std::string data, std::string ip, int port);*/
 
 signals:
 
@@ -36,7 +34,7 @@ public slots:
 
     void disconnected();
 
-    void bytesWritten(const qint64 bytes);
+    void bytesWritten(qint64 bytes);
 
 private:
     QUdpSocket *socket;

@@ -2,6 +2,7 @@
 #include "UserResponse.hpp"
 #include "./ui_mainwindow.h"
 #include "Debug.hpp"
+#include "BabelError.hpp"
 
 #include <QtDebug>
 #include <QAbstractButton>
@@ -11,7 +12,8 @@
 #include <iostream>
 #include <QApplication>
 
-MainWindow::MainWindow(QWidget *parent, NetworkClientSocket &network) : QMainWindow(parent), ui(new Ui::MainWindow), client(network)
+MainWindow::MainWindow(QWidget *parent, NetworkClientSocket &network) : QMainWindow(parent), ui(new Ui::MainWindow),
+                                                                        client(network)
 {
     audio = std::make_shared<PortAudio>();
     codec = std::make_shared<Opus>();
@@ -26,22 +28,23 @@ MainWindow::MainWindow(QWidget *parent, NetworkClientSocket &network) : QMainWin
     ui->WrongLoginText->hide();
 
     timer = new QTimer(this);
-    voiceTimer =  new QTimer(this);
+    voiceTimer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(UpdateClient()));
     connect(voiceTimer, SIGNAL(timeout()), this, SLOT(ManageVoice()));
     timer->start(100);
     logged = false;
     ui->CantFindText->hide();
     called = false;
+    ui->textEdit->hide();
 }
 
 MainWindow::~MainWindow()
 {
+    delete mapper;
+    delete timer;
+    delete voiceTimer;
     delete ui;
 }
-
-
-
 
 
 void MainWindow::coucou(const QString &name)
@@ -115,11 +118,11 @@ void MainWindow::on_RegisterButton_clicked()
     auto response = BabelNetwork::UserResponse::AccountCreationRequest(user, pass);
     client.getTcp()->sendResponse(response);
 }
+
 void MainWindow::on_DeleteAccountButton_clicked()
 {
     auto response = BabelNetwork::UserResponse::AccountDeletionRequest(login);
     client.getTcp()->sendResponse(response);
-    std::cout << "Delete Account clicked" << std::endl;
 }
 
 void MainWindow::on_RefuseRequestButton_clicked()
@@ -134,7 +137,7 @@ void MainWindow::on_RefuseRequestButton_clicked()
 
 void MainWindow::on_AcceptRequestButton_clicked()
 {
-        if (friendRequest != nullptr) {
+    if (friendRequest != nullptr) {
         auto response = BabelNetwork::FriendResponse::FriendRequestAccepted(login, friendRequest->getFriendLogin());
         client.getTcp()->sendResponse(response);
     }
@@ -145,8 +148,8 @@ void MainWindow::on_AcceptRequestButton_clicked()
 void MainWindow::on_AcceptCallButton_clicked()
 {
     called = true;
-    client.getUdp()->doConnect(client.myUdpIp, client.myUdpPort);
-    auto response = BabelNetwork::CallResponse::AcceptCall(callInfo, client.myUdpPort);
+    client.getUdp()->doConnect(client.getMyUdpIp(), client.getMyUdpPort());
+    auto response = BabelNetwork::CallResponse::AcceptCall(callInfo, client.getMyUdpIp(), client.getMyUdpPort());
     std::cout << std::endl << response << std::endl << std::endl;
     client.getTcp()->sendResponse(response);
     ui->gridStackedWidget->setCurrentWidget(ui->CallPage);
@@ -174,15 +177,13 @@ void MainWindow::on_CallButton_clicked()
 {
     if (called != true && actualFriend != login) {
         called = true;
-        client.getUdp()->doConnect(client.myUdpIp, client.myUdpPort);
-        auto response = BabelNetwork::CallResponse::CallRequest(login, actualFriend, client.myUdpIp, std::to_string(client.myUdpPort));
+        client.getUdp()->doConnect(client.getMyUdpIp(), client.getMyUdpPort());
+        auto response = BabelNetwork::CallResponse::CallRequest(login, actualFriend, client.getMyUdpIp(),
+            std::to_string(client.getMyUdpPort()));
         client.getTcp()->sendResponse(response);
     }
     //else display already in a call
 }
-
-
-
 
 
 void MainWindow::LoggedIn(const std::shared_ptr<BabelNetwork::UserResponse> &response)
@@ -193,7 +194,7 @@ void MainWindow::LoggedIn(const std::shared_ptr<BabelNetwork::UserResponse> &res
     std::cout << "LOGGED IN" << std::endl;
     login = response->getLogin();
     logged = true;
-    ui->ContactName->setText(login.c_str());
+    ui->LoginNameEdit->setText(login.c_str());
 }
 
 void MainWindow::LoggedOut(const std::shared_ptr<BabelNetwork::UserResponse> &response)
@@ -214,14 +215,14 @@ void MainWindow::LoggedOut(const std::shared_ptr<BabelNetwork::UserResponse> &re
 
 void MainWindow::AccountCreate(const std::shared_ptr<BabelNetwork::UserResponse> &response)
 {
-    ui->CantFindText->setText("Account Create");
-    ui->CantFindText->show();
+    ui->textEdit->setText("Account Create");
+    ui->textEdit->show();
     (void) response;
 }
 
 void MainWindow::AccountDelete(const std::shared_ptr<BabelNetwork::UserResponse> &response)
 {
-    if (called == true) {
+    if (called) {
         voiceTimer->stop();
         audio->stop_audio();
         called = false;
@@ -237,8 +238,7 @@ void MainWindow::AccountDelete(const std::shared_ptr<BabelNetwork::UserResponse>
 
 void MainWindow::UnknowUserError(const std::shared_ptr<BabelNetwork::UserResponse> &response)
 {
-    //THROW ERROR
-    (void) response;
+    throw (BabelErrors::BabelError("Response code : " + std::to_string(response->getCode())));
 }
 
 void MainWindow::WrongLogin(const std::shared_ptr<BabelNetwork::UserResponse> &response)
@@ -257,8 +257,8 @@ void MainWindow::WrongPassword(const std::shared_ptr<BabelNetwork::UserResponse>
 
 void MainWindow::LoginAlreadyTaken(const std::shared_ptr<BabelNetwork::UserResponse> &response)
 {
-    ui->CantFindText->setText("Login already taken");
-    ui->CantFindText->show();
+    ui->textEdit->setText("Login already taken");
+    ui->textEdit->show();
     (void) response;
 }
 
@@ -325,8 +325,23 @@ void MainWindow::AddFriend(const std::shared_ptr<BabelNetwork::FriendResponse> &
             connect(mapper, SIGNAL(mapped(const QString &)), this, SLOT(coucou(const QString &)));
             button->setText(friendList[i].c_str());
             butts.push_back(button);
-        } else
-            butts[i]->setText(friendList[i].c_str());
+        }
+    }
+}
+
+void MainWindow::DeleteFriend(const std::shared_ptr<BabelNetwork::FriendResponse> &response)
+{
+    int i = 0;
+
+    for (auto it = friendList.begin(); it != friendList.end(); it++, i++) {
+        std::cout << "NAME BUTTON : " << butts[i]->text().toLocal8Bit().constData() << " FriendName : " << it->c_str() << std::endl;
+        if (butts[i]->text() == response->getFriendLogin() && butts[i]->isHidden() == false) {
+            std::cout << "COUCOU" << std::endl;
+            butts[i]->hide();
+            butts.removeAt(i);
+            friendList.erase(it);
+            break;
+        }
     }
 }
 
@@ -356,12 +371,8 @@ void MainWindow::ReceiveMessage(const std::shared_ptr<BabelNetwork::MessageRespo
 
 void MainWindow::UnknowUserMessage(const std::shared_ptr<BabelNetwork::MessageResponse> &response)
 {
-    (void) response;
-    //FRONT ARTHUR
+    throw (BabelErrors::BabelError("Response code : " + std::to_string(response->getCode())));
 }
-
-
-
 
 
 void MainWindow::doUserResponse(const std::shared_ptr<BabelNetwork::AResponse> &response)
@@ -398,7 +409,8 @@ void MainWindow::doFriendResponse(const std::shared_ptr<BabelNetwork::AResponse>
 
 void MainWindow::doMessageResponse(const std::shared_ptr<BabelNetwork::AResponse> &response)
 {
-    std::shared_ptr<BabelNetwork::MessageResponse> ptr = std::dynamic_pointer_cast<BabelNetwork::MessageResponse>(response);
+    std::shared_ptr<BabelNetwork::MessageResponse> ptr = std::dynamic_pointer_cast<BabelNetwork::MessageResponse>(
+        response);
     int code = response->getCode();
 
     for (size_t i = 0; i < messageCodeIdx.size(); i++)
@@ -408,8 +420,7 @@ void MainWindow::doMessageResponse(const std::shared_ptr<BabelNetwork::AResponse
 
 void MainWindow::doUnknowTypeResponse(const std::shared_ptr<BabelNetwork::AResponse> &response)
 {
-    printf("code : %d\n", response->getCode());
-    //throw (BabelErrors::BabelError("Unknow Response Type"));
+    throw (BabelErrors::BabelError("Response code : " + std::to_string(response->getCode())));
 }
 
 void MainWindow::checkTypeResponse(const std::shared_ptr<BabelNetwork::AResponse> &response)
@@ -430,7 +441,6 @@ void MainWindow::ManageVoice()
 {
     std::vector<uint16_t> send;
     std::vector<uint16_t> receive;
-    std::vector<uint16_t> save;
 
     /*send = audio->getVoice();
     std::cout << send.size() << std::endl;
@@ -442,44 +452,17 @@ void MainWindow::ManageVoice()
     send.clear();
     receive.clear();*/
 
-
-    if (client.myUdpPort == 9000) {
-        send = audio->getVoice();
-        if (send.size() != 0)
-            send = codec->encode(send);
-        client.getUdp()->sendVoice(send, callInfo->getIp(), std::stoi(callInfo->getPort()));
-        send.clear();
-    } else {
-        receive = client.getUdp()->readVoice(callInfo->getIp(), std::stoi(callInfo->getPort()));
-        for (size_t i = 0; i < receive.size(); i++) {
-            std::cout << receive[i] << std::endl;
-        }
-         if (receive.size() > 0) {
-            std::cout << "ICI" << std::endl;
-            receive = codec->decode(receive);
-            audio->playVoice(receive);
-        }
-        receive.clear();
-    }
-
-
-
-    /*send = audio->getVoice();
-    if (send.size() != 0)
+    send = audio->getVoice();
+    if (!send.empty())
         send = codec->encode(send);
     client.getUdp()->sendVoice(send, callInfo->getIp(), std::stoi(callInfo->getPort()));
     send.clear();
     receive = client.getUdp()->readVoice(callInfo->getIp(), std::stoi(callInfo->getPort()));
-    //save.insert(save.end(), receive.begin(), receive.end());
-    //std::cout << "SAVE SIZE : " << save.size() << std::endl;
-    if (receive.size() > 0) {
-        std::cout << "ICI" << std::endl;
+    if (!receive.empty()) {
         receive = codec->decode(receive);
-        //save = codec->decode(save);
         audio->playVoice(receive);
-        //save.clear();
     }
-    receive.clear();*/
+    receive.clear();
 
     //client.getUdp()->sendData("PTDR", callInfo->getIp(), std::stoi(callInfo->getPort()));
     //client.getUdp()->readData(callInfo->getIp(), std::stoi(callInfo->getPort()));

@@ -31,7 +31,7 @@ namespace BabelNetwork {
             UnknownErrorOccur = 354,
         };
 
-    private:
+    public:
         enum MaxDataSize {
             Login = 128,
             FriendLogin = 128
@@ -99,8 +99,6 @@ namespace BabelNetwork {
 
         /* <- Getters / Setters -> */
     public:
-        [[nodiscard]] std::shared_ptr<AResponse> get_shared_from_this() const noexcept final;
-
         [[nodiscard]] char *getDataByte() noexcept final;
 
         [[nodiscard]] char *getDataByteDataInfos() const noexcept final;

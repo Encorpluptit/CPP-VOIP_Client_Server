@@ -3,9 +3,6 @@
 #include <iostream>
 #include "QtSocket.hpp"
 #include "UserResponse.hpp"
-#include "CallResponse.hpp"
-#include "FriendResponse.hpp"
-#include "MessageResponse.hpp"
 
 MyTcpSocket::MyTcpSocket(QObject *parent) : QObject(parent)
 {
