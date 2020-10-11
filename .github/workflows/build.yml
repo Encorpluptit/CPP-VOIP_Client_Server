@@ -24,4 +24,4 @@ jobs:
         run: make re
 
       - name: Unit Tests
-        run: make tests_run
+        run: make gh_tests_run

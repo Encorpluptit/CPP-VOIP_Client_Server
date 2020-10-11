@@ -19,6 +19,7 @@ set(CMAKE_CXX_STANDARD 20)
 # Compilation modes
 option(USE_DEBUG "Enter debug mode" ON)
 option(USE_LOG "Log Execution in a file" OFF)
+option(GH_TESTS "Github tests for disable port audio" OFF)
 
 
 ###############################################################################
@@ -283,13 +284,17 @@ target_compile_definitions(unit_tests PRIVATE _UNIT_TESTS_)
 target_compile_options(unit_tests PRIVATE --coverage)
 
 target_include_directories(unit_tests PRIVATE tests/criterion_unit_tests/include
-${CLIENT_INCLUDES})
+        ${CLIENT_INCLUDES})
 
 target_link_libraries(unit_tests criterion ${CONAN_LIBS} gcov stdc++fs Qt5::Widgets Qt5::Network)
 
 #set_property(TARGET unit_tests PROPERTY CXX_STANDARD 11)
 set_target_properties(unit_tests PROPERTIES CXX_STANDARD 17)
 #set(CMAKE_CXX_STANDARD 17)
+
+if (GH_TESTS)
+    target_compile_definitions(unit_tests PRIVATE GH_TESTS)
+endif (GH_TESTS)
 
 
 ##########################
