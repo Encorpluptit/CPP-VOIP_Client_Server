@@ -8,9 +8,7 @@
 #include <iostream>
 #include "CallResponse.hpp"
 
-using namespace BabelNetwork;
-
-std::shared_ptr<AResponse> CallResponse::NewCallStarted(
+std::shared_ptr<BabelNetwork::AResponse> BabelNetwork::CallResponse::NewCallStarted(
     const std::string &sender,
     const std::string &receiver,
     const std::string &ip,
@@ -28,7 +26,7 @@ std::shared_ptr<AResponse> CallResponse::NewCallStarted(
     return response;
 }
 
-std::shared_ptr<AResponse> CallResponse::CallRequest(
+std::shared_ptr<BabelNetwork::AResponse> BabelNetwork::CallResponse::CallRequest(
     const std::string &sender,
     const std::string &receiver,
     const std::string &ip,
@@ -41,7 +39,7 @@ std::shared_ptr<AResponse> CallResponse::CallRequest(
     return resp;
 }
 
-std::shared_ptr<AResponse> CallResponse::LeftCall(
+std::shared_ptr<BabelNetwork::AResponse> BabelNetwork::CallResponse::LeftCall(
     const std::string &sender,
     const std::string &receiver
 )
@@ -52,7 +50,7 @@ std::shared_ptr<AResponse> CallResponse::LeftCall(
     return resp;
 }
 
-std::shared_ptr<AResponse> CallResponse::EndCallRequest(
+std::shared_ptr<BabelNetwork::AResponse> BabelNetwork::CallResponse::EndCallRequest(
     const std::shared_ptr<BabelNetwork::CallResponse> &resp
 )
 {
@@ -64,7 +62,7 @@ std::shared_ptr<AResponse> CallResponse::EndCallRequest(
     return response;
 }
 
-std::shared_ptr<AResponse> CallResponse::CallIncoming(
+std::shared_ptr<BabelNetwork::AResponse> BabelNetwork::CallResponse::CallIncoming(
     const std::shared_ptr<CallResponse> &resp,
     const uint16_t call_id
 )
@@ -79,7 +77,7 @@ std::shared_ptr<AResponse> CallResponse::CallIncoming(
     return response;
 }
 
-std::shared_ptr<AResponse> CallResponse::AcceptCall(
+std::shared_ptr<BabelNetwork::AResponse> BabelNetwork::CallResponse::AcceptCall(
     const std::shared_ptr<BabelNetwork::CallResponse> &resp,
     const std::string &ip,
     const uint16_t port
@@ -95,7 +93,7 @@ std::shared_ptr<AResponse> CallResponse::AcceptCall(
     return response;
 }
 
-std::shared_ptr<AResponse> CallResponse::RefusedCall(
+std::shared_ptr<BabelNetwork::AResponse> BabelNetwork::CallResponse::RefusedCall(
     const std::shared_ptr<BabelNetwork::CallResponse> &resp
 )
 {
@@ -109,7 +107,7 @@ std::shared_ptr<AResponse> CallResponse::RefusedCall(
     return response;
 }
 
-std::shared_ptr<AResponse> CallResponse::DisconnectedUser(
+std::shared_ptr<BabelNetwork::AResponse> BabelNetwork::CallResponse::DisconnectedUser(
     const std::string &sender,
     const std::string &receiver
 )
@@ -120,7 +118,7 @@ std::shared_ptr<AResponse> CallResponse::DisconnectedUser(
     return resp;
 }
 
-std::shared_ptr<AResponse> CallResponse::UnknownErrorOccured(
+std::shared_ptr<BabelNetwork::AResponse> BabelNetwork::CallResponse::UnknownErrorOccured(
     const std::shared_ptr<BabelNetwork::CallResponse> &resp
 )
 {

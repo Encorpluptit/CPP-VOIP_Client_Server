@@ -8,61 +8,66 @@
 #include <iostream>
 #include "MessageResponse.hpp"
 
-using namespace BabelNetwork;
-
-std::shared_ptr<AResponse> MessageResponse::RequestMessageSend(const std::string &sender, const std::string &receiver,
+std::shared_ptr<BabelNetwork::AResponse>
+BabelNetwork::MessageResponse::RequestMessageSend(const std::string &sender, const std::string &receiver,
     const std::string &messageData)
 {
-    auto resp = std::make_shared<MessageResponse>(sender, receiver, messageData);
-    resp->setCode(MessageResponse::ResponseCode::RequestSendMessage);
+    auto resp = std::make_shared<BabelNetwork::MessageResponse>(sender, receiver, messageData);
+    resp->setCode(BabelNetwork::MessageResponse::ResponseCode::RequestSendMessage);
     if (!resp->setTimestamp())
         return nullptr;
     return resp;
 }
 
-std::shared_ptr<AResponse> MessageResponse::OkSendMessage(const std::shared_ptr<MessageResponse> &response)
+std::shared_ptr<BabelNetwork::AResponse>
+BabelNetwork::MessageResponse::OkSendMessage(const std::shared_ptr<BabelNetwork::MessageResponse> &response)
 {
-    response->setCode(MessageResponse::ResponseCode::SendMessageOk);
+    response->setCode(BabelNetwork::MessageResponse::ResponseCode::SendMessageOk);
     return response;
 }
 
-std::shared_ptr<AResponse>
-MessageResponse::MessageReceive(const std::string &sender, const std::string &receiver, const std::string &messageData)
+std::shared_ptr<BabelNetwork::AResponse>
+BabelNetwork::MessageResponse::MessageReceive(const std::string &sender, const std::string &receiver,
+    const std::string &messageData)
 {
-    auto resp = std::make_shared<MessageResponse>(sender, receiver, messageData);
-    resp->setCode(MessageResponse::ResponseCode::ReceiveMessage);
+    auto resp = std::make_shared<BabelNetwork::MessageResponse>(sender, receiver, messageData);
+    resp->setCode(BabelNetwork::MessageResponse::ResponseCode::ReceiveMessage);
     if (!resp->setTimestamp())
         return nullptr;
     return resp;
 }
 
-std::shared_ptr<AResponse> MessageResponse::MessageReceive(const std::shared_ptr<MessageResponse> &resp)
+std::shared_ptr<BabelNetwork::AResponse>
+BabelNetwork::MessageResponse::MessageReceive(const std::shared_ptr<BabelNetwork::MessageResponse> &resp)
 {
-    auto response = std::make_shared<MessageResponse>(
+    auto response = std::make_shared<BabelNetwork::MessageResponse>(
         resp->getSender(), resp->getReceiver(), resp->getMessageData());
-    response->setCode(MessageResponse::ResponseCode::ReceiveMessage);
+    response->setCode(BabelNetwork::MessageResponse::ResponseCode::ReceiveMessage);
     if (!response->setTimestamp())
         return nullptr;
     return response;
 }
 
-std::shared_ptr<AResponse> MessageResponse::ReceiveMessageOk(const std::string &sender, const std::string &receiver)
+std::shared_ptr<BabelNetwork::AResponse>
+BabelNetwork::MessageResponse::ReceiveMessageOk(const std::string &sender, const std::string &receiver)
 {
-    auto resp = std::make_shared<MessageResponse>(sender, receiver, "");
-    resp->setCode(MessageResponse::ResponseCode::ReceiveOk);
+    auto resp = std::make_shared<BabelNetwork::MessageResponse>(sender, receiver, "");
+    resp->setCode(BabelNetwork::MessageResponse::ResponseCode::ReceiveOk);
     if (!resp->setTimestamp())
         return nullptr;
     return resp;
 }
 
-std::shared_ptr<AResponse> MessageResponse::UserNotFound(const std::shared_ptr<MessageResponse> &response)
+std::shared_ptr<BabelNetwork::AResponse>
+BabelNetwork::MessageResponse::UserNotFound(const std::shared_ptr<BabelNetwork::MessageResponse> &response)
 {
-    response->setCode(MessageResponse::ResponseCode::UnknownUser);
+    response->setCode(BabelNetwork::MessageResponse::ResponseCode::UnknownUser);
     return response;
 }
 
-std::shared_ptr<AResponse> MessageResponse::UnknownErrorAppend(const std::shared_ptr<MessageResponse> &response)
+std::shared_ptr<BabelNetwork::AResponse>
+BabelNetwork::MessageResponse::UnknownErrorAppend(const std::shared_ptr<BabelNetwork::MessageResponse> &response)
 {
-    response->setCode(MessageResponse::ResponseCode::UnknownError);
+    response->setCode(BabelNetwork::MessageResponse::ResponseCode::UnknownError);
     return response;
 }

@@ -13,7 +13,7 @@
 #include "AResponse.hpp"
 
 namespace BabelNetwork {
-    class MessageResponse final : virtual public AResponse {
+    class MessageResponse final : virtual public BabelNetwork::AResponse {
         /* <- Class Enum -> */
     public:
         enum ResponseCode {
@@ -35,7 +35,7 @@ namespace BabelNetwork {
 
         /* <- Class Structure -> */
     public:
-        using Data = struct DataStruct {
+        struct Data {
             char sender[MaxDataSize::Sender];
             char receiver[MaxDataSize::Receiver];
             char messageData[MaxDataSize::MessageData];
@@ -59,7 +59,7 @@ namespace BabelNetwork {
 
         /* <- Constructor - Destructor -> */
     public:
-        MessageResponse() : AResponse()
+        MessageResponse() : BabelNetwork::AResponse()
         {
             _header._responseType = Message;
             _header._dataInfosSize = DataInfosSize;
@@ -136,24 +136,26 @@ namespace BabelNetwork {
 
         /* <- Formatted Response -> */
     public:
-        [[nodiscard]] static std::shared_ptr<AResponse>
+        [[nodiscard]] static std::shared_ptr<BabelNetwork::AResponse>
         RequestMessageSend(const std::string &sender, const std::string &receiver, const std::string &messageData);
 
-        [[nodiscard]] static std::shared_ptr<AResponse> OkSendMessage(const std::shared_ptr<MessageResponse> &response);
+        [[nodiscard]] static std::shared_ptr<BabelNetwork::AResponse>
+        OkSendMessage(const std::shared_ptr<BabelNetwork::MessageResponse> &response);
 
-        [[nodiscard]] static std::shared_ptr<AResponse>
+        [[nodiscard]] static std::shared_ptr<BabelNetwork::AResponse>
         MessageReceive(const std::string &sender, const std::string &receiver, const std::string &messageData);
 
-        [[nodiscard]] static std::shared_ptr<AResponse>
-        MessageReceive(const std::shared_ptr<MessageResponse> &response);
+        [[nodiscard]] static std::shared_ptr<BabelNetwork::AResponse>
+        MessageReceive(const std::shared_ptr<BabelNetwork::MessageResponse> &response);
 
-        [[nodiscard]] static std::shared_ptr<AResponse>
+        [[nodiscard]] static std::shared_ptr<BabelNetwork::AResponse>
         ReceiveMessageOk(const std::string &sender, const std::string &receiver);
 
-        [[nodiscard]] static std::shared_ptr<AResponse> UserNotFound(const std::shared_ptr<MessageResponse> &response);
+        [[nodiscard]] static std::shared_ptr<BabelNetwork::AResponse>
+        UserNotFound(const std::shared_ptr<BabelNetwork::MessageResponse> &response);
 
-        [[nodiscard]] static std::shared_ptr<AResponse>
-        UnknownErrorAppend(const std::shared_ptr<MessageResponse> &response);
+        [[nodiscard]] static std::shared_ptr<BabelNetwork::AResponse>
+        UnknownErrorAppend(const std::shared_ptr<BabelNetwork::MessageResponse> &response);
 
         /* <- Stringify Code -> */
     private:

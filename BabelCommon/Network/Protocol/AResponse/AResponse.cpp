@@ -14,21 +14,21 @@
 
 using namespace BabelNetwork;
 
-AResponse::AResponse(const ResponseHeader &headerResponse)
+BabelNetwork::AResponse::AResponse(const ResponseHeader &headerResponse)
     : _header(headerResponse) {}
 
-AResponse::AResponse(const AResponse &other) : AResponse(other._header) {}
+BabelNetwork::AResponse::AResponse(const BabelNetwork::AResponse &other) : BabelNetwork::AResponse(other._header) {}
 
-std::shared_ptr<AResponse> AResponse::getResponse(const char *headerBuffer)
+std::shared_ptr<BabelNetwork::AResponse> BabelNetwork::AResponse::getResponse(const char *headerBuffer)
 {
     ResponseHeader response{};
     std::memcpy(&response, headerBuffer, HeaderSize);
 
     switch (response._responseType) {
         case User:
-            return std::shared_ptr<AResponse>(new UserResponse(response));
+            return std::shared_ptr<BabelNetwork::AResponse>(new UserResponse(response));
         case Call:
-            return std::shared_ptr<AResponse>(new CallResponse(response));
+            return std::shared_ptr<BabelNetwork::AResponse>(new CallResponse(response));
         case Friend:
             return std::shared_ptr<AResponse>(new FriendResponse(response));
         case Message:

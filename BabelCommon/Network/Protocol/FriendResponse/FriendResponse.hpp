@@ -12,7 +12,7 @@
 #include "AResponse.hpp"
 
 namespace BabelNetwork {
-    class FriendResponse final : virtual public AResponse {
+    class FriendResponse final : virtual public BabelNetwork::AResponse {
 
         /* <- Class Enum -> */
     public:
@@ -39,7 +39,7 @@ namespace BabelNetwork {
 
         /* <- Class Structure -> */
     public:
-        using Data = struct DataStruct {
+        struct Data {
             char login[MaxDataSize::Login];
             char FriendLogin[MaxDataSize::FriendLogin];
         };
@@ -59,7 +59,7 @@ namespace BabelNetwork {
 
         /* <- Constructor - Destructor -> */
     public:
-        FriendResponse() : AResponse()
+        FriendResponse() : BabelNetwork::AResponse()
         {
             _header._responseType = Friend;
             _header._dataInfosSize = DataInfosSize;
@@ -126,13 +126,13 @@ namespace BabelNetwork {
 
         /* <- Formatted Response -> */
     public:
-        [[nodiscard]] static std::shared_ptr<AResponse>
+        [[nodiscard]] static std::shared_ptr<BabelNetwork::AResponse>
         RequestFriend(const std::string &login, const std::string &friendLogin);
 
-        [[nodiscard]] static std::shared_ptr<AResponse>
+        [[nodiscard]] static std::shared_ptr<BabelNetwork::AResponse>
         AddFriend(const std::string &login, const std::string &friendLogin);
 
-        [[nodiscard]] static std::shared_ptr<AResponse>
+        [[nodiscard]] static std::shared_ptr<BabelNetwork::AResponse>
         NewFriendRequest(const std::string &login, const std::string &friendLogin);
 
         [[nodiscard]] static std::shared_ptr<AResponse>

@@ -12,7 +12,7 @@
 #include "AResponse.hpp"
 
 namespace BabelNetwork {
-    class CallResponse final : virtual public AResponse {
+    class CallResponse final : virtual public BabelNetwork::AResponse {
         /* <- Class Enum -> */
     public:
         enum ResponseCode {
@@ -151,7 +151,7 @@ namespace BabelNetwork {
 
         /* <- Formatted Response -> */
     public:
-        [[nodiscard]] static std::shared_ptr<AResponse> NewCallStarted(
+        [[nodiscard]] static std::shared_ptr<BabelNetwork::AResponse> NewCallStarted(
             const std::string &sender,
             const std::string &receiver,
             const std::string &ip,
@@ -159,43 +159,43 @@ namespace BabelNetwork {
             uint16_t call_id
         );
 
-        [[nodiscard]] static std::shared_ptr<AResponse> CallRequest(
+        [[nodiscard]] static std::shared_ptr<BabelNetwork::AResponse> CallRequest(
             const std::string &sender,
             const std::string &receiver,
             const std::string &ip,
             const std::string &port
         );
 
-        [[nodiscard]] static std::shared_ptr<AResponse> LeftCall(
+        [[nodiscard]] static std::shared_ptr<BabelNetwork::AResponse> LeftCall(
             const std::string &sender,
             const std::string &receiver
         );
 
-        [[nodiscard]] static std::shared_ptr<AResponse> EndCallRequest(
+        [[nodiscard]] static std::shared_ptr<BabelNetwork::AResponse> EndCallRequest(
             const std::shared_ptr<BabelNetwork::CallResponse> &resp
         );
 
-        [[nodiscard]] static std::shared_ptr<AResponse> CallIncoming(
+        [[nodiscard]] static std::shared_ptr<BabelNetwork::AResponse> CallIncoming(
             const std::shared_ptr<CallResponse> &resp,
             uint16_t call_id
         );
 
-        [[nodiscard]] static std::shared_ptr<AResponse> AcceptCall(
+        [[nodiscard]] static std::shared_ptr<BabelNetwork::AResponse> AcceptCall(
             const std::shared_ptr<BabelNetwork::CallResponse> &resp,
             const std::string &ip,
             uint16_t port
         );
 
-        [[nodiscard]] static std::shared_ptr<AResponse> RefusedCall(
+        [[nodiscard]] static std::shared_ptr<BabelNetwork::AResponse> RefusedCall(
             const std::shared_ptr<BabelNetwork::CallResponse> &response
         );
 
-        [[nodiscard]] static std::shared_ptr<AResponse> DisconnectedUser(
+        [[nodiscard]] static std::shared_ptr<BabelNetwork::AResponse> DisconnectedUser(
             const std::string &sender,
             const std::string &receiver
         );
 
-        [[nodiscard]] static std::shared_ptr<AResponse> UnknownErrorOccured(
+        [[nodiscard]] static std::shared_ptr<BabelNetwork::AResponse> UnknownErrorOccured(
             const std::shared_ptr<BabelNetwork::CallResponse> &response
         );
 
