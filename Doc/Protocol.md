@@ -416,6 +416,32 @@ this is the structure for the Call responsse fill this struct and send it to ser
   * 352: User didn't exist.
   * 354: MMmm there is a error. (soz we don't what it is)
 
+### Header
+
+im going to specify the header for every responsse for Friend part
+you need to send it to specify the size of the next structure
+
+* _loginSize = size of the login user
+* _friendLoginSize = size of the login user
+
+  ```cpp
+  DataInfosStruct {
+    uint16_t _loginSize;
+    uint16_t _friendLoginSize;
+  };
+  ```
+
+### Struct of call responsse
+
+this is the structure for the Call responsse fill this struct and send it to server
+
+  ```cpp
+    DataStruct {
+      char login[MaxDataSize::Login];
+      char FriendLogin[MaxDataSize::FriendLogin];
+    };
+  ```
+
 * Friend Management
   * [Client -> Server]
     * Success Codes.
