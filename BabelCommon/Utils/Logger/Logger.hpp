@@ -58,6 +58,8 @@ namespace BabelUtils {
         void initLogType();
 
         #ifdef LOG_UNIX
+            std::filesystem::path createLogDirectories();
+
             void createLogFile(std::filesystem::path filePath);
         #endif
 

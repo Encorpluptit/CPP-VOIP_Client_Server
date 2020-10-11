@@ -53,6 +53,38 @@ void Logger::initLogType()
     }
 }
 
+#ifdef LOG_UNIX
+std::filesystem::path Logger::createLogDirectories()
+{
+    const std::string LogDir("BabelLogs");
+    const std::string TargetLogDir("Babel" + _description + "Log");
+    const std::filesystem::path current_path(std::filesystem::current_path());
+    std::filesystem::path tmpPath(current_path);
+
+    tmpPath /= LogDir;
+    std::filesystem::create_directory(tmpPath);
+    tmpPath /= TargetLogDir;
+    std::filesystem::create_directory(tmpPath);
+    return tmpPath;
+}
+
+void Logger::createLogFile(std::filesystem::path filePath)
+{
+    std::time_t rawtime;
+    struct tm *timeinfo;
+    size_t sz = FILENAME_MAX - filePath.string().size();
+
+    if (std::time(&rawtime) == ((time_t) -1) || !(timeinfo = std::localtime(&rawtime))
+        || !strftime(_timeBuffer, sz, "%Y-%m-%d_%H-%M-%S.log", timeinfo)) {
+        filePath /= std::string("Log_File.log");
+        _logFile = std::ofstream(filePath.string());
+        return;
+    }
+    filePath /= std::string(_timeBuffer);
+    _logFile = std::ofstream(filePath.string());
+}
+#endif
+
 void Logger::getTime()
 {
     std::time_t rawtime;
