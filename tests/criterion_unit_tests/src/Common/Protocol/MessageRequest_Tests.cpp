@@ -6,6 +6,24 @@
 #include "MessageResponse.hpp"
 #include "ResponseError.hpp"
 
+Test(Common, MessageResponse_00)
+{
+    const AResponse::ResponseHeader hdr = {
+        ._code = FriendResponse::ResponseCode::FriendAdded,
+        ._responseType = AResponse::ResponseType::Message,
+        ._dataInfosSize = 0
+    };
+    FriendResponse test(hdr);
+
+    ASSERT_BOOL(test.isOk(), false);
+
+    ASSERT_INT(test.getResponseType(), AResponse::ResponseType::Friend);
+    ASSERT_BOOL(test.getDescription().empty(), false);
+    ASSERT_BOOL(test.describe_code().empty(), false);
+    ASSERT_BOOL(test.describe_data().empty(), false);
+    ASSERT_BOOL(test.describe_data_infos().empty(), false);
+}
+
 Test(Common, MessageResponse_01)
 {
     const std::string user_1("dam");
@@ -52,5 +70,121 @@ Test(Common, MessageResponse_02)
     cr_assert_not_null(ptr2);
     cr_assert_str_eq(ptr2->getSender(), user_1.c_str());
     cr_assert_str_eq(ptr2->getReceiver(), user_2.c_str());
+    cr_assert_str_eq(ptr2->getMessageData(), msg.c_str());
+}
+
+Test(Common, MessageResponse_03)
+{
+    const std::string sender = std::string(BabelNetwork::MessageResponse::MaxDataSize::Sender + 1, '*');
+    const std::string receiver = std::string(BabelNetwork::MessageResponse::MaxDataSize::Receiver, '*');
+    const std::string msg = std::string(BabelNetwork::MessageResponse::MaxDataSize::MessageData, '*');
+
+    cr_assert_throw(
+        BabelNetwork::MessageResponse test(sender, receiver, msg),
+        BabelErrors::MessageResponse
+    );
+}
+
+Test(Common, MessageResponse_04)
+{
+    const std::string sender = std::string(BabelNetwork::MessageResponse::MaxDataSize::Sender, '*');
+    const std::string receiver = std::string(BabelNetwork::MessageResponse::MaxDataSize::Receiver + 1, '*');
+    const std::string msg = std::string(BabelNetwork::MessageResponse::MaxDataSize::MessageData, '*');
+
+    cr_assert_throw(
+        BabelNetwork::MessageResponse test(sender, receiver, msg),
+        BabelErrors::MessageResponse
+    );
+}
+
+Test(Common, MessageResponse_05)
+{
+    const std::string sender = std::string(BabelNetwork::MessageResponse::MaxDataSize::Sender, '*');
+    const std::string receiver = std::string(BabelNetwork::MessageResponse::MaxDataSize::Receiver, '*');
+    const std::string msg = std::string(BabelNetwork::MessageResponse::MaxDataSize::MessageData + 1, '*');
+
+    cr_assert_throw(
+        BabelNetwork::MessageResponse test(sender, receiver, msg),
+        BabelErrors::MessageResponse
+    );
+}
+
+Test(Common, MessageResponse_RequestMessageSend)
+{
+    const std::string sender("dam");
+    const std::string receiver("ugo");
+    const std::string msg("Coucou !");
+    BabelNetwork::MessageResponse::ResponseCode code = BabelNetwork::MessageResponse::ResponseCode::RequestSendMessage;
+
+    auto ptr = BabelNetwork::MessageResponse::RequestMessageSend(sender, receiver, msg);
+    EXPECT_INT(ptr->getResponseType(), BabelNetwork::AResponse::ResponseType::Message);
+    EXPECT_SIZET(ptr->getDataInfosSize(), BabelNetwork::MessageResponse::DataInfosSize);
+    EXPECT_INT(ptr->getCode(), code);
+
+    auto ptr2 = std::dynamic_pointer_cast<BabelNetwork::MessageResponse>(ptr);
+    cr_assert_not_null(ptr2);
+    cr_assert_str_eq(ptr2->getSender(), sender.c_str());
+    cr_assert_str_eq(ptr2->getReceiver(), receiver.c_str());
+    cr_assert_str_eq(ptr2->getMessageData(), msg.c_str());
+}
+
+Test(Common, MessageResponse_MessageReceive)
+{
+    const std::string sender("dam");
+    const std::string receiver("ugo");
+    const std::string msg("Coucou !");
+    BabelNetwork::MessageResponse::ResponseCode code = BabelNetwork::MessageResponse::ResponseCode::ReceiveMessage;
+
+    auto ptr = BabelNetwork::MessageResponse::MessageReceive(sender, receiver, msg);
+    EXPECT_INT(ptr->getResponseType(), BabelNetwork::AResponse::ResponseType::Message);
+    EXPECT_SIZET(ptr->getDataInfosSize(), BabelNetwork::MessageResponse::DataInfosSize);
+    EXPECT_INT(ptr->getCode(), code);
+
+    auto ptr2 = std::dynamic_pointer_cast<BabelNetwork::MessageResponse>(ptr);
+    cr_assert_not_null(ptr2);
+    cr_assert_str_eq(ptr2->getSender(), sender.c_str());
+    cr_assert_str_eq(ptr2->getReceiver(), receiver.c_str());
+    cr_assert_str_eq(ptr2->getMessageData(), msg.c_str());
+}
+
+Test(Common, MessageResponse_MessageReceive_poly)
+{
+    const std::string sender("dam");
+    const std::string receiver("ugo");
+    const std::string msg("Coucou !");
+    BabelNetwork::MessageResponse::ResponseCode code = BabelNetwork::MessageResponse::ResponseCode::ReceiveMessage;
+
+    auto lol = BabelNetwork::MessageResponse::RequestMessageSend(sender, receiver, msg);
+    auto lol2 = std::dynamic_pointer_cast<BabelNetwork::MessageResponse>(lol);
+    auto ptr = BabelNetwork::MessageResponse::MessageReceive(lol2);
+    EXPECT_INT(ptr->getResponseType(), BabelNetwork::AResponse::ResponseType::Message);
+    EXPECT_SIZET(ptr->getDataInfosSize(), BabelNetwork::MessageResponse::DataInfosSize);
+    EXPECT_INT(ptr->getCode(), code);
+
+    auto ptr2 = std::dynamic_pointer_cast<BabelNetwork::MessageResponse>(ptr);
+    cr_assert_not_null(ptr2);
+    cr_assert_str_eq(ptr2->getSender(), sender.c_str());
+    cr_assert_str_eq(ptr2->getReceiver(), receiver.c_str());
+    cr_assert_str_eq(ptr2->getMessageData(), msg.c_str());
+}
+
+Test(Common, MessageResponse_OkSendMessage)
+{
+    const std::string sender("dam");
+    const std::string receiver("ugo");
+    const std::string msg("Coucou !");
+    BabelNetwork::MessageResponse::ResponseCode code = BabelNetwork::MessageResponse::ResponseCode::SendMessageOk;
+
+    auto lol = BabelNetwork::MessageResponse::MessageReceive(sender, receiver, msg);
+    auto lol2 = std::dynamic_pointer_cast<BabelNetwork::MessageResponse>(lol);
+    auto ptr = BabelNetwork::MessageResponse::OkSendMessage(lol2);
+    EXPECT_INT(ptr->getResponseType(), BabelNetwork::AResponse::ResponseType::Message);
+    EXPECT_SIZET(ptr->getDataInfosSize(), BabelNetwork::MessageResponse::DataInfosSize);
+    EXPECT_INT(ptr->getCode(), code);
+
+    auto ptr2 = std::dynamic_pointer_cast<BabelNetwork::MessageResponse>(ptr);
+    cr_assert_not_null(ptr2);
+    cr_assert_str_eq(ptr2->getSender(), sender.c_str());
+    cr_assert_str_eq(ptr2->getReceiver(), receiver.c_str());
     cr_assert_str_eq(ptr2->getMessageData(), msg.c_str());
 }

@@ -25,7 +25,8 @@ namespace BabelNetwork {
             UnknownUser = 450,
             UnknownError = 460
         };
-    private:
+
+    public:
         enum MaxDataSize {
             Sender = 128,
             Receiver = 128,
