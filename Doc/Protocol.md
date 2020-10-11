@@ -554,19 +554,23 @@ this is the structure for the Call responsse fill this struct and send it to ser
   * 450: Unknown User.
   * 460: Unknown Error.
 
-<!-- ### Header
+### Header
 
-im going to specify the header for every responsse for Friend part
+im going to specify the header for every responsse for Message part
 you need to send it to specify the size of the next structure
 
-* _loginSize = size of the login user
-* _friendLoginSize = size of the login user
+* _senderSize = size of the login user
+* _receiverSize = size of the login user
+* _messageDataSize = size of the message
+* _timestampSize = size of the timestamp message
 
   ```cpp
-  DataInfosStruct {
-    uint16_t _loginSize;
-    uint16_t _friendLoginSize;
-  };
+    DataInfosStruct {
+      uint16_t _senderSize;
+      uint16_t _receiverSize;
+      uint16_t _messageDataSize;
+      uint8_t _timestampSize;
+    };
   ```
 
 ### Struct of call responsse
@@ -575,95 +579,98 @@ this is the structure for the Call responsse fill this struct and send it to ser
 
   ```cpp
     DataStruct {
-      char login[MaxDataSize::Login];
-      char FriendLogin[MaxDataSize::FriendLogin];
-    };
+      char sender[MaxDataSize::Sender];
+      char receiver[MaxDataSize::Receiver];
+      char messageData[MaxDataSize::MessageData];
+      std::time_t timestamp;
+    };  
   ```
 
-* Friend Management
-  * [Client -> Server]
-    * Success Codes.
-    * 300: Request Friendship.
+<!-- 
+// * Message Management
+//   * [Client -> Server]
+//     * Success Codes.
+//     * 300: Request Friendship.
 
-      ```json
-              {
-                "sender":             "damien.bernard@epitech.eu",
-                "receiver":           "ugo.levi-cescutti@epitech.eu"
-              }
-      ```
+//       ```json
+//               {
+//                 "sender":             "damien.bernard@epitech.eu",
+//                 "receiver":           "ugo.levi-cescutti@epitech.eu"
+//               }
+//       ```
 
-    * 306: Delete this Friend.
+//     * 306: Delete this Friend.
 
-      ```json
-              {
-                "sender":             "damien.bernard@epitech.eu",
-                "receiver":           "ugo.levi-cescutti@epitech.eu"
-              }
-      ```
+//       ```json
+//               {
+//                 "sender":             "damien.bernard@epitech.eu",
+//                 "receiver":           "ugo.levi-cescutti@epitech.eu"
+//               }
+//       ```
 
-  * [Server -> Client]
-    * Success Codes.
+//   * [Server -> Client]
+//     * Success Codes.
 
-    * 303: Requested Friendship was Accepted.
+//     * 303: Requested Friendship was Accepted.
 
-      ```json
-              {
-                "sender":             "damien.bernard@epitech.eu",
-                "receiver":           "ugo.levi-cescutti@epitech.eu"
-              }
-      ```
+//       ```json
+//               {
+//                 "sender":             "damien.bernard@epitech.eu",
+//                 "receiver":           "ugo.levi-cescutti@epitech.eu"
+//               }
+//       ```
 
-    * 304: Requested Friendship was Decline.
+//     * 304: Requested Friendship was Decline.
 
-      ```json
-              {
-                "sender":             "damien.bernard@epitech.eu",
-                "receiver":           "ugo.levi-cescutti@epitech.eu"
-              }
-      ```
+//       ```json
+//               {
+//                 "sender":             "damien.bernard@epitech.eu",
+//                 "receiver":           "ugo.levi-cescutti@epitech.eu"
+//               }
+//       ```
 
-    * 301: Look at this Requested Friendship.
+//     * 301: Look at this Requested Friendship.
   
-      ```json
-              {
-                "sender":             "damien.bernard@epitech.eu",
-                "receiver":           "ugo.levi-cescutti@epitech.eu"
-              }
-      ```
+//       ```json
+//               {
+//                 "sender":             "damien.bernard@epitech.eu",
+//                 "receiver":           "ugo.levi-cescutti@epitech.eu"
+//               }
+//       ```
 
-    * Error Codes
-    * 471: Requested Friendship refused.
+//     * Error Codes
+//     * 471: Requested Friendship refused.
 
-      ```json
-              {
-                "sender":             "damien.bernard@epitech.eu",
-                "receiver":           "ugo.levi-cescutti@epitech.eu"
-              }
-      ```
+//       ```json
+//               {
+//                 "sender":             "damien.bernard@epitech.eu",
+//                 "receiver":           "ugo.levi-cescutti@epitech.eu"
+//               }
+//       ```
 
-    * 350: You are already Friend.
+//     * 350: You are already Friend.
 
-      ```json
-              {
-                "sender":             "damien.bernard@epitech.eu",
-                "receiver":           "ugo.levi-cescutti@epitech.eu"
-              }
-      ```
+//       ```json
+//               {
+//                 "sender":             "damien.bernard@epitech.eu",
+//                 "receiver":           "ugo.levi-cescutti@epitech.eu"
+//               }
+//       ```
 
-    * 352: User didn't exist.
+//     * 352: User didn't exist.
 
-      ```json
-              {
-                "sender":             "damien.bernard@epitech.eu",
-                "receiver":           "ugo.levi-cescutti@epitech.eu"
-              }
-      ```
+//       ```json
+//               {
+//                 "sender":             "damien.bernard@epitech.eu",
+//                 "receiver":           "ugo.levi-cescutti@epitech.eu"
+//               }
+//       ```
 
-    * 354: MMmm there is a error. (soz we don't what it is)
+//     * 354: MMmm there is a error. (soz we don't what it is)
 
-      ```json
-              {
-                "sender":             "damien.bernard@epitech.eu",
-                "receiver":           "ugo.levi-cescutti@epitech.eu"
-              }
-      ``` -->
+//       ```json
+//               {
+//                 "sender":             "damien.bernard@epitech.eu",
+//                 "receiver":           "ugo.levi-cescutti@epitech.eu"
+//               }
+//       ``` -->
