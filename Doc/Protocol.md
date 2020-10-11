@@ -44,16 +44,16 @@ that is the classic header for a responsse
     * 175: Request Account Deleted.
     * 176: Client Logged Out.
 
-    * 400: Call Started.
-    * 401: Request Call.
-    * 402: Call Left.
-    * 403: Request End Call.
-    * 404: Incoming CAll.
-    * 405: Call Accepted.
-    * 470: Call Refused.
-    * 471: User Disconected.
-    * 472: Unknown Error.
-    
+    * 200: Call Started.
+    * 201: Request Call.
+    * 202: Call Left.
+    * 203: Request End Call.
+    * 204: Incoming Call.
+    * 205: Call Accepted.
+    * 270: Call Refused.
+    * 271: User Disconected.
+    * 272: Unknown Error.
+
     * 300: Request Friendship.
     * 301: Look at this Requested Friendship.
     * 302: ??
