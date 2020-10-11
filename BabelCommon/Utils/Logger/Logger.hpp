@@ -9,7 +9,7 @@
 #define CPP_BABEL_2020_LOGGER_HPP
 
 #include <fstream>
-#ifdef UNIX
+#ifdef LOG_UNIX
 #include <filesystem>
 #endif
 #include "NetworkInfos.hpp"
@@ -57,7 +57,7 @@ namespace BabelUtils {
 
         void initLogType();
 
-        #ifdef UNIX
+        #ifdef LOG_UNIX
             void createLogFile(std::filesystem::path filePath);
         #endif
 

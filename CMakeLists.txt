@@ -16,7 +16,7 @@ set(CMAKE_CXX_STANDARD 20)
 ###############################################################################
 # Compilation modes
 option(USE_DEBUG "Enter debug mode" ON)
-option(USE_LOG "Log Execution in a file" OFF)
+option(USE_LOG "Log Execution in a file" ON)
 option(GH_TESTS "Github tests for disable port audio" OFF)
 
 
@@ -24,6 +24,7 @@ option(GH_TESTS "Github tests for disable port audio" OFF)
 # Set Compile Options
 if (UNIX)
     add_compile_options(-Wall -Wextra)
+    add_compile_definitions(LOG_UNIX)
 endif (UNIX)
 
 if (USE_LOG)

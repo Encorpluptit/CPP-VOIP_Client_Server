@@ -16,7 +16,7 @@ Logger::Logger(Logger::LogType type)
 {
     initLogType();
     try {
-        #ifdef UNIX
+        #ifdef LOG_UNIX
             std::filesystem::path tmpPath = createLogDirectories();
             createLogFile(tmpPath);
             _ok = true;
