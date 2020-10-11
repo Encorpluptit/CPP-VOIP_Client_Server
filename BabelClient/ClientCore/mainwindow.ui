@@ -41,6 +41,9 @@
     <property name="contextMenuPolicy">
      <enum>Qt::NoContextMenu</enum>
     </property>
+    <property name="currentIndex">
+     <number>2</number>
+    </property>
     <widget class="QWidget" name="LoginWidget">
      <property name="maximumSize">
       <size>
@@ -209,6 +212,59 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
       <layout class="QFormLayout" name="CallLayout">
+       <property name="fieldGrowthPolicy">
+        <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+       </property>
+       <item row="0" column="0">
+        <widget class="QTextEdit" name="LoginNameEdit">
+         <property name="maximumSize">
+          <size>
+           <width>110</width>
+           <height>40</height>
+          </size>
+         </property>
+         <property name="verticalScrollBarPolicy">
+          <enum>Qt::ScrollBarAlwaysOff</enum>
+         </property>
+         <property name="horizontalScrollBarPolicy">
+          <enum>Qt::ScrollBarAlwaysOff</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QTextEdit" name="ContactName">
+         <property name="maximumSize">
+          <size>
+           <width>200</width>
+           <height>40</height>
+          </size>
+         </property>
+         <property name="contextMenuPolicy">
+          <enum>Qt::DefaultContextMenu</enum>
+         </property>
+         <property name="verticalScrollBarPolicy">
+          <enum>Qt::ScrollBarAlwaysOff</enum>
+         </property>
+         <property name="horizontalScrollBarPolicy">
+          <enum>Qt::ScrollBarAlwaysOff</enum>
+         </property>
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+         <property name="html">
+          <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:6px; margin-bottom:6px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="markdown" stdset="0">
+          <string notr="true">Ugo
+
+</string>
+         </property>
+        </widget>
+       </item>
        <item row="2" column="0">
         <layout class="QVBoxLayout" name="VLayout">
          <item>
@@ -246,109 +302,67 @@ p, li { white-space: pre-wrap; }
         </layout>
        </item>
        <item row="2" column="1">
-        <widget class="QTextEdit" name="HistoricMessages"/>
-       </item>
-       <item row="3" column="1">
-        <widget class="QTextEdit" name="NewMessages">
-         <property name="maximumSize">
-          <size>
-           <width>150</width>
-           <height>50</height>
-          </size>
-         </property>
-         <property name="verticalScrollBarPolicy">
-          <enum>Qt::ScrollBarAlwaysOff</enum>
-         </property>
-         <property name="horizontalScrollBarPolicy">
-          <enum>Qt::ScrollBarAlwaysOff</enum>
-         </property>
-         <property name="placeholderText" stdset="0">
-          <string>Message</string>
+        <widget class="QTextEdit" name="HistoricMessages">
+         <property name="textInteractionFlags">
+          <set>Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
          </property>
         </widget>
        </item>
        <item row="4" column="1">
+        <widget class="QPushButton" name="sendMessage">
+         <property name="maximumSize">
+          <size>
+           <width>200</width>
+           <height>200</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Send Message</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1">
         <widget class="QPushButton" name="CallButton">
          <property name="text">
           <string>Call</string>
          </property>
         </widget>
        </item>
-       <item row="5" column="1">
-        <widget class="QPushButton" name="HangOutButton">
-         <property name="text">
-          <string>HangOut</string>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="1">
-        <widget class="QPushButton" name="DisconnectButton">
-         <property name="text">
-          <string>Disconnect</string>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="0">
+       <item row="6" column="0">
         <widget class="QPushButton" name="ManageFriendButton">
          <property name="text">
           <string>Manage Friend</string>
          </property>
         </widget>
        </item>
-       <item row="0" column="0">
-        <widget class="QTextEdit" name="LoginNameEdit">
-         <property name="maximumSize">
-          <size>
-           <width>110</width>
-           <height>40</height>
-          </size>
-         </property>
-         <property name="verticalScrollBarPolicy">
-          <enum>Qt::ScrollBarAlwaysOff</enum>
-         </property>
-         <property name="horizontalScrollBarPolicy">
-          <enum>Qt::ScrollBarAlwaysOff</enum>
+       <item row="6" column="1">
+        <widget class="QPushButton" name="HangOutButton">
+         <property name="text">
+          <string>HangOut</string>
          </property>
         </widget>
        </item>
-       <item row="6" column="0">
+       <item row="7" column="0">
         <widget class="QPushButton" name="DeleteAccountButton">
          <property name="text">
           <string>Delete Account</string>
          </property>
         </widget>
        </item>
-       <item row="0" column="1">
-        <widget class="QTextEdit" name="ContactName">
-         <property name="maximumSize">
-          <size>
-           <width>200</width>
-           <height>40</height>
-          </size>
+       <item row="7" column="1">
+        <widget class="QPushButton" name="DisconnectButton">
+         <property name="text">
+          <string>Disconnect</string>
          </property>
-         <property name="contextMenuPolicy">
-          <enum>Qt::DefaultContextMenu</enum>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QLineEdit" name="NewMessages">
+         <property name="text">
+          <string/>
          </property>
-         <property name="verticalScrollBarPolicy">
-          <enum>Qt::ScrollBarAlwaysOff</enum>
-         </property>
-         <property name="horizontalScrollBarPolicy">
-          <enum>Qt::ScrollBarAlwaysOff</enum>
-         </property>
-         <property name="readOnly">
-          <bool>true</bool>
-         </property>
-         <property name="html">
-          <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:6px; margin-bottom:6px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-         </property>
-         <property name="markdown" stdset="0">
-          <string notr="true">Ugo
-
-</string>
+         <property name="placeholderText">
+          <string>Message</string>
          </property>
         </widget>
        </item>
@@ -491,7 +505,7 @@ p, li { white-space: pre-wrap; }
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Request friend from &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
         </widget>
        </item>
