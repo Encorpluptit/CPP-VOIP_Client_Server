@@ -4,7 +4,6 @@
 PortAudio::PortAudio()
 {
     int err = Pa_Initialize();
-    std::cout << "ERROR PORTAUDIO : " << Pa_GetErrorText(err) << std::endl;
     if (err != paNoError)
         throw (BabelErrors::BabelError("PortAudio Initialization"));
 }
@@ -44,9 +43,6 @@ std::vector<uint16_t> PortAudio::getVoice() {
     if (len < 0)
         throw (BabelErrors::BabelError("PortAudio Error StreamReadAvailable"));
     while ((len = Pa_GetStreamReadAvailable(stream)) < 480);
-    /*if (len < (long) 480)
-        Pa_ReadStream(stream, record.data(), (unsigned long) len);
-    else*/
     Pa_ReadStream(stream, record.data(), 480);
     return (record);
 }

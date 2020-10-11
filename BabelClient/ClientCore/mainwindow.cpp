@@ -180,7 +180,6 @@ void MainWindow::on_CallButton_clicked()
 {
     if (called != true && actualFriend != login) {
         client.setIpPort(5000 + std::rand() % 15000);
-        std::cout << "MY UDP PORT : " << client.getMyUdpPort() << std::endl;
         called = true;
         client.getUdp()->doConnect(client.getMyUdpIp(), client.getMyUdpPort());
         auto response = BabelNetwork::CallResponse::CallRequest(login, actualFriend, client.getMyUdpIp(),
@@ -195,7 +194,6 @@ void MainWindow::on_sendMessage_clicked()
 
     if (actualFriend != login) {
         message = ui->NewMessages->text().toLocal8Bit().constData();
-        std::cout << "MESSAGE : " << message << std::endl;
         auto response = BabelNetwork::MessageResponse::RequestMessageSend(login, actualFriend, message);
         client.getTcp()->sendResponse(response);
     }
@@ -206,7 +204,6 @@ void MainWindow::LoggedIn(const std::shared_ptr<BabelNetwork::UserResponse> &res
     actualFriend = login;
     ui->gridStackedWidget->setCurrentWidget(ui->CallPage);
     ui->WrongLoginText->hide();
-    std::cout << "LOGGED IN" << std::endl;
     login = response->getLogin();
     logged = true;
     ui->LoginNameEdit->setText(login.c_str());
@@ -426,7 +423,6 @@ void MainWindow::doFriendResponse(const std::shared_ptr<BabelNetwork::AResponse>
         response);
     int code = response->getCode();
 
-    std::cout << response->getDescription() << std::endl;
     for (size_t i = 0; i < friendCodeIdx.size(); i++)
         if (friendCodeIdx[i] == code)
             friend_ptr[i](this, ptr);
@@ -467,16 +463,6 @@ void MainWindow::ManageVoice()
     std::vector<uint16_t> send;
     std::vector<uint16_t> receive;
 
-    /*send = audio->getVoice();
-    std::cout << send.size() << std::endl;
-    if (send.size() != 0)
-        send = codec->encode(send);
-    if (send.size() != 0)
-        receive = codec->decode(send);
-    audio->playVoice(receive);
-    send.clear();
-    receive.clear();*/
-
     send = audio->getVoice();
     if (!send.empty())
         send = codec->encode(send);
@@ -488,7 +474,4 @@ void MainWindow::ManageVoice()
         audio->playVoice(receive);
     }
     receive.clear();
-
-    //client.getUdp()->sendData("PTDR", callInfo->getIp(), std::stoi(callInfo->getPort()));
-    //client.getUdp()->readData(callInfo->getIp(), std::stoi(callInfo->getPort()));
 }
