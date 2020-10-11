@@ -256,7 +256,7 @@ you need to send it to specify the size of the next structure
 * _receiverSize = size of the login user
 * _timestampSize = size of the timeStamp
 * _ipSize = size of the ip user
-* _portSize = size of the por user
+* _portSize = size of the port user
 
   ```cpp
     DataInfosStruct {
