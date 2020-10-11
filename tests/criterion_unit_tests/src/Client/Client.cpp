@@ -38,7 +38,7 @@ Test(Client, PortAudio_Codec2)
     );
 }
 
-Test(Client, PortAudio_Codec3)
+Test(Client, PortAudio_Codec3, .disabled=true)
 {
     std::shared_ptr<ICodec> codec = std::make_shared<Opus>();
     std::vector<uint16_t> voice;
