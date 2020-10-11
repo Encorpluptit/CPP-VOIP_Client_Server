@@ -53,6 +53,18 @@ that is the classic header for a responsse
     * 470: Call Refused.
     * 471: User Disconected.
     * 472: Unknown Error.
+    
+    * 300: Request Friendship.
+    * 301: Look at this Requested Friendship.
+    * 302: ??
+    * 303: Requested Friendship was Accepted.
+    * 304: Requested Friendship was Decline.
+    * 306: Delete this Friend.
+
+    * 350: You are already Friend.
+    * 351: Target is not a Friend.
+    * 352: User didn't exist.
+    * 354: MMmm there is a error. (soz we don't what it is)
 
 ### Login (20*|27* Codes)
 
