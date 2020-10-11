@@ -90,10 +90,8 @@ void CallManager::endCall(
 {
     for (const auto &target: clientList) {
         if (target->getUser() && target->getUser()->login == resp->getSender()) {
-            std::cout << "ici" << std::endl;
             deleteConf(resp->getCallId());
             target->sendResponse(CallResponse::LeftCall(resp->getReceiver(), resp->getSender()));
-            clientSocket->sendResponse(CallResponse::LeftCall(resp->getSender(), resp->getReceiver()));
             return;
         }
     }
