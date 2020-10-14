@@ -4,7 +4,7 @@
 
 class IUdpSocket {
 public:
-    virtual void doConnect(const std::string &ip, int port) = 0;
+    virtual void doConnect(int port) = 0;
 
     virtual void disconnect() = 0;
 

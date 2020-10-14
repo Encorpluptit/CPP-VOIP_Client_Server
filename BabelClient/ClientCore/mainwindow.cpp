@@ -150,7 +150,7 @@ void MainWindow::on_AcceptCallButton_clicked()
 {
     called = true;
     client.setIpPort(5000 + std::rand() % 15000);
-    client.getUdp()->doConnect(client.getMyUdpIp(), client.getMyUdpPort());
+    client.getUdp()->doConnect(client.getMyUdpPort());
     auto response = BabelNetwork::CallResponse::AcceptCall(callInfo, client.getMyUdpIp(), client.getMyUdpPort());
     client.getTcp()->sendResponse(response);
     ui->gridStackedWidget->setCurrentWidget(ui->CallPage);
@@ -181,7 +181,7 @@ void MainWindow::on_CallButton_clicked()
     if (called != true && actualFriend != login) {
         client.setIpPort(5000 + std::rand() % 15000);
         called = true;
-        client.getUdp()->doConnect(client.getMyUdpIp(), client.getMyUdpPort());
+        client.getUdp()->doConnect(client.getMyUdpPort());
         auto response = BabelNetwork::CallResponse::CallRequest(login, actualFriend, client.getMyUdpIp(),
             std::to_string(client.getMyUdpPort()));
         client.getTcp()->sendResponse(response);

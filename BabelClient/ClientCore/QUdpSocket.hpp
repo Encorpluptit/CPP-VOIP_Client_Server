@@ -14,7 +14,7 @@ public:
 
     ~MyUdpSocket() override;
 
-    void doConnect(const std::string &ip, int port) override;
+    void doConnect(int port) override;
 
     void disconnect() override;
 

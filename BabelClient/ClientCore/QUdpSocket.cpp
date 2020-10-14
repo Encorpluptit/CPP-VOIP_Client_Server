@@ -17,9 +17,9 @@ MyUdpSocket::~MyUdpSocket()
     delete socket;
 }
 
-void MyUdpSocket::doConnect(const std::string &ip, int port)
+void MyUdpSocket::doConnect(int port)
 {
-    socket->bind(QHostAddress(ip.c_str()), port);
+    socket->bind(socket->localAddress(), port);
 }
 
 void MyUdpSocket::disconnect()
